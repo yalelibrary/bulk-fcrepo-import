@@ -15,6 +15,7 @@
     <name>ladybird-webapp (Web)</name>
     <url>http://maven.apache.org</url>
     <properties>
+        <cargo.version>1.4.6</cargo.version>
         <test.context.path>/</test.context.path>
         <build.timestamp>${maven.build.timestamp}</build.timestamp>
         <maven.build.timestamp.format>yyyy-MM-dd</maven.build.timestamp.format>
@@ -103,6 +104,12 @@
             <artifactId>resteasy-guice</artifactId>
             <version>3.0.6.Final</version>
         </dependency>
+        <!-- Jboss embedded -->
+        <dependency>
+            <groupId>org.jboss.as</groupId>
+            <artifactId>jboss-as-embedded</artifactId>
+            <version>7.1.1.Final</version>
+        </dependency>
         <!-- Java EE -->
         <dependency>
             <groupId>javax</groupId>
@@ -129,6 +136,35 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
             </plugin>
+            <!-- cargo -->
+            <plugin>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven2-plugin</artifactId>
+                <version>${cargo.version}</version>
+                <configuration>
+                    <container>
+                        <containerId>tomcat7x</containerId>
+                    </container>
+                    <configuration>
+                        <type>standalone</type>
+                        <home>${project.build.directory}/tomcat7x</home>
+                        <properties>
+                            <cargo.servlet.port>8080</cargo.servlet.port>
+                            <cargo.tomcat.manager.url>
+                                http:/localhost:8080/manager
+                            </cargo.tomcat.manager.url>
+                        </properties>
+                    </configuration>
+                    <deployables>
+                        <deployable>
+                            <groupId>ladybird_dev</groupId>
+                            <artifactId>ladybird-webapp</artifactId>
+                            <type>war</type>
+                        </deployable>
+                    </deployables>
+                </configuration>
+            </plugin>
+            <!-- end: cargo-->
         </plugins>
     </build>
     <profiles>
