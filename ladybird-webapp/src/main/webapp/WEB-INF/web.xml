@@ -34,7 +34,6 @@
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
-
     <context-param>
         <param-name>facelets.SKIP_COMMENTS</param-name>
         <param-value>true</param-value>
@@ -43,7 +42,7 @@
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Production</param-value>
     </context-param>
-    <!-- context params -->
+
     <context-param>
         <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
         <param-value>client</param-value>
@@ -57,10 +56,6 @@
         <param-value>bootstrap</param-value>
     </context-param>
 
-
-    <!-- resteasy -->
-
-    <!-- Note The mapping prefix to be same as resteasy servlet url-pattern -->
     <context-param>
         <param-name>resteasy.servlet.mapping.prefix</param-name>
         <param-value>/rest/*</param-value>
@@ -77,23 +72,6 @@
         <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
 
-    <!-- original sans guice-->
-
-    <!-- Auto scan REST service: disabled for guice
-    <context-param>
-        <param-name>resteasy.scan</param-name>
-        <param-value>true</param-value>
-    </context-param>
-    <listener>
-        <listener-class>
-            org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap
-        </listener-class>
-    </listener>
-    -->
-
-
-    <!-- guice-resteasy -->
-
     <listener>
         <listener-class>
             org.jboss.resteasy.plugins.guice.GuiceResteasyBootstrapServletContextListener
@@ -109,8 +87,6 @@
         <param-name>resteasy.guice.stage</param-name>
         <param-value>PRODUCTION</param-value>
     </context-param>
-
-    <!-- Appliction Listerners -->
 
     <listener>
         <listener-class>edu.yale.library.AppContextListener</listener-class>

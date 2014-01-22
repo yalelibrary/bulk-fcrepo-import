@@ -18,7 +18,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 
 /**
- *
  * @param <T>
  * @param <ID>
  */
@@ -108,9 +107,11 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
     }
 
     @SuppressWarnings("unchecked")
-    protected List<T> findByCriteria(Criterion... criterion) {
+    protected List<T> findByCriteria(Criterion... criterion)
+    {
         Criteria crit = getSession().createCriteria(getPersistentClass());
-        for (Criterion c : criterion) {
+        for (Criterion c : criterion)
+        {
             crit.add(c);
         }
         return crit.list();

@@ -19,13 +19,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Ladybird</a>
+                <a class="navbar-brand" href="http://localhost:8080/ladybird-webapp/web/pages/index.xhtml">Ladybird</a>
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="logs.xhtml">Logs</a></li>
-                    <li><a href="alerts.xhtml">Alerts</a></li>
+                    <li><a href="http://localhost:8080/ladybird-webapp/web/pages/index.xhtml">Home</a></li>
+                    <li><a href="http://localhost:8080/ladybird-webapp/web/pages/index.xhtml">Logs</a></li>
+                    <li><a href="http://localhost:8080/ladybird-webapp/web/pages/index.xhtml">Alerts</a></li>
                 </ul>
             </div>
         </div>
@@ -37,30 +37,29 @@
 
         <ul class="nav nav-pills">
             <!-- <li class="active"><a href="#">Home</a></li> -->
-            <li><a href="logs.xhtml">Logs</a></li>
-            <li><a href="alerts.xhtml">Alerts</a></li>
+            <li><a href="http://localhost:8080/ladybird-webapp/web/pages/Users.xhtml">Users</a></li>
+            <li><a href="http://localhost:8080/ladybird-webapp/web/pages/Project.xhtml">Project</a></li>
+            <li><a href="http://localhost:8080/ladybird-webapp/web/pages/Object.xhtml">Object</a></li>
+            <li><a href="http://localhost:8080/ladybird-webapp/web/pages/HydraPublish.xhtml">Hydra Publish</a></li>
+            <li><a href="http://localhost:8080/ladybird-webapp/web/pages/FieldDefinition.xhtml">Field Definition</a></li>
+            <li> <a href="http://localhost:8080/ladybird-webapp/web/pages/Collection.xhtml">Collection</a></li>
+            <li><a href="http://localhost:8080/ladybird-webapp/web/pages/AuthorityControl.xhtml">Authority Control</a></li>
         </ul>
 
         <div class="row row-offcanvas row-offcanvas-right">
-            <div class="col-xs-12 col-sm-10">
-                <p class="pull-right visible-xs">
-                    <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
-                </p>
 
+            <!--
+            <div class="col-xs-6 col-sm-2 sidebar-offcanvas" id="sidebar" role="navigation">
+            </div>
+            --> <!--/span-->
+
+            <div class="col-xs-12 col-sm-10">
                 <div class="row">
                     <ui:insert name="content" />
                 </div><!--/row-->
             </div><!--/span-->
 
-            <div class="col-xs-6 col-sm-2 sidebar-offcanvas" id="sidebar" role="navigation">
-                <div class="list-group">
-                    <!-- <a href="#" class="list-group-item active">Link</a> -->
-                    <a href="logs.xhtml" class="list-group-item">Logs</a>
-                    <a href="alerts.xhtml" class="list-group-item">Alerts</a>
-                    <a href="search.xhtml" class="list-group-item">Search</a>
-                    <a href="#" class="list-group-item">More</a>
-                </div>
-            </div><!--/span-->
+
         </div><!--/row-->
     </div> <!--main -->
 

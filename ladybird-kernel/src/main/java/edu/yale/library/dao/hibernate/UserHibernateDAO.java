@@ -12,7 +12,7 @@ public class UserHibernateDAO extends GenericHibernateDAO<User, Integer> impleme
     @Override
     public java.util.List findAll()
     {
-         return Collections.singletonList(new String("UserHibernateDAO: collection empty."));
+        return Collections.singletonList(new String("UserHibernateDAO: collection empty."));
     }
 
 }
