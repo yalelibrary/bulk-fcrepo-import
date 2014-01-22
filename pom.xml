@@ -1,11 +1,42 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>edu.yale.library</groupId>
     <artifactId>ladybird</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
+
     <name>ladybird (Project)</name>
+    <description/>
+    <url/>
+    <inceptionYear>2014</inceptionYear>
+    <organization>
+        <name>Yale University</name>
+        <url>www.yale.edu</url>
+    </organization>
+    <licenses/>
+
+    <developers>
+        <developer>
+            <name>Osman Din</name>
+        </developer>
+    </developers>
+    <contributors/>
+
+    <mailingLists/>
+
+    <modules>
+        <module>ladybird-tests</module>
+        <module>ladybird-webapp</module>
+        <module>ladybird-kernel</module>
+        <module>ladybird-engine</module>
+    </modules>
+
+    <scm/>
+    <issueManagement/>
+    <ciManagement/>
+    <distributionManagement/>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -19,48 +50,15 @@
         <hibernate.version>4.2.0.Final</hibernate.version>
         <joda.version>2.2</joda.version>
         <mysql.version>5.1.20</mysql.version>
+        <mail.version>1.4.4</mail.version>
+        <javaee-api.version>6.0</javaee-api.version>
+        <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
+        <resteasy-jaxrs.version>3.0.6.Final</resteasy-jaxrs.version>
+        <javax.inject.version>1</javax.inject.version>
+        <guice.version>3.0</guice.version>
+        <resteasy-guice.version>3.0.6.Final</resteasy-guice.version>
     </properties>
-    <modules>
-        <module>ladybird-tests</module>
-        <module>ladybird-webapp</module>
-        <module>ladybird-kernel</module>
-        <module>ladybird-engine</module>
-    </modules>
-    <repositories>
-        <repository>
-            <id>jboss-public-repository-group</id>
-            <name>JBoss Public Maven Repository Group</name>
-            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
-            <layout>default</layout>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>maven2-repository.dev.java.net</id>
-            <name>Java.net Repository for Maven</name>
-            <url>http://download.java.net/maven/2/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>prime-repo</id>
-            <name>PrimeFaces Maven Repository</name>
-            <url>http://repository.primefaces.org</url>
-            <layout>default</layout>
-        </repository>
-        <repository>
-            <id>nexus</id>
-            <url>http://130.132.146.30:8081/nexus/content/repositories/snapshots</url>
-        </repository>
-    </repositories>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -131,7 +129,7 @@
             <dependency>
                 <groupId>javax.mail</groupId>
                 <artifactId>mail</artifactId>
-                <version>1.4.4</version>
+                <version>${mail.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
@@ -151,27 +149,22 @@
             <dependency>
                 <groupId>javax</groupId>
                 <artifactId>javaee-api</artifactId>
-                <version>6.0</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.sun.faces</groupId>
-                        <artifactId>jsf-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.sun.faces</groupId>
-                        <artifactId>jsf-impl</artifactId>
-                    </exclusion>
-                </exclusions>
+                <version>${javaee-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.inject</groupId>
                 <artifactId>javax.inject</artifactId>
-                <version>1</version>
+                <version>${javax.inject.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.inject</groupId>
+                <artifactId>guice</artifactId>
+                <version>${guice.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
-                <version>3.0.1</version>
+                <version>${javax.servlet-api.version}</version>
             </dependency>
             <!-- Test -->
             <dependency>
@@ -209,7 +202,12 @@
             <dependency>
                 <groupId>org.jboss.resteasy</groupId>
                 <artifactId>resteasy-jaxrs</artifactId>
-                <version>3.0.6.Final</version>
+                <version>${resteasy-jaxrs.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-guice</artifactId>
+                <version>${resteasy-guice.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -225,35 +223,48 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.16</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <classpathDependencyExcludes>
-                        <classpathDependencyExclude>javax.faces:javax.faces-api</classpathDependencyExclude>
-                    </classpathDependencyExcludes>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-    <organization>
-        <name>Yale University</name>
-        <url>www.yale.edu</url>
-    </organization>
-    <developers>
-        <developer>
-            <name>Osman Din</name>
-        </developer>
-    </developers>
+
+    <repositories>
+        <repository>
+            <id>jboss-public-repository-group</id>
+            <name>JBoss Public Maven Repository Group</name>
+            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+            <layout>default</layout>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>maven2-repository.dev.java.net</id>
+            <name>Java.net Repository for Maven</name>
+            <url>http://download.java.net/maven/2/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>prime-repo</id>
+            <name>PrimeFaces Maven Repository</name>
+            <url>http://repository.primefaces.org</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
+            <id>nexus</id>
+            <url>http://130.132.146.30:8081/nexus/content/repositories/snapshots</url>
+        </repository>
+    </repositories>
+    <pluginRepositories></pluginRepositories>
+
+    <build/>
+
+    <reporting/>
+
+    <profiles/>
+
 </project>

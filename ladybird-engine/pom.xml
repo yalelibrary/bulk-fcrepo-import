@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
-<project
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-        xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>edu.yale.library</groupId>
         <artifactId>ladybird</artifactId>
@@ -11,17 +10,21 @@
     <groupId>edu.yale.library.engine</groupId>
     <artifactId>ladybird-engine</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+
     <name>ladybird-engine (Services)</name>
-    <url>http://maven.apache.org</url>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <tika-core.version>0.4</tika-core.version>
+        <poi-ooxml.version>3.8</poi-ooxml.version>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.tika</groupId>
             <artifactId>tika-core</artifactId>
-            <version>0.4</version>
+            <version>${tika-core.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -53,13 +56,8 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>3.8</version>
+            <version>${poi-ooxml.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${surefire.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -79,12 +77,11 @@
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-guice</artifactId>
-            <version>3.0.6.Final</version>
         </dependency>
         <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
-            <version>3.0</version>
+            <version>${guice.version}</version>
         </dependency>
         <!--  Java EE -->
         <dependency>
@@ -92,4 +89,5 @@
             <artifactId>javaee-api</artifactId>
         </dependency>
     </dependencies>
+
 </project>
