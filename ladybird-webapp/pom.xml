@@ -26,6 +26,7 @@
         <el-impl.version>2.2</el-impl.version>
         <javax.faces-api.version>2.2</javax.faces-api.version>
         <jstl.version>1.2</jstl.version>
+        <bootstrap-theme.version>1.0.10</bootstrap-theme.version>
     </properties>
 
     <dependencies>
@@ -92,9 +93,9 @@
             <version>${primefaces-extensions.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.primefaces.theme</groupId>
+            <groupId>org.primefaces.themes</groupId>
             <artifactId>bootstrap</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${bootstrap-theme.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
