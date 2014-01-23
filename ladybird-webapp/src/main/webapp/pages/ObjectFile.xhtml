@@ -1,0 +1,125 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../templates/template.xhtml">
+	<ui:define name="content">
+		<h2>ObjectFile</h2>
+		<h:form id="ObjectFileForm" enctype="multipart/form-data"
+			styleClass=""
+			style="">
+			<br />
+
+			<div style="">
+				<div class="" style="">
+
+                    <!--Add Button -->
+
+                    <p:commandButton id="chartBtn" icon="ui-icon-plusthick"
+						value="New Item" type="button" style="color:#103480;"
+						onclick="dlg.show();" />
+
+                    <br />
+                    <br />
+					
+
+					<!-- Data Table -->
+
+					<p:dataTable id="ObjectFileDatatable" value="#{ObjectFileView.itemList}"
+						var="item" paginator="true" rows="10"
+						tableStyle="" paginatorPosition="bottom"
+						editable="false">
+						
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="Date" />
+							</f:facet>
+							<h:outputText value="#{item.date}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="UserId" />
+							</f:facet>
+							<h:outputText value="#{item.userId}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="Oid" />
+							</f:facet>
+							<h:outputText value="#{item.oid}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="FileLabel" />
+							</f:facet>
+							<h:outputText value="#{item.fileLabel}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="FileName" />
+							</f:facet>
+							<h:outputText value="#{item.fileName}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="FilePath" />
+							</f:facet>
+							<h:outputText value="#{item.filePath}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="FileExt" />
+							</f:facet>
+							<h:outputText value="#{item.fileExt}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="FileSize" />
+							</f:facet>
+							<h:outputText value="#{item.fileSize}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="Md5" />
+							</f:facet>
+							<h:outputText value="#{item.md5}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="Sha256" />
+							</f:facet>
+							<h:outputText value="#{item.sha256}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="HydraPublishId" />
+							</f:facet>
+							<h:outputText value="#{item.hydraPublishId}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="Status" />
+							</f:facet>
+							<h:outputText value="#{item.status}" />
+						</p:column>
+
+						<p:column width="80" rendered="false">
+							<f:facet name="header">
+								<h:outputText value="Remove?" />
+							</f:facet>
+							<p:commandButton icon="ui-icon-close" title="remove from db"
+								actionListener="#{ObjectFileView.remove(c)}" update="ObjectFileDatatable" />
+						</p:column>
+					</p:dataTable>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>
+

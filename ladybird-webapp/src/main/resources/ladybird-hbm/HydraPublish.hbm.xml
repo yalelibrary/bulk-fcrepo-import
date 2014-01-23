@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="edu.yale.library.beans.HydraPublish" table="hydra_publish" catalog="pamoja">
+        <id name="hydraPublishId" type="java.lang.Integer">
+            <column name="hydra_publish_id" />
+            <generator class="identity" />
+        </id>
+        <property name="date" type="timestamp">
+            <column name="date" length="19" />
+        </property>
+        <property name="hydraContentmodelId" type="java.lang.Integer">
+            <column name="hydra_contentmodel_id" />
+        </property>
+        <property name="collectionId" type="java.lang.Integer">
+            <column name="collection_id" />
+        </property>
+        <property name="projectId" type="java.lang.Integer">
+            <column name="project_id" />
+        </property>
+        <property name="oid" type="java.lang.Integer">
+            <column name="oid" />
+        </property>
+        <property name="oid_1" type="java.lang.Integer">
+            <column name="_oid" />
+        </property>
+        <property name="zindex" type="java.lang.Integer">
+            <column name="zindex" />
+        </property>
+        <property name="boid" type="java.lang.Integer">
+            <column name="_boid" />
+        </property>
+        <property name="bindex" type="java.lang.Integer">
+            <column name="_bindex" />
+        </property>
+        <property name="hydraid" type="string">
+            <column name="hydraid" length="45" />
+        </property>
+        <property name="action" type="string">
+            <column name="action" length="10" />
+        </property>
+        <property name="dateready" type="timestamp">
+            <column name="dateready" length="19" />
+        </property>
+        <property name="datehydrastart" type="timestamp">
+            <column name="datehydrastart" length="19" />
+        </property>
+        <property name="datehydraend" type="timestamp">
+            <column name="datehydraend" length="19" />
+        </property>
+        <property name="dateaudit" type="timestamp">
+            <column name="dateaudit" length="19" />
+        </property>
+        <property name="attempts" type="java.lang.Integer">
+            <column name="attempts" />
+        </property>
+        <property name="priority" type="java.lang.Integer">
+            <column name="priority" />
+        </property>
+        <property name="server" type="string">
+            <column name="server" length="45" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="edu.yale.library.beans.Project" table="project" catalog="pamoja">
+        <id name="projectId" type="java.lang.Integer">
+            <column name="project_id" />
+            <generator class="identity" />
+        </id>
+        <property name="label" type="string">
+            <column name="label" length="45" not-null="true" />
+        </property>
+        <property name="date" type="timestamp">
+            <column name="date" length="19" not-null="true" />
+        </property>
+        <property name="userId" type="java.lang.Integer">
+            <column name="user_id" />
+        </property>
+        <property name="location" type="string">
+            <column name="location" length="150" />
+        </property>
+        <property name="url" type="string">
+            <column name="url" length="250" />
+        </property>
+        <property name="add1" type="string">
+            <column name="add1" length="150" />
+        </property>
+        <property name="add2" type="string">
+            <column name="add2" length="85" />
+        </property>
+        <property name="city" type="string">
+            <column name="city" length="45" />
+        </property>
+        <property name="state" type="string">
+            <column name="state" length="25" />
+        </property>
+        <property name="zip" type="string">
+            <column name="zip" length="15" />
+        </property>
+        <property name="phone" type="string">
+            <column name="phone" length="45" />
+        </property>
+    </class>
+</hibernate-mapping>

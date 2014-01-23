@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="edu.yale.library.beans.ObjectLongstring" table="object_longstring" catalog="pamoja">
+        <id name="dataId" type="java.lang.Integer">
+            <column name="data_id" />
+            <generator class="identity" />
+        </id>
+        <property name="date" type="timestamp">
+            <column name="date" length="19" not-null="true" />
+        </property>
+        <property name="userId" type="int">
+            <column name="user_id" not-null="true" />
+        </property>
+        <property name="oid" type="string">
+            <column name="oid" length="45" not-null="true" />
+        </property>
+        <property name="value" type="binary">
+            <column name="value" not-null="true" />
+        </property>
+        <property name="fdid" type="int">
+            <column name="fdid" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

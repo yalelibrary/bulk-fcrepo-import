@@ -1,0 +1,154 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../templates/template.xhtml">
+	<ui:define name="content">
+		<h2>FieldDefinitionVersion</h2>
+		<h:form id="FieldDefinitionVersionForm" enctype="multipart/form-data"
+			styleClass=""
+			style="">
+			<br />
+
+			<div style="">
+				<div class="" style="">
+
+                    <!--Add Button -->
+
+                    <p:commandButton id="chartBtn" icon="ui-icon-plusthick"
+						value="New Item" type="button" style="color:#103480;"
+						onclick="dlg.show();" />
+
+                    <br />
+                    <br />
+					
+					<!-- Data Table -->
+
+					<p:dataTable id="FieldDefinitionVersionDatatable" value="#{FieldDefinitionVersionView.itemList}"
+						var="item" paginator="true" rows="10"
+						tableStyle="" paginatorPosition="bottom"
+						editable="false">
+						
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="Id" />
+							</f:facet>
+							<h:outputText value="#{item.id}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="ChangeDate" />
+							</f:facet>
+							<h:outputText value="#{item.changeDate}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="ChangeUserId" />
+							</f:facet>
+							<h:outputText value="#{item.changeUserId}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="Fdid" />
+							</f:facet>
+							<h:outputText value="#{item.fdid}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="Date" />
+							</f:facet>
+							<h:outputText value="#{item.date}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="Type" />
+							</f:facet>
+							<h:outputText value="#{item.type}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="Acid" />
+							</f:facet>
+							<h:outputText value="#{item.acid}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="Faid" />
+							</f:facet>
+							<h:outputText value="#{item.faid}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="Handle" />
+							</f:facet>
+							<h:outputText value="#{item.handle}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="Tooltip" />
+							</f:facet>
+							<h:outputText value="#{item.tooltip}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="Multivalue" />
+							</f:facet>
+							<h:outputText value="#{item.multivalue}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="Display" />
+							</f:facet>
+							<h:outputText value="#{item.display}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="Technical" />
+							</f:facet>
+							<h:outputText value="#{item.technical}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="Export" />
+							</f:facet>
+							<h:outputText value="#{item.export}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="Locked" />
+							</f:facet>
+							<h:outputText value="#{item.locked}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="Required" />
+							</f:facet>
+							<h:outputText value="#{item.required}" />
+						</p:column>
+						<p:column width="70">
+							<f:facet name="header">
+								<h:outputText value="Style" />
+							</f:facet>
+							<h:outputText value="#{item.style}" />
+						</p:column>
+
+						<p:column width="80" rendered="false">
+							<f:facet name="header">
+								<h:outputText value="Remove?" />
+							</f:facet>
+							<p:commandButton icon="ui-icon-close" title="remove from db"
+								actionListener="#{FieldDefinitionVersionView.remove(c)}" update="FieldDefinitionVersionDatatable" />
+						</p:column>
+					</p:dataTable>
+				</div>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>
+
