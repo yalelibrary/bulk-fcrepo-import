@@ -5,6 +5,10 @@
          version="3.0">
     <display-name>LadyBird Web Application</display-name>
 
+    <welcome-file-list>
+        <welcome-file>pages/index.xhtml</welcome-file>
+    </welcome-file-list>
+
     <listener>
         <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
     </listener>
