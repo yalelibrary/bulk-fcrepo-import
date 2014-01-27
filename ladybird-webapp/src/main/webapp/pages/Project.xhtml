@@ -1,143 +1,142 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../templates/template.xhtml">
-	<ui:define name="content">
-		<h2>Project</h2>
-		<h:form id="ProjectForm" enctype="multipart/form-data"
-			styleClass=""
-			style="">
-			<br />
+    <ui:define name="content">
+        <h2>Project</h2>
+        <h:form id="ProjectForm" enctype="multipart/form-data"
+                styleClass=""
+                style="">
+            <br/>
 
-			<div style="">
-				<div class="" style="">
+            <div style="">
+                <div class="" style="">
 
                     <!--Add Button -->
 
                     <p:commandButton id="chartBtn" icon="ui-icon-plusthick"
-						value="New Item" type="button" style="color:#103480;"
-						onclick="dlg.show();" />
+                                     value="New Item" type="button" style="color:#103480;"
+                                     onclick="dlg.show();"/>
 
-                    <br />
-                    <br />
-					
-					<!-- Modal pop up for + Button -->
+                    <br/>
+                    <br/>
+
+                    <!-- Modal pop up for + Button -->
 
                     <p:dialog id="modalDialog" header="New Item" widgetVar="dlg"
-						modal="true" height="350" width="350" resizable="false">
-						<div class="control-group">
+                              modal="true" height="350" width="350" resizable="false">
+                        <div class="control-group">
 							<span class="help-block"> <p:messages id="messages_pf"
-									showDetail="true" autoUpdate="true" closable="true" />
+                                                                  showDetail="true" autoUpdate="true" closable="true"/>
 							</span>
-						</div>
-						<div class="control-group">
-							<label class="control-label" for="locCode">NetId</label>
-							<div class="controls">
-								<p:inputText id="name" value="#{ProjectView.item.projectid}" />
-							</div>
-						</div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="locCode">NetId</label>
+
+                            <div class="controls">
+                                <p:inputText id="name" value="#{ProjectView.item.projectid}"/>
+                            </div>
+                        </div>
 
                         <!-- Submit Button -->
 
-						<p:commandButton update="ProjectDatatable, messages_pf"
-							value="Submit" styleClass="btn" action="#{ProjectView.saveAll}"
-							actionListener="#{ProjectView.addInfo}">
-						</p:commandButton>
+                        <p:commandButton update="ProjectDatatable, messages_pf"
+                                         value="Submit" styleClass="btn" action="#{ProjectView.saveAll}"
+                                         actionListener="#{ProjectView.addInfo}">
+                        </p:commandButton>
 
-					</p:dialog>
+                    </p:dialog>
 
-					<!-- Data Table -->
+                    <!-- Data Table -->
 
-					<p:dataTable id="ProjectDatatable" value="#{ProjectView.itemList}"
-						var="item" paginator="true" rows="10"
-						tableStyle="" paginatorPosition="bottom"
-						editable="false">
-						
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Label" />
-							</f:facet>
-							<h:outputText value="#{item.label}" />
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Date" />
-							</f:facet>
-							<h:outputText value="#{item.date}" />
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="UserId" />
-							</f:facet>
-							<h:outputText value="#{item.userId}" />
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Location" />
-							</f:facet>
-							<h:outputText value="#{item.location}" />
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Url" />
-							</f:facet>
-							<h:outputText value="#{item.url}" />
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Add1" />
-							</f:facet>
-							<h:outputText value="#{item.add1}" />
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Add2" />
-							</f:facet>
-							<h:outputText value="#{item.add2}" />
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="City" />
-							</f:facet>
-							<h:outputText value="#{item.city}" />
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="State" />
-							</f:facet>
-							<h:outputText value="#{item.state}" />
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Zip" />
-							</f:facet>
-							<h:outputText value="#{item.zip}" />
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Phone" />
-							</f:facet>
-							<h:outputText value="#{item.phone}" />
-						</p:column>
+                    <p:dataTable id="ProjectDatatable" value="#{ProjectView.itemList}"
+                                 var="item" paginator="true" rows="10"
+                                 tableStyle="" paginatorPosition="bottom"
+                                 editable="false">
 
-						<p:column width="80" rendered="false">
-							<f:facet name="header">
-								<h:outputText value="Remove?" />
-							</f:facet>
-							<p:commandButton icon="ui-icon-close" title="remove from db"
-								actionListener="#{ProjectView.remove(c)}" update="ProjectDatatable" />
-						</p:column>
-					</p:dataTable>
-				</div>
-			</div>
-		</h:form>
-	</ui:define>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Label"/>
+                            </f:facet>
+                            <h:outputText value="#{item.label}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Date"/>
+                            </f:facet>
+                            <h:outputText value="#{item.date}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="UserId"/>
+                            </f:facet>
+                            <h:outputText value="#{item.userId}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Location"/>
+                            </f:facet>
+                            <h:outputText value="#{item.location}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Url"/>
+                            </f:facet>
+                            <h:outputText value="#{item.url}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Add1"/>
+                            </f:facet>
+                            <h:outputText value="#{item.add1}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Add2"/>
+                            </f:facet>
+                            <h:outputText value="#{item.add2}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="City"/>
+                            </f:facet>
+                            <h:outputText value="#{item.city}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="State"/>
+                            </f:facet>
+                            <h:outputText value="#{item.state}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Zip"/>
+                            </f:facet>
+                            <h:outputText value="#{item.zip}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Phone"/>
+                            </f:facet>
+                            <h:outputText value="#{item.phone}"/>
+                        </p:column>
+
+                        <p:column width="80" rendered="false">
+                            <f:facet name="header">
+                                <h:outputText value="Remove?"/>
+                            </f:facet>
+                            <p:commandButton icon="ui-icon-close" title="remove from db"
+                                             actionListener="#{ProjectView.remove(c)}" update="ProjectDatatable"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
 </ui:composition>
 </html>
 

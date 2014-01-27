@@ -1,131 +1,130 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../templates/template.xhtml">
-	<ui:define name="content">
-		<h2>Users</h2>
-		<h:form id="UserForm" enctype="multipart/form-data"
-			styleClass=""
-			style="">
-			<br />
+    <ui:define name="content">
+        <h2>Users</h2>
+        <h:form id="UserForm" enctype="multipart/form-data"
+                styleClass=""
+                style="">
+            <br/>
 
-			<div style="">
-				<div class="" style="">
+            <div style="">
+                <div class="" style="">
 
                     <!--Add Button -->
 
                     <p:commandButton id="chartBtn" icon="ui-icon-plusthick"
-						value="New Item" type="button" style="color:#103480;"
-						onclick="dlg.show();" />
+                                     value="New Item" type="button" style="color:#103480;"
+                                     onclick="dlg.show();"/>
 
-                    <br />
-                    <br />
-					
-					<!-- Modal pop up for + Button -->
+                    <br/>
+                    <br/>
+
+                    <!-- Modal pop up for + Button -->
 
                     <p:dialog id="modalDialog" header="New Item" widgetVar="dlg"
-						modal="true" height="350" width="350" resizable="false">
-						<div class="control-group">
+                              modal="true" height="350" width="350" resizable="false">
+                        <div class="control-group">
 							<span class="help-block"> <p:messages id="messages_pf"
-									showDetail="true" autoUpdate="true" closable="true" />
+                                                                  showDetail="true" autoUpdate="true" closable="true"/>
 							</span>
-						</div>
-						<div class="control-group">
-							<label class="control-label" for="locCode">NetId</label>
-							<div class="controls">
-								<p:inputText id="name" value="#{UserView.item.netid}" />
-							</div>
-						</div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="locCode">NetId</label>
+
+                            <div class="controls">
+                                <p:inputText id="name" value="#{UserView.item.netid}"/>
+                            </div>
+                        </div>
 
                         <!-- Submit Button -->
 
-						<p:commandButton update="UserDatatable, messages_pf"
-							value="Submit" styleClass="btn" action="#{UserView.saveAll}"
-							actionListener="#{UserView.addInfo}">
-						</p:commandButton>
+                        <p:commandButton update="UserDatatable, messages_pf"
+                                         value="Submit" styleClass="btn" action="#{UserView.saveAll}"
+                                         actionListener="#{UserView.addInfo}">
+                        </p:commandButton>
 
-					</p:dialog>
+                    </p:dialog>
 
-					<!-- Data Table -->
+                    <!-- Data Table -->
 
-					<p:dataTable id="UserDatatable" value="#{UserView.itemList}"
-						var="item" paginator="true" rows="10"
-						tableStyle="" paginatorPosition="bottom"
-						editable="false">
-						
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Date" />
-							</f:facet>
-							<h:outputText value="#{item.date}" />
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Username" />
-							</f:facet>
-							<h:outputText value="#{item.username}" />
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Password" />
-							</f:facet>
-							<h:outputText value="#{item.password}" />
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="DateCreated" />
-							</f:facet>
-							<h:outputText value="#{item.dateCreated}" />
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="DateEdited" />
-							</f:facet>
-							<h:outputText value="#{item.dateEdited}" />
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="DateLastused" />
-							</f:facet>
-							<h:outputText value="#{item.dateLastused}" />
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="UserId_1" />
-							</f:facet>
-							<h:outputText value="#{item.userId_1}" />
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Name" />
-							</f:facet>
-							<h:outputText value="#{item.name}" />
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="Email" />
-							</f:facet>
-							<h:outputText value="#{item.email}" />
-						</p:column>
+                    <p:dataTable id="UserDatatable" value="#{UserView.itemList}"
+                                 var="item" paginator="true" rows="10"
+                                 tableStyle="" paginatorPosition="bottom"
+                                 editable="false">
 
-						<p:column width="80" rendered="false">
-							<f:facet name="header">
-								<h:outputText value="Remove?" />
-							</f:facet>
-							<p:commandButton icon="ui-icon-close" title="remove from db"
-								actionListener="#{UserView.remove(c)}" update="UserDatatable" />
-						</p:column>
-					</p:dataTable>
-				</div>
-			</div>
-		</h:form>
-	</ui:define>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Date"/>
+                            </f:facet>
+                            <h:outputText value="#{item.date}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Username"/>
+                            </f:facet>
+                            <h:outputText value="#{item.username}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Password"/>
+                            </f:facet>
+                            <h:outputText value="#{item.password}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="DateCreated"/>
+                            </f:facet>
+                            <h:outputText value="#{item.dateCreated}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="DateEdited"/>
+                            </f:facet>
+                            <h:outputText value="#{item.dateEdited}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="DateLastused"/>
+                            </f:facet>
+                            <h:outputText value="#{item.dateLastused}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="UserId_1"/>
+                            </f:facet>
+                            <h:outputText value="#{item.userId_1}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Name"/>
+                            </f:facet>
+                            <h:outputText value="#{item.name}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Email"/>
+                            </f:facet>
+                            <h:outputText value="#{item.email}"/>
+                        </p:column>
+
+                        <p:column width="80" rendered="false">
+                            <f:facet name="header">
+                                <h:outputText value="Remove?"/>
+                            </f:facet>
+                            <p:commandButton icon="ui-icon-close" title="remove from db"
+                                             actionListener="#{UserView.remove(c)}" update="UserDatatable"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
 </ui:composition>
 </html>
 
