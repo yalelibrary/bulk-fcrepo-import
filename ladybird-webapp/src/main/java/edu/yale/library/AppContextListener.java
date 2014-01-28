@@ -20,7 +20,6 @@ public class AppContextListener implements ServletContextListener
         {
             start = HibernateUtil.getSessionFactory().getStatistics().getStartTime();
             logger.debug("Built Session Factory");
-
         } catch (Throwable t)
         {
             logger.error("Error in context initialization", t);
