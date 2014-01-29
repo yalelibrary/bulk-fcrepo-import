@@ -50,6 +50,7 @@
         <hibernate.version>4.2.0.Final</hibernate.version>
         <joda.version>2.2</joda.version>
         <mysql.version>5.1.20</mysql.version>
+        <derby.version>10.10.1.1</derby.version>
         <mail.version>1.4.4</mail.version>
         <javaee-api.version>6.0</javaee-api.version>
         <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
@@ -168,6 +169,11 @@
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
                 <version>${javax.servlet-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.derby</groupId>
+                <artifactId>derby</artifactId>
+                <version>${derby.version}</version>
             </dependency>
             <!-- Test -->
             <dependency>

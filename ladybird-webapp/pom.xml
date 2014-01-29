@@ -108,6 +108,10 @@
             <artifactId>commons-logging</artifactId>
             <version>${commons-logging.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+        </dependency>
         <!-- Java EE -->
         <dependency>
             <groupId>javax</groupId>
