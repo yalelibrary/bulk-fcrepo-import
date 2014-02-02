@@ -19,10 +19,13 @@ public class AppContextListener implements ServletContextListener
         logger.debug("Application Start up.");
         try
         {
-            //TODO read from props if the setting is embedded
-            servicesManager.initDB();
-            START_DB = System.currentTimeMillis();
-            logger.debug("Started embedded DB");
+            if (ApplicationProperties.CONFIG_STATE.DEFAULT_DB_CONFIGURED)
+            {
+                logger.debug("Trying to start embedded DB");
+                servicesManager.initDB();
+                START_DB = System.currentTimeMillis();
+                logger.debug("Started embedded DB");
+            }
             START_HIBERNATE = HibernateUtil.getSessionFactory().getStatistics().getStartTime();
             logger.debug("Built Session Factory");
         } catch (Throwable t)
@@ -37,9 +40,13 @@ public class AppContextListener implements ServletContextListener
     {
         try
         {
-            //TODO read from props if the setting is embedded and a DB is indeed running
-            servicesManager.stopDB();
-            logger.debug("Closed embedded database. Time : " + TimeUtils.elapsedMinutes(START_DB));
+            //TODO check state to ensure DB is running
+            if (ApplicationProperties.CONFIG_STATE.DEFAULT_DB_CONFIGURED)
+            {
+                logger.debug("Trying to stop embedded DB");
+                servicesManager.stopDB();
+                logger.debug("Closed embedded database. Time : " + TimeUtils.elapsedMinutes(START_DB));
+            }
             HibernateUtil.shutdown();
             logger.debug("Closed Hibernate Session Factory. Time : " + TimeUtils.elapsedMinutes(START_HIBERNATE));
         } catch (Throwable t)

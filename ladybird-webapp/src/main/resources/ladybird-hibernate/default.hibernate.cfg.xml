@@ -4,13 +4,9 @@
         "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
-        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.username">root</property>
-        <property name="hibernate.connection.password">macshelf</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/pamoja</property>
-        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-        <property name="hibernate.default_catalog">pamoja</property>
-        <property name="show_sql">false</property>
-        <mapping resource="User.hbm.xml"></mapping>
+        <property name="hibernate.connection.driver_class">org.apache.derby.jdbc.EmbeddedDriver</property>
+        <property name="hibernate.connection.url">jdbc:derby:memory:PAMOJADB</property>
+        <property name="show_sql">true</property>
+        <property name="hibernate.dialect"> org.hibernate.dialect.DerbyTenSevenDialect</property>
     </session-factory>
 </hibernate-configuration>
