@@ -27,6 +27,8 @@ public class DerbyConfigIT
 
     ServicesManager servicesManager;
 
+    final static String TESTDB = "pamoja";
+
     @Before
     public void init()
     {
@@ -81,11 +83,11 @@ public class DerbyConfigIT
         ArrayList statements = new ArrayList();
         PreparedStatement stmt;
         final String protocol = "jdbc:derby:";
-        final String dbName = "memory:PAMOJADB";
+        final String dbName = "memory:" + TESTDB;
         try
         {
             Properties props = new Properties();
-            props.put("user", "PAMOJADB");
+            props.put("user", TESTDB);
             conn = DriverManager.getConnection(protocol + dbName + ";create=false", props);
             conn.setAutoCommit(false);
             stmt = conn.prepareStatement(
@@ -121,12 +123,12 @@ public class DerbyConfigIT
         Connection conn = null;
         Statement statement = null;
         final String protocol = "jdbc:derby:";
-        final String dbName = "memory:PAMOJADB";
+        final String dbName = "memory:" + TESTDB;
         final String selectTableSQL = "SELECT username, password from USERS";
         try
         {
             Properties props = new Properties();
-            props.put("user", "PAMOJADB");
+            props.put("user", TESTDB);
             conn = DriverManager.getConnection(protocol + dbName + ";create=false", props);
             statement = conn.createStatement();
             ResultSet rs = statement.executeQuery(selectTableSQL);
