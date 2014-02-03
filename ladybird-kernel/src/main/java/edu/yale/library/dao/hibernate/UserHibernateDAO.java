@@ -9,10 +9,4 @@ import java.util.Collections;
 public class UserHibernateDAO extends GenericHibernateDAO<User, Integer> implements UserDAO
 {
 
-    @Override
-    public java.util.List findAll()
-    {
-        return Collections.singletonList(new String("UserHibernateDAO: collection empty."));
-    }
-
 }

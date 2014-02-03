@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../templates/template.xhtml">
+    <ui:define name="content">
+        <h2>Users</h2>
+        <h:form id="UserForm" enctype="multipart/form-data">
+
+            <div>
+                <div>
+
+                    <br/>
+
+                    <!--Add Button -->
+
+                    <p:commandButton icon="ui-icon-plusthick"
+                                     type="button"
+                                     onclick="dlg.show();"
+                                     value="New Item" />
+
+                    <!-- Modal pop up for + Button -->
+
+                    <p:dialog id="modalDialog"
+                              header="New Item"
+                              height="350"
+                              modal="true"
+                              resizable="false"
+                              width="350"
+                              widgetVar="dlg">
+
+                        <div>
+							<span class="help-block">
+                                <p:messages id="messages_pf" showDetail="true" autoUpdate="true" closable="true"/>
+							</span>
+                        </div>
+
+                        <div>
+                            <label>Username</label>
+                            <div>
+                                <p:inputText value="#{userView.item.username}"/>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label>Creator</label>
+                            <div>
+                                <p:inputText value="#{userView.item.userId_1}"/>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label>Name</label>
+                            <div>
+                                <p:inputText value="#{userView.item.name}"/>
+                            </div>
+                        </div>
+
+
+                        <div>
+                            <label>E-mail</label>
+                            <div>
+                                <p:inputText value="#{userView.item.email}"/>
+                            </div>
+                        </div>
+
+
+                        <!-- Submit Button -->
+
+                        <p:commandButton action="#{userView.save}"
+                                         styleClass="btn"
+                                         update="UserDatatable, messages_pf"
+                                         value="Submit"/>
+
+                    </p:dialog>
+
+                    <br/>
+                    <br/>
+
+                    <!-- Data Table -->
+
+                    <p:dataTable id="UserDatatable"
+                                 editable="false"
+                                 paginator="true"
+                                 paginatorPosition="bottom"
+                                 rows="10"
+                                 value="#{userView.itemList}"
+                                 var="item">
+
+                        <p:column headerText="Id">
+                            <h:outputText value="#{item.userId}"/>
+                        </p:column>
+                        <p:column headerText="Date">
+                            <h:outputText value="#{item.date}"/>
+                        </p:column>
+                        <p:column headerText="Username">
+                            <h:outputText value="#{item.username}"/>
+                        </p:column>
+                        <p:column headerText="Password">
+                            <h:outputText value="#{item.password}"/>
+                        </p:column>
+                        <p:column headerText="Created">
+                            <h:outputText value="#{item.dateCreated}"/>
+                        </p:column>
+                        <p:column headerText="Edited">
+                            <h:outputText value="#{item.dateEdited}"/>
+                        </p:column>
+                        <p:column headerText="Last used">
+                            <h:outputText value="#{item.dateLastused}"/>
+                        </p:column>
+                        <p:column headerText="Creator">
+                            <h:outputText value="#{item.userId_1}"/>
+                        </p:column>
+                        <p:column headerText="Name">
+                            <h:outputText value="#{item.name}"/>
+                        </p:column>
+                        <p:column headerText="E-mail">
+                            <h:outputText value="#{item.email}"/>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+
