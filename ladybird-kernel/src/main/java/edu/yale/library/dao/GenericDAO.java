@@ -8,7 +8,7 @@ public interface GenericDAO<T, ID extends Serializable>
 
     List<T> findAll();
 
-    void save(T entity);
+    Integer save(T entity);
 
 
 }

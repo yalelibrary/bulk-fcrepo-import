@@ -22,6 +22,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>edu.yale.library.kernel</groupId>
+            <artifactId>ladybird-kernel</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.tika</groupId>
             <artifactId>tika-core</artifactId>
             <version>${tika-core.version}</version>
@@ -57,7 +62,6 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>${poi-ooxml.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

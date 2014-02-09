@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="edu.yale.library.beans.ImportSource" table="import_source" catalog="pamoja">
+        <id name="importSourceId" type="java.lang.Integer">
+            <column name="import_source_id" />
+            <generator class="identity" />
+        </id>
+        <property name="date" type="timestamp">
+            <column name="date" length="19" not-null="true" />
+        </property>
+        <property name="sourceid" type="string">
+            <column name="sourceid" length="45" />
+        </property>
+        <property name="importId" type="java.lang.Integer">
+            <column name="import_id" />
+        </property>
+        <property name="col" type="java.lang.Integer">
+            <column name="col" />
+        </property>
+        <property name="row" type="java.lang.Integer">
+            <column name="row" />
+        </property>
+        <property name="schema" type="string">
+            <column name="schema" length="45" />
+        </property>
+        <property name="url" type="string">
+            <column name="url" length="500" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="edu.yale.library.beans.ImportJobExhead" table="import_job_exhead" catalog="pamoja">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="importId" type="int">
+            <column name="import_id" not-null="true" />
+        </property>
+        <property name="date" type="timestamp">
+            <column name="date" length="19" not-null="true" />
+        </property>
+        <property name="value" type="string">
+            <column name="value" length="45" />
+        </property>
+        <property name="col" type="java.lang.Integer">
+            <column name="col" />
+        </property>
+        <property name="func" type="string">
+            <column name="func" length="45" />
+        </property>
+        <property name="fdid" type="java.lang.Integer">
+            <column name="fdid" />
+        </property>
+        <property name="import_" type="string">
+            <column name="import" length="1" />
+        </property>
+    </class>
+</hibernate-mapping>

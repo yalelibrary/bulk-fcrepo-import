@@ -30,7 +30,9 @@ public class FieldDefinition implements java.io.Serializable
     }
 
 
-    public FieldDefinition(int fdid, Date date, String type, int acid, int faid, String handle, int multivalue, int display, int technical, int export, int locked, String required, String style)
+    @Deprecated
+    public FieldDefinition(int fdid, Date date, String type, int acid, int faid, String handle, int multivalue,
+                           int display, int technical, int export, int locked, String required, String style)
     {
         this.fdid = fdid;
         this.date = date;
@@ -47,7 +49,10 @@ public class FieldDefinition implements java.io.Serializable
         this.style = style;
     }
 
-    public FieldDefinition(int fdid, Date date, String type, int acid, int faid, String handle, String tooltip, int multivalue, int display, int technical, int export, int locked, String required, String style)
+    @Deprecated
+    public FieldDefinition(int fdid, Date date, String type, int acid, int faid, String handle, String tooltip,
+                           int multivalue, int display, int technical, int export, int locked, String required,
+                           String style)
     {
         this.fdid = fdid;
         this.date = date;
@@ -63,6 +68,12 @@ public class FieldDefinition implements java.io.Serializable
         this.locked = locked;
         this.required = required;
         this.style = style;
+    }
+
+    public FieldDefinition(int fdid, String handle)
+    {
+        this.fdid = fdid;
+        this.handle = handle;
     }
 
     public int getFdid()

@@ -1,26 +1,38 @@
-package edu.yale.library.engine.excel;
+package edu.yale.library.engine.imports;
 
-import edu.yale.library.engine.FieldConstants;
+import edu.yale.library.engine.model.FieldConstant;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Represents rows and columns.
+ *
  * A bean for now. Subject to modification.
  */
 public class ImportEntity
 {
     List<Row> sheetRows = new ArrayList();
 
-    public class Column
+    public class Column<T>
     {
-       public FieldConstants field;
-       public String value;  //TODO change type
+       FieldConstant field;
+       T value;
 
-        public Column(FieldConstants field, String value)
+        public Column(FieldConstant field, T value)
         {
             this.field = field;
             this.value = value;
+        }
+
+        public T getValue()
+        {
+            return value;
+        }
+
+        public FieldConstant getField()
+        {
+            return field;
         }
     }
 
@@ -32,7 +44,7 @@ public class ImportEntity
         {
             return columns;
         }
-
+        @Deprecated
         public void setColumns(List<Column> columns)
         {
             this.columns = columns;

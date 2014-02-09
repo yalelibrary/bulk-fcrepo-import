@@ -68,13 +68,19 @@ public class SchemaBean
     }
 
     /**
-     * Filters value.
+     * TODO re-viist this as schema is changed.
+     *
+     * Filters value. Method subject to removal.
      * @param statement sql statement
      * @return transformed value
      */
     String value(String statement)
     {
-        SchemaFilter f = (s) -> s.replace("`", "");
+        SchemaFilter f = (s) -> s.replace("`", "").
+                replace("int(11)", "int").
+                replace("datetime", "timestamp")
+                .replace("longtext", "blob");
+
         return f.filter(statement);
     }
 

@@ -10,6 +10,7 @@ import org.hibernate.service.ServiceRegistryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.Properties;
 
 public final class HibernateUtil
@@ -134,10 +135,20 @@ public final class HibernateUtil
 
         private String readPropertiesFromFile(final String p, final String path) throws Exception
         {
-            Properties properties = new Properties();
-            properties.load(this.getClass().getResourceAsStream(path));
-            String config = properties.getProperty(p);
-            return config;
+            try
+            {
+                Properties properties = new Properties();
+                properties.load(this.getClass().getResourceAsStream(path));
+                String config = properties.getProperty(p);
+                return config;
+            }
+            catch(IOException|NullPointerException e)
+            {
+                logger.error("Error reading property :" + e.getMessage());
+                logger.error("The path or file to be read was:" + path);
+                logger.error("The property to be read was:" + p);
+                throw new Exception(e);
+            }
         }
 
         public ConfigReader()

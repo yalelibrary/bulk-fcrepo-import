@@ -9,13 +9,9 @@
         <property name="show_sql">false</property>
         <property name="hibernate.dialect"> org.hibernate.dialect.DerbyTenSevenDialect</property>
         <!--Import-->
-        <mapping resource="ImportFile.hbm.xml"></mapping>
         <mapping resource="ImportJob.hbm.xml"></mapping>
         <mapping resource="ImportJobContents.hbm.xml"></mapping>
         <mapping resource="ImportJobExhead.hbm.xml"></mapping>
-
-        <mapping resource="Users.hbm.xml"></mapping>
-
 
     </session-factory>
 </hibernate-configuration>
