@@ -3,8 +3,10 @@ package edu.yale.library.view;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 
+import edu.yale.library.dao.MonitorDAO;
 import edu.yale.library.dao.UserDAO;
 import edu.yale.library.dao.GenericDAO;
+import edu.yale.library.dao.hibernate.MonitorHibernateDAO;
 import edu.yale.library.dao.hibernate.UserHibernateDAO;
 
 import edu.yale.library.beans.*;
@@ -24,5 +26,7 @@ public class DaoHibernateModule extends AbstractModule
         //bind(projectDaoType).to(ProjectDAO.class);
 
         bind(UserDAO.class).to(UserHibernateDAO.class);  //N.B. a.l. stub required.
+        bind(MonitorDAO.class).to(MonitorHibernateDAO.class);
+
     }
 }

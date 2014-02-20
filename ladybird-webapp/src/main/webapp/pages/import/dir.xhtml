@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template.xhtml">
+    <ui:define name="content">
+        <h2>Monitor Directories</h2>
+        <h:form id="UserForm" enctype="multipart/form-data">
+
+            <div>
+                <div>
+
+                    <br/>
+
+                    <!--Add Button -->
+
+                    <p:commandButton icon="ui-icon-plusthick"
+                                     type="button"
+                                     onclick="dlg.show();"
+                                     value="Update Item"/>
+
+                    <!-- Modal pop up for + Button -->
+
+                    <p:dialog id="modalDialog"
+                              header="New Item"
+                              height="350"
+                              modal="true"
+                              resizable="false"
+                              width="350"
+                              widgetVar="dlg">
+
+                        <div>
+                            <span class="help-block">
+                                <p:messages id="messages_pf" showDetail="true" autoUpdate="true" closable="true"/>
+                        </span>
+                        </div>
+
+                        <div>
+                            <label>Directory</label>
+
+                            <div>
+                                <p:inputText value="#{monitorView.item.dirPath}"/>
+                            </div>
+                        </div>
+
+
+                        <!-- Submit Button -->
+
+                        <p:commandButton action="#{monitorView.save}"
+                                         styleClass="btn"
+                                         update="DirDatatable, messages_pf"
+                                         value="Submit"/>
+
+                    </p:dialog>
+
+                    <br/>
+                    <br/>
+
+                    <!-- Data Table -->
+
+                    <p:dataTable id="DirDatatable"
+                                 editable="false"
+                                 paginator="true"
+                                 paginatorPosition="bottom"
+                                 rows="10"
+                                 value="#{monitorView.itemList}"
+                                 var="item">
+
+                        <p:column headerText="Dir">
+                            <h:outputText value="#{item.dirPath}"/>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

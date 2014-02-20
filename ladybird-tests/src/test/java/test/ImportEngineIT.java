@@ -95,10 +95,16 @@ public class ImportEngineIT
 
     public SpreadsheetFile getTestSpreadsheeet()
     {
+        /*
         SpreadsheetFile file = new SpreadsheetFile();
         file.setFileName(FileConstants.TEST_XLS_FILE);
         file.setAltName("Test spreadsheet.");
         file.setPath(FileConstants.TEST_XLS_FILE);
+        return file;*/
+
+        SpreadsheetFile file = new SpreadsheetFile(FileConstants.TEST_XLS_FILE, "Test spreadsheet",
+                FileConstants.TEST_XLS_FILE, getClass().getClassLoader().getResourceAsStream(FileConstants.TEST_XLS_FILE));
+
         return file;
     }
 

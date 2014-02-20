@@ -9,6 +9,14 @@
 
     <logger name="org.hibernate" level="OFF" />
 
+    <logger name="org.quartz.simpl" level="OFF" />
+
+    <logger name="org.quartz.core" level="OFF" />
+
+    <logger name="org.quartz.impl" level="OFF" />
+
+    <logger name="org.jboss.logging" level="OFF" />
+
     <root additivity="false" level="DEBUG">
         <appender-ref ref="STDOUT"/>
     </root>

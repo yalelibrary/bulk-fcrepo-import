@@ -13,5 +13,8 @@
         <mapping resource="ImportJobContents.hbm.xml"></mapping>
         <mapping resource="ImportJobExhead.hbm.xml"></mapping>
 
+        <mapping resource="Monitor.hbm.xml"></mapping>
+
+
     </session-factory>
 </hibernate-configuration>

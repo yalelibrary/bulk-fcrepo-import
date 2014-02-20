@@ -1,6 +1,5 @@
 package edu.yale.library.engine.model;
 
-import edu.yale.library.engine.model.FieldConstant;
 
 interface FieldDataValidator
 {

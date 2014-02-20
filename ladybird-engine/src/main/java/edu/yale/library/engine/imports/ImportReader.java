@@ -8,7 +8,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -22,20 +21,16 @@ public final class ImportReader
 {
 
     private final Logger logger = getLogger(this.getClass());
-
     private final SpreadsheetFile file;
-
-    private final int DEFAULT_SHEET;
-
+    private final int sheetNumber; //assumes one sheet
     private ReadMode readMode;
 
-    public ImportReader(SpreadsheetFile file, int DEFAULT_SHEET, ReadMode readMode)
+    public ImportReader(SpreadsheetFile file, int sheetNumber, ReadMode readMode)
     {
         this.file = file;
-        this.DEFAULT_SHEET = DEFAULT_SHEET;
+        this.sheetNumber = sheetNumber;
         this.readMode = readMode;
     }
-
 
     public List processSheet() throws UnknownFunctionException
     {
@@ -46,6 +41,7 @@ public final class ImportReader
 
         try
         {
+            logger.debug("Processing a sheet of={}", file);
             XSSFSheet sheet = getDefaultSheet();
             final Iterator<Row> it = sheet.iterator();
 
@@ -105,6 +101,7 @@ public final class ImportReader
         catch (IOException e)
         {
             //todo
+            e.printStackTrace();
         }
         return sheetRows;
     }
@@ -131,7 +128,7 @@ public final class ImportReader
         }
         catch (IllegalArgumentException e)
         {
-            throw new UnknownFunctionException("Specified cell not a recognized function or fdid: " + cellValue);
+            throw new UnknownFunctionException("Specified cell not a recognized function or fdid= " + cellValue);
         }
     }
 
@@ -166,13 +163,16 @@ public final class ImportReader
         }
     }
 
-    //TODO: uses default_sheet 0
+    /**
+     * Read default sheet (0 for now)
+     * @return
+     * @throws IOException
+     */
     private XSSFSheet getDefaultSheet() throws IOException
     {
-        InputStream excelFile = getClass().getClassLoader()
-                .getResourceAsStream(file.getPath());
-        XSSFWorkbook workbook = new XSSFWorkbook(excelFile);
-        XSSFSheet sheet = workbook.getSheetAt(DEFAULT_SHEET);
+        logger.debug("Reading sheet={}", file.getFileName());
+        XSSFWorkbook workbook = new XSSFWorkbook(file.getFileStream());
+        XSSFSheet sheet = workbook.getSheetAt(sheetNumber);
         return sheet;
     }
 }

@@ -18,22 +18,17 @@ public class DefaultJobsManager implements JobsManager
 {
     private final Logger logger = getLogger(this.getClass());
 
-    //TODO
-    List<JobDetail> jobs = new ArrayList<JobDetail>();
-
-    {
-        JobDetail job = JobBuilder.newJob(new Job() {
-            @Override
-            public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-                //noop
-            }
-        }.getClass()).withIdentity("cleanup").build();
-        jobs.add(job);
-    }
+    static List<JobDetail> jobs = new ArrayList(); //TODO
 
     public List<JobDetail> getJobs()
     {
         return jobs;
+    }
+
+    public void addJob(JobDetail job)
+    {
+        logger.debug("Adding job");
+        jobs.add(job);
     }
 
     @Override
