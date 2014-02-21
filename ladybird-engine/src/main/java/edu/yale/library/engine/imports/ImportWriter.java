@@ -26,21 +26,22 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ImportWriter
 {
     private final Logger logger = getLogger(this.getClass());
-
-    Date JOB_EXEC_DATE = new Date(System.currentTimeMillis()); //todo
+    private final Date JOB_EXEC_DATE = new Date(System.currentTimeMillis()); //todo
 
     /**
      * Full cycle import writing (sans file import).
      * @param list
      * @param ctx import job context containing information about the job
      */
-    public void write(final List<ImportEntity.Row> list, ImportJobContext ctx)
+    public int write(final List<ImportEntity.Row> list, ImportJobContext ctx)
     {
         final int importId = writeImportJob(ctx);
         //header
         writeExHead(importId, getHeaderRow(unmodifiableList(list)).getColumns());
         //contents
         writeContents(importId, getContentRows(unmodifiableList(list)));
+
+        return importId;
     }
 
     /**
@@ -50,7 +51,7 @@ public class ImportWriter
      */
     public void writeExHead(final int importId, final List<ImportEntity.Column> list)
     {
-        ImportJobExheadDAO dao = new ImportJobExheadHibernateDAO();
+        final ImportJobExheadDAO dao = new ImportJobExheadHibernateDAO();
         int col = 0;
         logger.debug("Excel spreadsheet columns size:" + list.size());
         for (ImportEntity.Column column: list)
@@ -85,7 +86,7 @@ public class ImportWriter
             {
                 ImportEntity.Column<String> col = columns.get(c);
 
-                logger.debug("Row={}, Col={}, Columns={}", r, c, columns.size());
+                //logger.debug("Row={}, Col={}, Columns={}", r, c, columns.size());
                 ImportJobContents entry = new ImportJobContentsBuilder().setImportId(importId).setDate(JOB_EXEC_DATE).
                         setCol(c).setRow(r).setValue(col.getValue()).build();
                 dao.save(entry); //TODO or save list

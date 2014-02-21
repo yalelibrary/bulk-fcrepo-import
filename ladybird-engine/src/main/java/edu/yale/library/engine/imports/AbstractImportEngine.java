@@ -1,10 +1,11 @@
 package edu.yale.library.engine.imports;
 
 
-import edu.yale.library.engine.model.UnknownFunctionException;
+import edu.yale.library.engine.model.ImportReaderValidationException;
 import edu.yale.library.engine.model.DefaultFieldDataValidator;
 import edu.yale.library.engine.model.ReadMode;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -21,7 +22,7 @@ public abstract class AbstractImportEngine implements ImportEngine
      * Read with default param settings.
      * @see #read(SpreadsheetFile, edu.yale.library.engine.model.ReadMode, edu.yale.library.engine.model.DefaultFieldDataValidator)
      */
-    public final List<ImportEntity.Row> read(SpreadsheetFile file) throws UnknownFunctionException
+    public final List<ImportEntity.Row> read(SpreadsheetFile file) throws ImportReaderValidationException, IOException
     {
         return read(file, ReadMode.FULL, new DefaultFieldDataValidator());
     }
@@ -34,7 +35,7 @@ public abstract class AbstractImportEngine implements ImportEngine
      * @return list of row values. Perhaps should return sheet.
      */
     public final List<ImportEntity.Row> read(SpreadsheetFile file, ReadMode inputReadMode,
-           DefaultFieldDataValidator validator) throws UnknownFunctionException
+           DefaultFieldDataValidator validator) throws ImportReaderValidationException, IOException
     {
         spreadsheetFile = file;
         List<ImportEntity.Row> rows = doRead(file, inputReadMode);
@@ -45,9 +46,9 @@ public abstract class AbstractImportEngine implements ImportEngine
      * Writes to tables.
      * @param list
      */
-    public final void write(List<ImportEntity.Row> list)
+    public final int write(List<ImportEntity.Row> list)
     {
-        doWrite(list);
+        return doWrite(list);
     }
 
     protected SpreadsheetFile getFile()
@@ -55,9 +56,10 @@ public abstract class AbstractImportEngine implements ImportEngine
         return spreadsheetFile.clone();
     }
 
-    public abstract List<ImportEntity.Row> doRead(SpreadsheetFile file, ReadMode mode) throws UnknownFunctionException;
+    public abstract List<ImportEntity.Row> doRead(SpreadsheetFile file, ReadMode mode)
+            throws ImportReaderValidationException, IOException;
 
-    public abstract void doWrite(List<ImportEntity.Row> file);
+    public abstract int doWrite(List<ImportEntity.Row> file);
 
 
 }

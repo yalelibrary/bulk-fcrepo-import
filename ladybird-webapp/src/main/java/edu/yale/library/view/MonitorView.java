@@ -3,7 +3,11 @@ package edu.yale.library.view;
 
 import edu.yale.library.beans.Monitor;
 import edu.yale.library.dao.MonitorDAO;
+import edu.yale.library.engine.cron.ExportScheduler;
 import edu.yale.library.engine.cron.FilePickerScheduler;
+import edu.yale.library.engine.cron.ImportScheduler;
+import edu.yale.library.engine.model.CronSchedulingException;
+import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 
 import javax.annotation.PostConstruct;
@@ -20,9 +24,16 @@ public class MonitorView extends AbstractView
 {
     private final Logger logger = getLogger(this.getClass());
 
-    private List<Monitor> itemList;
+    private static final String IMPORT_JOB_ID = "import_job";
+    private static final String IMPORT_JOB_TRIGGER = "trigger";
+    private static final String EXPORT_JOB_ID = "export_job";
+    private static final String EXPORT_JOB_TRIGGER = "trigger_export";
+    private static final String FILEPICKER_JOB_ID = "pickup_job_";
+    private static final String FILEPICKER_JOB_TRIGGER = "trigger";
+    private static final String FILEPACKER_JOB_GROUP_ID = "group";
 
-    Monitor item = new Monitor();
+    private List<Monitor> itemList;
+    Monitor monitorItem = new Monitor();
 
     @Inject
     private MonitorDAO monitorDAO;
@@ -38,29 +49,56 @@ public class MonitorView extends AbstractView
     {
         try
         {
-            int itemId = dao.save(item);
-            // now schedule it
+            logger.debug("Saving import/export pair=" + monitorItem.toString());
+
+            int itemId = dao.save(monitorItem);
+
+            logger.debug("Scheduling file pick, import, export jobs");
+
+            /* FIXME. Done because currently Import/Export Engine notification e-mail is not tied to a particular User.
+               It just asks for user e-mail. When it's linked, a drop down should appear, obviating the need for this
+               line.*/
+
+            monitorItem.getUser().setEmail(monitorItem.getNotificationEmail());
+
+            // Set off file monitoring for the particular directory (assumes new scheduler per directory):
             FilePickerScheduler filePickerScheduler = new FilePickerScheduler();
-            //assumes a new jobscheduler per directory
-            filePickerScheduler.schedulePickJob("pickup_job_" + itemId, //some uuid?
-                    "trigger" + itemId, "group" + itemId, getCronString(), item.getDirPath());
+            filePickerScheduler.schedulePickJob(FILEPICKER_JOB_ID + itemId, //some uuid?
+                    FILEPICKER_JOB_TRIGGER+ itemId, FILEPACKER_JOB_GROUP_ID
+                    + itemId, getFilePickupCronString(), monitorItem);
+
+            // Run import export cron pair on this directory (associated with user) from now on
+            // Set off import cron:
+            ImportScheduler importScheduler = new ImportScheduler();
+            importScheduler.scheduleJob(IMPORT_JOB_ID, IMPORT_JOB_TRIGGER, getImportCronSchedule());
+
+            // Set off export cron:
+            ExportScheduler exportScheduler = new ExportScheduler();
+            exportScheduler.scheduleJob(EXPORT_JOB_ID, EXPORT_JOB_TRIGGER, getExportCronSchedule(), monitorItem);
         }
-        catch (Exception e)
+        catch (CronSchedulingException e)
         {
-            logger.error("Error saving item", e);
+            logger.error("Error scheduling import/export job", e); //ignore exception
+        }
+        catch (HibernateException h)
+        {
+            logger.error("Error saving import/export pair", h); //ignore exception
         }
     }
 
-    @Override
-    public String toString()
-    {
-        return item.toString();
-    }
-
-    //Read this?
-    private String getCronString()
+    private String getFilePickupCronString()
     {
         return "0/60 * * * * ?";
+    }
+
+    private String getExportCronSchedule()
+    {
+        return "0/150 * * * * ?";
+    }
+
+    private String getImportCronSchedule()
+    {
+        return "0/120 * * * * ?";
     }
 
     public List getItemList()
@@ -69,16 +107,21 @@ public class MonitorView extends AbstractView
         return monitorList;
     }
 
-    public Monitor getItem()
+    public Monitor getMonitorItem()
     {
-        return item;
+        return monitorItem;
     }
 
-    public void setItem(Monitor item)
+    public void setMonitorItem(Monitor monitorItem)
     {
-        this.item = item;
+        this.monitorItem = monitorItem;
     }
 
+    @Override
+    public String toString()
+    {
+        return monitorItem.toString();
+    }
 
 }
 

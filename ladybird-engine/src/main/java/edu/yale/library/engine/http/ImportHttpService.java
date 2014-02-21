@@ -2,7 +2,7 @@ package edu.yale.library.engine.http;
 
 
 
-import edu.yale.library.engine.cron.JobsManager;
+import edu.yale.library.cron.JobsManager;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;

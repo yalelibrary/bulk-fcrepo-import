@@ -1,8 +1,8 @@
 package edu.yale.library.view;
 
 
-import edu.yale.library.engine.cron.DefaultJobsManager;
-import edu.yale.library.engine.cron.JobsManager;
+import edu.yale.library.cron.DefaultJobsManager;
+import edu.yale.library.cron.JobsManager;
 import org.quartz.JobDetail;
 import org.slf4j.Logger;
 
@@ -26,13 +26,8 @@ public class CronView {
     @PostConstruct
     public void init()
     {
-        //logger.debug("Inst jobs");
         JobsManager jobsManager = new DefaultJobsManager();
         jobs = jobsManager.getJobs();
-        //logger.debug("Jobs size=" + jobs.size());
-
-        //logger.debug("val=" + jobs.get(0).getKey().getName());
-        //logger.debug("done inst jobs");
     }
 
     public List<JobDetail> getJobs() {

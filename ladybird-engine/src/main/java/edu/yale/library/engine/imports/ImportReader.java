@@ -15,7 +15,7 @@ import java.util.List;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * Processor. Subject to modification.
+ * Read Processor. Subject to modification.
  */
 public final class ImportReader
 {
@@ -32,7 +32,7 @@ public final class ImportReader
         this.readMode = readMode;
     }
 
-    public List processSheet() throws UnknownFunctionException
+    public List processSheet() throws ImportReaderValidationException, IOException
     {
         List<ImportEntity.Row> sheetRows = new ArrayList();
 
@@ -70,7 +70,9 @@ public final class ImportReader
                     if (this.readMode == ReadMode.HALT)
                     {
                         logger.error("Unknown field column in header." + unknownFunction.getMessage());
-                        throw new UnknownFunctionException(unknownFunction);
+                        ImportReaderValidationException importReaderValidationException = new ImportReaderValidationException(unknownFunction);
+                        importReaderValidationException.initCause(unknownFunction);
+                        throw importReaderValidationException;
                     }
                     logger.debug("Unknown header value. " + unknownFunction.getMessage());
                     valueMap.add(FunctionConstants.UNK);
@@ -100,8 +102,8 @@ public final class ImportReader
         }
         catch (IOException e)
         {
-            //todo
             e.printStackTrace();
+            throw e;
         }
         return sheetRows;
     }

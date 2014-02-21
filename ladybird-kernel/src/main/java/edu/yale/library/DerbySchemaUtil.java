@@ -61,11 +61,8 @@ public final class DerbySchemaUtil
     private static final class Config
     {
         final static String PROTOCOL = "jdbc:derby:";
-
         final static String DB = "memory:pamoja";
-
         final static String DB_USER = "pamoja";
-
         final static Properties PROPS = new Properties();
 
         static

@@ -149,7 +149,22 @@ public class User implements java.io.Serializable
         this.email = email;
     }
 
-
+    @Override
+    public String toString()
+    {
+        return "User{" +
+                "userId=" + userId +
+                ", date=" + date +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", dateCreated=" + dateCreated +
+                ", dateEdited=" + dateEdited +
+                ", dateLastused=" + dateLastused +
+                ", userId_1=" + userId_1 +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }
 
 

@@ -4,6 +4,8 @@ package edu.yale.library.engine.cron;
 import static org.slf4j.LoggerFactory.getLogger;
 
 
+import edu.yale.library.cron.DefaultJobsManager;
+import edu.yale.library.engine.model.CronSchedulingException;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
@@ -21,18 +23,30 @@ public class ImportScheduler
      * @param cronExpression
      * @throws Exception
      */
-    public void scheduleImportJob(final String jobName, final String triggerName, String cronExpression) throws Exception {
+    public void scheduleJob(final String jobName, final String triggerName, String cronExpression)
+    {
         logger.debug("Scheduling import job");
-        Scheduler scheduler = new StdSchedulerFactory().getScheduler();
-        scheduler.start();
-        JobDetail job = getJob(jobName);
-        scheduler.scheduleJob(job, getTrigger(cronExpression));
+
+        JobDetail job;
+        try
+        {
+            Scheduler scheduler = new StdSchedulerFactory().getScheduler();
+            scheduler.start();
+            job = getJob(jobName, ImportJob.class);
+            scheduler.scheduleJob(job, getTrigger(cronExpression));
+        }
+        catch (SchedulerException e)
+        {
+            throw new CronSchedulingException(e);
+        }
+
         //add to jobs manager
         DefaultJobsManager defaultJobsManager = new DefaultJobsManager();
         defaultJobsManager.addJob(job);
     }
 
-    private Trigger getTrigger(String cronExpression) {
+    protected Trigger getTrigger(String cronExpression)
+    {
         Trigger trigger = TriggerBuilder
                 .newTrigger()
                 .withIdentity("IMG-TRIGER", "IMJ")
@@ -41,10 +55,12 @@ public class ImportScheduler
         return trigger;
     }
 
-    private JobDetail getJob(String jobName) {
-        JobDetail job = JobBuilder.newJob(ImportJob.class)
+    protected JobDetail getJob(String jobName, Class klass)
+    {
+        JobDetail job = JobBuilder.newJob(klass)
                 .withIdentity(jobName, "IMJ").build();
         return job;
     }
+
 }
 

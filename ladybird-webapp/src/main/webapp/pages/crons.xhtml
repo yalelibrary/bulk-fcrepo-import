@@ -24,13 +24,13 @@
                                  paginatorPosition="bottom"
                                  rows="10"
                                  value="#{cronView.jobs}"
-                                 var="item">
+                                 var="monitorItem">
 
                         <p:column headerText="Job Name">
-                            <h:outputText value="#{item.key.name}"/>
+                            <h:outputText value="#{monitorItem.key.name}"/>
                         </p:column>
                         <p:column headerText="Group">
-                            <h:outputText value="#{item.key.group}"/>
+                            <h:outputText value="#{monitorItem.key.group}"/>
                         </p:column>
                         <p:column headerText="Schedule">
                             <h:outputText value="N/A"/>

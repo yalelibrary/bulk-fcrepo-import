@@ -10,6 +10,10 @@ import edu.yale.library.dao.ImportJobExheadDAO;
 import edu.yale.library.dao.hibernate.ImportJobContentsHibernateDAO;
 import edu.yale.library.dao.hibernate.ImportJobExheadHibernateDAO;
 import edu.yale.library.dao.hibernate.ImportJobHibernateDAO;
+import edu.yale.library.engine.cron.ExportEngineQueue;
+import edu.yale.library.engine.exports.DefaultExportEngine;
+import edu.yale.library.engine.exports.ExportEngine;
+import edu.yale.library.engine.exports.ExportRequestEvent;
 import edu.yale.library.engine.imports.*;
 import edu.yale.library.engine.imports.ImportEngine;
 import edu.yale.library.engine.imports.DefaultImportEngine;
@@ -20,6 +24,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -32,7 +38,7 @@ import static org.junit.Assert.fail;
 
 
 /**
- * Tests full cycle for read/write import.
+ * Tests full cycle for read/write import/export.
  */
 public class ImportEngineIT
 {
@@ -41,10 +47,13 @@ public class ImportEngineIT
 
     ServicesManager servicesManager;
 
-    /** Contains test fdids corresponding to test excel file (instead of via db) */
+    /* Contains test fdids corresponding to test excel file (instead of via db) */
     final static String FDID_TEST_PROPS_FILE = "/fdids.test.properties";
 
-    /**
+    @Deprecated
+    private static final String XLS_FILE_TO_WRITE = asTmp("test_export.xlsx");
+
+     /**
      * Full cycle read write
      * @throws Exception
      */
@@ -56,10 +65,10 @@ public class ImportEngineIT
 
         setApplicationData(); //TODO tmp. Inst app. rules for test (since db state is cleaned)
 
-        ImportEngine engine = new DefaultImportEngine();
+        final ImportEngine importEngine = new DefaultImportEngine();
 
         logger.debug("Reading test spreadsheet rows");
-        List<ImportEntity.Row> rows = engine.read(getTestSpreadsheeet(), ReadMode.FULL,
+        final List<ImportEntity.Row> rows = importEngine.read(getImportSpreadsheeet(), ReadMode.FULL,
                 new DefaultFieldDataValidator());
         logger.debug("Read spreadseet rows");
 
@@ -68,43 +77,71 @@ public class ImportEngineIT
         assertEquals("Column value mismatch", rows.get(1).getColumns().get(4).getValue(), "Gilchrist, Scott");
 
         logger.debug("Writing rows to tables");
-        engine.write(rows);
+        final int imid = importEngine.write(rows);
+
+        //Note: This needs to be re-visited per logic requirement
+            /* Add request for export */
+        final ExportRequestEvent exportEvent = new ExportRequestEvent(imid);
+        ExportEngineQueue.addJob(exportEvent);
+
+        logger.debug("Added event=" + exportEvent.toString());
 
         //Now read back:
 
         //Job itself:
-        ImportJobDAO importJobHibernateDAO = new ImportJobHibernateDAO();
-        List<ImportJob> l = importJobHibernateDAO.findAll();
+        final ImportJobDAO importJobHibernateDAO = new ImportJobHibernateDAO();
+        final List<ImportJob> l = importJobHibernateDAO.findAll();
         assertEquals("Import job count mismatch", l.size(), 1);
 
         //Headers (aka exhead):
-        ImportJobExheadDAO importJobExheadDAO = new ImportJobExheadHibernateDAO();
-        List<ImportJobExhead> jobExheads = importJobExheadDAO.findAll();
+        final ImportJobExheadDAO importJobExheadDAO = new ImportJobExheadHibernateDAO();
+        final List<ImportJobExhead> jobExheads = importJobExheadDAO.findAll();
+
         assertEquals("Import job exhead count mismatch", jobExheads.size(), FileConstants.COL_COUNT);
+        assertEquals("Exhead count per imid mismatch}", importJobExheadDAO.getNumEntriesPerImportJob(imid), 31);
 
         //Contents (aka imjobcontents):
-        ImportJobContentsDAO importJobContentsDAO = new ImportJobContentsHibernateDAO();
-        List<ImportJobContents> importJobContents = importJobContentsDAO.findAll();
+        final ImportJobContentsDAO importJobContentsDAO = new ImportJobContentsHibernateDAO();
+        final List<ImportJobContents> importJobContents = importJobContentsDAO.findAll();
 
         /* assert that data written to DB equals rows times cols (-1 for each since exhead is row 0 and F1 is col 1)
            from the spreadsheet. */
 
         assertEquals("Import job contents size mismatch. ", importJobContents.size(),
                 (FileConstants.ROW_COUNT - 1) * (FileConstants.COL_COUNT - 1));
+
+        /* Test Export */
+        final ExportEngine exportEngine = new DefaultExportEngine();
+
+        logger.debug("Export engine reading import tables");
+        final List<ImportEntity.Row> listExportRows = exportEngine.read();
+
+        assert( listExportRows != null );
+        logger.debug("Size={}", listExportRows.size());
+        assertEquals("Export rows don't equal import expected rows", listExportRows.size(), 76); //fixme
+
+        //write this spreadsheet
+        exportEngine.write(listExportRows, XLS_FILE_TO_WRITE);
+
+        //again, read back:
+        logger.debug("Reading the new test spreadsheet created by ExportEngine with ImportEngine");
+        final List<ImportEntity.Row> rowsReadBack = importEngine.read(getExportSpreadsheeet(), ReadMode.FULL,
+                new DefaultFieldDataValidator());
+        assertEquals("Rows size mismatch", rowsReadBack.size(), 76); //fixme
     }
 
-    public SpreadsheetFile getTestSpreadsheeet()
+    public SpreadsheetFile getImportSpreadsheeet()
     {
-        /*
-        SpreadsheetFile file = new SpreadsheetFile();
-        file.setFileName(FileConstants.TEST_XLS_FILE);
-        file.setAltName("Test spreadsheet.");
-        file.setPath(FileConstants.TEST_XLS_FILE);
-        return file;*/
-
         SpreadsheetFile file = new SpreadsheetFile(FileConstants.TEST_XLS_FILE, "Test spreadsheet",
                 FileConstants.TEST_XLS_FILE, getClass().getClassLoader().getResourceAsStream(FileConstants.TEST_XLS_FILE));
+        return file;
+    }
 
+    public SpreadsheetFile getExportSpreadsheeet() throws FileNotFoundException
+    {
+        SpreadsheetFile file = new SpreadsheetFile("/Users/osmandin/test_export.xlsx",
+                "Test spreadsheet", "",
+                new FileInputStream("/Users/osmandin/test_export.xlsx"));
         return file;
     }
 
@@ -181,6 +218,13 @@ public class ImportEngineIT
 
         final static int FDID_COL_COUNT = 30; //COL_COUNT (regular fdids) minus a FunctionConstants (F1)
 
+    }
+
+    /* Creates the file in the user home directory. */
+    @Deprecated
+    private static String asTmp(final String s)
+    {
+        return System.getProperty("user.home") + System.getProperty("file.separator") + s;
     }
 
     @Before

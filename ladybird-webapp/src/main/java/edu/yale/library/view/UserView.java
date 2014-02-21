@@ -2,6 +2,7 @@ package edu.yale.library.view;
 
 
 import edu.yale.library.beans.User;
+import edu.yale.library.beans.UserBuilder;
 import edu.yale.library.dao.UserDAO;
 
 import org.slf4j.Logger;
@@ -24,7 +25,7 @@ public class UserView extends AbstractView
 
     private List<User> itemList;
 
-    User item = new User();
+    User item = new UserBuilder().createUser();
 
     @Inject
     private UserDAO userDAO;

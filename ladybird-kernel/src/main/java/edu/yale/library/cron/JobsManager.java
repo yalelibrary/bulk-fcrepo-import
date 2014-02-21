@@ -1,14 +1,12 @@
-package edu.yale.library.engine.cron;
+package edu.yale.library.cron;
 
 import org.quartz.JobDetail;
 
 import java.util.List;
 
 
-/**
- * For now data structure for all jobs
- */
-public interface JobsManager {
+public interface JobsManager
+{
 
     public List<JobDetail> getJobs();
 

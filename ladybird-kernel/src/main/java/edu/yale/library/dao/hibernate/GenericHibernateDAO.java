@@ -3,6 +3,7 @@ package edu.yale.library.dao.hibernate;
 import edu.yale.library.dao.GenericDAO;
 import edu.yale.library.persistence.HibernateUtil;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.Query;
@@ -60,15 +61,15 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
             //logger.debug("Getting session");
             s = getSession();
             tx = s.beginTransaction();
-            logger.debug("Saving item: " + item.toString());
+            //logger.debug("Saving item: " + item.toString());
             id = (Integer) s.save(item);
             s.flush();
             tx.commit();
             //logger.debug("Saved item");
         }
-        catch (Throwable t)
+        catch (HibernateException t)
         {
-            logger.debug("Exception tyring to persist item." + t.getMessage());
+            logger.error("Exception tyring to persist item." + t.getMessage());
             t.printStackTrace();
             try
             {
@@ -79,8 +80,11 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
             }
             catch (Throwable rt)
             {
+                logger.error("Exception rolling back transaction", rt);
                 rt.printStackTrace();
+                throw rt;
             }
+            throw t;
         }
         finally
         {

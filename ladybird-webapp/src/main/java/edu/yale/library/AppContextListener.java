@@ -3,6 +3,8 @@ package edu.yale.library;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import edu.yale.library.cron.NotificationScheduler;
+import edu.yale.library.engine.cron.ExportScheduler;
 import edu.yale.library.engine.cron.ImportScheduler;
 import edu.yale.library.persistence.HibernateUtil;
 
@@ -30,9 +32,10 @@ public class AppContextListener implements ServletContextListener
             START_HIBERNATE = HibernateUtil.getSessionFactory().getStatistics().getStartTime();
             logger.debug("Built Session Factory");
 
-            //Set off import cron
-            ImportScheduler importScheduler = new ImportScheduler();
-            importScheduler.scheduleImportJob("import_job", "trigger", getImportCronSchedule());
+            //Set off notifications cron. Other crons in MontiorView (or it's RESTful analog):
+
+            NotificationScheduler notificationScheduler = new NotificationScheduler();
+            notificationScheduler.scheduleJob("notification", "trigger", getNotificationCronSchedule());
         } catch (Throwable t)
         {
             logger.error("Error in context initialization", t);
@@ -66,9 +69,9 @@ public class AppContextListener implements ServletContextListener
         servicesManager = new ServicesManager(); //
     }
 
-    private String getImportCronSchedule()
+    private String getNotificationCronSchedule()
     {
-        return "0/120 * * * * ?";
+        return "0/30 * * * * ?"; //check every 30 sec
     }
 
 }

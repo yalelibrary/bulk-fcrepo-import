@@ -2,7 +2,7 @@ package edu.yale.library.engine.model;
 
 /**
  * An exception to represent unrecongized F or Fdid value.
- * TODO Should probably be wrapped with some other business logic exception.
+ * @see ImportReaderValidationException
  */
 public class UnknownFunctionException extends Exception
 {

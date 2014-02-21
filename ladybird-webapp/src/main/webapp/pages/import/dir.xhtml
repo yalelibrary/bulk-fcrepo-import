@@ -7,7 +7,7 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../templates/template.xhtml">
     <ui:define name="content">
-        <h2>Monitor Directories</h2>
+        <h2>Import/Export Cron Scheduler</h2>
         <h:form id="UserForm" enctype="multipart/form-data">
 
             <div>
@@ -39,10 +39,29 @@
                         </div>
 
                         <div>
-                            <label>Directory</label>
+                            <label>Import Directory</label>
 
                             <div>
-                                <p:inputText value="#{monitorView.item.dirPath}"/>
+                                <p:inputText value="#{monitorView.monitorItem.dirPath}"/>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label>Export Directory</label>
+
+                            <div>
+                                <p:inputText value="#{monitorView.monitorItem.exportPath}"/>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label>Notification E-mail</label>
+
+                            <div>
+                                 <p:inputText value="#{monitorView.monitorItem.notificationEmail}" required="true"
+                                              label="Email" validatorMessage="Invalid E-mail">
+                                    <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+                                 </p:inputText>
                             </div>
                         </div>
 
@@ -67,10 +86,18 @@
                                  paginatorPosition="bottom"
                                  rows="10"
                                  value="#{monitorView.itemList}"
-                                 var="item">
+                                 var="monitorItem">
 
-                        <p:column headerText="Dir">
-                            <h:outputText value="#{item.dirPath}"/>
+                        <p:column headerText="Import Directory">
+                            <h:outputText value="#{monitorItem.dirPath}"/>
+                        </p:column>
+
+                        <p:column headerText="Export Directory">
+                            <h:outputText value="#{monitorItem.exportPath}"/>
+                        </p:column>
+
+                        <p:column headerText="User">
+                            <h:outputText value="#{monitorItem.notificationEmail}"/>
                         </p:column>
 
                     </p:dataTable>

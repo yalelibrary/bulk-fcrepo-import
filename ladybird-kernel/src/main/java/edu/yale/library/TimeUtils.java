@@ -11,4 +11,9 @@ public class TimeUtils
     {
         return TimeUnit.MILLISECONDS.toMinutes(System.currentTimeMillis() - start) + " minutes.";
     }
+
+    public static String elapsedMilli(long start)
+    {
+        return (System.currentTimeMillis() - start) + " ms.";
+    }
 }

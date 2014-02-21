@@ -2,14 +2,17 @@ package edu.yale.library.beans;// default package
 
 
 /**
- * Monitor
+ * Represents input-output folder pair and user.
  */
 public class Monitor implements java.io.Serializable
 {
 
-
     private Integer id;
     private String dirPath;
+    private String exportPath;
+    private User user = new User();
+    @Deprecated
+    private String notificationEmail; //todo remove
 
     public Monitor()
     {
@@ -20,6 +23,30 @@ public class Monitor implements java.io.Serializable
     {
         this.id = id;
         this.dirPath = dirPath;
+    }
+
+    public Monitor(Integer id, String dirPath, String exportPath)
+    {
+        this.id = id;
+        this.dirPath = dirPath;
+        this.exportPath = exportPath;
+    }
+
+    public Monitor(Integer id, String dirPath, String exportPath, User user)
+    {
+        this.id = id;
+        this.dirPath = dirPath;
+        this.exportPath = exportPath;
+        this.user = user;
+    }
+
+    public Monitor(Integer id, String dirPath, String exportPath, User user, String notificationEmail)
+    {
+        this.id = id;
+        this.dirPath = dirPath;
+        this.exportPath = exportPath;
+        this.user = user;
+        this.notificationEmail = notificationEmail;
     }
 
     public String getDirPath()
@@ -40,6 +67,48 @@ public class Monitor implements java.io.Serializable
     public void setId(Integer id)
     {
         this.id = id;
+    }
+
+    public String getExportPath()
+    {
+        return exportPath;
+    }
+
+    public void setExportPath(String exportPath)
+    {
+        this.exportPath = exportPath;
+    }
+
+    public User getUser()
+    {
+        return user;
+    }
+
+    public void setUser(User user)
+    {
+        this.user = user;
+    }
+
+    public String getNotificationEmail()
+    {
+        return notificationEmail;
+    }
+
+    public void setNotificationEmail(String notificationEmail)
+    {
+        this.notificationEmail = notificationEmail;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Monitor{" +
+                "id=" + id +
+                ", dirPath='" + dirPath + '\'' +
+                ", exportPath='" + exportPath + '\'' +
+                ", user=" + user +
+                ", notificationEmail='" + notificationEmail + '\'' +
+                '}';
     }
 }
 

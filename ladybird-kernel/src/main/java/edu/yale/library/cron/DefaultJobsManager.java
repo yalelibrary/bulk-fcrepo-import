@@ -1,6 +1,6 @@
-package edu.yale.library.engine.cron;
+package edu.yale.library.cron;
 
-import org.quartz.*;
+import org.quartz.JobDetail;
 import org.slf4j.Logger;
 
 import javax.inject.Named;
@@ -10,9 +10,7 @@ import java.util.List;
 import static org.slf4j.LoggerFactory.getLogger;
 
 
-/**
- * For now data structure for all jobs
- */
+
 @Named
 public class DefaultJobsManager implements JobsManager
 {
@@ -27,7 +25,6 @@ public class DefaultJobsManager implements JobsManager
 
     public void addJob(JobDetail job)
     {
-        logger.debug("Adding job");
         jobs.add(job);
     }
 

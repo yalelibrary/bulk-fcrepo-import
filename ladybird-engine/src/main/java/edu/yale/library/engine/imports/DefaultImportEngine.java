@@ -1,9 +1,10 @@
 package edu.yale.library.engine.imports;
 
-import edu.yale.library.engine.model.UnknownFunctionException;
+import edu.yale.library.engine.model.ImportReaderValidationException;
 import edu.yale.library.engine.model.ReadMode;
 import org.slf4j.Logger;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -15,7 +16,8 @@ public class DefaultImportEngine extends AbstractImportEngine
     private final static Integer DEFAULT_SHEET = 0; //todo
 
     @Override
-    public List<ImportEntity.Row> doRead(SpreadsheetFile file, ReadMode readMode) throws UnknownFunctionException
+    public List<ImportEntity.Row> doRead(SpreadsheetFile file, ReadMode readMode) throws ImportReaderValidationException,
+            IOException
     {
         logger.debug("Reading spreadsheet: " + file.getAltName());
 
@@ -24,13 +26,13 @@ public class DefaultImportEngine extends AbstractImportEngine
     }
 
     @Override
-    public void doWrite(List<ImportEntity.Row> list)
+    public int doWrite(List<ImportEntity.Row> list)
     {
         logger.debug("Initiating write");
 
         ImportWriter importWriter = new ImportWriter();
         //TODO obtain file,dir,user
-        importWriter.write(list, new ImportJobContextBuilder().userId(USER_ID).file("").dir("").build());
+        return importWriter.write(list, new ImportJobContextBuilder().userId(USER_ID).file("").dir("").build());
     }
 
 

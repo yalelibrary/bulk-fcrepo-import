@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated Feb 20, 2014 4:40:21 PM by Hibernate Tools 4.0.0 -->
+<!-- Replace notification e-mail with User entity -->
 <hibernate-mapping>
     <class name="edu.yale.library.beans.Monitor" table="monitor" catalog="pamoja">
         <id name="id" type="java.lang.Integer">
@@ -10,6 +10,12 @@
         </id>
         <property name="dirPath" type="string">
             <column name="dir" length="500" not-null="true" />
+        </property>
+        <property name="exportPath" type="string">
+            <column name="dir_export" length="500" not-null="true" />
+        </property>
+        <property name="notificationEmail" type="string">
+            <column name="notification_email" length="15" not-null="true" />
         </property>
     </class>
 </hibernate-mapping>

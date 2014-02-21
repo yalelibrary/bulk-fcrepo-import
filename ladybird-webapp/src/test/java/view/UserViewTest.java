@@ -1,6 +1,7 @@
 package view;
 
 import edu.yale.library.ServicesManager;
+import edu.yale.library.beans.UserBuilder;
 import edu.yale.library.view.DaoInitializer;
 import edu.yale.library.beans.User;
 import edu.yale.library.dao.UserDAO;
@@ -64,7 +65,7 @@ public class UserViewTest
 
     User buildUser()
     {
-        User item = new User();
+        User item = new UserBuilder().createUser();
         item.setUsername("test user");
         item.setPassword("test_pw");
         Date date = new Date(System.currentTimeMillis());
