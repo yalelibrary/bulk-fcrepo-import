@@ -139,9 +139,10 @@ public class ImportEngineIT
 
     public SpreadsheetFile getExportSpreadsheeet() throws FileNotFoundException
     {
-        SpreadsheetFile file = new SpreadsheetFile("/Users/osmandin/test_export.xlsx",
-                "Test spreadsheet", "",
-                new FileInputStream("/Users/osmandin/test_export.xlsx"));
+        final String testPath = System.getProperty("user.home")
+                + System.getProperty("file.separator") + "test_export.xlsx";
+        SpreadsheetFile file = new SpreadsheetFile("test_export_xlsx", "Test export xls",
+                testPath, new FileInputStream(testPath));
         return file;
     }
 
