@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<marc:record xmlns:marc="http://www.loc.gov/MARC21/slim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd"
+             type="Bibliographic">
+    <marc:leader>02430cam a2200349 a 4500</marc:leader>
+    <marc:controlfield tag="001">6915810</marc:controlfield>
+    <marc:controlfield tag="005">20110325170503.0</marc:controlfield>
+    <marc:controlfield tag="008">050311s1598 gw 000 0 lat d</marc:controlfield>
+    <marc:datafield tag="035" ind1=" " ind2=" ">
+        <marc:subfield code="a">(OCoLC)ocn688710149</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="035" ind1=" " ind2=" ">
+        <marc:subfield code="a">6915810</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="040" ind1=" " ind2=" ">
+        <marc:subfield code="a">CtY-BR</marc:subfield>
+        <marc:subfield code="c">CtY-BR</marc:subfield>
+        <marc:subfield code="e">dcrb</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="079" ind1=" " ind2=" ">
+        <marc:subfield code="a">ocm61060848</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="100" ind1="1" ind2=" ">
+        <marc:subfield code="a">Cantoral, Hieronymus Valentinus de.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="240" ind1="1" ind2="0">
+        <marc:subfield code="a">Neophitus</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="245" ind1="1" ind2="0">
+        <marc:subfield code="a">
+            Versio trilinguis Italica, Gallica, Hispanica historicorum tractatuum qui adversus episcopi Romani
+            veraveriorem antichristianam tyrannidem, in Latinis tomis operum D. Mart. Lutheri extant :
+        </marc:subfield>
+        <marc:subfield code="b">
+             opusculorum ejusdem quae ex professo in illius commiserandae ecclesiae doctores erroresq[ue] edita sunt /
+        </marc:subfield>
+        <marc:subfield code="c">
+            Hironymo Valentino cognomento de Cantoral, interprete ; appositus est ejusdem dialogus appellatus Neophitus,
+            ubi de suscipienda vera fide gratia evangelij cum silentio, spe, reverentia humilitate, tractatur.
+        </marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="246" ind1="3" ind2=" ">
+        <marc:subfield code="a">
+            Versio trilingvis Italica, Gallica, Hispanica historicorvm tractatvvm qvi adversvs episcopi Romani
+            veraveriorem antichristianam tyrannidem, in Latinis tomis operum D. Mart. Lutheri extant
+        </marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="246" ind1="3" ind2=" ">
+        <marc:subfield code="a">Neophitvs</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="260" ind1=" " ind2=" ">
+        <marc:subfield code="a">Jenae :</marc:subfield>
+        <marc:subfield code="b">Ex officina Tobiae Steinmanni,</marc:subfield>
+        <marc:subfield code="c">anno MDIIC [1598]</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="300" ind1=" " ind2=" ">
+        <marc:subfield code="a">[40] p. ;</marc:subfield>
+        <marc:subfield code="c">21 cm. (4to)</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="590" ind1=" " ind2=" ">
+        <marc:subfield code="a">
+            BEIN MS 1084: Stamp: Herzoglicher S. Meiningischer Bibliothek [Library of the Dukes of Saxe-Meiningen]. In
+            ms. on t.p. verso: I.V.C.J. B[ernhard] H[erzog] Z[u] S[achsen] 1679. In ms. on front paste-down: [Rosenthal]
+            MS230. Spine label and ms. note: Hdschr. 71 (number assigned by Theodor Linschman, who in 1902, reorganized
+            the ms. holdings of the princes of Saxe-Meiningen). Bound with ms. of the Augsburg Confession in four
+            languages (Latin, Italian, French, and Spanish).
+        </marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="500" ind1=" " ind2=" ">
+        <marc:subfield code="a">
+            Consists of the preliminary dialogue "Neophitus" in Latin only.
+        </marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="500" ind1=" " ind2=" ">
+        <marc:subfield code="a">Dedicated to Georg Mylius.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="500" ind1=" " ind2=" ">
+        <marc:subfield code="a">Signatures: A-E⁴ (A1v, A4v, E4v blank).</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="500" ind1=" " ind2=" ">
+        <marc:subfield code="a">Turned C's used in date in Roman numerals on t.p.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="504" ind1=" " ind2=" ">
+        <marc:subfield code="a">Includes bibliographical references in margins.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="610" ind1="2" ind2="0">
+        <marc:subfield code="a">Catholic Church</marc:subfield>
+        <marc:subfield code="v">Controversial literature</marc:subfield>
+        <marc:subfield code="v">Early works to 1800.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="650" ind1=" " ind2="0">
+        <marc:subfield code="a">Grace (Theology)</marc:subfield>
+        <marc:subfield code="v">Early works to 1800.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="690" ind1=" " ind2="4">
+        <marc:subfield code="a">Euro tracts</marc:subfield>
+        <marc:subfield code="y">1598.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="692" ind1="1" ind2="4">
+        <marc:subfield code="a">Bernhard</marc:subfield>
+        <marc:subfield code="b">I,</marc:subfield>
+        <marc:subfield code="c">Duke of Saxe-Meiningen,</marc:subfield>
+        <marc:subfield code="d">1649-1706</marc:subfield>
+        <marc:subfield code="x">Autograph.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="693" ind1="2" ind2="4">
+        <marc:subfield code="a">Herzoglicher S. Meiningischer Bibliothek</marc:subfield>
+        <marc:subfield code="x">Stamp.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="700" ind1="1" ind2=" ">
+        <marc:subfield code="a">Mylius, Georg,</marc:subfield>
+        <marc:subfield code="d">1548-1607,</marc:subfield>
+        <marc:subfield code="e">dedicatee.</marc:subfield>
+    </marc:datafield>
+    <marc:datafield tag="700" ind1="1" ind2=" ">
+        <marc:subfield code="a">Steinmann, Tobias,</marc:subfield>
+        <marc:subfield code="d">1556-1631,</marc:subfield>
+        <marc:subfield code="e">printer.</marc:subfield>
+    </marc:datafield>
+</marc:record>

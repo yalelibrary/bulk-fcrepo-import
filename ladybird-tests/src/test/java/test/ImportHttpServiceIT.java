@@ -1,4 +1,4 @@
-package edu.yale.library.engine.test;
+package test;
 
 
 import library.AbstractHttpServiceTester;

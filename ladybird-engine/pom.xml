@@ -18,6 +18,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <tika-core.version>0.4</tika-core.version>
         <poi-ooxml.version>3.8</poi-ooxml.version>
+        <xpathapi-jaxp.version>0.4</xpathapi-jaxp.version>
     </properties>
 
     <dependencies>
@@ -81,6 +82,11 @@
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-guice</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.svario.xpathapi</groupId>
+            <artifactId>xpathapi-jaxp</artifactId>
+            <version>${xpathapi-jaxp.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.inject</groupId>
