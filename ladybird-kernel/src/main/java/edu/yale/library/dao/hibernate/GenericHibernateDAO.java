@@ -21,43 +21,36 @@ import static org.slf4j.LoggerFactory.getLogger;
  * @param <ID>
  */
 public abstract class GenericHibernateDAO<T, ID extends Serializable>
-        implements GenericDAO<T, ID>
-{
+        implements GenericDAO<T, ID> {
 
     private Class<T> persistentClass;
 
     private final Logger logger = getLogger(this.getClass());
 
-    public GenericHibernateDAO()
-    {
+    public GenericHibernateDAO() {
         this.persistentClass = (Class<T>) ((ParameterizedType) getClass()
                 .getGenericSuperclass()).getActualTypeArguments()[0];
     }
 
-    protected Session getSession()
-    {
+    protected Session getSession() {
         return HibernateUtil.getSessionFactory().openSession();
     }
 
-    public Class<T> getPersistentClass()
-    {
+    public Class<T> getPersistentClass() {
         return persistentClass;
     }
 
     @SuppressWarnings("unchecked")
-    public List<T> findAll()
-    {
+    public List<T> findAll() {
         Query q = getSession().createQuery("from " + persistentClass.getName().toString());
         return q.list();
     }
 
-    public Integer save(T item)
-    {
+    public Integer save(T item) {
         Integer id = -1;
         Session s = null;
         Transaction tx = null;
-        try
-        {
+        try {
             //logger.debug("Getting session");
             s = getSession();
             tx = s.beginTransaction();
@@ -66,30 +59,21 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
             s.flush();
             tx.commit();
             //logger.debug("Saved item");
-        }
-        catch (HibernateException t)
-        {
+        } catch (HibernateException t) {
             logger.error("Exception tyring to persist item." + t.getMessage());
             t.printStackTrace();
-            try
-            {
-                if (tx != null)
-                {
+            try {
+                if (tx != null) {
                     tx.rollback();
                 }
-            }
-            catch (Throwable rt)
-            {
+            } catch (Throwable rt) {
                 logger.error("Exception rolling back transaction", rt);
                 rt.printStackTrace();
                 throw rt;
             }
             throw t;
-        }
-        finally
-        {
-            if (s != null)
-            {
+        } finally {
+            if (s != null) {
                 s.close();
             }
         }

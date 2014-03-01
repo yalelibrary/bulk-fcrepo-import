@@ -1,42 +1,35 @@
-package edu.yale.library.beans;// default package
+package edu.yale.library.beans;
 
 
 /**
  * Object
  */
-public class Object implements java.io.Serializable
-{
+public class Object implements java.io.Serializable {
 
 
     private Integer oid;
     private int projectId;
 
-    public Object()
-    {
+    public Object() {
     }
 
-    public Object(int projectId)
-    {
+    public Object(int projectId) {
         this.projectId = projectId;
     }
 
-    public Integer getOid()
-    {
+    public Integer getOid() {
         return this.oid;
     }
 
-    public void setOid(Integer oid)
-    {
+    public void setOid(Integer oid) {
         this.oid = oid;
     }
 
-    public int getProjectId()
-    {
+    public int getProjectId() {
         return this.projectId;
     }
 
-    public void setProjectId(int projectId)
-    {
+    public void setProjectId(int projectId) {
         this.projectId = projectId;
     }
 

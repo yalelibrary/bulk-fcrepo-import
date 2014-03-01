@@ -12,26 +12,22 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 public class ImportJobContentsHibernateDAO extends GenericHibernateDAO<ImportJobContents, Integer>
-        implements ImportJobContentsDAO
-{
-    Logger logger = LoggerFactory.getLogger(ImportJobContentsHibernateDAO.class);
+        implements ImportJobContentsDAO {
+    private Logger logger = LoggerFactory.getLogger(ImportJobContentsHibernateDAO.class);
 
-    public List<ImportJobContents> findByRow(final int arg)
-    {
+    public List<ImportJobContents> findByRow(final int arg) {
         Query q = getSession().createQuery("from ImportJobContents where row = :param");
         q.setParameter("param", arg);
         return q.list();
     }
 
-    public List<ImportJobContents> findByImportId(final int arg)
-    {
+    public List<ImportJobContents> findByImportId(final int arg) {
         Query q = getSession().createQuery("from ImportJobContents where importId = :param");
         q.setParameter("param", arg);
         return q.list();
     }
 
-    public int getNumEntriesPerImportJob(final int arg)
-    {
+    public int getNumEntriesPerImportJob(final int arg) {
         Query q = getSession().createQuery("select count(*) from ImportJobContents where importId = :param");
         q.setParameter("param", arg);
         return ((Long) q.uniqueResult()).intValue();
@@ -39,11 +35,11 @@ public class ImportJobContentsHibernateDAO extends GenericHibernateDAO<ImportJob
 
     /**
      * Selects max row number for an import job
+     *
      * @param arg
      * @return
      */
-    public int getNumRowsPerImportJob(final int arg)
-    {
+    public int getNumRowsPerImportJob(final int arg) {
         Query q = getSession().createQuery("select max(i.row) from ImportJobContents i where importId = :param");
         q.setParameter("param", arg);
         return ((Integer) q.uniqueResult()).intValue();

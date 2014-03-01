@@ -12,18 +12,15 @@ import org.slf4j.LoggerFactory;
  * TODO read port etc from properties.
  * TODO decide on system "from" email, and subject of e-mails
  */
-public class EMailNotificationHandler implements NotificationHandler
-{
+public class EMailNotificationHandler implements NotificationHandler {
     private static final int SMTP_PORT = 587;
     private static final String HOST_NAME = "mail.yale.edu";
 
-    Logger logger = LoggerFactory.getLogger(EMailNotificationHandler.class);
+    private Logger logger = LoggerFactory.getLogger(EMailNotificationHandler.class);
 
-    public void notifyUser(User user, Event event)
-    {
+    public void notifyUser(User user, Event event) {
         Email email = new SimpleEmail();
-        try
-        {
+        try {
             email.setHostName(HOST_NAME);
             email.setSmtpPort(SMTP_PORT);
             email.setFrom(user.getEmail()); //todo should be some sys email
@@ -36,9 +33,7 @@ public class EMailNotificationHandler implements NotificationHandler
             email.send();
 
             logger.debug("Sent e-mail notification to user email={}", user.getEmail());
-        }
-        catch (EmailException e)
-        {
+        } catch (EmailException e) {
             logger.error("Exception sending notification");
             e.printStackTrace(); //TODO
         }

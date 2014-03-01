@@ -1,4 +1,4 @@
-package edu.yale.library.beans;// default package
+package edu.yale.library.beans;
 
 
 import java.util.Date;
@@ -6,8 +6,7 @@ import java.util.Date;
 /**
  * ObjectFile
  */
-public class ObjectFile implements java.io.Serializable
-{
+public class ObjectFile implements java.io.Serializable {
 
 
     private Integer dataId;
@@ -24,161 +23,117 @@ public class ObjectFile implements java.io.Serializable
     private Integer hydraPublishId;
     private String status;
 
-    public ObjectFile()
-    {
+    public ObjectFile() {
     }
 
 
-    public ObjectFile(Date date, int userId, int oid)
-    {
+    public ObjectFile(Date date, int userId, int oid) {
         this.date = date;
         this.userId = userId;
         this.oid = oid;
     }
 
-    public ObjectFile(Date date, int userId, int oid, String fileLabel, String fileName, String filePath, String fileExt, Integer fileSize, String md5, String sha256, Integer hydraPublishId, String status)
-    {
-        this.date = date;
-        this.userId = userId;
-        this.oid = oid;
-        this.fileLabel = fileLabel;
-        this.fileName = fileName;
-        this.filePath = filePath;
-        this.fileExt = fileExt;
-        this.fileSize = fileSize;
-        this.md5 = md5;
-        this.sha256 = sha256;
-        this.hydraPublishId = hydraPublishId;
-        this.status = status;
-    }
-
-    public Integer getDataId()
-    {
+    public Integer getDataId() {
         return this.dataId;
     }
 
-    public void setDataId(Integer dataId)
-    {
+    public void setDataId(Integer dataId) {
         this.dataId = dataId;
     }
 
-    public Date getDate()
-    {
+    public Date getDate() {
         return this.date;
     }
 
-    public void setDate(Date date)
-    {
+    public void setDate(Date date) {
         this.date = date;
     }
 
-    public int getUserId()
-    {
+    public int getUserId() {
         return this.userId;
     }
 
-    public void setUserId(int userId)
-    {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
-    public int getOid()
-    {
+    public int getOid() {
         return this.oid;
     }
 
-    public void setOid(int oid)
-    {
+    public void setOid(int oid) {
         this.oid = oid;
     }
 
-    public String getFileLabel()
-    {
+    public String getFileLabel() {
         return this.fileLabel;
     }
 
-    public void setFileLabel(String fileLabel)
-    {
+    public void setFileLabel(String fileLabel) {
         this.fileLabel = fileLabel;
     }
 
-    public String getFileName()
-    {
+    public String getFileName() {
         return this.fileName;
     }
 
-    public void setFileName(String fileName)
-    {
+    public void setFileName(String fileName) {
         this.fileName = fileName;
     }
 
-    public String getFilePath()
-    {
+    public String getFilePath() {
         return this.filePath;
     }
 
-    public void setFilePath(String filePath)
-    {
+    public void setFilePath(String filePath) {
         this.filePath = filePath;
     }
 
-    public String getFileExt()
-    {
+    public String getFileExt() {
         return this.fileExt;
     }
 
-    public void setFileExt(String fileExt)
-    {
+    public void setFileExt(String fileExt) {
         this.fileExt = fileExt;
     }
 
-    public Integer getFileSize()
-    {
+    public Integer getFileSize() {
         return this.fileSize;
     }
 
-    public void setFileSize(Integer fileSize)
-    {
+    public void setFileSize(Integer fileSize) {
         this.fileSize = fileSize;
     }
 
-    public String getMd5()
-    {
+    public String getMd5() {
         return this.md5;
     }
 
-    public void setMd5(String md5)
-    {
+    public void setMd5(String md5) {
         this.md5 = md5;
     }
 
-    public String getSha256()
-    {
+    public String getSha256() {
         return this.sha256;
     }
 
-    public void setSha256(String sha256)
-    {
+    public void setSha256(String sha256) {
         this.sha256 = sha256;
     }
 
-    public Integer getHydraPublishId()
-    {
+    public Integer getHydraPublishId() {
         return this.hydraPublishId;
     }
 
-    public void setHydraPublishId(Integer hydraPublishId)
-    {
+    public void setHydraPublishId(Integer hydraPublishId) {
         this.hydraPublishId = hydraPublishId;
     }
 
-    public String getStatus()
-    {
+    public String getStatus() {
         return this.status;
     }
 
-    public void setStatus(String status)
-    {
+    public void setStatus(String status) {
         this.status = status;
     }
 

@@ -1,4 +1,4 @@
-package edu.yale.library.beans;// default package
+package edu.yale.library.beans;
 
 
 import java.util.Date;
@@ -6,8 +6,7 @@ import java.util.Date;
 /**
  * HydraPublish
  */
-public class HydraPublish implements java.io.Serializable
-{
+public class HydraPublish implements java.io.Serializable {
 
 
     private Integer hydraPublishId;
@@ -30,219 +29,158 @@ public class HydraPublish implements java.io.Serializable
     private Integer priority;
     private String server;
 
-    public HydraPublish()
-    {
+    public HydraPublish() {
     }
 
-    public HydraPublish(Date date, Integer hydraContentmodelId, Integer collectionId, Integer projectId, Integer oid, Integer oid_1, Integer zindex, Integer boid, Integer bindex, String hydraid, String action, Date dateready, Date datehydrastart, Date datehydraend, Date dateaudit, Integer attempts, Integer priority, String server)
-    {
-        this.date = date;
-        this.hydraContentmodelId = hydraContentmodelId;
-        this.collectionId = collectionId;
-        this.projectId = projectId;
-        this.oid = oid;
-        this.oid_1 = oid_1;
-        this.zindex = zindex;
-        this.boid = boid;
-        this.bindex = bindex;
-        this.hydraid = hydraid;
-        this.action = action;
-        this.dateready = dateready;
-        this.datehydrastart = datehydrastart;
-        this.datehydraend = datehydraend;
-        this.dateaudit = dateaudit;
-        this.attempts = attempts;
-        this.priority = priority;
-        this.server = server;
-    }
-
-    public Integer getHydraPublishId()
-    {
+    public Integer getHydraPublishId() {
         return this.hydraPublishId;
     }
 
-    public void setHydraPublishId(Integer hydraPublishId)
-    {
+    public void setHydraPublishId(Integer hydraPublishId) {
         this.hydraPublishId = hydraPublishId;
     }
 
-    public Date getDate()
-    {
+    public Date getDate() {
         return this.date;
     }
 
-    public void setDate(Date date)
-    {
+    public void setDate(Date date) {
         this.date = date;
     }
 
-    public Integer getHydraContentmodelId()
-    {
+    public Integer getHydraContentmodelId() {
         return this.hydraContentmodelId;
     }
 
-    public void setHydraContentmodelId(Integer hydraContentmodelId)
-    {
+    public void setHydraContentmodelId(Integer hydraContentmodelId) {
         this.hydraContentmodelId = hydraContentmodelId;
     }
 
-    public Integer getCollectionId()
-    {
+    public Integer getCollectionId() {
         return this.collectionId;
     }
 
-    public void setCollectionId(Integer collectionId)
-    {
+    public void setCollectionId(Integer collectionId) {
         this.collectionId = collectionId;
     }
 
-    public Integer getProjectId()
-    {
+    public Integer getProjectId() {
         return this.projectId;
     }
 
-    public void setProjectId(Integer projectId)
-    {
+    public void setProjectId(Integer projectId) {
         this.projectId = projectId;
     }
 
-    public Integer getOid()
-    {
+    public Integer getOid() {
         return this.oid;
     }
 
-    public void setOid(Integer oid)
-    {
+    public void setOid(Integer oid) {
         this.oid = oid;
     }
 
-    public Integer getOid_1()
-    {
+    public Integer getOid_1() {
         return this.oid_1;
     }
 
-    public void setOid_1(Integer oid_1)
-    {
+    public void setOid_1(Integer oid_1) {
         this.oid_1 = oid_1;
     }
 
-    public Integer getZindex()
-    {
+    public Integer getZindex() {
         return this.zindex;
     }
 
-    public void setZindex(Integer zindex)
-    {
+    public void setZindex(Integer zindex) {
         this.zindex = zindex;
     }
 
-    public Integer getBoid()
-    {
+    public Integer getBoid() {
         return this.boid;
     }
 
-    public void setBoid(Integer boid)
-    {
+    public void setBoid(Integer boid) {
         this.boid = boid;
     }
 
-    public Integer getBindex()
-    {
+    public Integer getBindex() {
         return this.bindex;
     }
 
-    public void setBindex(Integer bindex)
-    {
+    public void setBindex(Integer bindex) {
         this.bindex = bindex;
     }
 
-    public String getHydraid()
-    {
+    public String getHydraid() {
         return this.hydraid;
     }
 
-    public void setHydraid(String hydraid)
-    {
+    public void setHydraid(String hydraid) {
         this.hydraid = hydraid;
     }
 
-    public String getAction()
-    {
+    public String getAction() {
         return this.action;
     }
 
-    public void setAction(String action)
-    {
+    public void setAction(String action) {
         this.action = action;
     }
 
-    public Date getDateready()
-    {
+    public Date getDateready() {
         return this.dateready;
     }
 
-    public void setDateready(Date dateready)
-    {
+    public void setDateready(Date dateready) {
         this.dateready = dateready;
     }
 
-    public Date getDatehydrastart()
-    {
+    public Date getDatehydrastart() {
         return this.datehydrastart;
     }
 
-    public void setDatehydrastart(Date datehydrastart)
-    {
+    public void setDatehydrastart(Date datehydrastart) {
         this.datehydrastart = datehydrastart;
     }
 
-    public Date getDatehydraend()
-    {
+    public Date getDatehydraend() {
         return this.datehydraend;
     }
 
-    public void setDatehydraend(Date datehydraend)
-    {
+    public void setDatehydraend(Date datehydraend) {
         this.datehydraend = datehydraend;
     }
 
-    public Date getDateaudit()
-    {
+    public Date getDateaudit() {
         return this.dateaudit;
     }
 
-    public void setDateaudit(Date dateaudit)
-    {
+    public void setDateaudit(Date dateaudit) {
         this.dateaudit = dateaudit;
     }
 
-    public Integer getAttempts()
-    {
+    public Integer getAttempts() {
         return this.attempts;
     }
 
-    public void setAttempts(Integer attempts)
-    {
+    public void setAttempts(Integer attempts) {
         this.attempts = attempts;
     }
 
-    public Integer getPriority()
-    {
+    public Integer getPriority() {
         return this.priority;
     }
 
-    public void setPriority(Integer priority)
-    {
+    public void setPriority(Integer priority) {
         this.priority = priority;
     }
 
-    public String getServer()
-    {
+    public String getServer() {
         return this.server;
     }
 
-    public void setServer(String server)
-    {
+    public void setServer(String server) {
         this.server = server;
     }
 

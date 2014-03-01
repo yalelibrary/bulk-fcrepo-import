@@ -1,6 +1,5 @@
 package edu.yale.library.view;
 
-import edu.yale.library.beans.Object;
 import edu.yale.library.dao.ObjectDAO;
 
 import org.slf4j.Logger;
@@ -14,18 +13,16 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 @ManagedBean
 @RequestScoped
-public class ObjectView extends AbstractView
-{
+public class ObjectView extends AbstractView {
     private final Logger logger = getLogger(this.getClass());
 
     @Inject
     private ObjectDAO entityDAO;
 
     @PostConstruct
-    public void init()
-    {
-       initFields();
-       dao = entityDAO;
+    public void init() {
+        initFields();
+        dao = entityDAO;
     }
 
 }

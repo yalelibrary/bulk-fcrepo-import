@@ -11,14 +11,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public class SchemaBean
-{
+public class SchemaBean {
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     PropertyReader reader = new PropertyReader(ApplicationProperties.SCHEMA_PROPS_FILE);
 
-    private Map build() throws IOException
-    {
+    private Map build() throws IOException {
         Map<String, String> map = new HashMap();
         Properties props = reader.readAll();
         for (final String key : props.stringPropertyNames())
@@ -26,15 +24,11 @@ public class SchemaBean
         return map;
     }
 
-    public static Map getSchema()
-    {
-        try
-        {
+    public static Map getSchema() {
+        try {
             Map map = new SchemaBean().build();
             return Collections.unmodifiableMap(map);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             return Collections.emptyMap(); //ignore exception
         }
     }
@@ -42,17 +36,14 @@ public class SchemaBean
     /**
      * Reads properties.
      */
-    private class PropertyReader
-    {
+    private class PropertyReader {
         final String path;
 
-        PropertyReader(final String path)
-        {
+        PropertyReader(final String path) {
             this.path = path;
         }
 
-        private Properties readAll() throws IOException
-        {
+        private Properties readAll() throws IOException {
             Properties properties = new Properties();
             properties.load(this.getClass().getResourceAsStream(path));
             return properties;
@@ -62,23 +53,22 @@ public class SchemaBean
     /**
      * A filter transforms the schema in some way.
      */
-    interface SchemaFilter
-    {
+    interface SchemaFilter {
         String filter(final String s);
     }
 
     /**
-     * TODO re-viist this as schema is changed.
-     *
+     * TODO re-visit this as schema is changed.
+     * <p/>
      * Filters value. Method subject to removal.
+     *
      * @param statement sql statement
      * @return transformed value
      */
-    String value(String statement)
-    {
-        SchemaFilter f = (s) -> s.replace("`", "").
-                replace("int(11)", "int").
-                replace("datetime", "timestamp")
+    private String value(final String statement) {
+        final SchemaFilter f = (s) -> s.replace("`", "")
+                .replace("int(11)", "int")
+                .replace("datetime", "timestamp")
                 .replace("longtext", "blob");
 
         return f.filter(statement);

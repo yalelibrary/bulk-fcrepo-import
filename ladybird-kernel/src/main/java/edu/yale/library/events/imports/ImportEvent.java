@@ -8,15 +8,14 @@ import java.util.Date;
 /**
  * An import event. Classes may subcass this. Subject to modification.
  */
-public class ImportEvent implements Event
-{
+public class ImportEvent implements Event {
     /* User requesting action */
-    User user;
+    private User user;
 
     /* TIme started */
-    Date startTime;
+    private Date startTime;
 
     /* Time ended */
-    Date endTime;
+    private Date endTime;
 
 }

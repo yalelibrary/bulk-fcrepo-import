@@ -4,8 +4,7 @@ package edu.yale.library.beans;
 import java.util.Date;
 
 
-public class ImportJobExhead implements java.io.Serializable
-{
+public class ImportJobExhead implements java.io.Serializable {
 
 
     private Integer id;
@@ -21,13 +20,11 @@ public class ImportJobExhead implements java.io.Serializable
     @Deprecated
     private String import_;
 
-    public ImportJobExhead()
-    {
+    public ImportJobExhead() {
     }
 
     @Deprecated
-    public ImportJobExhead(int importId, Date date, Integer col, String value)
-    {
+    public ImportJobExhead(int importId, Date date, Integer col, String value) {
         this.importId = importId;
         this.date = date;
         this.col = col;
@@ -35,8 +32,7 @@ public class ImportJobExhead implements java.io.Serializable
     }
 
     @Deprecated
-    public ImportJobExhead(int importId, Date date, String value, Integer col, String func, Integer fdid, String import_)
-    {
+    public ImportJobExhead(int importId, Date date, String value, Integer col, String func, Integer fdid, String import_) {
         this.importId = importId;
         this.date = date;
         this.value = value;
@@ -46,101 +42,84 @@ public class ImportJobExhead implements java.io.Serializable
         this.import_ = import_;
     }
 
-    public Integer getId()
-    {
+    public Integer getId() {
         return this.id;
     }
 
-    public void setId(Integer id)
-    {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getImportId()
-    {
+    public int getImportId() {
         return this.importId;
     }
 
-    public void setImportId(int importId)
-    {
+    public void setImportId(int importId) {
         this.importId = importId;
     }
 
-    public Date getDate()
-    {
+    public Date getDate() {
         return this.date;
     }
 
-    public void setDate(Date date)
-    {
+    public void setDate(Date date) {
         this.date = date;
     }
 
-    public String getValue()
-    {
+    public String getValue() {
         return this.value;
     }
 
-    public void setValue(String value)
-    {
+    public void setValue(String value) {
         this.value = value;
     }
 
-    public Integer getCol()
-    {
+    public Integer getCol() {
         return this.col;
     }
 
-    public void setCol(Integer col)
-    {
+    public void setCol(Integer col) {
         this.col = col;
     }
 
     @Deprecated
-    public String getFunc()
-    {
+    public String getFunc() {
         return this.func;
     }
 
     @Deprecated
-    public void setFunc(String func)
-    {
+    public void setFunc(String func) {
         this.func = func;
     }
 
     @Deprecated
-    public Integer getFdid()
-    {
+    public Integer getFdid() {
         return this.fdid;
     }
 
     @Deprecated
-    public void setFdid(Integer fdid)
-    {
+    public void setFdid(Integer fdid) {
         this.fdid = fdid;
     }
 
     @Deprecated
-    public String getImport_()
-    {
+    public String getImport_() {
         return this.import_;
     }
 
     @Deprecated
-    public void setImport_(String import_)
-    {
+    public void setImport_(String import_) {
         this.import_ = import_;
     }
 
     @Override
-    public String toString()
-    {
-        return "ImportJobExhead{" +
-                "col=" + col +
-                ", date=" + date +
-                ", importId=" + importId +
-                ", value='" + value + '\'' +
-                '}';
+    public String toString() {
+        return "ImportJobExhead{"
+                + "col=" + col
+                + ", date=" + date
+                + ", importId=" + importId
+                + ", value='" + value + '\''
+                + '}';
     }
 
 }

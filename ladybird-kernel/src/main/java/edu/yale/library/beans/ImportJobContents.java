@@ -3,8 +3,7 @@ package edu.yale.library.beans;
 
 import java.util.Date;
 
-public class ImportJobContents implements java.io.Serializable
-{
+public class ImportJobContents implements java.io.Serializable {
 
 
     private int id;
@@ -16,13 +15,11 @@ public class ImportJobContents implements java.io.Serializable
     @Deprecated
     private String complete;
 
-    public ImportJobContents()
-    {
+    public ImportJobContents() {
     }
 
     @Deprecated
-    public ImportJobContents(int id, int importId, Date date, int row, int col, String complete)
-    {
+    public ImportJobContents(int id, int importId, Date date, int row, int col, String complete) {
         this.id = id;
         this.importId = importId;
         this.date = date;
@@ -31,8 +28,7 @@ public class ImportJobContents implements java.io.Serializable
         this.complete = complete;
     }
 
-    public ImportJobContents(int importId, Date date, int row, int col, String value)
-    {
+    public ImportJobContents(int importId, Date date, int row, int col, String value) {
         this.importId = importId;
         this.date = date;
         this.row = row;
@@ -41,8 +37,7 @@ public class ImportJobContents implements java.io.Serializable
     }
 
     @Deprecated
-    public ImportJobContents(int id, int importId, Date date, int row, int col, String value, String complete)
-    {
+    public ImportJobContents(int id, int importId, Date date, int row, int col, String value, String complete) {
         this.id = id;
         this.importId = importId;
         this.date = date;
@@ -52,87 +47,72 @@ public class ImportJobContents implements java.io.Serializable
         this.complete = complete;
     }
 
-    public int getId()
-    {
+    public int getId() {
         return this.id;
     }
 
-    public void setId(int id)
-    {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public int getImportId()
-    {
+    public int getImportId() {
         return this.importId;
     }
 
-    public void setImportId(int importId)
-    {
+    public void setImportId(int importId) {
         this.importId = importId;
     }
 
-    public Date getDate()
-    {
+    public Date getDate() {
         return this.date;
     }
 
-    public void setDate(Date date)
-    {
+    public void setDate(Date date) {
         this.date = date;
     }
 
-    public int getRow()
-    {
+    public int getRow() {
         return this.row;
     }
 
-    public void setRow(int row)
-    {
+    public void setRow(int row) {
         this.row = row;
     }
 
-    public int getCol()
-    {
+    public int getCol() {
         return this.col;
     }
 
-    public void setCol(int col)
-    {
+    public void setCol(int col) {
         this.col = col;
     }
 
-    public String getValue()
-    {
+    public String getValue() {
         return this.value;
     }
 
-    public void setValue(String value)
-    {
+    public void setValue(String value) {
         this.value = value;
     }
 
     @Deprecated
-    public String getComplete()
-    {
+    public String getComplete() {
         return this.complete;
     }
 
     @Deprecated
-    public void setComplete(String complete)
-    {
+    public void setComplete(String complete) {
         this.complete = complete;
     }
 
     @Override
-    public String toString()
-    {
-        return "ImportJobContents{" +
-                "importId=" + importId +
-                ", row=" + row +
-                ", col=" + col +
-                ", value='" + value + '\'' +
-                '}';
+    public String toString() {
+        return "ImportJobContents{"
+                + "importId=" + importId
+                + ", row=" + row
+                + ", col=" + col
+                + ", value='" + value + '\''
+                + '}';
     }
 }
 

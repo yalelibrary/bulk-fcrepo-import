@@ -21,11 +21,10 @@ public class CronView {
 
     private final Logger logger = getLogger(this.getClass());
 
-    List<JobDetail> jobs = new ArrayList();
+    private List<JobDetail> jobs = new ArrayList();
 
     @PostConstruct
-    public void init()
-    {
+    public void init() {
         JobsManager jobsManager = new DefaultJobsManager();
         jobs = jobsManager.getJobs();
     }

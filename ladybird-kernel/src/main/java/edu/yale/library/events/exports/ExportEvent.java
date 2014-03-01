@@ -1,6 +1,5 @@
 package edu.yale.library.events.exports;
 
-import edu.yale.library.beans.User;
 import edu.yale.library.events.Event;
 
 import java.util.Date;
@@ -8,12 +7,11 @@ import java.util.Date;
 /**
  * An import event. Classes may subcass this. Subject to modification.
  */
-public class ExportEvent implements Event
-{
+public class ExportEvent implements Event {
     /* TIme started */
-    Date startTime;
+    private Date startTime;
 
     /* Time ended */
-    Date endTime;
+    private Date endTime;
 
 }

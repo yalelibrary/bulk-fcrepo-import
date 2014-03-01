@@ -5,8 +5,7 @@ import java.util.Date;
 /**
  * AuthorityControl
  */
-public class AuthorityControl implements java.io.Serializable
-{
+public class AuthorityControl implements java.io.Serializable {
 
 
     private Integer acid;
@@ -16,21 +15,18 @@ public class AuthorityControl implements java.io.Serializable
     private String code;
     private int userId;
 
-    public AuthorityControl()
-    {
+    public AuthorityControl() {
     }
 
 
-    public AuthorityControl(Date date, int fdid, String value, int userId)
-    {
+    public AuthorityControl(Date date, int fdid, String value, int userId) {
         this.date = date;
         this.fdid = fdid;
         this.value = value;
         this.userId = userId;
     }
 
-    public AuthorityControl(Date date, int fdid, String value, String code, int userId)
-    {
+    public AuthorityControl(Date date, int fdid, String value, String code, int userId) {
         this.date = date;
         this.fdid = fdid;
         this.value = value;
@@ -38,63 +34,51 @@ public class AuthorityControl implements java.io.Serializable
         this.userId = userId;
     }
 
-    public Integer getAcid()
-    {
+    public Integer getAcid() {
         return this.acid;
     }
 
-    public void setAcid(Integer acid)
-    {
+    public void setAcid(Integer acid) {
         this.acid = acid;
     }
 
-    public Date getDate()
-    {
+    public Date getDate() {
         return this.date;
     }
 
-    public void setDate(Date date)
-    {
+    public void setDate(Date date) {
         this.date = date;
     }
 
-    public int getFdid()
-    {
+    public int getFdid() {
         return this.fdid;
     }
 
-    public void setFdid(int fdid)
-    {
+    public void setFdid(int fdid) {
         this.fdid = fdid;
     }
 
-    public String getValue()
-    {
+    public String getValue() {
         return this.value;
     }
 
-    public void setValue(String value)
-    {
+    public void setValue(String value) {
         this.value = value;
     }
 
-    public String getCode()
-    {
+    public String getCode() {
         return this.code;
     }
 
-    public void setCode(String code)
-    {
+    public void setCode(String code) {
         this.code = code;
     }
 
-    public int getUserId()
-    {
+    public int getUserId() {
         return this.userId;
     }
 
-    public void setUserId(int userId)
-    {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 

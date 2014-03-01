@@ -5,10 +5,9 @@ import org.quartz.JobDetail;
 import java.util.List;
 
 
-public interface JobsManager
-{
+public interface JobsManager {
 
-    public List<JobDetail> getJobs();
+    List<JobDetail> getJobs();
 
-    public void setJobs(List<JobDetail> jobs) ;
+    void setJobs(List<JobDetail> jobs);
 }

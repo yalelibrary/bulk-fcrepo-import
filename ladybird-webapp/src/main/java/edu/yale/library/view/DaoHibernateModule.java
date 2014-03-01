@@ -9,18 +9,17 @@ import edu.yale.library.dao.GenericDAO;
 import edu.yale.library.dao.hibernate.MonitorHibernateDAO;
 import edu.yale.library.dao.hibernate.UserHibernateDAO;
 
-import edu.yale.library.beans.*;
+import edu.yale.library.beans.User;
+import edu.yale.library.beans.Project;
 
-public class DaoHibernateModule extends AbstractModule
-{
+public class DaoHibernateModule extends AbstractModule {
     @Override
-    protected void configure()
-    {
+    protected void configure() {
         TypeLiteral<GenericDAO<User, Integer>> userDaoType
-                = new TypeLiteral<GenericDAO<User, Integer>>() {;};
+                = new TypeLiteral<GenericDAO<User, Integer>>() { };
 
         TypeLiteral<GenericDAO<Project, Integer>> projectDaoType
-                = new TypeLiteral<GenericDAO<Project, Integer>>() {;};
+                = new TypeLiteral<GenericDAO<Project, Integer>>() { };
 
         bind(userDaoType).to(UserDAO.class);
         //bind(projectDaoType).to(ProjectDAO.class);

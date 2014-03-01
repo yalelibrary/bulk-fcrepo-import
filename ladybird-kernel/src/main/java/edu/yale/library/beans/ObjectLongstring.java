@@ -1,4 +1,4 @@
-package edu.yale.library.beans;// default package
+package edu.yale.library.beans;
 
 
 import java.util.Date;
@@ -6,8 +6,7 @@ import java.util.Date;
 /**
  * ObjectLongstring
  */
-public class ObjectLongstring implements java.io.Serializable
-{
+public class ObjectLongstring implements java.io.Serializable {
 
 
     private Integer dataId;
@@ -17,12 +16,10 @@ public class ObjectLongstring implements java.io.Serializable
     private byte[] value;
     private int fdid;
 
-    public ObjectLongstring()
-    {
+    public ObjectLongstring() {
     }
 
-    public ObjectLongstring(Date date, int userId, String oid, byte[] value, int fdid)
-    {
+    public ObjectLongstring(Date date, int userId, String oid, byte[] value, int fdid) {
         this.date = date;
         this.userId = userId;
         this.oid = oid;
@@ -30,63 +27,51 @@ public class ObjectLongstring implements java.io.Serializable
         this.fdid = fdid;
     }
 
-    public Integer getDataId()
-    {
+    public Integer getDataId() {
         return this.dataId;
     }
 
-    public void setDataId(Integer dataId)
-    {
+    public void setDataId(Integer dataId) {
         this.dataId = dataId;
     }
 
-    public Date getDate()
-    {
+    public Date getDate() {
         return this.date;
     }
 
-    public void setDate(Date date)
-    {
+    public void setDate(Date date) {
         this.date = date;
     }
 
-    public int getUserId()
-    {
+    public int getUserId() {
         return this.userId;
     }
 
-    public void setUserId(int userId)
-    {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
-    public String getOid()
-    {
+    public String getOid() {
         return this.oid;
     }
 
-    public void setOid(String oid)
-    {
+    public void setOid(String oid) {
         this.oid = oid;
     }
 
-    public byte[] getValue()
-    {
+    public byte[] getValue() {
         return this.value;
     }
 
-    public void setValue(byte[] value)
-    {
+    public void setValue(byte[] value) {
         this.value = value;
     }
 
-    public int getFdid()
-    {
+    public int getFdid() {
         return this.fdid;
     }
 
-    public void setFdid(int fdid)
-    {
+    public void setFdid(int fdid) {
         this.fdid = fdid;
     }
 

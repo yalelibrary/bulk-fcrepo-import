@@ -1,4 +1,4 @@
-package edu.yale.library.beans;// default package
+package edu.yale.library.beans;
 
 
 import java.util.Date;
@@ -6,8 +6,7 @@ import java.util.Date;
 /**
  * HydraPublishPath
  */
-public class HydraPublishPath implements java.io.Serializable
-{
+public class HydraPublishPath implements java.io.Serializable {
 
 
     private Integer id;
@@ -31,237 +30,172 @@ public class HydraPublishPath implements java.io.Serializable
     private Integer fileSize;
     private String fileExtension;
 
-    public HydraPublishPath()
-    {
+    public HydraPublishPath() {
     }
 
 
-    public HydraPublishPath(Date date, int hydraPublishId)
-    {
+    public HydraPublishPath(Date date, int hydraPublishId) {
         this.date = date;
         this.hydraPublishId = hydraPublishId;
     }
 
-    public HydraPublishPath(Date date, int hydraPublishId, String type, String pathhttp, String pathunc, String md5, String sha256, String controlgroup, String mimetype, String dsid, String ingestmethod, String altids, String dslabel, Integer versionable, String dsstate, String logmessage, Integer oidpointer, Integer fileSize, String fileExtension)
-    {
-        this.date = date;
-        this.hydraPublishId = hydraPublishId;
-        this.type = type;
-        this.pathhttp = pathhttp;
-        this.pathunc = pathunc;
-        this.md5 = md5;
-        this.sha256 = sha256;
-        this.controlgroup = controlgroup;
-        this.mimetype = mimetype;
-        this.dsid = dsid;
-        this.ingestmethod = ingestmethod;
-        this.altids = altids;
-        this.dslabel = dslabel;
-        this.versionable = versionable;
-        this.dsstate = dsstate;
-        this.logmessage = logmessage;
-        this.oidpointer = oidpointer;
-        this.fileSize = fileSize;
-        this.fileExtension = fileExtension;
-    }
-
-    public Integer getId()
-    {
+    public Integer getId() {
         return this.id;
     }
 
-    public void setId(Integer id)
-    {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public Date getDate()
-    {
+    public Date getDate() {
         return this.date;
     }
 
-    public void setDate(Date date)
-    {
+    public void setDate(Date date) {
         this.date = date;
     }
 
-    public int getHydraPublishId()
-    {
+    public int getHydraPublishId() {
         return this.hydraPublishId;
     }
 
-    public void setHydraPublishId(int hydraPublishId)
-    {
+    public void setHydraPublishId(int hydraPublishId) {
         this.hydraPublishId = hydraPublishId;
     }
 
-    public String getType()
-    {
+    public String getType() {
         return this.type;
     }
 
-    public void setType(String type)
-    {
+    public void setType(String type) {
         this.type = type;
     }
 
-    public String getPathhttp()
-    {
+    public String getPathhttp() {
         return this.pathhttp;
     }
 
-    public void setPathhttp(String pathhttp)
-    {
+    public void setPathhttp(String pathhttp) {
         this.pathhttp = pathhttp;
     }
 
-    public String getPathunc()
-    {
+    public String getPathunc() {
         return this.pathunc;
     }
 
-    public void setPathunc(String pathunc)
-    {
+    public void setPathunc(String pathunc) {
         this.pathunc = pathunc;
     }
 
-    public String getMd5()
-    {
+    public String getMd5() {
         return this.md5;
     }
 
-    public void setMd5(String md5)
-    {
+    public void setMd5(String md5) {
         this.md5 = md5;
     }
 
-    public String getSha256()
-    {
+    public String getSha256() {
         return this.sha256;
     }
 
-    public void setSha256(String sha256)
-    {
+    public void setSha256(String sha256) {
         this.sha256 = sha256;
     }
 
-    public String getControlgroup()
-    {
+    public String getControlgroup() {
         return this.controlgroup;
     }
 
-    public void setControlgroup(String controlgroup)
-    {
+    public void setControlgroup(String controlgroup) {
         this.controlgroup = controlgroup;
     }
 
-    public String getMimetype()
-    {
+    public String getMimetype() {
         return this.mimetype;
     }
 
-    public void setMimetype(String mimetype)
-    {
+    public void setMimetype(String mimetype) {
         this.mimetype = mimetype;
     }
 
-    public String getDsid()
-    {
+    public String getDsid() {
         return this.dsid;
     }
 
-    public void setDsid(String dsid)
-    {
+    public void setDsid(String dsid) {
         this.dsid = dsid;
     }
 
-    public String getIngestmethod()
-    {
+    public String getIngestmethod() {
         return this.ingestmethod;
     }
 
-    public void setIngestmethod(String ingestmethod)
-    {
+    public void setIngestmethod(String ingestmethod) {
         this.ingestmethod = ingestmethod;
     }
 
-    public String getAltids()
-    {
+    public String getAltids() {
         return this.altids;
     }
 
-    public void setAltids(String altids)
-    {
+    public void setAltids(String altids) {
         this.altids = altids;
     }
 
-    public String getDslabel()
-    {
+    public String getDslabel() {
         return this.dslabel;
     }
 
-    public void setDslabel(String dslabel)
-    {
+    public void setDslabel(String dslabel) {
         this.dslabel = dslabel;
     }
 
-    public Integer getVersionable()
-    {
+    public Integer getVersionable() {
         return this.versionable;
     }
 
-    public void setVersionable(Integer versionable)
-    {
+    public void setVersionable(Integer versionable) {
         this.versionable = versionable;
     }
 
-    public String getDsstate()
-    {
+    public String getDsstate() {
         return this.dsstate;
     }
 
-    public void setDsstate(String dsstate)
-    {
+    public void setDsstate(String dsstate) {
         this.dsstate = dsstate;
     }
 
-    public String getLogmessage()
-    {
+    public String getLogmessage() {
         return this.logmessage;
     }
 
-    public void setLogmessage(String logmessage)
-    {
+    public void setLogmessage(String logmessage) {
         this.logmessage = logmessage;
     }
 
-    public Integer getOidpointer()
-    {
+    public Integer getOidpointer() {
         return this.oidpointer;
     }
 
-    public void setOidpointer(Integer oidpointer)
-    {
+    public void setOidpointer(Integer oidpointer) {
         this.oidpointer = oidpointer;
     }
 
-    public Integer getFileSize()
-    {
+    public Integer getFileSize() {
         return this.fileSize;
     }
 
-    public void setFileSize(Integer fileSize)
-    {
+    public void setFileSize(Integer fileSize) {
         this.fileSize = fileSize;
     }
 
-    public String getFileExtension()
-    {
+    public String getFileExtension() {
         return this.fileExtension;
     }
 
-    public void setFileExtension(String fileExtension)
-    {
+    public void setFileExtension(String fileExtension) {
         this.fileExtension = fileExtension;
     }
 

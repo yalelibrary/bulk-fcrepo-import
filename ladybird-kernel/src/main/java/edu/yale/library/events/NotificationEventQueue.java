@@ -9,12 +9,11 @@ import java.util.concurrent.ArrayBlockingQueue;
 /**
  * TODO temp. A memory queue.
  */
-public class NotificationEventQueue
-{
-    static Queue<NotificationItem> notificationEventQueue = new ArrayBlockingQueue(50);
+public class NotificationEventQueue {
+    public static final int CAPACITY = 50;
+    static Queue<NotificationItem> notificationEventQueue = new ArrayBlockingQueue(CAPACITY);
 
-    public static boolean addEvent(NotificationItem e)
-    {
+    public static boolean addEvent(NotificationItem e) {
         return notificationEventQueue.add(e);
     }
 
@@ -24,22 +23,19 @@ public class NotificationEventQueue
 
     public class NotificationItem {
 
-        public NotificationItem(Event e, List<User> users)
-        {
+        public NotificationItem(Event e, List<User> users) {
             this.e = e;
             this.users = users;
         }
 
-        Event e;
-        List<User> users;
+        private Event e;
+        private List<User> users;
 
-        public Event getE()
-        {
+        public Event getE() {
             return e;
         }
 
-        public List<User> getUsers()
-        {
+        public List<User> getUsers() {
             return users;
         }
     }

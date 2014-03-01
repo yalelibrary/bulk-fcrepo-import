@@ -3,8 +3,7 @@ package edu.yale.library.beans;
 
 import java.util.Date;
 
-public class ImportSourceData implements java.io.Serializable
-{
+public class ImportSourceData implements java.io.Serializable {
 
 
     private Integer id;
@@ -19,138 +18,100 @@ public class ImportSourceData implements java.io.Serializable
     private Integer zindex;
     private String notes;
 
-    public ImportSourceData()
-    {
+    public ImportSourceData() {
     }
 
 
-    public ImportSourceData(Date date, int importSourceId)
-    {
+    public ImportSourceData(Date date, int importSourceId) {
         this.date = date;
         this.importSourceId = importSourceId;
     }
 
-    public ImportSourceData(Date date, int importSourceId, String k1, String k2, String k3, String attr, String attrVal, String value, Integer zindex, String notes)
-    {
-        this.date = date;
-        this.importSourceId = importSourceId;
-        this.k1 = k1;
-        this.k2 = k2;
-        this.k3 = k3;
-        this.attr = attr;
-        this.attrVal = attrVal;
-        this.value = value;
-        this.zindex = zindex;
-        this.notes = notes;
-    }
-
-    public Integer getId()
-    {
+    public Integer getId() {
         return this.id;
     }
 
-    public void setId(Integer id)
-    {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public Date getDate()
-    {
+    public Date getDate() {
         return this.date;
     }
 
-    public void setDate(Date date)
-    {
+    public void setDate(Date date) {
         this.date = date;
     }
 
-    public int getImportSourceId()
-    {
+    public int getImportSourceId() {
         return this.importSourceId;
     }
 
-    public void setImportSourceId(int importSourceId)
-    {
+    public void setImportSourceId(int importSourceId) {
         this.importSourceId = importSourceId;
     }
 
-    public String getK1()
-    {
+    public String getK1() {
         return this.k1;
     }
 
-    public void setK1(String k1)
-    {
+    public void setK1(String k1) {
         this.k1 = k1;
     }
 
-    public String getK2()
-    {
+    public String getK2() {
         return this.k2;
     }
 
-    public void setK2(String k2)
-    {
+    public void setK2(String k2) {
         this.k2 = k2;
     }
 
-    public String getK3()
-    {
+    public String getK3() {
         return this.k3;
     }
 
-    public void setK3(String k3)
-    {
+    public void setK3(String k3) {
         this.k3 = k3;
     }
 
-    public String getAttr()
-    {
+    public String getAttr() {
         return this.attr;
     }
 
-    public void setAttr(String attr)
-    {
+    public void setAttr(String attr) {
         this.attr = attr;
     }
 
-    public String getAttrVal()
-    {
+    public String getAttrVal() {
         return this.attrVal;
     }
 
-    public void setAttrVal(String attrVal)
-    {
+    public void setAttrVal(String attrVal) {
         this.attrVal = attrVal;
     }
 
-    public String getValue()
-    {
+    public String getValue() {
         return this.value;
     }
 
-    public void setValue(String value)
-    {
+    public void setValue(String value) {
         this.value = value;
     }
 
-    public Integer getZindex()
-    {
+    public Integer getZindex() {
         return this.zindex;
     }
 
-    public void setZindex(Integer zindex)
-    {
+    public void setZindex(Integer zindex) {
         this.zindex = zindex;
     }
 
-    public String getNotes()
-    {
+    public String getNotes() {
         return this.notes;
     }
 
-    public void setNotes(String notes)
-    {
+    public void setNotes(String notes) {
         this.notes = notes;
     }
 

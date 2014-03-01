@@ -14,19 +14,16 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 @ManagedBean
 @ApplicationScoped
-public class DaoInitializer
-{
-    private final static Logger logger = getLogger(DaoInitializer.class);
+public class DaoInitializer {
+    private static final Logger logger = getLogger(DaoInitializer.class);
 
     private static final Injector injector;
 
-    static
-    {
+    static {
         injector = Guice.createInjector(new DaoHibernateModule());
     }
 
-    public static void injectFields (Object object)
-    {
+    public static void injectFields(Object object) {
         injector.injectMembers(object);
     }
 }

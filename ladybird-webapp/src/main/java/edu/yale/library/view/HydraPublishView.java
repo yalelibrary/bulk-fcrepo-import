@@ -1,6 +1,5 @@
 package edu.yale.library.view;
 
-import edu.yale.library.beans.HydraPublish;
 import edu.yale.library.dao.HydraPublishDAO;
 
 import org.slf4j.Logger;
@@ -14,18 +13,16 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 @ManagedBean
 @RequestScoped
-public class HydraPublishView extends AbstractView
-{
+public class HydraPublishView extends AbstractView {
     private final Logger logger = getLogger(this.getClass());
 
     @Inject
     private HydraPublishDAO entityDAO;
 
     @PostConstruct
-    public void init()
-    {
-       initFields();
-       dao = entityDAO;
+    public void init() {
+        initFields();
+        dao = entityDAO;
     }
 
 }

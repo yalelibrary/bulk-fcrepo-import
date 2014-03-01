@@ -2,14 +2,18 @@ package edu.yale.library.cron;
 
 
 import edu.yale.library.events.NotificationJob;
-import org.quartz.*;
+import org.quartz.CronScheduleBuilder;
+import org.quartz.Scheduler;
+import org.quartz.JobBuilder;
+import org.quartz.JobDetail;
+import org.quartz.Trigger;
+import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public final class NotificationScheduler
-{
+public final class NotificationScheduler {
 
     private final Logger logger = getLogger(this.getClass());
 

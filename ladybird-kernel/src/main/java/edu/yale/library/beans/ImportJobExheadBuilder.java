@@ -2,8 +2,7 @@ package edu.yale.library.beans;
 
 import java.util.Date;
 
-public class ImportJobExheadBuilder
-{
+public class ImportJobExheadBuilder {
     private int importId;
     private Date date;
     private String value;
@@ -12,50 +11,42 @@ public class ImportJobExheadBuilder
     private Integer fdid;
     private String import_;
 
-    public ImportJobExheadBuilder setImportId(int importId)
-    {
+    public ImportJobExheadBuilder setImportId(int importId) {
         this.importId = importId;
         return this;
     }
 
-    public ImportJobExheadBuilder setDate(Date date)
-    {
+    public ImportJobExheadBuilder setDate(Date date) {
         this.date = date;
         return this;
     }
 
-    public ImportJobExheadBuilder setValue(String value)
-    {
+    public ImportJobExheadBuilder setValue(String value) {
         this.value = value;
         return this;
     }
 
-    public ImportJobExheadBuilder setCol(Integer col)
-    {
+    public ImportJobExheadBuilder setCol(Integer col) {
         this.col = col;
         return this;
     }
 
-    public ImportJobExheadBuilder setFunc(String func)
-    {
+    public ImportJobExheadBuilder setFunc(String func) {
         this.func = func;
         return this;
     }
 
-    public ImportJobExheadBuilder setFdid(Integer fdid)
-    {
+    public ImportJobExheadBuilder setFdid(Integer fdid) {
         this.fdid = fdid;
         return this;
     }
 
-    public ImportJobExheadBuilder setImport_(String import_)
-    {
+    public ImportJobExheadBuilder setImport_(String import_) {
         this.import_ = import_;
         return this;
     }
 
-    public ImportJobExhead createImportJobExhead()
-    {
+    public ImportJobExhead createImportJobExhead() {
         return new ImportJobExhead(importId, date, col, value);
     }
 }

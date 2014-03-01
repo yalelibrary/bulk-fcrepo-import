@@ -6,37 +6,30 @@ import org.slf4j.LoggerFactory;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public final class DerbyManager
-{
+public final class DerbyManager {
     private static final Logger logger = LoggerFactory.getLogger(DerbyManager.class);
 
     private static volatile Boolean RUNNING = false;
 
     private static final DerbyManager INSTANCE = new DerbyManager();
 
-    private DerbyManager()
-    {
+    private DerbyManager() {
     }
 
-    public boolean isRUNNING()
-    {
+    public boolean isRUNNING() {
         return RUNNING;
     }
 
-    public static DerbyManager getINSTANCE()
-    {
+    public static DerbyManager getINSTANCE() {
         return INSTANCE;
     }
 
     /**
      * Stop database.
      */
-    protected synchronized void stop() throws SQLException
-    {
-        synchronized (RUNNING)
-        {
-            if (!RUNNING)
-            {
+    protected synchronized void stop() throws SQLException {
+        synchronized (RUNNING) {
+            if (!RUNNING) {
                 logger.debug("Not running already.");
                 return;
             }
@@ -45,60 +38,49 @@ public final class DerbyManager
         }
     }
 
-    private synchronized void doStop()throws SQLException
-    {
-        try
-        {
+    private synchronized void doStop() throws SQLException {
+        try {
             DriverManager.getConnection("jdbc:derby:;shutdown=true");
-        }
-        catch (SQLException e)
-        {
-            if (abnormalShutdown(e))
+        } catch (SQLException e) {
+            if (abnormalShutdown(e)) {
                 logger.error("DB did not shut down normally", e);
+            }
         }
     }
 
     /**
      * Start Db
+     *
      * @return
      * @throws AppConfigException
      */
-    protected synchronized void start() throws AppConfigException
-    {
-        synchronized (RUNNING)
-        {
-            if (RUNNING)
+    protected synchronized void start() throws AppConfigException {
+        synchronized (RUNNING) {
+            if (RUNNING) {
                 throw new AppConfigException(ApplicationProperties.ALREADY_RUNNING);
-            try
-            {
+            }
+            try {
                 doStart();
                 logger.debug("Started driver");
                 RUNNING = true;
-            }
-            catch (AppConfigException e)
-            {
+            } catch (AppConfigException e) {
                 throw new AppConfigException(e);
             }
         }
     }
 
-    private synchronized void doStart() throws AppConfigException
-    {
-        try
-        {
+    private synchronized void doStart() throws AppConfigException {
+        try {
             loadDriver();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new AppConfigException(e);
         }
     }
 
-    private boolean abnormalShutdown(SQLException e)
-    {
-        return (((e.getErrorCode() != Config.ERROR_CODE) &&
-                (!Config.ABNORMAL_STATE.equals(e.getSQLState()))))
-                ? true: false;
+    private boolean abnormalShutdown(SQLException e) {
+        return (((e.getErrorCode() != Config.ERROR_CODE)
+                && (!Config.ABNORMAL_STATE.equals(e.getSQLState()))))
+                ? true : false;
     }
 
     /**
@@ -108,22 +90,21 @@ public final class DerbyManager
      * @throws IllegalAccessException
      * @throws ClassNotFoundException
      */
-    private void loadDriver() throws InstantiationException, IllegalAccessException, ClassNotFoundException
-    {
+    private void loadDriver() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         Class.forName(Config.DRIVER).newInstance();
     }
 
     /**
      * General config settings
      */
-    private static final class Config
-    {
-        final static String DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";
+    private static final class Config {
+        static final String DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";
 
-        final static String ABNORMAL_STATE = "XJ015";
+        static final String ABNORMAL_STATE = "XJ015";
 
-        final static int ERROR_CODE = 50000;
+        static final int ERROR_CODE = 50000;
 
-        private Config() {}
+        private Config() {
+        }
     }
 }

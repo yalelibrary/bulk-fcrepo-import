@@ -8,6 +8,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.concurrent.TimeUnit;
@@ -24,15 +25,16 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 @ManagedBean
 @RequestScoped
-public class DefaultImportHttpServiceClient
-{
-    private final static Logger logger = getLogger(DaoInitializer.class);
+public class DefaultImportHttpServiceClient {
+    private static final Logger logger = getLogger(DaoInitializer.class);
 
-    private final static String URL = "http://localhost:8080/ladybird-webapp/rest/cronjobs"; //TODO
+    private static final String URL = "http://localhost:8080/ladybird-webapp/rest/cronjobs"; //TODO
 
     private final PoolingHttpClientConnectionManager connectionManager;
 
     private final HttpClient httpClient;
+
+    private static final int STATUS_OK = 200; //replace w/ httpclient.SC_OK
 
     private static final int IDLE_TIMEOUT = 3;
 
@@ -51,15 +53,12 @@ public class DefaultImportHttpServiceClient
      *
      * @return
      */
-    public String getJobs()
-    {
-        try
-        {
+    public String getJobs() {
+        try {
             HttpGet getRequest = new HttpGet(URL);
             getRequest.addHeader("accept", "application/json");
             HttpResponse response = httpClient.execute(getRequest);
-            if (response.getStatusLine().getStatusCode() != 200)
-            {
+            if (response.getStatusLine().getStatusCode() != STATUS_OK) {
                 throw new RuntimeException("Failed : HTTP error code : "
                         + response.getStatusLine().getStatusCode());
             }
@@ -67,21 +66,14 @@ public class DefaultImportHttpServiceClient
                     new InputStreamReader((response.getEntity().getContent())));
             StringBuffer sb = new StringBuffer();
             String output = "";
-            while ((output = br.readLine()) != null)
-            {
+            while ((output = br.readLine()) != null) {
                 sb.append(output);
             }
 
             return sb.toString();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             return "Error in service.";
-        }
-        finally
-        {
-            //TODO shutdown; default is idle timeout
         }
     }
 }

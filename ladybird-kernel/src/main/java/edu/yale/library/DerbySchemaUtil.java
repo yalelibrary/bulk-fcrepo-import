@@ -17,40 +17,36 @@ import java.util.Map;
 /**
  *
  */
-public final class DerbySchemaUtil
-{
+public final class DerbySchemaUtil {
     private static final Logger logger = LoggerFactory.getLogger(DerbySchemaUtil.class);
 
     /**
      * Init schema
+     *
      * @throws AppConfigException
      */
-    protected void init() throws AppConfigException
-    {
-        try
-        {
-            Connection conn = DriverManager.getConnection(Config.PROTOCOL +
-                    Config.DB + ";create=true", Config.PROPS);
+    protected void init() throws AppConfigException {
+        try {
+            Connection conn = DriverManager.getConnection(Config.PROTOCOL
+                    + Config.DB + ";create=true", Config.PROPS);
             logger.debug("Connected to DB and created a schema: " + Config.DB);
             conn.setAutoCommit(false);
             Statement statement = conn.createStatement();
             logger.debug("Creating table(s)");
 
             final java.util.Map<String, String> m = SchemaBean.getSchema();
-            if (m == null || 0 == m.size())
+            if (m == null || 0 == m.size()) {
                 throw new AppConfigException("Schema empty");
+            }
             Iterator it = m.entrySet().iterator();
-            while (it.hasNext())
-            {
-                Map.Entry p = (Map.Entry)it.next();
+            while (it.hasNext()) {
+                Map.Entry p = (Map.Entry) it.next();
                 logger.debug("Executing: " + p.getKey() + " = " + p.getValue());
                 statement.execute(p.getValue().toString());
             }
             conn.commit();
             logger.debug("Created table(s)");
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             throw new AppConfigException(e);
         }
     }
@@ -58,19 +54,18 @@ public final class DerbySchemaUtil
     /**
      * General config settings
      */
-    private static final class Config
-    {
-        final static String PROTOCOL = "jdbc:derby:";
-        final static String DB = "memory:pamoja";
-        final static String DB_USER = "pamoja";
-        final static Properties PROPS = new Properties();
+    private static final class Config {
+        static final String PROTOCOL = "jdbc:derby:";
+        static final String DB = "memory:pamoja";
+        static final String DB_USER = "pamoja";
+        static final Properties PROPS = new Properties();
 
-        static
-        {
+        static {
             PROPS.put("user", Config.DB_USER);
         }
 
-        private Config() {}
+        private Config() {
+        }
     }
 
 

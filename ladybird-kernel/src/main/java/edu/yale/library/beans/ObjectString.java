@@ -1,4 +1,4 @@
-package edu.yale.library.beans;// default package
+package edu.yale.library.beans;
 
 
 import java.util.Date;
@@ -6,8 +6,7 @@ import java.util.Date;
 /**
  * ObjectString
  */
-public class ObjectString implements java.io.Serializable
-{
+public class ObjectString implements java.io.Serializable {
 
 
     private Integer dataId;
@@ -17,12 +16,10 @@ public class ObjectString implements java.io.Serializable
     private String value;
     private int fdid;
 
-    public ObjectString()
-    {
+    public ObjectString() {
     }
 
-    public ObjectString(Date date, int userId, int oid, String value, int fdid)
-    {
+    public ObjectString(Date date, int userId, int oid, String value, int fdid) {
         this.date = date;
         this.userId = userId;
         this.oid = oid;
@@ -30,63 +27,51 @@ public class ObjectString implements java.io.Serializable
         this.fdid = fdid;
     }
 
-    public Integer getDataId()
-    {
+    public Integer getDataId() {
         return this.dataId;
     }
 
-    public void setDataId(Integer dataId)
-    {
+    public void setDataId(Integer dataId) {
         this.dataId = dataId;
     }
 
-    public Date getDate()
-    {
+    public Date getDate() {
         return this.date;
     }
 
-    public void setDate(Date date)
-    {
+    public void setDate(Date date) {
         this.date = date;
     }
 
-    public int getUserId()
-    {
+    public int getUserId() {
         return this.userId;
     }
 
-    public void setUserId(int userId)
-    {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
-    public int getOid()
-    {
+    public int getOid() {
         return this.oid;
     }
 
-    public void setOid(int oid)
-    {
+    public void setOid(int oid) {
         this.oid = oid;
     }
 
-    public String getValue()
-    {
+    public String getValue() {
         return this.value;
     }
 
-    public void setValue(String value)
-    {
+    public void setValue(String value) {
         this.value = value;
     }
 
-    public int getFdid()
-    {
+    public int getFdid() {
         return this.fdid;
     }
 
-    public void setFdid(int fdid)
-    {
+    public void setFdid(int fdid) {
         this.fdid = fdid;
     }
 

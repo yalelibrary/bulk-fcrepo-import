@@ -1,4 +1,4 @@
-package edu.yale.library.beans;// default package
+package edu.yale.library.beans;
 
 
 import java.util.Date;
@@ -6,8 +6,7 @@ import java.util.Date;
 /**
  * ObjectEvent
  */
-public class ObjectEvent implements java.io.Serializable
-{
+public class ObjectEvent implements java.io.Serializable {
 
 
     private Integer eventId;
@@ -17,12 +16,10 @@ public class ObjectEvent implements java.io.Serializable
     private int oid;
     private String event;
 
-    public ObjectEvent()
-    {
+    public ObjectEvent() {
     }
 
-    public ObjectEvent(int eventTypeId, int userId, Date date, int oid, String event)
-    {
+    public ObjectEvent(int eventTypeId, int userId, Date date, int oid, String event) {
         this.eventTypeId = eventTypeId;
         this.userId = userId;
         this.date = date;
@@ -30,63 +27,51 @@ public class ObjectEvent implements java.io.Serializable
         this.event = event;
     }
 
-    public Integer getEventId()
-    {
+    public Integer getEventId() {
         return this.eventId;
     }
 
-    public void setEventId(Integer eventId)
-    {
+    public void setEventId(Integer eventId) {
         this.eventId = eventId;
     }
 
-    public int getEventTypeId()
-    {
+    public int getEventTypeId() {
         return this.eventTypeId;
     }
 
-    public void setEventTypeId(int eventTypeId)
-    {
+    public void setEventTypeId(int eventTypeId) {
         this.eventTypeId = eventTypeId;
     }
 
-    public int getUserId()
-    {
+    public int getUserId() {
         return this.userId;
     }
 
-    public void setUserId(int userId)
-    {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
-    public Date getDate()
-    {
+    public Date getDate() {
         return this.date;
     }
 
-    public void setDate(Date date)
-    {
+    public void setDate(Date date) {
         this.date = date;
     }
 
-    public int getOid()
-    {
+    public int getOid() {
         return this.oid;
     }
 
-    public void setOid(int oid)
-    {
+    public void setOid(int oid) {
         this.oid = oid;
     }
 
-    public String getEvent()
-    {
+    public String getEvent() {
         return this.event;
     }
 
-    public void setEvent(String event)
-    {
+    public void setEvent(String event) {
         this.event = event;
     }
 

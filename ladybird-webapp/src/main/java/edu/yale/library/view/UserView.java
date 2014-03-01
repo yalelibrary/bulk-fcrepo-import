@@ -19,59 +19,50 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 @ManagedBean
 @RequestScoped
-public class UserView extends AbstractView
-{
+public class UserView extends AbstractView {
     private final Logger logger = getLogger(this.getClass());
 
     private List<User> itemList;
 
-    User item = new UserBuilder().createUser();
+    private User item = new UserBuilder().createUser();
 
     @Inject
     private UserDAO userDAO;
 
     @PostConstruct
-    public void init()
-    {
+    public void init() {
         initFields();
         dao = userDAO;
     }
 
-    public List getItemList()
-    {
-        List<User> user =  dao.findAll();
+    public List getItemList() {
+        List<User> user = dao.findAll();
         return user;
     }
 
-    public User getItem()
-    {
+    public User getItem() {
         return item;
     }
 
-    public void setItem(User item)
-    {
+    public void setItem(User item) {
         this.item = item;
     }
 
-    public void save()
-    {
-        try
-        {
+    public void save() {
+        try {
             setDefaults(item);
             dao.save(item);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             logger.error("Error saving item", e);
         }
     }
 
     /**
      * Sets date defaults
+     *
      * @param item
      */
-    public void setDefaults(User item)
-    {
+    public void setDefaults(User item) {
         Date date = new Date(System.currentTimeMillis());
         item.setDate(date);
         item.setDateCreated(date);
@@ -81,8 +72,7 @@ public class UserView extends AbstractView
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return item.toString();
     }
 
