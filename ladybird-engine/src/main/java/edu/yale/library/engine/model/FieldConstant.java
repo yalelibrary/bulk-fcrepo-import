@@ -1,7 +1,6 @@
 package edu.yale.library.engine.model;
 
-public interface FieldConstant
-{
+public interface FieldConstant {
     String getName();
 
     void setName(String s);

@@ -19,6 +19,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 @ManagedBean
 @RequestScoped
+@SuppressWarnings("unchecked")
 public class UserView extends AbstractView {
     private final Logger logger = getLogger(this.getClass());
 

@@ -3,29 +3,23 @@ package edu.yale.library.engine.model;
 /**
  * Generic MarcReadingException. Wraps underlying low-level exception
  */
-public class MarcReadingException extends Exception
-{
-    public MarcReadingException()
-    {
+public class MarcReadingException extends Exception {
+    public MarcReadingException() {
     }
 
-    public MarcReadingException(String message)
-    {
+    public MarcReadingException(String message) {
         super(message);
     }
 
-    public MarcReadingException(String message, Throwable cause)
-    {
+    public MarcReadingException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public MarcReadingException(Throwable cause)
-    {
+    public MarcReadingException(Throwable cause) {
         super(cause);
     }
 
-    public MarcReadingException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)
-    {
+    public MarcReadingException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

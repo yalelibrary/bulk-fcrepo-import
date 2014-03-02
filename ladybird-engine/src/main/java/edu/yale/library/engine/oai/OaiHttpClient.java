@@ -18,7 +18,7 @@ import org.w3c.dom.Node;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.*;
+import javax.xml.xpath.XPathException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -31,9 +31,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 /**
  * OAI-PMH client. Hits the web service and gets the XML. Passes off data to MarcReader
  */
-public class OaiHttpClient
-{
-    private final static Logger logger = getLogger(OaiHttpClient.class);
+public class OaiHttpClient {
+    private static final Logger logger = getLogger(OaiHttpClient.class);
     private OaiProvider oaiProvider;
     private MarcReader marcReader;
     private final PoolingHttpClientConnectionManager connectionManager;
@@ -47,8 +46,7 @@ public class OaiHttpClient
         httpClient = HttpClients.custom().setConnectionManager(connectionManager).build();
     }
 
-    public OaiHttpClient(OaiProvider oaiProvider)
-    {
+    public OaiHttpClient(OaiProvider oaiProvider) {
         this.oaiProvider = oaiProvider;
         this.marcReader = new DefaultMarcReader(); //TODO
     }
@@ -56,23 +54,18 @@ public class OaiHttpClient
 
     /**
      * Reads Marc stream (assumes marc connection w/ bibId)
+     *
      * @param bibId
      */
-    public Record readMarc(final String bibId) throws IOException, MarcReadingException
-    {
+    public Record readMarc(final String bibId) throws IOException, MarcReadingException {
         logger.debug("Reading marc for doc={}", bibId);
-        try
-        {
+        try {
             final Node node = extractMarcXml(harvest(OaiUrlHelper.urlForMarcGetRecord(oaiProvider, bibId)));
             return marcReader.readMarc(node);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             logger.error("Error reading OAI feed.", e);
             throw e;
-        }
-        catch (MarcReadingException m)
-        {
+        } catch (MarcReadingException m) {
             logger.error("Error reading marc document.", m);
             throw m;
         }
@@ -80,87 +73,72 @@ public class OaiHttpClient
 
     /**
      * Reads DC stream (assumes marc connection w/ barcode)
+     *
      * @param barcode
      */
-    public void readDC(final String barcode)
-    {
+    public void readDC(final String barcode) {
         logger.debug("Reading dc for doc={}", barcode);
-        try
-        {
+        try {
             final String xml = harvest(OaiUrlHelper.urlForDCGetRecord(oaiProvider, barcode));
 
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             logger.error("Error reading OAI feed.", e);
         }
     }
 
     /**
      * Strip OAI tags surrounding marc:record
+     *
      * @param xml
      * @return
      */
-    private Node extractMarcXml(final String xml) throws MarcReadingException
-    {
-        try
-        {
+    private Node extractMarcXml(final String xml) throws MarcReadingException {
+        try {
             final DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
             domFactory.setNamespaceAware(true);
             final DocumentBuilder builder = domFactory.newDocumentBuilder();
             final Document doc = builder.parse(IOUtils.toInputStream(xml));
-            final Map<String, String> namespaceMap = new HashMap();
+            final Map<String, String> namespaceMap = new HashMap<>();
             namespaceMap.put("k", "http://www.openarchives.org/OAI/2.0/");
             namespaceMap.put("l", "http://www.loc.gov/MARC21/slim");
             final Node n = XPathAPI.selectSingleNode(doc, "//l:record", namespaceMap);
             return n;
-        }
-        catch (ParserConfigurationException | SAXException | XPathException | IOException e)
-        {
-           logger.error("Error extracting marc record", e);
-           throw new MarcReadingException("Marc extracting failed", e);
+        } catch (ParserConfigurationException | SAXException | XPathException | IOException e) {
+            logger.error("Error extracting marc record", e);
+            throw new MarcReadingException("Marc extracting failed", e);
         }
     }
 
     /**
      * Fetches contents from url.
      * TODO pre-validate before parsing content?
+     *
      * @param URL
      * @return
      * @throws IOException
      */
-    private String harvest(final String URL) throws IOException
-    {
-        try
-        {
+    private String harvest(final String URL) throws IOException {
+        try {
             HttpGet getRequest = new HttpGet(URL);
             final HttpResponse response = httpClient.execute(getRequest);
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
-            {
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
                 throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
             }
-            final BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent()), "UTF-8"));
-            final StringBuffer sb = new StringBuffer();
+            final BufferedReader br = new BufferedReader(
+                    new InputStreamReader((response.getEntity().getContent()), "UTF-8"));
+            final StringBuilder sb = new StringBuilder();
             String output;
-            while ((output = br.readLine()) != null)
-            {
+            while ((output = br.readLine()) != null) {
                 //FIXME. There will be special cases such as these. Perhaps the fix is to use a different reader.
-                if (!output.startsWith("<"))
-                {
-                    output =  " " + output;
+                if (!output.startsWith("<")) {
+                    output = " " + output;
                 }
                 sb.append(output);
                 //logger.debug(output);
             }
             return sb.toString();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw e;
-        }
-        finally
-        {
-            //TODO shutdown; default is idle timeout
         }
     }
 
@@ -168,47 +146,53 @@ public class OaiHttpClient
      * Helps construct urls to hit the provider
      * TODO validate before returning
      */
-    private static class OaiUrlHelper
-    {
-        /** Support metadata formats */
-        enum METADATA {marc21, dc}
-        /** OAI-PMH verbs */
-        enum VERB {GetRecord}
+    private static class OaiUrlHelper {
+        /**
+         * Support metadata formats
+         */
+        enum METADATA {
+            marc21, dc
+        }
+
+        /**
+         * OAI-PMH verbs
+         */
+        enum VERB {
+            GetRecord
+        }
 
         /**
          * Constants
          */
-        class OAIPrefix
-        {
-            final static String VERB_PREFIX = "verb";
-            final static String IDENTIFIER_PREFIX = "identifier";
-            final static String METADATA_PREFIX = "metadataPrefix";
+        class OAIPrefix {
+            static final String VERB_PREFIX = "verb";
+            static final String IDENTIFIER_PREFIX = "identifier";
+            static final String METADATA_PREFIX = "metadataPrefix";
         }
 
         /**
          * Helper method for Marc
+         *
          * @param oaiProvider
          * @param idFor
          * @return
          */
-        static String urlForMarcGetRecord(final OaiProvider oaiProvider, final String idFor)
-        {
+        static String urlForMarcGetRecord(final OaiProvider oaiProvider, final String idFor) {
             return getUrl(oaiProvider, idFor, VERB.GetRecord, METADATA.marc21);
         }
 
         /**
          * Helper method for DC
+         *
          * @param oaiProvider
          * @param idFor
          * @return
          */
-        static String urlForDCGetRecord(final OaiProvider oaiProvider, final String idFor)
-        {
+        static String urlForDCGetRecord(final OaiProvider oaiProvider, final String idFor) {
             return getUrl(oaiProvider, idFor, VERB.GetRecord, METADATA.dc);
         }
 
-        static String getUrl(final OaiProvider oaiProvider, final String idFor, VERB verb, METADATA metadata)
-        {
+        static String getUrl(final OaiProvider oaiProvider, final String idFor, VERB verb, METADATA metadata) {
             URIBuilder uriBuilder = new URIBuilder();
             uriBuilder.setPath(oaiProvider.getUrl());
             uriBuilder.addParameter(OAIPrefix.VERB_PREFIX, verb.toString());

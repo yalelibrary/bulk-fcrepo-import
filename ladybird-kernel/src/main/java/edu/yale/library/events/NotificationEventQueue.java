@@ -11,7 +11,7 @@ import java.util.concurrent.ArrayBlockingQueue;
  */
 public class NotificationEventQueue {
     public static final int CAPACITY = 50;
-    static Queue<NotificationItem> notificationEventQueue = new ArrayBlockingQueue(CAPACITY);
+    static Queue<NotificationItem> notificationEventQueue = new ArrayBlockingQueue<>(CAPACITY);
 
     public static boolean addEvent(NotificationItem e) {
         return notificationEventQueue.add(e);

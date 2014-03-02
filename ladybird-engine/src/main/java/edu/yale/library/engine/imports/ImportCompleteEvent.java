@@ -6,8 +6,7 @@ import edu.yale.library.events.imports.ImportEvent;
 /**
  * TODO field access. Subject to modification.
  */
-public final class ImportCompleteEvent extends ImportEvent
-{
+public final class ImportCompleteEvent extends ImportEvent {
 
     int rowsProcessed;
     int passCount;
@@ -16,8 +15,7 @@ public final class ImportCompleteEvent extends ImportEvent
 
     private SpreadsheetFile spreadsheetFile;
 
-    public ImportCompleteEvent(User user, SpreadsheetFile spreadsheetFile, int rowsProcessed, int passCount, int failedValidations, int failCount)
-    {
+    public ImportCompleteEvent(User user, SpreadsheetFile spreadsheetFile, int rowsProcessed, int passCount, int failedValidations, int failCount) {
         this.spreadsheetFile = spreadsheetFile;
         this.rowsProcessed = rowsProcessed;
         this.passCount = passCount;
@@ -26,14 +24,13 @@ public final class ImportCompleteEvent extends ImportEvent
     }
 
     @Override
-    public String toString()
-    {
-        return "ImportCompleteEvent{" +
-                "rowsProcessed=" + rowsProcessed +
-                ", passCount=" + passCount +
-                ", failCount=" + failCount +
-                ", failedValidations=" + failedValidations +
-                ", spreadsheetFile=" + spreadsheetFile +
-                '}';
+    public String toString() {
+        return "ImportCompleteEvent{"
+                + "rowsProcessed=" + rowsProcessed
+                + ", passCount=" + passCount
+                + ", failCount=" + failCount
+                + ", failedValidations=" + failedValidations
+                + ", spreadsheetFile=" + spreadsheetFile
+                + '}';
     }
 }

@@ -54,7 +54,7 @@ public final class DerbyManager {
      * @return
      * @throws AppConfigException
      */
-    protected synchronized void start() throws AppConfigException {
+    protected synchronized void start() {
         synchronized (RUNNING) {
             if (RUNNING) {
                 throw new AppConfigException(ApplicationProperties.ALREADY_RUNNING);
@@ -69,7 +69,7 @@ public final class DerbyManager {
         }
     }
 
-    private synchronized void doStart() throws AppConfigException {
+    private synchronized void doStart() {
         try {
             loadDriver();
         } catch (Exception e) {

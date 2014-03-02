@@ -11,6 +11,8 @@ import org.hibernate.Query;
 import java.util.List;
 
 public class ImportJobExheadHibernateDAO extends GenericHibernateDAO<ImportJobExhead, Integer> implements ImportJobExheadDAO {
+
+    @SuppressWarnings("unchecked")
     public List<ImportJobContents> findByImportId(final int arg) {
         Query q = getSession().createQuery("from ImportJobExhead where importId = :param");
         q.setParameter("param", arg);

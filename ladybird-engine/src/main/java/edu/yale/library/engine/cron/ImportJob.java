@@ -5,7 +5,10 @@ import edu.yale.library.TimeUtils;
 import edu.yale.library.beans.User;
 import edu.yale.library.engine.exports.ExportRequestEvent;
 import edu.yale.library.engine.imports.*;
-import edu.yale.library.engine.model.*;
+import edu.yale.library.engine.model.DefaultFieldDataValidator;
+import edu.yale.library.engine.model.ImportReaderValidationException;
+import edu.yale.library.engine.model.ImportEngineException;
+import edu.yale.library.engine.model.ReadMode;
 import edu.yale.library.events.Event;
 import edu.yale.library.events.NotificationEventQueue;
 import org.quartz.Job;
@@ -19,28 +22,26 @@ import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class ImportJob implements Job
-{
+public class ImportJob implements Job {
     private final Logger logger = getLogger(this.getClass());
 
     /**
      * Execute the full cycle and notify the list of users.
      * todo find out how to tie user id to file data
+     *
      * @param arg0
      * @throws JobExecutionException
      */
-    public void execute(JobExecutionContext arg0) throws JobExecutionException
-    {
+    public void execute(JobExecutionContext arg0) throws JobExecutionException {
         final long startTime = System.currentTimeMillis();
         final ImportRequestEvent importRequestedEvent = ImportEngineQueue.getJob();
         final SpreadsheetFile file = importRequestedEvent.getSpreadsheetFile();
 
         logger.debug("[start] import job. File name={}", file);
 
-        try
-        {
+        try {
             final ImportEngine importEngine = new DefaultImportEngine();
-            final List list = importEngine.read(file, ReadMode.FULL, new DefaultFieldDataValidator());
+            final List<ImportEntity.Row>  list = importEngine.read(file, ReadMode.FULL, new DefaultFieldDataValidator());
 
             logger.debug("Read rows. list size=" + list.size());
 
@@ -64,21 +65,16 @@ public class ImportJob implements Job
             ExportEngineQueue.addJob(exportEvent);
 
             logger.debug("Added event=" + exportEvent.toString());
-        }
-        catch (ImportReaderValidationException e)
-        {
+        } catch (ImportReaderValidationException e) {
             logger.error("validation exception", e);
             throw new ImportEngineException(e);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             logger.error("Error executing job", e.getMessage());
             throw new ImportEngineException(e);
         }
     }
 
-    private void sendNotification(Event importEvent, List<User> u)
-    {
+    private void sendNotification(Event importEvent, List<User> u) {
         NotificationEventQueue.addEvent(new NotificationEventQueue().new NotificationItem(importEvent, u));
     }
 

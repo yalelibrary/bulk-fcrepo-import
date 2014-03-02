@@ -14,7 +14,7 @@ import java.io.File;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.nio.file.*;
+import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
@@ -24,44 +24,37 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Picks file from filesystem and puts an ImportEvent on queue
+ *
  * @see edu.yale.library.engine.imports.ImportRequestEvent
  */
-public class FilePickerJob implements Job
-{
+public class FilePickerJob implements Job {
 
     private final Logger logger = getLogger(this.getClass());
     private static final String XLSX = "xlsx";
 
-    public void monitorDirectory(final String FILE_SYS_RESOURCE, final Monitor monitorItem)
-    {
+    public void monitorDirectory(final String FILE_SYS_RESOURCE, final Monitor monitorItem) {
         final FileSystem fs = FileSystems.getDefault();
         final WatchService watchService;
-        try
-        {
+        try {
             watchService = fs.newWatchService();
             final Path path = fs.getPath(FILE_SYS_RESOURCE);
             path.register(watchService, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY,
                     StandardWatchEventKinds.OVERFLOW, StandardWatchEventKinds.ENTRY_DELETE);
 
-            while (true)
-            {
+            while (true) {
                 final WatchKey watchKey = watchService.take();
                 final List<WatchEvent<?>> watchEventList = watchKey.pollEvents();
 
-                for (final WatchEvent watchEvent : watchEventList)
-                {
+                for (final WatchEvent watchEvent : watchEventList) {
                     final WatchEvent.Kind watchEventKind = watchEvent.kind();
 
-                    if (watchEventKind == StandardWatchEventKinds.ENTRY_MODIFY ||
-                            watchEventKind == StandardWatchEventKinds.ENTRY_DELETE)
-                    {
+                    if (watchEventKind == StandardWatchEventKinds.ENTRY_MODIFY
+                            || watchEventKind == StandardWatchEventKinds.ENTRY_DELETE) {
                         logger.debug("File modification event detected. A file was modified (on folder) {} ",
                                 watchEvent.context().toString());
                     }
-                    if (watchEventKind == StandardWatchEventKinds.ENTRY_CREATE)
-                    {
-                        if (false == watchEvent.context().toString().contains(XLSX))
-                        {  //todo filter
+                    if (watchEventKind == StandardWatchEventKinds.ENTRY_CREATE) {
+                        if (false == watchEvent.context().toString().contains(XLSX)) {  //todo filter
                             continue;
                         }
 
@@ -70,7 +63,7 @@ public class FilePickerJob implements Job
 
                         /* Enqueue the new spreadsheet */
 
-                        final File fullPath = new File (path.toAbsolutePath() + System.getProperty("file.separator")
+                        final File fullPath = new File(path.toAbsolutePath() + System.getProperty("file.separator")
                                 + watchEvent.context().toString());
                         final SpreadsheetFile file = new SpreadsheetFile(watchEvent.context().toString(),
                                 path.toAbsolutePath().toString(),
@@ -85,20 +78,18 @@ public class FilePickerJob implements Job
                         logger.debug("Enqueued event=" + importEvent.toString());
                     }
                 }
-                if (!watchKey.reset())
+                if (!watchKey.reset()) {
                     break;
+                }
 
             }
-        }
-        catch (Exception e) //todo
-        {
+        } catch (Exception e) {
             logger.error("Exception monitoring filesystem resource(s)", e);
             e.printStackTrace(); //TODO restart the job
         }
     }
 
-    public void execute(JobExecutionContext ctx) throws JobExecutionException
-    {
+    public void execute(JobExecutionContext ctx) throws JobExecutionException {
         logger.debug("FilePickerJob init");
 
         final Monitor monitorItem = (Monitor) ctx.getJobDetail().getJobDataMap().get("event");

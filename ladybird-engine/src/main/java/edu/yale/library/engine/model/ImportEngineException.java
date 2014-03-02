@@ -4,29 +4,23 @@ package edu.yale.library.engine.model;
 /**
  * For now a RuntimeException.
  */
-public class ImportEngineException extends RuntimeException
-{
-    public ImportEngineException()
-    {
+public class ImportEngineException extends RuntimeException {
+    public ImportEngineException() {
     }
 
-    public ImportEngineException(String message)
-    {
+    public ImportEngineException(String message) {
         super(message);
     }
 
-    public ImportEngineException(String message, Throwable cause)
-    {
+    public ImportEngineException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public ImportEngineException(Throwable cause)
-    {
+    public ImportEngineException(Throwable cause) {
         super(cause);
     }
 
-    public ImportEngineException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)
-    {
+    public ImportEngineException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

@@ -11,14 +11,12 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class ImportHttpServiceIT extends AbstractHttpServiceTester
-{
+public class ImportHttpServiceIT extends AbstractHttpServiceTester {
 
-    final private String HTTP_SERVICE = "cronjobs";
+    private final String HTTP_SERVICE = "cronjobs";
 
     @Test
-    public void testGetScheduledJobs() throws Exception
-    {
+    public void testGetScheduledJobs() throws Exception {
         final HttpGet getMethod0 = HttpGetCall(HTTP_SERVICE);
         final HttpResponse response0 = httpClient.execute(getMethod0);
         assertNotNull(response0);

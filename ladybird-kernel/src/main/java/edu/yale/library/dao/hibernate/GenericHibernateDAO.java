@@ -23,10 +23,11 @@ import static org.slf4j.LoggerFactory.getLogger;
 public abstract class GenericHibernateDAO<T, ID extends Serializable>
         implements GenericDAO<T, ID> {
 
-    private Class<T> persistentClass;
-
     private final Logger logger = getLogger(this.getClass());
 
+    private Class<T> persistentClass;
+
+    @SuppressWarnings("unchecked")
     public GenericHibernateDAO() {
         this.persistentClass = (Class<T>) ((ParameterizedType) getClass()
                 .getGenericSuperclass()).getActualTypeArguments()[0];
@@ -42,7 +43,7 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 
     @SuppressWarnings("unchecked")
     public List<T> findAll() {
-        Query q = getSession().createQuery("from " + persistentClass.getName().toString());
+        Query q = getSession().createQuery("from " + persistentClass.getName());
         return q.list();
     }
 

@@ -14,6 +14,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 @ManagedBean
 @ApplicationScoped
+@SuppressWarnings("unchecked")
 public class DaoInitializer {
     private static final Logger logger = getLogger(DaoInitializer.class);
 

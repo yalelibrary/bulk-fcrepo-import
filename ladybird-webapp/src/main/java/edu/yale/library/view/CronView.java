@@ -17,6 +17,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 @ManagedBean
 @RequestScoped
+@SuppressWarnings("unchecked")
 public class CronView {
 
     private final Logger logger = getLogger(this.getClass());

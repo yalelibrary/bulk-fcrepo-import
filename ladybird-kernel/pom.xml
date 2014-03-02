@@ -16,6 +16,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <commons-configuration.version>1.10</commons-configuration.version>
+        <commons-email.version>1.1</commons-email.version>
     </properties>
 
     <dependencies>
@@ -43,9 +44,9 @@
             <version>${guice.version}</version>
         </dependency>
         <dependency>
-            <groupId>commons-email</groupId>
+            <groupId>org.apache.commons</groupId>
             <artifactId>commons-email</artifactId>
-            <version>1.1</version>
+            <version>${commons-email.version}</version>
         </dependency>
         <dependency>
             <groupId>org.quartz-scheduler</groupId>

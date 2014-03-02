@@ -14,10 +14,14 @@ import edu.yale.library.engine.cron.ExportEngineQueue;
 import edu.yale.library.engine.exports.DefaultExportEngine;
 import edu.yale.library.engine.exports.ExportEngine;
 import edu.yale.library.engine.exports.ExportRequestEvent;
-import edu.yale.library.engine.imports.*;
+import edu.yale.library.engine.imports.ImportEntity;
 import edu.yale.library.engine.imports.ImportEngine;
 import edu.yale.library.engine.imports.DefaultImportEngine;
-import edu.yale.library.engine.model.*;
+import edu.yale.library.engine.model.FieldDefinitionValue;
+import edu.yale.library.engine.imports.SpreadsheetFile;
+import edu.yale.library.engine.model.ReadMode;
+import edu.yale.library.engine.model.FieldConstant;
+import edu.yale.library.engine.model.DefaultFieldDataValidator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,26 +44,25 @@ import static org.junit.Assert.fail;
 /**
  * Tests full cycle for read/write import/export.
  */
-public class ImportEngineIT
-{
+public class ImportEngineIT {
 
-    Logger logger = LoggerFactory.getLogger(this.getClass());
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    ServicesManager servicesManager;
+    private ServicesManager servicesManager;
 
     /* Contains test fdids corresponding to test excel file (instead of via db) */
-    final static String FDID_TEST_PROPS_FILE = "/fdids.test.properties";
+    private static final String FDID_TEST_PROPS_FILE = "/fdids.test.properties";
 
     @Deprecated
     private static final String XLS_FILE_TO_WRITE = asTmp("test_export.xlsx");
 
-     /**
+    /**
      * Full cycle read write
+     *
      * @throws Exception
      */
     @Test
-    public void execute() throws Exception
-    {
+    public void execute() throws Exception {
         //start the engine
         servicesManager.startDB(); //TODO
 
@@ -116,7 +119,7 @@ public class ImportEngineIT
         logger.debug("Export engine reading import tables");
         final List<ImportEntity.Row> listExportRows = exportEngine.read();
 
-        assert( listExportRows != null );
+        assert (listExportRows != null);
         logger.debug("Size={}", listExportRows.size());
         assertEquals("Export rows don't equal import expected rows", listExportRows.size(), 76); //fixme
 
@@ -130,15 +133,13 @@ public class ImportEngineIT
         assertEquals("Rows size mismatch", rowsReadBack.size(), 76); //fixme
     }
 
-    public SpreadsheetFile getImportSpreadsheeet()
-    {
+    public SpreadsheetFile getImportSpreadsheeet() {
         SpreadsheetFile file = new SpreadsheetFile(FileConstants.TEST_XLS_FILE, "Test spreadsheet",
                 FileConstants.TEST_XLS_FILE, getClass().getClassLoader().getResourceAsStream(FileConstants.TEST_XLS_FILE));
         return file;
     }
 
-    public SpreadsheetFile getExportSpreadsheeet() throws FileNotFoundException
-    {
+    public SpreadsheetFile getExportSpreadsheeet() throws FileNotFoundException {
         final String testPath = System.getProperty("user.home")
                 + System.getProperty("file.separator") + "test_export.xlsx";
         SpreadsheetFile file = new SpreadsheetFile("test_export_xlsx", "Test export xls",
@@ -149,22 +150,17 @@ public class ImportEngineIT
     /**
      * Sets business logic data
      */
-    public void setApplicationData()
-    {
+    public void setApplicationData() {
         initFieldDefMap(); //set default fdids
     }
 
     /**
      * Inits fdids
      */
-    public void initFieldDefMap()
-    {
-        try
-        {
+    public void initFieldDefMap() {
+        try {
             new FieldDefinitionValue().setFieldDefMap(getTextFieldDefsMap());
-        }
-        catch(IOException|NullPointerException e)
-        {
+        } catch (IOException | NullPointerException e) {
             logger.error("Test fdids could not be loaded", e);
             fail();
         }
@@ -172,21 +168,22 @@ public class ImportEngineIT
 
     /**
      * Helps in initing fdids via a tex tfile
+     *
      * @return
      * @throws IOException
      * @throws NullPointerException
      */
-    public Map getTextFieldDefsMap() throws IOException, NullPointerException
-    {
-        Map<String, FieldConstant> fdidsMap = new HashMap();
+    public Map<String,FieldConstant> getTextFieldDefsMap() throws IOException {
+        Map<String, FieldConstant> fdidsMap = new HashMap<>();
 
         final Properties properties = new Properties();
         properties.load(this.getClass().getResourceAsStream(FDID_TEST_PROPS_FILE));
 
-        for (final String fdidInt: properties.stringPropertyNames())
+        for (final String fdidInt : properties.stringPropertyNames()) {
             //TODO put Int as key?
-            fdidsMap.put(properties.getProperty(fdidInt).toString(), getFdid(Integer.parseInt(fdidInt),
-                    properties.getProperty(fdidInt).toString()));
+            fdidsMap.put(properties.getProperty(fdidInt), getFdid(Integer.parseInt(fdidInt),
+                    properties.getProperty(fdidInt)));
+        }
 
         //test file entries should equal the number of spreadsheet columns:
         assertEquals("Wrong number of test fdids", fdidsMap.size(),
@@ -195,48 +192,42 @@ public class ImportEngineIT
         return fdidsMap;
     }
 
-    public void setJdbcFieldDefsMap()
-    {
+    public void setJdbcFieldDefsMap() {
         //TODO (set fdid in test db?)
     }
 
-    public FieldDefinitionValue getFdid(int fdid, String s)
-    {
+    public FieldDefinitionValue getFdid(int fdid, String s) {
         return new FieldDefinitionValue(fdid, s);
     }
 
     /**
      * Test file constants
      */
-    public class FileConstants
-    {
+    public class FileConstants {
 
-        final static String TEST_XLS_FILE = "4654-pt1-READY-FOR-INGEST-A.xlsx";
+        static final String TEST_XLS_FILE = "4654-pt1-READY-FOR-INGEST-A.xlsx";
 
-        final static int ROW_COUNT = 78;
+        static final int ROW_COUNT = 78;
 
-        final static int COL_COUNT = 31; //Actual number
+        static final int COL_COUNT = 31; //Actual number
 
-        final static int FDID_COL_COUNT = 30; //COL_COUNT (regular fdids) minus a FunctionConstants (F1)
+        static final int FDID_COL_COUNT = 30; //COL_COUNT (regular fdids) minus a FunctionConstants (F1)
 
     }
 
     /* Creates the file in the user home directory. */
     @Deprecated
-    private static String asTmp(final String s)
-    {
+    private static String asTmp(final String s) {
         return System.getProperty("user.home") + System.getProperty("file.separator") + s;
     }
 
     @Before
-    public void init()
-    {
+    public void init() {
         servicesManager = new ServicesManager();
     }
 
     @After
-    public void stopDB() throws SQLException
-    {
+    public void stopDB() throws SQLException {
         servicesManager.stopDB();
     }
 

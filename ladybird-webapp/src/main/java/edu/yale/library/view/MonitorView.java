@@ -20,6 +20,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 @ManagedBean
 @ApplicationScoped
+@SuppressWarnings("unchecked")
 public class MonitorView extends AbstractView {
     private final Logger logger = getLogger(this.getClass());
 

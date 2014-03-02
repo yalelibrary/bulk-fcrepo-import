@@ -13,6 +13,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 @ManagedBean
 @RequestScoped
+@SuppressWarnings("unchecked")
 public class FieldDefinitionVersionView extends AbstractView {
     private final Logger logger = getLogger(this.getClass());
 

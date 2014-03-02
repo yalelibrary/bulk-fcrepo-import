@@ -11,19 +11,18 @@ import java.util.List;
 /**
  * Reads Excel spreadsheet. Subject to modification.
  */
-public abstract class AbstractImportEngine implements ImportEngine
-{
+public abstract class AbstractImportEngine implements ImportEngine {
 
     private SpreadsheetFile spreadsheetFile = null;
 
-    protected final static Integer USER_ID = 0; //todo
+    protected static final Integer USER_ID = 0; //todo
 
     /**
      * Read with default param settings.
+     *
      * @see #read(SpreadsheetFile, edu.yale.library.engine.model.ReadMode, edu.yale.library.engine.model.DefaultFieldDataValidator)
      */
-    public final List<ImportEntity.Row> read(SpreadsheetFile file) throws ImportReaderValidationException, IOException
-    {
+    public final List<ImportEntity.Row> read(SpreadsheetFile file) throws ImportReaderValidationException, IOException {
         return read(file, ReadMode.FULL, new DefaultFieldDataValidator());
     }
 
@@ -35,8 +34,7 @@ public abstract class AbstractImportEngine implements ImportEngine
      * @return list of row values. Perhaps should return sheet.
      */
     public final List<ImportEntity.Row> read(SpreadsheetFile file, ReadMode inputReadMode,
-           DefaultFieldDataValidator validator) throws ImportReaderValidationException, IOException
-    {
+                                             DefaultFieldDataValidator validator) throws ImportReaderValidationException, IOException {
         spreadsheetFile = file;
         List<ImportEntity.Row> rows = doRead(file, inputReadMode);
         return rows;
@@ -44,15 +42,14 @@ public abstract class AbstractImportEngine implements ImportEngine
 
     /**
      * Writes to tables.
+     *
      * @param list
      */
-    public final int write(List<ImportEntity.Row> list)
-    {
+    public final int write(List<ImportEntity.Row> list) {
         return doWrite(list);
     }
 
-    protected SpreadsheetFile getFile()
-    {
+    protected SpreadsheetFile getFile() {
         return spreadsheetFile.clone();
     }
 
@@ -63,6 +60,3 @@ public abstract class AbstractImportEngine implements ImportEngine
 
 
 }
-
-
- 

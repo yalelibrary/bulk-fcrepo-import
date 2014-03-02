@@ -1,7 +1,6 @@
 package edu.yale.library.engine.model;
 
- public enum WriteMode
- {
+public enum WriteMode {
     HALT,
     FULL
 }

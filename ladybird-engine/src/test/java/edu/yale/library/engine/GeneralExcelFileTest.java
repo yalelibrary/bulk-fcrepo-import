@@ -13,18 +13,16 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Exercises general Excel reading. The test is meant for testing the format of the test file.
- *
  */
-public class GeneralExcelFileTest
-{
+public class GeneralExcelFileTest {
 
     /**
      * Tests number of rows and columns
+     *
      * @throws Exception
      */
     @Test
-    public void testColumnsandRows() throws IOException
-    {
+    public void testColumnsandRows() throws IOException {
 
         InputStream TEST_EXCEL_FILE = getClass().getClassLoader()
                 .getResourceAsStream(FileConstants.TEST_XLS_FILE);
@@ -38,8 +36,7 @@ public class GeneralExcelFileTest
         assertEquals("Expected header count mismatch", header.getPhysicalNumberOfCells(),
                 FileConstants.HEADER_COL_COUNT);
 
-        while (it.hasNext())
-        {
+        while (it.hasNext()) {
             org.apache.poi.ss.usermodel.Row row = it.next();
             assertEquals("Expected columns mismatch in row num. " + row.getRowNum(),
                     row.getPhysicalNumberOfCells(), FileConstants.COL_COUNT);

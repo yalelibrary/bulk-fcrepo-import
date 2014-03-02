@@ -15,18 +15,21 @@ public class ImportJobContentsHibernateDAO extends GenericHibernateDAO<ImportJob
         implements ImportJobContentsDAO {
     private Logger logger = LoggerFactory.getLogger(ImportJobContentsHibernateDAO.class);
 
+    @SuppressWarnings("unchecked")
     public List<ImportJobContents> findByRow(final int arg) {
         Query q = getSession().createQuery("from ImportJobContents where row = :param");
         q.setParameter("param", arg);
         return q.list();
     }
 
+    @SuppressWarnings("unchecked")
     public List<ImportJobContents> findByImportId(final int arg) {
         Query q = getSession().createQuery("from ImportJobContents where importId = :param");
         q.setParameter("param", arg);
         return q.list();
     }
 
+    @SuppressWarnings("unchecked")
     public int getNumEntriesPerImportJob(final int arg) {
         Query q = getSession().createQuery("select count(*) from ImportJobContents where importId = :param");
         q.setParameter("param", arg);
@@ -42,7 +45,7 @@ public class ImportJobContentsHibernateDAO extends GenericHibernateDAO<ImportJob
     public int getNumRowsPerImportJob(final int arg) {
         Query q = getSession().createQuery("select max(i.row) from ImportJobContents i where importId = :param");
         q.setParameter("param", arg);
-        return ((Integer) q.uniqueResult()).intValue();
+        return ((Integer) q.uniqueResult());
     }
 }
 

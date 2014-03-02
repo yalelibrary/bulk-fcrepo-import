@@ -1,6 +1,6 @@
 package edu.yale.library.engine.model;
 
- public enum ReadMode {
+public enum ReadMode {
     HALT,
     FULL
 }

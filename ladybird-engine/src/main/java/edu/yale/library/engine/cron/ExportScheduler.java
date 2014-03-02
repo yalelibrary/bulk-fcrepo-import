@@ -3,14 +3,19 @@ package edu.yale.library.engine.cron;
 import edu.yale.library.beans.Monitor;
 import edu.yale.library.cron.DefaultJobsManager;
 import edu.yale.library.engine.model.CronSchedulingException;
-import org.quartz.*;
+import org.quartz.JobDetail;
+import org.quartz.CronScheduleBuilder;
+import org.quartz.SchedulerException;
+import org.quartz.Scheduler;
+import org.quartz.Trigger;
+import org.quartz.TriggerBuilder;
+import org.quartz.JobBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class ExportScheduler
-{
+public class ExportScheduler {
     private final Logger logger = getLogger(this.getClass());
 
     /**
@@ -21,20 +26,16 @@ public class ExportScheduler
      * @param cronExpression
      * @throws Exception
      */
-    public void scheduleJob(final String jobName, final String triggerName, String cronExpression, Monitor monitorItem)
-    {
+    public void scheduleJob(final String jobName, final String triggerName, String cronExpression, Monitor monitorItem) {
         logger.debug("Scheduling export job");
 
         JobDetail job;
-        try
-        {
+        try {
             Scheduler scheduler = new StdSchedulerFactory().getScheduler();
             scheduler.start();
             job = getJob(jobName, ExportJob.class, monitorItem);
             scheduler.scheduleJob(job, getTrigger(cronExpression));
-        }
-        catch (SchedulerException e)
-        {
+        } catch (SchedulerException e) {
             throw new CronSchedulingException(e);
         }
         //add to jobs manager
@@ -42,8 +43,7 @@ public class ExportScheduler
         defaultJobsManager.addJob(job);
     }
 
-    protected Trigger getTrigger(String cronExpression)
-    {
+    protected Trigger getTrigger(String cronExpression) {
         Trigger trigger = TriggerBuilder
                 .newTrigger()
                 .withIdentity("EXJ-TRIGER", "EXJ")
@@ -52,8 +52,8 @@ public class ExportScheduler
         return trigger;
     }
 
-    protected JobDetail getJob(String jobName, Class klass, Monitor monitorItem)
-    {
+    @SuppressWarnings("unchecked")
+    protected JobDetail getJob(String jobName, Class klass, Monitor monitorItem) {
         JobDetail job = JobBuilder.newJob(klass)
                 .withIdentity(jobName, "EXJ").build();
         job.getJobDataMap().put("event", monitorItem); //used by ExportJob

@@ -7,8 +7,7 @@ import java.io.IOException;
 import java.util.List;
 
 
-public interface ExportEngine
-{
+public interface ExportEngine {
     List<ImportEntity.Row> read();
 
     void write(List<ImportEntity.Row> list, String spreadSheetFilePath) throws IOException;

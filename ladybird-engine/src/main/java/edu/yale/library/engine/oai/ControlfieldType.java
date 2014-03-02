@@ -8,41 +8,33 @@ import javax.xml.bind.annotation.XmlAttribute;
 
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "controlfieldType", namespace = "http://www.loc.gov/MARC21/slim", propOrder = {"value"})
-public class ControlfieldType
-{
+@XmlType(name = "controlfieldType", namespace = "http://www.loc.gov/MARC21/slim", propOrder = { "value" })
+public class ControlfieldType {
     @XmlValue
     protected String value;
 
     @XmlAttribute(name = "tag")
     protected String tag;
 
-    public String getValue()
-    {
+    public String getValue() {
         return value;
     }
 
-    public void setValue(String value)
-    {
+    public void setValue(String value) {
         this.value = value;
     }
 
-    public String getTag()
-    {
+    public String getTag() {
         return tag;
     }
 
-    public void setTag(String value)
-    {
+    public void setTag(String value) {
         this.tag = value;
     }
 
     @Override
-    public String toString()
-    {
-        return "ControlfieldType{" +
-                "value='" + value + '\'' +
-                ", tag='" + tag + '\'' +
-                '}';
+    public String toString() {
+        return "ControlfieldType{" + "value='" + value + '\''
+                + ", tag='" + tag + '\'' + '}';
     }
 }

@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import javax.xml.bind.JAXBContext;
@@ -17,7 +16,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -26,24 +24,19 @@ import static org.junit.Assert.fail;
 /**
  * Test against a document
  */
-public class Marc21ReaderTest
-{
-    Logger logger = LoggerFactory.getLogger(Marc21ReaderTest.class);
+public class Marc21ReaderTest {
+    private Logger logger = LoggerFactory.getLogger(Marc21ReaderTest.class);
 
     @Test
-    public void readContents()
-    {
-        try
-        {
+    public void readContents() {
+        try {
             final InputStream is = this.getClass().getClassLoader().getResourceAsStream("oai/marc21_doc.xml");
             assert (is != null);
             final JAXBContext jaxbContext = JAXBContext.newInstance(Record.class);
             final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             final Record record = (Record) jaxbUnmarshaller.unmarshal(is);
             assertEquals("DataField size mismatch", record.getDatafield().size(), 24);
-        }
-        catch (JAXBException e)
-        {
+        } catch (JAXBException e) {
             fail("Reading test marc document failed");
         }
     }
@@ -52,23 +45,19 @@ public class Marc21ReaderTest
      * Tests full feed, and extract marc:record element
      */
     @Test
-    public void testDataFieldsUnMarshalling()
-    {
-        try
-        {
+    public void testDataFieldsUnMarshalling() {
+        try {
             final DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
             domFactory.setNamespaceAware(true);
             final DocumentBuilder builder = domFactory.newDocumentBuilder();
             final Document doc = builder.parse(this.getClass().getClassLoader().getResourceAsStream("oai/oai_marc21"));
-            final Map<String, String> namespaceMap = new HashMap();
+            final Map<String, String> namespaceMap = new HashMap<>();
             namespaceMap.put("k", "http://www.openarchives.org/OAI/2.0/");
             namespaceMap.put("l", "http://www.loc.gov/MARC21/slim");
             final Node node = XPathAPI.selectSingleNode(doc, "//l:record", namespaceMap);
             final Record r = asRecord(node);
             assertEquals("mismatch", r.getDatafield().size(), 24);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             fail(e.getMessage());
         }
     }
@@ -79,18 +68,14 @@ public class Marc21ReaderTest
      * @param p
      * @throws JAXBException
      */
-    public Record asRecord(Node p) throws JAXBException
-    {
-        try
-        {
+    public Record asRecord(Node p) throws JAXBException {
+        try {
             final JAXBContext jaxbContext = JAXBContext.newInstance(Record.class);
             final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             final Record record = (Record) jaxbUnmarshaller.unmarshal(p);
             assertEquals("Record size mismatch", record.getDatafield().size(), 24);
             return record;
-        }
-        catch (JAXBException e)
-        {
+        } catch (JAXBException e) {
             throw e;
         }
     }

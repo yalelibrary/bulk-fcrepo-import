@@ -8,17 +8,14 @@ import java.util.concurrent.ArrayBlockingQueue;
 /**
  * TODO temp. A memory queue
  */
-public class ExportEngineQueue
-{
-    static Queue<ExportRequestEvent> jobQueue = new ArrayBlockingQueue(50);
+public class ExportEngineQueue {
+    static Queue<ExportRequestEvent> jobQueue = new ArrayBlockingQueue<>(50);
 
-    public static boolean addJob(ExportRequestEvent event)
-    {
+    public static boolean addJob(ExportRequestEvent event) {
         return jobQueue.add(event);
     }
 
-    public static ExportRequestEvent getJob()
-    {
+    public static ExportRequestEvent getJob() {
         return jobQueue.poll();
     }
 

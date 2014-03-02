@@ -12,35 +12,26 @@ import javax.xml.bind.Unmarshaller;
 /**
  * A simple impelmentation. Implement and Use Marc4J wrapper for more extensinve functionality.
  */
-public class DefaultMarcReader implements MarcReader
-{
-    private final static Logger logger = LoggerFactory.getLogger(DefaultMarcReader.class);
+public class DefaultMarcReader implements MarcReader {
+    private static final Logger logger = LoggerFactory.getLogger(DefaultMarcReader.class);
 
-    public Record readMarc(final Node arg) throws MarcReadingException
-    {
-        try
-        {
+    public Record readMarc(final Node arg) throws MarcReadingException {
+        try {
             return readContents(arg);
-        }
-        catch (JAXBException e)
-        {
+        } catch (JAXBException e) {
             logger.error("Exception reading marc record", e);
             throw new MarcReadingException(e);
         }
     }
 
-    private Record readContents(final Node node) throws JAXBException
-    {
-        try
-        {
+    private Record readContents(final Node node) throws JAXBException {
+        try {
             assert (node != null);
             final JAXBContext jaxbContext = JAXBContext.newInstance(Record.class);
             final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
             final Record record = (Record) jaxbUnmarshaller.unmarshal(node);
             return record;
-        }
-        catch (JAXBException e)
-        {
+        } catch (JAXBException e) {
             throw e;
         }
     }

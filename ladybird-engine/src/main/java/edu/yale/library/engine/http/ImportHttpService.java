@@ -1,7 +1,6 @@
 package edu.yale.library.engine.http;
 
 
-
 import edu.yale.library.cron.JobsManager;
 import org.slf4j.Logger;
 
@@ -19,29 +18,25 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 
 @Path("/{path: .*}/cronjobs")
-public class ImportHttpService
-{
+public class ImportHttpService {
     private final Logger logger = getLogger(this.getClass());
 
     JobsManager jobsManager;
 
     @Inject
-    public ImportHttpService(JobsManager jobsManager)
-    {
+    public ImportHttpService(JobsManager jobsManager) {
         this.jobsManager = jobsManager;
     }
 
     @GET
     @Produces(APPLICATION_JSON)
-    public Response getScheduledJobs()
-    {
+    public Response getScheduledJobs() {
         return Response.ok(getAllJobs()).build();
     }
 
     public String getAllJobs() {
 
-        if (jobsManager == null)
-        {
+        if (jobsManager == null) {
             logger.error("Jobs Manager null");
         }
 

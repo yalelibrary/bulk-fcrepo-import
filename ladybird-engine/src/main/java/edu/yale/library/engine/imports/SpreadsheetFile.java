@@ -6,8 +6,7 @@ import java.io.InputStream;
 /**
  * Represents a spreadsheet file. Subject to modification. Simple implementation for now.
  */
-public class SpreadsheetFile implements Cloneable
-{
+public class SpreadsheetFile implements Cloneable {
     private String fileName;
 
     private String altName;
@@ -16,74 +15,60 @@ public class SpreadsheetFile implements Cloneable
 
     private InputStream fileStream;
 
-    public SpreadsheetFile(String fileName, String altName, String path, InputStream fileStream)
-    {
+    public SpreadsheetFile(String fileName, String altName, String path, InputStream fileStream) {
         this.fileName = fileName;
         this.altName = altName;
         this.path = path;
         this.fileStream = fileStream;
     }
 
-    public InputStream getFileStream()
-    {
+    public InputStream getFileStream() {
         return fileStream;
     }
 
-    public void setFileStream(InputStream fileStream)
-    {
+    public void setFileStream(InputStream fileStream) {
         this.fileStream = fileStream;
     }
 
-    public String getAltName()
-    {
+    public String getAltName() {
         return altName;
     }
 
-    public void setAltName(String altName)
-    {
+    public void setAltName(String altName) {
         this.altName = altName;
     }
 
-    public String getPath()
-    {
+    public String getPath() {
         return path;
     }
 
-    public void setPath(String path)
-    {
+    public void setPath(String path) {
         this.path = path;
     }
 
-    public String getFileName()
-    {
+    public String getFileName() {
 
         return fileName;
     }
 
-    public void setFileName(String fileName)
-    {
+    public void setFileName(String fileName) {
         this.fileName = fileName;
     }
 
     @Override
-    public String toString()
-    {
-        return "SpreadsheetFile{" +
-                "fileName='" + fileName + '\'' +
-                ", altName='" + altName + '\'' +
-                ", path='" + path + '\'' +
-                '}';
+    public String toString() {
+        return "SpreadsheetFile{"
+                + "fileName='" + fileName + '\''
+                + ", altName='" + altName + '\''
+                + ", path='" + path + '\''
+                + '}';
     }
 
     @Override
-    protected SpreadsheetFile clone()
-    {
-        try
-        {
+    protected SpreadsheetFile clone() {
+        try {
             return (SpreadsheetFile) super.clone();
-        }
-        catch (Throwable t)
-        {
+        } catch (Throwable t) {
             throw new InternalError(t.toString());
         }
     }

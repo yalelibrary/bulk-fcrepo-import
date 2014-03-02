@@ -25,7 +25,7 @@ public final class DerbySchemaUtil {
      *
      * @throws AppConfigException
      */
-    protected void init() throws AppConfigException {
+    protected void init() {
         try {
             Connection conn = DriverManager.getConnection(Config.PROTOCOL
                     + Config.DB + ";create=true", Config.PROPS);

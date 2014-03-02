@@ -14,6 +14,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 @ManagedBean
 @RequestScoped
+@SuppressWarnings("unchecked")
 public class ObjectAcidView extends AbstractView {
     private final Logger logger = getLogger(this.getClass());
 

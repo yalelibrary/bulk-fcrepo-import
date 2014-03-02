@@ -9,7 +9,7 @@ public final class EmbeddedDatabaseUtil {
     private EmbeddedDatabaseUtil() {
     }
 
-    protected static void start() throws AppConfigException {
+    protected static void start() {
         DerbyManager.getINSTANCE().start();
     }
 
@@ -21,7 +21,7 @@ public final class EmbeddedDatabaseUtil {
         return DerbyManager.getINSTANCE().isRUNNING();
     }
 
-    protected static void init() throws AppConfigException {
+    protected static void init() {
         new DerbySchemaUtil().init(); //TODO
     }
 

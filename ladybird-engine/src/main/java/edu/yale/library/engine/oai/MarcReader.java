@@ -6,7 +6,6 @@ import org.w3c.dom.Node;
 /**
  * MarcReader supertype
  */
-public interface MarcReader
-{
+public interface MarcReader {
     Record readMarc(Node arg) throws MarcReadingException;
 }

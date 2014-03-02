@@ -8,15 +8,13 @@ import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class DefaultExportEngine extends AbstractExportEngine
-{
+public class DefaultExportEngine extends AbstractExportEngine {
     private final Logger logger = getLogger(this.getClass());
 
-    private final static Integer DEFAULT_SHEET = 0; //todo
+    private static final Integer DEFAULT_SHEET = 0; //todo
 
     @Override
-    public List<ImportEntity.Row> doRead()
-    {
+    public List<ImportEntity.Row> doRead() {
         logger.debug("Reading rows from import table(s)");
 
         ExportReader reader = new ExportReader();
@@ -28,8 +26,7 @@ public class DefaultExportEngine extends AbstractExportEngine
     }
 
     @Override
-    public void doWrite(final List<ImportEntity.Row> list, final String pathName) throws IOException
-    {
+    public void doWrite(final List<ImportEntity.Row> list, final String pathName) throws IOException {
         logger.debug("Initiating write to spreadsheet. . .");
 
         ExportWriter exportWriter = new ExportWriter();

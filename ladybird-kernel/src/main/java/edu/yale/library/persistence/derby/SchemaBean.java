@@ -12,21 +12,22 @@ import java.util.Map;
 import java.util.Properties;
 
 public class SchemaBean {
-    Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger logger = LoggerFactory.getLogger(SchemaBean.class);
 
-    PropertyReader reader = new PropertyReader(ApplicationProperties.SCHEMA_PROPS_FILE);
+    final PropertyReader reader = new PropertyReader(ApplicationProperties.SCHEMA_PROPS_FILE);
 
-    private Map build() throws IOException {
-        Map<String, String> map = new HashMap();
-        Properties props = reader.readAll();
-        for (final String key : props.stringPropertyNames())
+    private Map<String,String> build() throws IOException {
+        final Map<String, String> map = new HashMap<>();
+        final Properties props = reader.readAll();
+        for (final String key : props.stringPropertyNames()) {
             map.put(key, value(props.getProperty(key)));
+        }
         return map;
     }
 
-    public static Map getSchema() {
+    public static Map<String,String> getSchema() {
         try {
-            Map map = new SchemaBean().build();
+            final Map<String,String> map = new SchemaBean().build();
             return Collections.unmodifiableMap(map);
         } catch (IOException e) {
             return Collections.emptyMap(); //ignore exception

@@ -14,7 +14,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class DefaultJobsManager implements JobsManager {
     private final Logger logger = getLogger(this.getClass());
 
-    static List<JobDetail> jobs = new ArrayList(); //TODO
+    static List<JobDetail> jobs = new ArrayList<>(); //TODO
 
     public List<JobDetail> getJobs() {
         return jobs;

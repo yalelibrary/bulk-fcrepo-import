@@ -9,16 +9,14 @@ import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class DefaultImportEngine extends AbstractImportEngine
-{
+public class DefaultImportEngine extends AbstractImportEngine {
     private final Logger logger = getLogger(this.getClass());
 
-    private final static Integer DEFAULT_SHEET = 0; //todo
+    private static final Integer DEFAULT_SHEET = 0; //todo
 
     @Override
     public List<ImportEntity.Row> doRead(SpreadsheetFile file, ReadMode readMode) throws ImportReaderValidationException,
-            IOException
-    {
+            IOException {
         logger.debug("Reading spreadsheet: " + file.getAltName());
 
         ImportReader reader = new ImportReader(file, DEFAULT_SHEET, readMode);
@@ -26,8 +24,7 @@ public class DefaultImportEngine extends AbstractImportEngine
     }
 
     @Override
-    public int doWrite(List<ImportEntity.Row> list)
-    {
+    public int doWrite(List<ImportEntity.Row> list) {
         logger.debug("Initiating write");
 
         ImportWriter importWriter = new ImportWriter();

@@ -1,50 +1,40 @@
 package edu.yale.library.engine.imports;
 
 import edu.yale.library.beans.Monitor;
-import edu.yale.library.beans.User;
 import edu.yale.library.events.imports.ImportEvent;
 
 /**
  * TODO field access. Subject to modification.
  */
-public final class ImportRequestEvent extends ImportEvent
-{
+public final class ImportRequestEvent extends ImportEvent {
 
     private SpreadsheetFile spreadsheetFile;
     private Monitor monitor;
 
-    public ImportRequestEvent(SpreadsheetFile spreadsheetFile, Monitor monitor)
-    {
+    public ImportRequestEvent(SpreadsheetFile spreadsheetFile, Monitor monitor) {
         this.spreadsheetFile = spreadsheetFile;
         this.monitor = monitor;
     }
 
-    public SpreadsheetFile getSpreadsheetFile()
-    {
+    public SpreadsheetFile getSpreadsheetFile() {
         return spreadsheetFile;
     }
 
     @Override
-    public String toString()
-    {
-        return "ImportRequestEvent{" +
-                "spreadsheetFile=" + spreadsheetFile +
-                ", monitor=" + monitor +
-                '}';
+    public String toString() {
+        return "ImportRequestEvent{" + "spreadsheetFile=" + spreadsheetFile
+                + ", monitor=" + monitor + '}';
     }
 
-    public void setSpreadsheetFile(SpreadsheetFile spreadsheetFile)
-    {
+    public void setSpreadsheetFile(SpreadsheetFile spreadsheetFile) {
         this.spreadsheetFile = spreadsheetFile;
     }
 
-    public Monitor getMonitor()
-    {
+    public Monitor getMonitor() {
         return monitor;
     }
 
-    public void setMonitor(Monitor monitor)
-    {
+    public void setMonitor(Monitor monitor) {
         this.monitor = monitor;
     }
 }
