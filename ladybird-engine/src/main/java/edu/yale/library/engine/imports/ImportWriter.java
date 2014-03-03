@@ -12,9 +12,13 @@ import edu.yale.library.dao.ImportJobExheadDAO;
 import edu.yale.library.dao.hibernate.ImportJobContentsHibernateDAO;
 import edu.yale.library.dao.hibernate.ImportJobExheadHibernateDAO;
 import edu.yale.library.dao.hibernate.ImportJobHibernateDAO;
+import edu.yale.library.engine.model.FunctionConstants;
+import edu.yale.library.engine.model.MarcReadingException;
+import edu.yale.library.engine.oai.OaiHttpClient;
+import edu.yale.library.engine.oai.OaiProvider;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -74,7 +78,7 @@ public class ImportWriter {
         logger.debug("Writing spreadsheet body contents");
         logger.debug("List size={}", list.size());
 
-        List<ImportJobContents> jobContentsList = new ArrayList<>(); //TODO (for bulk save)
+        //List<ImportJobContents> jobContentsList = new ArrayList<>(); //TODO (for bulk save)
 
         ImportJobContentsDAO dao = new ImportJobContentsHibernateDAO();
 
@@ -85,9 +89,29 @@ public class ImportWriter {
             for (int c = 0; c < columns.size(); c++) {
                 ImportEntity.Column<String> col = columns.get(c);
 
-                //logger.debug("Row={}, Col={}, Columns={}", r, c, columns.size());
-                ImportJobContents entry = new ImportJobContentsBuilder().setImportId(importId).setDate(JOB_EXEC_DATE).
-                        setCol(c).setRow(r).setValue(col.getValue()).build();
+                //logger.debug("Row={}, Col={}", r, c);
+
+                ImportJobContents entry = null;
+
+                if (col.getField().getName().equals(FunctionConstants.F104)) {
+                    OaiProvider oaiProvider = new OaiProvider("id", "url", "bibIdPrefix"); //TODO
+                    OaiHttpClient oaiHttpClient = new OaiHttpClient(oaiProvider);
+                    try {
+                        oaiHttpClient.readMarc(col.getValue());
+                        entry = new ImportJobContentsBuilder().setImportId(importId)
+                                .setDate(JOB_EXEC_DATE).setCol(c).setRow(r).setValue(col.getValue()).build();
+                    } catch (IOException e) {
+                        logger.error("Error reading source", e);
+                        e.printStackTrace();
+                    } catch (MarcReadingException e) {
+                        logger.error("Error reading marc", e);
+                        e.printStackTrace();
+                    }
+                } else {
+                    entry = new ImportJobContentsBuilder().setImportId(importId).setDate(JOB_EXEC_DATE).
+                            setCol(c).setRow(r).setValue(col.getValue()).build();
+                }
+
                 dao.save(entry); //TODO or save list
             }
             //jobContentsList.add(entry);

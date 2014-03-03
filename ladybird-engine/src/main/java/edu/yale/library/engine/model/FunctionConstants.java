@@ -19,7 +19,16 @@ public enum FunctionConstants implements FieldConstant {
     /**
      * File location *
      */
-    F3("F3", "Image");
+    F3("F3", "Image"),
+
+    /**
+     * BibId Import
+     */
+    F104("F104", "OAI-BibId-Import"),
+    /**
+     * Barcode Import
+     */
+    F105("F105", "OAI-Barcode-Import");
 
     private String name;
     private String title;

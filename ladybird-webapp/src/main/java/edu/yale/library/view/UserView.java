@@ -7,6 +7,7 @@ import edu.yale.library.dao.UserDAO;
 
 import org.slf4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 
@@ -39,6 +40,16 @@ public class UserView extends AbstractView {
     public List getItemList() {
         List<User> user = dao.findAll();
         return user;
+    }
+
+    //TODO: replace with DAO call
+    public List getUsernameList() {
+        List<User> user = getItemList();
+        List<String> userNameList = new ArrayList<>();
+        for (User u: user) {
+            userNameList.add(u.getUsername());
+        }
+        return userNameList;
     }
 
     public User getItem() {

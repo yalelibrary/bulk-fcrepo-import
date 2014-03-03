@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template.xhtml">
+    <ui:define name="content">
+        <h2>Import Source</h2>
+        <h:form id="ImportSourceForm" enctype="multipart/form-data"
+                styleClass=""
+                style="">
+            <br/>
+
+            <div style="">
+                <div class="" style="">
+
+                    <!--Add Button -->
+
+                    <p:commandButton id="chartBtn" icon="ui-icon-plusthick"
+                                     value="New Item" type="button" style="color:#103480;"
+                                     onclick="dlg.show();"/>
+
+                    <br/>
+                    <br/>
+
+                    <!-- Modal pop up for + Button -->
+
+                    <p:dialog id="modalDialog" header="New Item" widgetVar="dlg"
+                              modal="true" height="350" width="350" resizable="false">
+                        <div class="control-group">
+                        <span class="help-block">
+                            <p:messages id="messages_pf" showDetail="true" autoUpdate="true" closable="true"/>
+                        </span>
+                        </div>
+
+                        <div>
+                            <label>Provider URL</label>
+                            <div>
+                                <p:inputText value="#{ImportSourceView.item.url}">
+                                </p:inputText>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label>XML Type</label>
+                            <div>
+                                <p:inputText value="#{ImportSourceView.item.xmlType}"/>
+                            </div>
+                        </div>
+
+
+                        <div>
+                            <label>Get Record Prefix</label>
+                            <div>
+                                <p:inputText value="#{ImportSourceView.item.getPrefix}"/>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+
+                        <p:commandButton update="ImportSourceDatatable, messages_pf"
+                                         value="Submit" styleClass="btn" action="#{ImportSourceView.save}">
+                        </p:commandButton>
+
+                    </p:dialog>
+
+                    <!-- Data Table -->
+
+                    <p:dataTable id="ImportSourceDatatable" value="#{ImportSourceView.itemList}"
+                                 var="item" paginator="true" rows="10"
+                                 tableStyle="" paginatorPosition="bottom"
+                                 editable="false">
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Date"/>
+                            </f:facet>
+                            <h:outputText value="#{item.createdDate}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Url"/>
+                            </f:facet>
+                            <h:outputText value="#{item.url}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="XmlType"/>
+                            </f:facet>
+                            <h:outputText value="#{item.xmlType}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="GetPrefix"/>
+                            </f:facet>
+                            <h:outputText value="#{item.getPrefix}"/>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

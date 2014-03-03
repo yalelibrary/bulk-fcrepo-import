@@ -1,30 +1,32 @@
 package edu.yale.library.view;
 
-import edu.yale.library.beans.Project;
-import edu.yale.library.beans.ProjectBuilder;
-import edu.yale.library.dao.ProjectDAO;
+import edu.yale.library.beans.FieldMarcMapping;
+import edu.yale.library.beans.FieldMarcMappingBuilder;
+import edu.yale.library.dao.FieldMarcMappingDAO;
+
 import org.slf4j.Logger;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+
 import java.util.Date;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-@ManagedBean (name = "ProjectView")
+@ManagedBean (name = "FieldMarcMappingView")
 @RequestScoped
 @SuppressWarnings("unchecked")
-public class ProjectView extends AbstractView {
+public class FieldMarcMappingView extends AbstractView {
     private final Logger logger = getLogger(this.getClass());
 
-    private Project item = new ProjectBuilder().createProject();
-    private List<Project> itemList;
+    private FieldMarcMapping item = new FieldMarcMappingBuilder().createFieldMarcMapping();
+    private List<FieldMarcMapping> itemList;
 
     @Inject
-    private ProjectDAO entityDAO;
+    private FieldMarcMappingDAO entityDAO;
 
     @PostConstruct
     public void init() {
@@ -42,22 +44,18 @@ public class ProjectView extends AbstractView {
         }
     }
 
-    public List<Project> getItemList() {
-        List<Project> list = dao.findAll();
+    public List<FieldMarcMapping> getItemList() {
+        List<FieldMarcMapping> list = dao.findAll();
         return list;
     }
 
     @Deprecated
-    public void setDefaults(final Project item) {
+    public void setDefaults(final FieldMarcMapping item) {
         final Date date = new Date(System.currentTimeMillis());
         item.setDate(date);
     }
 
-    public void setItem(Project item) {
-        this.item = item;
-    }
-
-    public Project getItem() {
+    public FieldMarcMapping getItem() {
         return item;
     }
 }

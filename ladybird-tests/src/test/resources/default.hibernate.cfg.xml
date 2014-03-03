@@ -14,6 +14,11 @@
         <mapping resource="ImportJobExhead.hbm.xml"></mapping>
 
         <mapping resource="Monitor.hbm.xml"></mapping>
+        <mapping resource="ImportSource.hbm.xml"></mapping>
+        <mapping resource="Collection.hbm.xml"></mapping>
+        <mapping resource="Project.hbm.xml"></mapping>
+        <mapping resource="FieldDefinition.hbm.xml"></mapping>
+        <mapping resource="FieldMarcMapping.hbm.xml"></mapping>
 
 
     </session-factory>

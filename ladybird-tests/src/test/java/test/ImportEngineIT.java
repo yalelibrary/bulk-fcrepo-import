@@ -173,7 +173,7 @@ public class ImportEngineIT {
      * @throws IOException
      * @throws NullPointerException
      */
-    public Map<String,FieldConstant> getTextFieldDefsMap() throws IOException {
+    public Map<String, FieldConstant> getTextFieldDefsMap() throws IOException {
         Map<String, FieldConstant> fdidsMap = new HashMap<>();
 
         final Properties properties = new Properties();

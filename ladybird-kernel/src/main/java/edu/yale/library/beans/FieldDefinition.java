@@ -8,7 +8,6 @@ import java.util.Date;
  */
 public class FieldDefinition implements java.io.Serializable {
 
-
     private int fdid;
     private Date date;
     private String type;
@@ -144,6 +143,25 @@ public class FieldDefinition implements java.io.Serializable {
         this.style = style;
     }
 
+    @Override
+    public String toString() {
+        return "FieldDefinition{"
+                + "fdid=" + fdid
+                + ", date=" + date
+                + ", type='" + type + '\''
+                + ", acid=" + acid
+                + ", faid=" + faid
+                + ", handle='" + handle + '\''
+                + ", tooltip='" + tooltip + '\''
+                + ", multivalue=" + multivalue
+                + ", display=" + display
+                + ", technical=" + technical
+                + ", export=" + export
+                + ", locked=" + locked
+                + ", required='" + required + '\''
+                + ", style='" + style + '\''
+                + '}';
+    }
 
 }
 

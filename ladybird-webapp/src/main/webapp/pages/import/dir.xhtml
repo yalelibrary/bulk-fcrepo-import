@@ -63,6 +63,25 @@
                                     <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
                                  </p:inputText>
                             </div>
+
+                            <div>
+                                <label class="control-label" for="userSelectBox">Or select user </label>
+
+                                <div>
+                                    <p:selectOneMenu id="userSelectBox"
+                                                     value="">
+
+                                        <f:selectItems value="#{userView.usernameList}"
+                                                       var="select_user_var"
+                                                       itemLabel="#{select_user_var}"
+                                                       itemValue="#{select_user_var}" />
+
+                                    </p:selectOneMenu>
+                                    <h:message for="userSelectBox" style="color:red" />
+
+                                </div>
+                            </div>
+
                         </div>
 
 

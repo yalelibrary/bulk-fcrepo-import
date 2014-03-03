@@ -126,6 +126,23 @@ public class Project implements java.io.Serializable {
         this.phone = phone;
     }
 
+    @Override
+    public String toString() {
+        return "Project{"
+                + "projectId=" + projectId
+                + ", label='" + label + '\''
+                + ", date=" + date
+                + ", userId=" + userId
+                + ", location='" + location + '\''
+                + ", url='" + url + '\''
+                + ", add1='" + add1 + '\''
+                + ", add2='" + add2 + '\''
+                + ", city='" + city + '\''
+                + ", state='" + state + '\''
+                + ", zip='" + zip + '\''
+                + ", phone='" + phone + '\''
+                + '}';
+    }
 
 }
 

@@ -3,23 +3,18 @@ package test;
 import edu.yale.library.AppConfigException;
 import edu.yale.library.ApplicationProperties;
 import edu.yale.library.ServicesManager;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.SQLException;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Connection;
-import java.sql.Statement;
+import java.sql.ResultSet;
 import java.sql.DriverManager;
 import java.sql.Timestamp;
-import java.sql.ResultSet;
-
-import java.util.List;
-import java.util.ArrayList;
+import java.sql.Statement;
 import java.util.Properties;
-
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;

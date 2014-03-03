@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template.xhtml">
+    <ui:define name="content">
+        <h2>Field Definition</h2>
+        <h:form id="FieldDefinitionForm" enctype="multipart/form-data"
+                styleClass=""
+                style="">
+            <br/>
+
+            <div style="">
+                <div class="" style="">
+
+                    <!--Add Button -->
+
+                    <p:commandButton id="chartBtn" icon="ui-icon-plusthick"
+                                     value="New" type="button" style="color:#103480;"
+                                     onclick="dlg.show();"/>
+
+                    <br/>
+                    <br/>
+
+                    <!-- Modal pop up for + Button -->
+
+                    <p:dialog id="modalDialog" header="New" widgetVar="dlg"
+                              modal="true" height="350" width="350" resizable="false">
+                        <div class="control-group">
+                            <span class="help-block"> 
+                                <p:messages id="messages_pf" showDetail="true" autoUpdate="true" closable="true"/>
+                            </span>
+                        </div>
+
+
+                        <div>
+                            <label>Field Definition</label>
+                            <div>
+                                <p:inputText value="#{FieldDefinitionView.item.fdid}">
+                                </p:inputText>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label>Display Value</label>
+                            <div>
+                                <p:inputText value="#{FieldDefinitionView.item.display}">
+                                </p:inputText>
+                            </div>
+                        </div>
+
+
+                        <!-- Submit Button -->
+
+                        <p:commandButton update="FieldDefinitionDatatable, messages_pf"
+                                         value="Submit" styleClass="btn" action="#{FieldDefinitionView.save}">
+                        </p:commandButton>
+
+                    </p:dialog>
+
+                    <!-- Data Table -->
+
+                    <p:dataTable id="FieldDefinitionDatatable" value="#{FieldDefinitionView.itemList}"
+                                 var="item" paginator="true" rows="10"
+                                 tableStyle="" paginatorPosition="bottom"
+                                 editable="false">
+
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="Fdid"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fdid}"/>
+                        </p:column>
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="Date"/>
+                            </f:facet>
+                            <h:outputText value="#{item.date}"/>
+                        </p:column>
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="Type"/>
+                            </f:facet>
+                            <h:outputText value="#{item.type}"/>
+                        </p:column>
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="Acid"/>
+                            </f:facet>
+                            <h:outputText value="#{item.acid}"/>
+                        </p:column>
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="Faid"/>
+                            </f:facet>
+                            <h:outputText value="#{item.faid}"/>
+                        </p:column>
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="Handle"/>
+                            </f:facet>
+                            <h:outputText value="#{item.handle}"/>
+                        </p:column>
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="Tooltip"/>
+                            </f:facet>
+                            <h:outputText value="#{item.tooltip}"/>
+                        </p:column>
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="Multivalue"/>
+                            </f:facet>
+                            <h:outputText value="#{item.multivalue}"/>
+                        </p:column>
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="Display"/>
+                            </f:facet>
+                            <h:outputText value="#{item.display}"/>
+                        </p:column>
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="Technical"/>
+                            </f:facet>
+                            <h:outputText value="#{item.technical}"/>
+                        </p:column>
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="Export"/>
+                            </f:facet>
+                            <h:outputText value="#{item.export}"/>
+                        </p:column>
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="Locked"/>
+                            </f:facet>
+                            <h:outputText value="#{item.locked}"/>
+                        </p:column>
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="Required"/>
+                            </f:facet>
+                            <h:outputText value="#{item.required}"/>
+                        </p:column>
+                        <p:column >
+                            <f:facet name="header">
+                                <h:outputText value="Style"/>
+                            </f:facet>
+                            <h:outputText value="#{item.style}"/>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+
