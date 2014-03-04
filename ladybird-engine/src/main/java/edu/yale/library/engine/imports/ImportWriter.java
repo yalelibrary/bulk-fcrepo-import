@@ -12,13 +12,13 @@ import edu.yale.library.dao.ImportJobExheadDAO;
 import edu.yale.library.dao.hibernate.ImportJobContentsHibernateDAO;
 import edu.yale.library.dao.hibernate.ImportJobExheadHibernateDAO;
 import edu.yale.library.dao.hibernate.ImportJobHibernateDAO;
-import edu.yale.library.engine.model.FunctionConstants;
-import edu.yale.library.engine.model.MarcReadingException;
-import edu.yale.library.engine.oai.OaiHttpClient;
-import edu.yale.library.engine.oai.OaiProvider;
+//import edu.yale.library.engine.model.FunctionConstants;
+//import edu.yale.library.engine.model.MarcReadingException;
+//import edu.yale.library.engine.oai.OaiHttpClient;
+//import edu.yale.library.engine.oai.OaiProvider;
 import org.slf4j.Logger;
 
-import java.io.IOException;
+//import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -93,6 +93,7 @@ public class ImportWriter {
 
                 ImportJobContents entry = null;
 
+                /* stub for source import
                 if (col.getField().getName().equals(FunctionConstants.F104)) {
                     OaiProvider oaiProvider = new OaiProvider("id", "url", "bibIdPrefix"); //TODO
                     OaiHttpClient oaiHttpClient = new OaiHttpClient(oaiProvider);
@@ -107,11 +108,9 @@ public class ImportWriter {
                         logger.error("Error reading marc", e);
                         e.printStackTrace();
                     }
-                } else {
+                } else { } */
                     entry = new ImportJobContentsBuilder().setImportId(importId).setDate(JOB_EXEC_DATE).
                             setCol(c).setRow(r).setValue(col.getValue()).build();
-                }
-
                 dao.save(entry); //TODO or save list
             }
             //jobContentsList.add(entry);
