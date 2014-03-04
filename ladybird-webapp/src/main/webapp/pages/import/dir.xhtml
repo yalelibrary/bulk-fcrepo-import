@@ -58,20 +58,13 @@
                             <label>Notification E-mail</label>
 
                             <div>
-                                 <p:inputText value="#{monitorView.monitorItem.notificationEmail}" required="true"
-                                              label="Email" validatorMessage="Invalid E-mail">
-                                    <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
-                                 </p:inputText>
-                            </div>
-
-                            <div>
-                                <label class="control-label" for="userSelectBox">Or select user </label>
+                                <label class="control-label" for="userSelectBox">Select user e-mail </label>
 
                                 <div>
                                     <p:selectOneMenu id="userSelectBox"
-                                                     value="">
+                                                     value="#{monitorView.monitorItem.notificationEmail}">
 
-                                        <f:selectItems value="#{userView.usernameList}"
+                                        <f:selectItems value="#{userView.userEmailList}"
                                                        var="select_user_var"
                                                        itemLabel="#{select_user_var}"
                                                        itemValue="#{select_user_var}" />

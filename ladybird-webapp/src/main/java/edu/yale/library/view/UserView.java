@@ -42,7 +42,7 @@ public class UserView extends AbstractView {
         return user;
     }
 
-    //TODO: replace with DAO call
+    //TODO replace with DAO call
     public List getUsernameList() {
         List<User> user = getItemList();
         List<String> userNameList = new ArrayList<>();
@@ -50,6 +50,16 @@ public class UserView extends AbstractView {
             userNameList.add(u.getUsername());
         }
         return userNameList;
+    }
+
+    //TODO replace with DAO call
+    public List getUserEmailList() {
+        List<User> user = getItemList();
+        List<String> list = new ArrayList<>();
+        for (User u: user) {
+            list.add(u.getEmail());
+        }
+        return list;
     }
 
     public User getItem() {
