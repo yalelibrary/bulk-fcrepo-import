@@ -65,7 +65,7 @@ public class SchemaBean {
      *
      * @param statement sql statement
      * @return transformed value
-     */
+    */
     private String value(final String statement) {
         final SchemaFilter f = (s) -> s.replace("`", "")
                 .replace("int(11)", "int")

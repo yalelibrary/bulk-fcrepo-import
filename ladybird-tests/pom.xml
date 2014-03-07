@@ -28,6 +28,9 @@
         <tomcat7-maven-plugin.version>2.2</tomcat7-maven-plugin.version>
         <tomcat7-maven-plugin.port>9090</tomcat7-maven-plugin.port>
         <maven-failsafe-plugin.version>2.16</maven-failsafe-plugin.version>
+        <maven-surefire-plugin.version>2.16</maven-surefire-plugin.version>
+        <htmlunit.version>2.4</htmlunit.version>
+        <cargo-core-uberjar.version>1.4.7</cargo-core-uberjar.version>
     </properties>
 
     <dependencies>
@@ -107,6 +110,16 @@
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.htmlunit</groupId>
+            <artifactId>htmlunit</artifactId>
+            <version>${htmlunit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.cargo</groupId>
+            <artifactId>cargo-core-uberjar</artifactId>
+            <version>${cargo-core-uberjar.version}</version>
         </dependency>
         <!-- Java EE -->
         <dependency>
