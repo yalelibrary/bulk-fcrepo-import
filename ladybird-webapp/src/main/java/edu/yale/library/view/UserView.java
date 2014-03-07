@@ -4,29 +4,33 @@ package edu.yale.library.view;
 import edu.yale.library.beans.User;
 import edu.yale.library.beans.UserBuilder;
 import edu.yale.library.dao.UserDAO;
-
+import org.primefaces.model.LazyDataModel;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Date;
-
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.inject.Inject;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 @ManagedBean
-@RequestScoped
+@SessionScoped
 @SuppressWarnings("unchecked")
-public class UserView extends AbstractView {
+public class UserView extends AbstractView implements Serializable {
     private final Logger logger = getLogger(this.getClass());
 
     private List<User> itemList;
-
     private User item = new UserBuilder().createUser();
+
+    /**
+     * Used for lazy loading
+     */
+    private LazyDataModel<User> subItemList;
 
     @Inject
     private UserDAO userDAO;
@@ -35,6 +39,9 @@ public class UserView extends AbstractView {
     public void init() {
         initFields();
         dao = userDAO;
+        if (subItemList == null) { //FIXME
+            subItemList = new UserDataModel();
+        }
     }
 
     public List getItemList() {
@@ -46,7 +53,7 @@ public class UserView extends AbstractView {
     public List getUsernameList() {
         List<User> user = getItemList();
         List<String> userNameList = new ArrayList<>();
-        for (User u: user) {
+        for (User u : user) {
             userNameList.add(u.getUsername());
         }
         return userNameList;
@@ -56,7 +63,7 @@ public class UserView extends AbstractView {
     public List getUserEmailList() {
         List<User> user = getItemList();
         List<String> list = new ArrayList<>();
-        for (User u: user) {
+        for (User u : user) {
             list.add(u.getEmail());
         }
         return list;
@@ -98,6 +105,13 @@ public class UserView extends AbstractView {
         return item.toString();
     }
 
+    public LazyDataModel<User> getSubItemList() {
+        return subItemList;
+    }
+
+    public void setSubItemList(LazyDataModel<User> subItemList) {
+        this.subItemList = subItemList;
+    }
 }
 
 
