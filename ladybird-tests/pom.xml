@@ -7,7 +7,7 @@
         <artifactId>ladybird</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <groupId>ladybird_dev</groupId>
+    <groupId>edu.yale.library</groupId>
     <artifactId>ladybird-tests</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>

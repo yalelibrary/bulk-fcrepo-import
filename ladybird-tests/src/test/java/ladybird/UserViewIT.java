@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 
 /**
- * Tests html for user related pages
+ * Tests html for user crud related page(s)
  */
 public class UserViewIT extends AbstractWarTest {
     private static final Logger logger = LoggerFactory.getLogger(UserViewIT.class);
@@ -21,7 +21,7 @@ public class UserViewIT extends AbstractWarTest {
     /**
      * Page to test
      */
-    private static final String PAGE = "http://localhost:8081/ladybird-webapp-0.0.1-SNAPSHOT/pages/Users.xhtml";
+    private static final String PAGE_TO_TEST = getUrl("Users");
 
     @BeforeClass
     public static void setup() throws MalformedURLException {
@@ -38,7 +38,7 @@ public class UserViewIT extends AbstractWarTest {
     public void shouldContainEmptyTable() throws IOException {
         final WebClient webClient = new WebClient();
         webClient.setJavaScriptEnabled(false);
-        final HtmlPage page = webClient.getPage(PAGE);
+        final HtmlPage page = webClient.getPage(PAGE_TO_TEST);
         final String pageAsText = page.asText();
         Assert.assertTrue(pageAsText.contains("No records found."));
         webClient.closeAllWindows();
@@ -48,7 +48,7 @@ public class UserViewIT extends AbstractWarTest {
     public void shouldContainString_LastUsed() throws Exception {
         final WebClient webClient = new WebClient();
         webClient.setJavaScriptEnabled(false);
-        final HtmlPage page = webClient.getPage(PAGE);
+        final HtmlPage page = webClient.getPage(PAGE_TO_TEST);
         final String pageAsText = page.asText();
         Assert.assertTrue(pageAsText.contains("Last used"));
         webClient.closeAllWindows();

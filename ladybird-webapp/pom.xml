@@ -162,7 +162,7 @@
                     </configuration>
                     <deployables>
                         <deployable>
-                            <groupId>ladybird_dev</groupId>
+                            <groupId>edu.yale.library</groupId>
                             <artifactId>ladybird-webapp</artifactId>
                             <type>war</type>
                         </deployable>
@@ -186,9 +186,30 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.0</version>
-                <configuration>
-                    <outputDirectory>${user.home}/${project.artifactId}</outputDirectory>
-                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <!-- here the phase you need -->
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${user.home}/${project.artifactId}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>target</directory>
+                                    <filtering>false</filtering>
+                                    <include>**/*.war</include>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
