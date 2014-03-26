@@ -1,4 +1,4 @@
-package test;
+package ladybird;
 
 import edu.yale.library.AppConfigException;
 import edu.yale.library.ApplicationProperties;

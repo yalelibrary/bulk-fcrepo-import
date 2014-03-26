@@ -1,4 +1,4 @@
-package test;
+package ladybird;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;

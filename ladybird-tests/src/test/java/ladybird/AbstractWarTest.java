@@ -1,4 +1,4 @@
-package test;
+package ladybird;
 
 
 import org.codehaus.cargo.container.ContainerType;

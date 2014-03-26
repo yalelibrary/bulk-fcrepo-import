@@ -1,7 +1,5 @@
-package test;
+package ladybird;
 
-
-import library.AbstractHttpServiceTester;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
