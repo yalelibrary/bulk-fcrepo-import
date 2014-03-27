@@ -1,5 +1,6 @@
 package edu.yale.library.events;
 
+import edu.yale.library.ApplicationProperties;
 import edu.yale.library.beans.User;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
@@ -13,17 +14,15 @@ import org.slf4j.LoggerFactory;
  * TODO decide on system "from" email, and subject of e-mails
  */
 public class EMailNotificationHandler implements NotificationHandler {
-    private static final int SMTP_PORT = 587;
-    private static final String HOST_NAME = "mail.yale.edu";
 
     private Logger logger = LoggerFactory.getLogger(EMailNotificationHandler.class);
 
     public void notifyUser(User user, Event event) {
         Email email = new SimpleEmail();
         try {
-            email.setHostName(HOST_NAME);
-            email.setSmtpPort(SMTP_PORT);
-            email.setFrom(user.getEmail()); //todo should be some sys email
+            email.setHostName(ApplicationProperties.CONFIG_STATE.EMAIL_HOST);
+            email.setSmtpPort(ApplicationProperties.CONFIG_STATE.EMAIL_PORT);
+            email.setFrom(ApplicationProperties.CONFIG_STATE.EMAIL_ADMIN);
             email.setSubject("LadyBird Test E-mail"); //?
             email.setMsg(event.toString()); //?
             email.addTo(user.getEmail());
