@@ -121,6 +121,11 @@
             <artifactId>cargo-core-uberjar</artifactId>
             <version>${cargo-core-uberjar.version}</version>
         </dependency>
+        <dependency>
+            <groupId>dumbster</groupId>
+            <artifactId>dumbster</artifactId>
+            <version>1.6</version>
+        </dependency>
         <!-- Java EE -->
         <dependency>
             <groupId>javax</groupId>
