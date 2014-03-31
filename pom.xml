@@ -61,7 +61,7 @@
         <maven-compiler-plugin.source>1.8</maven-compiler-plugin.source>
         <maven-compiler-plugin.target>1.8</maven-compiler-plugin.target>
         <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
-        <maven-checkstyle-plugin.version>2.11</maven-checkstyle-plugin.version>
+        <maven-checkstyle-plugin.version>2.12</maven-checkstyle-plugin.version>
         <mockito-core.version>1.9.5</mockito-core.version>
     </properties>
 
@@ -177,7 +177,6 @@
                 <artifactId>derby</artifactId>
                 <version>${derby.version}</version>
             </dependency>
-            <!-- Test -->
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
@@ -265,12 +264,7 @@
             <url>http://repository.primefaces.org</url>
             <layout>default</layout>
         </repository>
-        <repository>
-            <id>nexus</id>
-            <url>http://130.132.146.30:8081/nexus/content/repositories/snapshots</url>
-        </repository>
     </repositories>
-    <pluginRepositories></pluginRepositories>
 
     <build>
         <plugins>

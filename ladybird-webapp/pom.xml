@@ -30,18 +30,22 @@
         <commons-logging.version>1.1.1</commons-logging.version>
         <maven-surefire-plugin.version>2.16</maven-surefire-plugin.version>
         <tomcat7-maven-plugin.version>2.2</tomcat7-maven-plugin.version>
+        <maven-war-plugin.version>2.0</maven-war-plugin.version>
+        <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
+        <ladybird-engine.version>0.0.1-SNAPSHOT</ladybird-engine.version>
+        <ladybird-kernel.version>0.0.1-SNAPSHOT</ladybird-kernel.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>edu.yale.library.engine</groupId>
             <artifactId>ladybird-engine</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${ladybird-engine.version}</version>
         </dependency>
         <dependency>
             <groupId>edu.yale.library.kernel</groupId>
             <artifactId>ladybird-kernel</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${ladybird-kernel.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.inject</groupId>
@@ -130,7 +134,6 @@
 
     <build>
         <resources>
-            <!-- deliberately explicit -->
             <resource>
                 <directory>src/main/resources</directory>
             </resource>
@@ -185,15 +188,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.0</version>
+                <version>${maven-war-plugin.version}</version>
             </plugin>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>2.6</version>
+                <version>${maven-resources-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>copy-resources</id>
-                        <!-- here the phase you need -->
                         <phase>package</phase>
                         <goals>
                             <goal>copy-resources</goal>

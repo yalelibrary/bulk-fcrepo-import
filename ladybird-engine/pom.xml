@@ -19,13 +19,14 @@
         <tika-core.version>0.4</tika-core.version>
         <poi-ooxml.version>3.8</poi-ooxml.version>
         <xpathapi-jaxp.version>0.4</xpathapi-jaxp.version>
+        <ladybird-kernel.version>0.0.1-SNAPSHOT</ladybird-kernel.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>edu.yale.library.kernel</groupId>
             <artifactId>ladybird-kernel</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${ladybird-kernel.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tika</groupId>

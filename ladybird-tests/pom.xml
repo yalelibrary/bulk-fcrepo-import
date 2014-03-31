@@ -31,18 +31,21 @@
         <maven-surefire-plugin.version>2.16</maven-surefire-plugin.version>
         <htmlunit.version>2.4</htmlunit.version>
         <cargo-core-uberjar.version>1.4.7</cargo-core-uberjar.version>
+        <dumbster.version>1.6</dumbster.version>
+        <ladybird-engine.version>0.0.1-SNAPSHOT</ladybird-engine.version>
+        <ladybird-kernel.version>0.0.1-SNAPSHOT</ladybird-kernel.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>edu.yale.library.engine</groupId>
             <artifactId>ladybird-engine</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${ladybird-engine.version}</version>
         </dependency>
         <dependency>
             <groupId>edu.yale.library.kernel</groupId>
             <artifactId>ladybird-kernel</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${ladybird-kernel.version}</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
@@ -124,7 +127,7 @@
         <dependency>
             <groupId>dumbster</groupId>
             <artifactId>dumbster</artifactId>
-            <version>1.6</version>
+            <version>${dumbster.version}</version>
         </dependency>
         <!-- Java EE -->
         <dependency>
@@ -153,9 +156,6 @@
                     <port>${tomcat7-maven-plugin.port}</port>
                     <path>/ladybird-webapp</path>
                     <useTestClasspath>true</useTestClasspath>
-                    <additionalClasspathDirs>
-                        <additionalClasspathDir></additionalClasspathDir>
-                    </additionalClasspathDirs>
                     <tomcatWebXml>src/test/resources/web.xml</tomcatWebXml>
                     <jarScanAllDirectories>false</jarScanAllDirectories>
                 </configuration>
@@ -213,7 +213,6 @@
                 </executions>
                 <configuration>
                     <systemProperties>
-                        <!-- derby -->
                         <property>
                             <name>derby.stream.error.file</name>
                             <value>target/derby.log</value>
