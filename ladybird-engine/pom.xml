@@ -7,7 +7,7 @@
         <artifactId>ladybird</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <groupId>edu.yale.library.engine</groupId>
+    <groupId>edu.yale.library</groupId>
     <artifactId>ladybird-engine</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
@@ -24,7 +24,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>edu.yale.library.kernel</groupId>
+            <groupId>edu.yale.library</groupId>
             <artifactId>ladybird-kernel</artifactId>
             <version>${ladybird-kernel.version}</version>
         </dependency>

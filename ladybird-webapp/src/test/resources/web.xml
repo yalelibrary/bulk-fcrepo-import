@@ -30,7 +30,7 @@
 
     <context-param>
         <param-name>resteasy.guice.modules</param-name>
-        <param-value>edu.yale.library.engine.RESTModule</param-value>
+        <param-value>edu.yale.library.ladybird.engine.RESTModule</param-value>
     </context-param>
 
     <context-param>

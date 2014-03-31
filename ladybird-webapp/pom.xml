@@ -38,12 +38,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>edu.yale.library.engine</groupId>
+            <groupId>edu.yale.library</groupId>
             <artifactId>ladybird-engine</artifactId>
             <version>${ladybird-engine.version}</version>
         </dependency>
         <dependency>
-            <groupId>edu.yale.library.kernel</groupId>
+            <groupId>edu.yale.library</groupId>
             <artifactId>ladybird-kernel</artifactId>
             <version>${ladybird-kernel.version}</version>
         </dependency>

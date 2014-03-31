@@ -1,9 +1,0 @@
-package edu.yale.library.dao.hibernate;
-
-
-import edu.yale.library.beans.User;
-import edu.yale.library.dao.UserDAO;
-
-public class UserHibernateDAO extends GenericHibernateDAO<User, Integer> implements UserDAO {
-
-}
