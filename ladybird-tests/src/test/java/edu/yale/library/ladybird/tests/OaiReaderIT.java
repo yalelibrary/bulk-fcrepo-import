@@ -29,8 +29,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class OaiReaderIT {
     private static final Logger logger = getLogger(OaiReaderIT.class);
-    private static final String DC_OAI_PROVIDER = "http://columbus.library.yale.edu:8055/OAI_Orbis"
-            + "/src/OAIOrbisTool.jsp?verb=GetRecord&identifier=oai:orbis.library.yale.edu:6915810&metadataPrefix=oai_dc";
+    private static final String DC_OAI_PROVIDER = getProp("oai_test_url");
+
     private static final String MARC_OAI_PROVIDER = getMarcString();
     private final PoolingHttpClientConnectionManager connectionManager;
     private final HttpClient httpClient;
@@ -89,11 +89,15 @@ public class OaiReaderIT {
 
     public static String getMarcString() {
         URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setPath("http://columbus.library.yale.edu:8055/OAI_Orbis/src/OAIOrbisTool.jsp");
+        uriBuilder.setPath(Util.getProperty("oai_test_url_prefix"));
         uriBuilder.addParameter("verb", "GetRecord");
-        uriBuilder.addParameter("identifier", "oai:orbis.library.yale.edu:" + "6915810");
+        uriBuilder.addParameter("identifier", getProp("oai_url_id") + getProp("oai_bibid"));
         uriBuilder.addParameter("metadataPrefix", "marc21");
         return uriBuilder.toString();
+    }
+
+    private static String getProp(final String p) {
+        return Util.getProperty(p);
     }
 
 

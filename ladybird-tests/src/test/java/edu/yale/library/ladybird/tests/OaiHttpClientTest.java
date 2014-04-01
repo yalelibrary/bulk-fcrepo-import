@@ -23,9 +23,9 @@ public class OaiHttpClientTest {
 
     @Test
     public void testReadMarc() {
-        final String bibId = "6915810";
-        OaiProvider o = new OaiProvider("id", "http://columbus.library.yale.edu:8055/OAI_Orbis/src/OAIOrbisTool.jsp",
-                "oai:orbis.library.yale.edu:");
+        final String bibId = getProp("oai_bibid");
+        OaiProvider o = new OaiProvider("id", getProp("oai_test_url_prefix"),
+                getProp("oai_url_id"));
         OaiHttpClient client = new OaiHttpClient(o);
         try {
             Record record = client.readMarc(bibId);
@@ -33,6 +33,10 @@ public class OaiHttpClientTest {
         } catch (IOException | MarcReadingException e) {
             fail();
         }
+    }
+
+    private String getProp(final String p) {
+        return Util.getProperty(p);
     }
 
 }
