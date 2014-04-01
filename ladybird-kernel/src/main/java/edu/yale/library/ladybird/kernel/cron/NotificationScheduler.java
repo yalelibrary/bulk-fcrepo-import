@@ -1,9 +1,8 @@
 package edu.yale.library.ladybird.kernel.cron;
 
 
-import com.google.inject.Guice;
 import com.google.inject.Inject;
-import edu.yale.library.ladybird.kernel.JobModule;
+import edu.yale.library.ladybird.kernel.KernelContext;
 import edu.yale.library.ladybird.kernel.events.AbstractNotificationJob;
 import edu.yale.library.ladybird.kernel.events.NotificationJob;
 import org.quartz.Scheduler;
@@ -28,14 +27,13 @@ public final class NotificationScheduler {
      *
      * @param jobName
      * @param triggerName
-     * @param cronExpression
      * @throws Exception
      */
-    public void scheduleJob(final String jobName, final String triggerName, String cronExpression) throws Exception {
+    public void scheduleJob(final String jobName, final String triggerName)  throws Exception {
         logger.debug("Scheduling job= {}", jobName);
         Scheduler scheduler = new StdSchedulerFactory().getScheduler();
         scheduler.start();
-        final String scheduledJob = getJob(jobName, cronExpression);
+        doSchedule(jobName, getNotificationCronSchedule());
         //add to jobs manager  //FIXME
         //DefaultJobsManager defaultJobsManager = new DefaultJobsManager();
         //defaultJobsManager.addJob(jobName);
@@ -47,14 +45,12 @@ public final class NotificationScheduler {
      * @param cronExpression
      * @return
      */
-    private String getJob(final String jobName, final String cronExpression) {
-        Guice.createInjector(new JobModule(), new org.nnsoft.guice.guartz.QuartzModule() {
-            @Override
-            protected void schedule() {
-                 scheduleJob(notificationJob.getClass()).withCronExpression(cronExpression).withJobName(jobName);
-            }
-        });
-        return notificationJob.getClass().getName();
+    public void doSchedule(final String jobName, final String cronExpression) {
+        KernelContext.scheduleGenericJob(notificationJob, jobName, cronExpression);
+    }
+
+    private static String getNotificationCronSchedule() {
+        return "0/5 * * * * ?";
     }
 }
 
