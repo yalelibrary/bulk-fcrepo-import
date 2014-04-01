@@ -14,4 +14,10 @@ public class ExportEvent implements Event {
     /* Time ended */
     private Date endTime;
 
+    private final String eventName = "Ladybird ExportEvent";
+
+    @Override
+    public String getEventName() {
+       return eventName;
+    }
 }

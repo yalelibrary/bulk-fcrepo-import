@@ -8,23 +8,18 @@ import org.apache.commons.mail.SimpleEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * General email utility
- * TODO read port etc from properties.
- * TODO decide on system "from" email, and subject of e-mails
- */
 public class EMailNotificationHandler implements NotificationHandler {
 
-    private Logger logger = LoggerFactory.getLogger(EMailNotificationHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(EMailNotificationHandler.class);
 
-    public void notifyUser(User user, Event event) {
-        Email email = new SimpleEmail();
+    public void notifyUser(final User user, final Event event) {
+        final Email email = new SimpleEmail();
         try {
             email.setHostName(ApplicationProperties.CONFIG_STATE.EMAIL_HOST);
             email.setSmtpPort(ApplicationProperties.CONFIG_STATE.EMAIL_PORT);
             email.setFrom(ApplicationProperties.CONFIG_STATE.EMAIL_ADMIN);
-            email.setSubject("LadyBird Test E-mail"); //?
-            email.setMsg(event.toString()); //?
+            email.setSubject(event.getEventName());
+            email.setMsg(event.toString()); //TODO
             email.addTo(user.getEmail());
 
             logger.debug("Sending e-mail notification to user email={}", user.getEmail());

@@ -1,5 +1,8 @@
 package edu.yale.library;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import edu.yale.library.ladybird.kernel.JobModule;
 import edu.yale.library.ladybird.kernel.cron.NotificationScheduler;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
 import edu.yale.library.ladybird.kernel.ServicesManager;
@@ -29,9 +32,8 @@ public class AppContextListener implements ServletContextListener {
             START_HIBERNATE = HibernateUtil.getSessionFactory().getStatistics().getStartTime();
             logger.debug("Built Session Factory");
 
-            //Set off notifications cron. Other crons in MontiorView (or it's RESTful analog):
-
-            NotificationScheduler notificationScheduler = new NotificationScheduler();
+            Injector injector = Guice.createInjector(new JobModule());
+            NotificationScheduler notificationScheduler = injector.getInstance(NotificationScheduler.class);
             notificationScheduler.scheduleJob("notification", "trigger", getNotificationCronSchedule());
         } catch (Throwable t) {
             logger.error("Error in context initialization", t);

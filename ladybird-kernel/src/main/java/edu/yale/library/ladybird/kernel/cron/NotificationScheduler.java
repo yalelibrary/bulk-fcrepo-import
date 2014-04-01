@@ -1,13 +1,12 @@
 package edu.yale.library.ladybird.kernel.cron;
 
 
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import edu.yale.library.ladybird.kernel.JobModule;
+import edu.yale.library.ladybird.kernel.events.AbstractNotificationJob;
 import edu.yale.library.ladybird.kernel.events.NotificationJob;
-import org.quartz.CronScheduleBuilder;
 import org.quartz.Scheduler;
-import org.quartz.JobBuilder;
-import org.quartz.JobDetail;
-import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 
@@ -17,8 +16,15 @@ public final class NotificationScheduler {
 
     private final Logger logger = getLogger(this.getClass());
 
+    private AbstractNotificationJob notificationJob;
+
+    @Inject
+    public NotificationScheduler(NotificationJob notificationJob) {
+        this.notificationJob = notificationJob;
+    }
+
     /**
-     * Schedules an import cron job. To be called from kernel at start up.
+     * Schedules and starts the notification job.
      *
      * @param jobName
      * @param triggerName
@@ -29,26 +35,26 @@ public final class NotificationScheduler {
         logger.debug("Scheduling job= {}", jobName);
         Scheduler scheduler = new StdSchedulerFactory().getScheduler();
         scheduler.start();
-        JobDetail job = getJob(jobName);
-        scheduler.scheduleJob(job, getTrigger(cronExpression));
-        //add to jobs manager
-        DefaultJobsManager defaultJobsManager = new DefaultJobsManager();
-        defaultJobsManager.addJob(job);
+        final String scheduledJob = getJob(jobName, cronExpression);
+        //add to jobs manager  //FIXME
+        //DefaultJobsManager defaultJobsManager = new DefaultJobsManager();
+        //defaultJobsManager.addJob(jobName);
     }
 
-    private Trigger getTrigger(String cronExpression) {
-        Trigger trigger = TriggerBuilder
-                .newTrigger()
-                .withIdentity("NOT-TRIGGER", "NOT")
-                .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
-                .build();
-        return trigger;
-    }
-
-    private JobDetail getJob(String jobName) {
-        JobDetail job = JobBuilder.newJob(NotificationJob.class).
-                withIdentity(jobName, "NOT-J").build();
-        return job;
+    /**
+     * Schedule job
+     * @param jobName
+     * @param cronExpression
+     * @return
+     */
+    private String getJob(final String jobName, final String cronExpression) {
+        Guice.createInjector(new JobModule(), new org.nnsoft.guice.guartz.QuartzModule() {
+            @Override
+            protected void schedule() {
+                 scheduleJob(notificationJob.getClass()).withCronExpression(cronExpression).withJobName(jobName);
+            }
+        });
+        return notificationJob.getClass().getName();
     }
 }
 

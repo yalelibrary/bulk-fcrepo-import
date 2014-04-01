@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.kernel.events;
 
 
+import com.google.inject.Inject;
 import edu.yale.library.ladybird.kernel.beans.User;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -15,21 +16,27 @@ import static org.slf4j.LoggerFactory.getLogger;
  * TODO Subject to modification because the current impl. will fail silently
  * (remove the job from the queue,but fail sending it).
  */
-public class NotificationJob implements Job {
+public class NotificationJob extends AbstractNotificationJob implements Job {
     private final Logger logger = getLogger(this.getClass());
+
+    private NotificationHandler notificationHandler;
+
+    @Inject
+    public NotificationJob(NotificationHandler notificationHandler) {
+        this.notificationHandler = notificationHandler;
+    }
 
     public void execute(JobExecutionContext ctx) throws JobExecutionException {
         NotificationEventQueue.NotificationItem notificationItem = NotificationEventQueue.getLastEvent();
         Event event = notificationItem.getE();  //FIXME  see javadoc comment
         User user = notificationItem.getUsers().get(0); //FIXME; could be multimpe users
 
-        if (event == null || user == null) {
+        if (event == null || user == null) { //FIXME
             return;
         }
 
         try {
             logger.debug("Notifying user=" + user.toString());
-            NotificationHandler notificationHandler = new EMailNotificationHandler();
             notificationHandler.notifyUser(user, event); //todo actual/more params
             logger.debug("Notification sent.");
         } catch (Exception e) {
