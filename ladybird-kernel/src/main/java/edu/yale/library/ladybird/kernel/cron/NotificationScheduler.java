@@ -1,13 +1,11 @@
 package edu.yale.library.ladybird.kernel.cron;
 
 
+import com.google.inject.Inject;
+import edu.yale.library.ladybird.kernel.KernelContext;
+import edu.yale.library.ladybird.kernel.events.AbstractNotificationJob;
 import edu.yale.library.ladybird.kernel.events.NotificationJob;
-import org.quartz.CronScheduleBuilder;
 import org.quartz.Scheduler;
-import org.quartz.JobBuilder;
-import org.quartz.JobDetail;
-import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 
@@ -17,38 +15,42 @@ public final class NotificationScheduler {
 
     private final Logger logger = getLogger(this.getClass());
 
+    private AbstractNotificationJob notificationJob;
+
+    @Inject
+    public NotificationScheduler(NotificationJob notificationJob) {
+        this.notificationJob = notificationJob;
+    }
+
     /**
-     * Schedules an import cron job. To be called from kernel at start up.
+     * Schedules and starts the notification job.
      *
      * @param jobName
      * @param triggerName
-     * @param cronExpression
      * @throws Exception
      */
-    public void scheduleJob(final String jobName, final String triggerName, String cronExpression) throws Exception {
+    public void scheduleJob(final String jobName, final String triggerName)  throws Exception {
         logger.debug("Scheduling job= {}", jobName);
         Scheduler scheduler = new StdSchedulerFactory().getScheduler();
         scheduler.start();
-        JobDetail job = getJob(jobName);
-        scheduler.scheduleJob(job, getTrigger(cronExpression));
-        //add to jobs manager
-        DefaultJobsManager defaultJobsManager = new DefaultJobsManager();
-        defaultJobsManager.addJob(job);
+        doSchedule(jobName, getNotificationCronSchedule());
+        //add to jobs manager  //FIXME
+        //DefaultJobsManager defaultJobsManager = new DefaultJobsManager();
+        //defaultJobsManager.addJob(jobName);
     }
 
-    private Trigger getTrigger(String cronExpression) {
-        Trigger trigger = TriggerBuilder
-                .newTrigger()
-                .withIdentity("NOT-TRIGGER", "NOT")
-                .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
-                .build();
-        return trigger;
+    /**
+     * Schedule job
+     * @param jobName
+     * @param cronExpression
+     * @return
+     */
+    public void doSchedule(final String jobName, final String cronExpression) {
+        KernelContext.scheduleGenericJob(notificationJob, jobName, cronExpression);
     }
 
-    private JobDetail getJob(String jobName) {
-        JobDetail job = JobBuilder.newJob(NotificationJob.class).
-                withIdentity(jobName, "NOT-J").build();
-        return job;
+    private static String getNotificationCronSchedule() {
+        return "0/5 * * * * ?";
     }
 }
 

@@ -19,27 +19,33 @@ import static org.junit.Assert.fail;
  */
 public class EMailNotificationHandlerIT {
 
-    private static final int TEST_PORT = 8099;
+    private static final int TEST_PORT = 8099; //TODO
 
     @Test
     public void testSend() {
-        SimpleSmtpServer server = SimpleSmtpServer.start(TEST_PORT);
+        final SimpleSmtpServer server = SimpleSmtpServer.start(TEST_PORT);
+        final ImportEvent testEvent = new ImportEvent();
 
         try {
-            EMailNotificationHandler eMailNotificationHandler = new EMailNotificationHandler();
-            User user = new UserBuilder().createUser();
-            user.setEmail("osman.din@yale.edu");
-            eMailNotificationHandler.notifyUser(user, new ImportEvent());
+            final EMailNotificationHandler notificationHandler = new EMailNotificationHandler();
+            final User user = new UserBuilder().createUser();
+            user.setEmail("test@test.edu");
+            notificationHandler.notifyUser(user, testEvent);
         } catch (Exception e) {
             e.printStackTrace();
             fail("Exception= " + e);
+        } finally {
+            try {
+                server.stop();
+            } catch (Exception e) {
+                fail("Error stopping server.");
+            }
         }
 
-        server.stop();
-
         assertTrue(server.getReceivedEmailSize() == 1);
-        Iterator emailIter = server.getReceivedEmail();
-        SmtpMessage email = (SmtpMessage) emailIter.next();
-        assertEquals("Wrong subject", email.getHeaderValue("Subject"), "LadyBird Test E-mail");
+        final Iterator emailIter = server.getReceivedEmail();
+        final SmtpMessage email = (SmtpMessage) emailIter.next();
+        assertEquals("Wrong subject", email.getHeaderValue("Subject"), testEvent.getEventName());
+        assertEquals("Wrong address", email.getHeaderValue("To"), "\"test@test.edu\" <test@test.edu>");
     }
 }

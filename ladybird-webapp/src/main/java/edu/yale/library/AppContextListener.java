@@ -1,9 +1,10 @@
 package edu.yale.library;
 
-import edu.yale.library.ladybird.kernel.cron.NotificationScheduler;
-import edu.yale.library.ladybird.kernel.ApplicationProperties;
-import edu.yale.library.ladybird.kernel.ServicesManager;
 import edu.yale.library.ladybird.kernel.TimeUtils;
+import edu.yale.library.ladybird.kernel.ApplicationProperties;
+import edu.yale.library.ladybird.kernel.JobModule;
+import edu.yale.library.ladybird.kernel.KernelContext;
+import edu.yale.library.ladybird.kernel.ServicesManager;
 import edu.yale.library.ladybird.kernel.persistence.HibernateUtil;
 
 import javax.servlet.ServletContextEvent;
@@ -29,10 +30,10 @@ public class AppContextListener implements ServletContextListener {
             START_HIBERNATE = HibernateUtil.getSessionFactory().getStatistics().getStartTime();
             logger.debug("Built Session Factory");
 
-            //Set off notifications cron. Other crons in MontiorView (or it's RESTful analog):
-
-            NotificationScheduler notificationScheduler = new NotificationScheduler();
-            notificationScheduler.scheduleJob("notification", "trigger", getNotificationCronSchedule());
+            //bootstrap notification:
+            KernelContext kernelContext = new KernelContext();
+            kernelContext.setAbstractModule(new JobModule());
+            KernelContext.initNotificationScheduler();
         } catch (Throwable t) {
             logger.error("Error in context initialization", t);
             t.printStackTrace();
@@ -59,9 +60,4 @@ public class AppContextListener implements ServletContextListener {
     public AppContextListener() {
         servicesManager = new ServicesManager(); //
     }
-
-    private String getNotificationCronSchedule() {
-        return "0/30 * * * * ?"; //check every 30 sec
-    }
-
 }
