@@ -35,8 +35,13 @@ public class ImportScheduler {
         try {
             Scheduler scheduler = new StdSchedulerFactory().getScheduler();
             scheduler.start();
-            job = getJob(jobName, ImportJob.class);
-            scheduler.scheduleJob(job, getTrigger(cronExpression));
+            job = getJob(jobName, ImportJobFactory.getInstance().getClass());
+            Trigger trigger = TriggerBuilder
+                    .newTrigger()
+                    .withIdentity("IMG-TRIGER", "IMJ")
+                    .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
+                    .build();
+            scheduler.scheduleJob(job, trigger);
         } catch (SchedulerException e) {
             throw new CronSchedulingException(e);
         }
@@ -46,14 +51,6 @@ public class ImportScheduler {
         defaultJobsManager.addJob(job);
     }
 
-    protected Trigger getTrigger(String cronExpression) {
-        Trigger trigger = TriggerBuilder
-                .newTrigger()
-                .withIdentity("IMG-TRIGER", "IMJ")
-                .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
-                .build();
-        return trigger;
-    }
 
     @SuppressWarnings("unchecked")
     protected JobDetail getJob(String jobName, Class klass) {

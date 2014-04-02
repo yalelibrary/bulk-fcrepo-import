@@ -67,7 +67,7 @@ public class FilePickerJob implements Job {
                                 + watchEvent.context().toString());
                         final SpreadsheetFile file = new SpreadsheetFile(watchEvent.context().toString(),
                                 path.toAbsolutePath().toString(),
-                                "ImportJob-X-" + watchEvent.context().toString(),
+                                "DefaultImportJob-X-" + watchEvent.context().toString(),
                                 FileUtils.openInputStream(fullPath));
                         final ImportRequestEvent importEvent = new ImportRequestEvent(file, monitorItem);
 

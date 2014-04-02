@@ -33,8 +33,13 @@ public class ExportScheduler {
         try {
             Scheduler scheduler = new StdSchedulerFactory().getScheduler();
             scheduler.start();
-            job = getJob(jobName, ExportJob.class, monitorItem);
-            scheduler.scheduleJob(job, getTrigger(cronExpression));
+            job = getJob(jobName, ExportJobFactory.getInstance().getClass(), monitorItem);
+            Trigger trigger = TriggerBuilder
+                    .newTrigger()
+                    .withIdentity("EXJ-TRIGER", "EXJ")
+                    .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
+                    .build();
+            scheduler.scheduleJob(job, trigger);
         } catch (SchedulerException e) {
             throw new CronSchedulingException(e);
         }
@@ -43,20 +48,12 @@ public class ExportScheduler {
         defaultJobsManager.addJob(job);
     }
 
-    protected Trigger getTrigger(String cronExpression) {
-        Trigger trigger = TriggerBuilder
-                .newTrigger()
-                .withIdentity("EXJ-TRIGER", "EXJ")
-                .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
-                .build();
-        return trigger;
-    }
 
     @SuppressWarnings("unchecked")
     protected JobDetail getJob(String jobName, Class klass, Monitor monitorItem) {
         JobDetail job = JobBuilder.newJob(klass)
                 .withIdentity(jobName, "EXJ").build();
-        job.getJobDataMap().put("event", monitorItem); //used by ExportJob
+        job.getJobDataMap().put("event", monitorItem); //used by DefaultExportJob
         return job;
     }
 }

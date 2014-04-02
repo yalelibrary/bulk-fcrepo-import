@@ -24,7 +24,6 @@ public class DummyEMailNotificationHandler implements NotificationHandler {
             email.setMsg("Test Message");
             email.addTo(ApplicationProperties.CONFIG_STATE.EMAIL_ADMIN);
             email.send();
-
         } catch (EmailException e) {
             logger.error("Exception sending notification");
             e.printStackTrace(); //TODO
