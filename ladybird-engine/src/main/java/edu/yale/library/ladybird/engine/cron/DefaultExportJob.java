@@ -36,13 +36,13 @@ public class DefaultExportJob implements Job, ExportJob {
     public void execute(JobExecutionContext ctx) throws JobExecutionException {
         logger.debug("[start] export job.");
 
-        ExportEngine exportEngine = new DefaultExportEngine();
+        final ExportEngine exportEngine = new DefaultExportEngine();
 
         try {
             final long startTime = System.currentTimeMillis();
             final List<ImportEntity.Row>  list = exportEngine.read();
 
-            logger.debug("Read rows from import tables. list size=" + list.size());
+            logger.debug("Read rows from import tables, list size=" + list.size());
 
             final Monitor monitorItem = (Monitor) ctx.getJobDetail().getJobDataMap().get("event");
 

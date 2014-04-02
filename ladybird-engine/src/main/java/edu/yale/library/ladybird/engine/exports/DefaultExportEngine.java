@@ -11,25 +11,23 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class DefaultExportEngine extends AbstractExportEngine {
     private final Logger logger = getLogger(this.getClass());
 
-    private static final Integer DEFAULT_SHEET = 0; //todo
-
     @Override
     public List<ImportEntity.Row> doRead() {
         logger.debug("Reading rows from import table(s)");
 
-        ExportReader reader = new ExportReader();
-        List<ImportEntity.Row> list = reader.populateRows();
+        final ExportReader reader = new ExportReader();
+        final List<ImportEntity.Row> list = reader.readRowsFromImportTables();
 
-        logger.debug("list size=" + list.size());
+        logger.debug("Read list size={}", list.size());
 
         return list;
     }
 
     @Override
     public void doWrite(final List<ImportEntity.Row> list, final String pathName) throws IOException {
-        logger.debug("Initiating write to spreadsheet. . .");
+        logger.debug("Initiating write to spreadsheet to path={}", pathName);
 
-        ExportWriter exportWriter = new ExportWriter();
+        final ExportWriter exportWriter = new ExportWriter();
         exportWriter.write(list, pathName);
     }
 

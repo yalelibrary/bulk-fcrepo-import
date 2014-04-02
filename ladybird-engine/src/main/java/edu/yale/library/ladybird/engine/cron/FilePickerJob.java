@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.engine.cron;
 
 
+import edu.yale.library.ladybird.engine.imports.SpreadsheetFileBuilder;
 import edu.yale.library.ladybird.kernel.beans.Monitor;
 import edu.yale.library.ladybird.engine.imports.ImportRequestEvent;
 import edu.yale.library.ladybird.engine.imports.SpreadsheetFile;
@@ -65,10 +66,7 @@ public class FilePickerJob implements Job {
 
                         final File fullPath = new File(path.toAbsolutePath() + System.getProperty("file.separator")
                                 + watchEvent.context().toString());
-                        final SpreadsheetFile file = new SpreadsheetFile(watchEvent.context().toString(),
-                                path.toAbsolutePath().toString(),
-                                "DefaultImportJob-X-" + watchEvent.context().toString(),
-                                FileUtils.openInputStream(fullPath));
+                        final SpreadsheetFile file = new SpreadsheetFileBuilder().setFileName(watchEvent.context().toString()).setAltName(path.toAbsolutePath().toString()).setPath("DefaultImportJob-X-" + watchEvent.context().toString()).setFileStream(FileUtils.openInputStream(fullPath)).createSpreadsheetFile();
                         final ImportRequestEvent importEvent = new ImportRequestEvent(file, monitorItem);
 
                         logger.debug("Prepared event=" + importEvent.toString());

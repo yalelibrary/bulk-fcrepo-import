@@ -12,9 +12,10 @@
         <mapping resource="ImportJob.hbm.xml"></mapping>
         <mapping resource="ImportJobContents.hbm.xml"></mapping>
         <mapping resource="ImportJobExhead.hbm.xml"></mapping>
+        <mapping resource="ImportSource.hbm.xml"></mapping>
+        <mapping resource="ImportSourceData.hbm.xml"></mapping>
 
         <mapping resource="Monitor.hbm.xml"></mapping>
-        <mapping resource="ImportSource.hbm.xml"></mapping>
         <mapping resource="Collection.hbm.xml"></mapping>
         <mapping resource="Project.hbm.xml"></mapping>
         <mapping resource="FieldDefinition.hbm.xml"></mapping>

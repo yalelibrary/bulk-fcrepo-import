@@ -47,6 +47,6 @@ public class FieldMarcMappingBuilder {
     }
 
     public FieldMarcMapping createFieldMarcMapping() {
-        return new FieldMarcMapping(id);
+        return new FieldMarcMapping(id, date, k1, k2, concat, delim, fdid);
     }
 }

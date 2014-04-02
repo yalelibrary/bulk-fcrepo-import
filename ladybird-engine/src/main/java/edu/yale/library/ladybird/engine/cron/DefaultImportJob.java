@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.engine.cron;
 
 
+import edu.yale.library.ladybird.engine.oai.OaiProvider;
 import edu.yale.library.ladybird.kernel.TimeUtils;
 import edu.yale.library.ladybird.kernel.beans.User;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
@@ -32,9 +33,8 @@ public class DefaultImportJob implements Job, ImportJob {
 
     /**
      * Execute the full cycle and notify the list of users.
-     * todo find out how to tie user id to file data
      *
-     * @param arg0
+     * @param arg0 JobExecution
      * @throws JobExecutionException
      */
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
@@ -46,17 +46,27 @@ public class DefaultImportJob implements Job, ImportJob {
 
         try {
             final ImportEngine importEngine = new DefaultImportEngine();
-            final List<ImportEntity.Row>  list = importEngine.read(file, ReadMode.FULL, new DefaultFieldDataValidator());
+            final DefaultFieldDataValidator fieldDataValidator = new DefaultFieldDataValidator();
+            final List<ImportEntity.Row>  rowList = importEngine.read(file, ReadMode.FULL, fieldDataValidator);
 
-            logger.debug("Read rows. list size=" + list.size());
+            logger.debug("Read rows. list size={}", rowList.size());
 
-            final int imid = importEngine.write(list);
+            //TODO SET VIA webapp
 
-            logger.debug("[end] Completed import job in " + TimeUtils.elapsedMilli(startTime));
+            final OaiProvider provider = new OaiProvider("id",
+                    "http://columbus.library.yale.edu:8055/OAI_Orbis/src/OAIOrbisTool.jsp",
+                    "oai:orbis.library.yale.edu:");
+            importEngine.setOaiProvider(provider);
+
+            logger.debug("Writing to import table(s)");
+
+            final int imid = importEngine.write(rowList);
+
+            logger.debug("[end] Completed import job in {}", TimeUtils.elapsedMilli(startTime));
 
             /* Add params as desired */
             final Event importEvent = new ImportCompleteEventBuilder().
-                    setRowsProcessed(list.size()).createImportDoneEvent();
+                    setRowsProcessed(rowList.size()).createImportDoneEvent();
 
             logger.debug("Adding import event and notifying all registered users");
 
@@ -64,8 +74,7 @@ public class DefaultImportJob implements Job, ImportJob {
 
             logger.debug("Added import event to notification queue");
 
-            //Note: This needs to be re-visited per logic requirement
-            /* Add request for export */
+            /* Add request for export */  //Note: This needs to be re-visited per logic requirement
             final ExportRequestEvent exportEvent = new ExportRequestEvent(imid);
             ExportEngineQueue.addJob(exportEvent);
 
@@ -79,8 +88,8 @@ public class DefaultImportJob implements Job, ImportJob {
         }
     }
 
-    private void sendNotification(Event importEvent, List<User> u) {
-        NotificationEventQueue.addEvent(new NotificationEventQueue().new NotificationItem(importEvent, u));
+    private void sendNotification(final Event importEvent, final List<User> userList) {
+        NotificationEventQueue.addEvent(new NotificationEventQueue().new NotificationItem(importEvent, userList));
     }
 
 }

@@ -11,13 +11,13 @@ import java.util.List;
  * A bean for now. Subject to modification.
  */
 public class ImportEntity {
-    List<Row> sheetRows = new ArrayList<>();
+    final List<Row> sheetRows = new ArrayList<>();
 
     public class Column<T> {
         FieldConstant field;
         T value;
 
-        public Column(FieldConstant field, T value) {
+        public Column(final FieldConstant field, final T value) {
             this.field = field;
             this.value = value;
         }
@@ -29,6 +29,14 @@ public class ImportEntity {
         public FieldConstant getField() {
             return field;
         }
+
+        @Override
+        public String toString() {
+            return "Column{"
+                    + "field=" + field
+                    + ", value=" + value
+                    + '}';
+        }
     }
 
     public class Row {
@@ -39,13 +47,16 @@ public class ImportEntity {
         }
 
         @Deprecated
-        public void setColumns(List<Column> columns) {
+        public void setColumns(final List<Column> columns) {
             this.columns = columns;
         }
-    }
 
-    public List<Row> getSheetRows() {
-        return sheetRows;
+        @Override
+        public String toString() {
+            return "Row{"
+                    + "columns=" + columns
+                    + '}';
+        }
     }
 
 }

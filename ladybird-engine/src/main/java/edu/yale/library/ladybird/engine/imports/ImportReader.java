@@ -21,11 +21,12 @@ import java.util.List;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * Read Processor. Subject to modification.
+ * Spreadsheet reader.
  */
 public final class ImportReader {
 
     private final Logger logger = getLogger(this.getClass());
+
     private final SpreadsheetFile file;
     private final int sheetNumber; //assumes one sheet
     private ReadMode readMode;
@@ -36,57 +37,63 @@ public final class ImportReader {
         this.readMode = readMode;
     }
 
+    /**
+     * Process a sheet (NOTE: assumes default sheet 0)
+     *
+     * @return datastructure containing all the data from the spreadsheet
+     * @throws ImportReaderValidationException
+     * @throws IOException
+     */
     public List<ImportEntity.Row> processSheet() throws ImportReaderValidationException, IOException {
-        List<ImportEntity.Row> sheetRows = new ArrayList<>();
+        final List<ImportEntity.Row> sheetRows = new ArrayList<>();
 
         // value list hods column function values. Could be replaced with a map.
-        List<FieldConstant> valueMap = new ArrayList<>();
+        final List<FieldConstant> valueMap = new ArrayList<>();
 
         try {
-            logger.debug("Processing a sheet of={}", file);
-            XSSFSheet sheet = getDefaultSheet();
+            logger.debug("Processing sheet of file={}", file);
+            final XSSFSheet sheet = getDefaultSheet();
             final Iterator<Row> it = sheet.iterator();
 
             //read first row
-            Row firstRow = it.next();
+            final Row firstRow = it.next();
             final Iterator<Cell> firstRowCellIterator = firstRow.cellIterator();
             final ImportEntity.Row headerSheetRow = new ImportEntity().new Row();
-
-            logger.debug(FieldDefinitionValue.getFieldDefMap().toString());
 
             while (firstRowCellIterator.hasNext()) {
                 final Cell cell = firstRowCellIterator.next();
 
                 // Reader Header value.
                 try {
-                    FieldConstant f = getFieldConstant(String.valueOf(cellValue(cell)));
+                    final FieldConstant f = getFieldConstant(String.valueOf(cellValue(cell)));
                     valueMap.add(f);
-                    ImportEntity.Column<String> column = new ImportEntity().new Column<>(f,
-                            String.valueOf(cellValue(cell)));
+                    final ImportEntity.Column<String> column = new ImportEntity()
+                            .new Column<>(f, String.valueOf(cellValue(cell)));
                     headerSheetRow.getColumns().add(column);
                 } catch (UnknownFunctionException unknownFunction) {
                     if (this.readMode == ReadMode.HALT) {
-                        logger.error("Unknown field column in header." + unknownFunction.getMessage());
-                        ImportReaderValidationException importReaderValidationException = new ImportReaderValidationException(unknownFunction);
+                       logger.error("Unknown field column in header= {}", unknownFunction.getMessage());
+                       final ImportReaderValidationException importReaderValidationException =
+                               new ImportReaderValidationException(unknownFunction);
                         importReaderValidationException.initCause(unknownFunction);
                         throw importReaderValidationException;
                     }
-                    logger.debug("Unknown header value. " + unknownFunction.getMessage());
+                    logger.debug("Unknown exhead value= {}", unknownFunction.getMessage());
                     valueMap.add(FunctionConstants.UNK);
                 }
             }
             //add header row:
             sheetRows.add(headerSheetRow);
 
-            //iterate body //FIXME poential bug(s). check empty columnns, and use map etc instead of list
+            //iterate body: //FIXME Check empty columnns.
             int cellCount = 0;
             while (it.hasNext()) {
-                ImportEntity.Row contentsSheetRow = new ImportEntity().new Row();
-                Row row = it.next();
-                Iterator<Cell> cellIterator = row.cellIterator();
+                final ImportEntity.Row contentsSheetRow = new ImportEntity().new Row();
+                final Row row = it.next();
+                final Iterator<Cell> cellIterator = row.cellIterator();
                 while (cellIterator.hasNext()) {
-                    Cell cell = cellIterator.next();
-                    ImportEntity.Column<String> column = new ImportEntity().new Column<>(valueMap.get(cellCount),
+                    final Cell cell = cellIterator.next();
+                    final ImportEntity.Column<String> column = new ImportEntity().new Column<>(valueMap.get(cellCount),
                             String.valueOf(cellValue(cell)));
                     contentsSheetRow.getColumns().add(column);
                     cellCount++;
@@ -95,41 +102,33 @@ public final class ImportReader {
                 cellCount = 0;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error reading", e);
             throw e;
         }
         return sheetRows;
     }
 
     /**
-     * @param cellValue
+     * Transform a strihng into a a FieldConstant
+     *
+     * @param cellValue spreadsheet cell value
      * @return a FieldConstant
      * @throws UnknownFunctionException
      * @see FunctionConstants
      */
-    private FieldConstant getFieldConstant(String cellValue) throws UnknownFunctionException {
-        if (FieldDefinitionValue.getFieldDefMap().containsKey(cellValue.trim())) //e.g. Note{fdid=80}
-        {
-            return FieldDefinitionValue.getFieldDefMap().get(cellValue.trim()); //?
+    public static FieldConstant getFieldConstant(final String cellValue) throws UnknownFunctionException {
+        //e.g. Note{fdid=80}
+        if (FieldDefinitionValue.getFieldDefMap().containsKey(cellValue.trim())) {
+            return FieldDefinitionValue.getFieldDefMap().get(cellValue.trim());
         }
 
         try {
-            String normCellString = normalizeFunctionConst(cellValue);
-            FieldConstant fieldConst = FunctionConstants.valueOf(normCellString);
+            final String normCellString = cellValue.replace("{", "").replace("}", "");
+            final FieldConstant fieldConst = FunctionConstants.valueOf(normCellString.toUpperCase());
             return fieldConst;
         } catch (IllegalArgumentException e) {
-            throw new UnknownFunctionException("Specified cell not a recognized function or fdid= " + cellValue);
+            throw new UnknownFunctionException("Specified cell=" + cellValue + " not a recognized function or fdid.");
         }
-    }
-
-    /**
-     * Removes brackets etc for now
-     *
-     * @param cellValue
-     * @return normalized string
-     */
-    private String normalizeFunctionConst(String cellValue) {
-        return cellValue.replace("{", "").replace("}", "");
     }
 
     /**
@@ -139,12 +138,12 @@ public final class ImportReader {
      * @param cell
      * @return Object wrapping primitive or string
      */
-    private Object cellValue(Cell cell) {
+    private Object cellValue(final Cell cell) {
         switch (cell.getCellType()) {
             case Cell.CELL_TYPE_BOOLEAN:
                 return cell.getBooleanCellValue();
             case Cell.CELL_TYPE_NUMERIC:
-                return cell.getNumericCellValue();
+                return (int) cell.getNumericCellValue(); //TODO note int. FIXME
             case Cell.CELL_TYPE_STRING:
                 return cell.getStringCellValue();
             default:
@@ -160,8 +159,8 @@ public final class ImportReader {
      */
     private XSSFSheet getDefaultSheet() throws IOException {
         logger.debug("Reading sheet={}", file.getFileName());
-        XSSFWorkbook workbook = new XSSFWorkbook(file.getFileStream());
-        XSSFSheet sheet = workbook.getSheetAt(sheetNumber);
+        final XSSFWorkbook workbook = new XSSFWorkbook(file.getFileStream());
+        final XSSFSheet sheet = workbook.getSheetAt(sheetNumber);
         return sheet;
     }
 }

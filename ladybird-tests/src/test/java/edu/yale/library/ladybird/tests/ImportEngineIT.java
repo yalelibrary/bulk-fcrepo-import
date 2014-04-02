@@ -1,5 +1,10 @@
 package edu.yale.library.ladybird.tests;
 
+import edu.yale.library.ladybird.engine.imports.ImportEngine;
+import edu.yale.library.ladybird.engine.imports.ImportEntity;
+import edu.yale.library.ladybird.engine.imports.DefaultImportEngine;
+import edu.yale.library.ladybird.engine.imports.SpreadsheetFile;
+import edu.yale.library.ladybird.engine.imports.SpreadsheetFileBuilder;
 import edu.yale.library.ladybird.kernel.ServicesManager;
 import edu.yale.library.ladybird.kernel.beans.ImportJob;
 import edu.yale.library.ladybird.kernel.beans.ImportJobContents;
@@ -14,11 +19,7 @@ import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
 import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
-import edu.yale.library.ladybird.engine.imports.ImportEntity;
-import edu.yale.library.ladybird.engine.imports.ImportEngine;
-import edu.yale.library.ladybird.engine.imports.DefaultImportEngine;
 import edu.yale.library.ladybird.engine.model.FieldDefinitionValue;
-import edu.yale.library.ladybird.engine.imports.SpreadsheetFile;
 import edu.yale.library.ladybird.engine.model.ReadMode;
 import edu.yale.library.ladybird.engine.model.FieldConstant;
 import edu.yale.library.ladybird.engine.model.DefaultFieldDataValidator;
@@ -82,8 +83,7 @@ public class ImportEngineIT {
         logger.debug("Writing rows to tables");
         final int imid = importEngine.write(rows);
 
-        //Note: This needs to be re-visited per logic requirement
-            /* Add request for export */
+        /* Add request for export */
         final ExportRequestEvent exportEvent = new ExportRequestEvent(imid);
         ExportEngineQueue.addJob(exportEvent);
 
@@ -91,10 +91,10 @@ public class ImportEngineIT {
 
         //Now read back:
 
-        //Job itself:
+        //The job itself:
         final ImportJobDAO importJobHibernateDAO = new ImportJobHibernateDAO();
-        final List<ImportJob> l = importJobHibernateDAO.findAll();
-        assertEquals("Import job count mismatch", l.size(), 1);
+        final List<ImportJob> importJobList = importJobHibernateDAO.findAll();
+        assertEquals("Import job count mismatch", importJobList.size(), 1);
 
         //Headers (aka exhead):
         final ImportJobExheadDAO importJobExheadDAO = new ImportJobExheadHibernateDAO();
@@ -121,7 +121,7 @@ public class ImportEngineIT {
 
         assert (listExportRows != null);
         logger.debug("Size={}", listExportRows.size());
-        assertEquals("Export rows don't equal import expected rows", listExportRows.size(), 76); //fixme
+        assertEquals("Export rows don't equal import expected rows", listExportRows.size(), 77);
 
         //write this spreadsheet
         exportEngine.write(listExportRows, XLS_FILE_TO_WRITE);
@@ -130,20 +130,31 @@ public class ImportEngineIT {
         logger.debug("Reading the new test spreadsheet created by ExportEngine with ImportEngine");
         final List<ImportEntity.Row> rowsReadBack = importEngine.read(getExportSpreadsheeet(), ReadMode.FULL,
                 new DefaultFieldDataValidator());
-        assertEquals("Rows size mismatch", rowsReadBack.size(), 76); //fixme
+        assertEquals("Rows size mismatch", rowsReadBack.size(), 77);
     }
 
+    /**
+     * Utility to create SpreadsheetFile
+     * @return a SpreadsheetFile instance
+     * @see SpreadsheetFile
+     */
     public SpreadsheetFile getImportSpreadsheeet() {
-        SpreadsheetFile file = new SpreadsheetFile(FileConstants.TEST_XLS_FILE, "Test spreadsheet",
-                FileConstants.TEST_XLS_FILE, getClass().getClassLoader().getResourceAsStream(FileConstants.TEST_XLS_FILE));
+        final SpreadsheetFile file = new SpreadsheetFileBuilder().setFileName(FileConstants.TEST_XLS_FILE)
+                .setAltName("Test spreadsheet")
+                .setPath(FileConstants.TEST_XLS_FILE)
+                .setFileStream(getClass().getClassLoader().getResourceAsStream(FileConstants.TEST_XLS_FILE))
+                .createSpreadsheetFile();
         return file;
     }
 
     public SpreadsheetFile getExportSpreadsheeet() throws FileNotFoundException {
         final String testPath = System.getProperty("user.home")
                 + System.getProperty("file.separator") + "test_export.xlsx";
-        SpreadsheetFile file = new SpreadsheetFile("test_export_xlsx", "Test export xls",
-                testPath, new FileInputStream(testPath));
+        SpreadsheetFile file = new SpreadsheetFileBuilder().setFileName("test_export_xlsx")
+                .setAltName("Test export xls")
+                .setPath(testPath)
+                .setFileStream(new FileInputStream(testPath))
+                .createSpreadsheetFile();
         return file;
     }
 
@@ -192,10 +203,7 @@ public class ImportEngineIT {
         return fdidsMap;
     }
 
-    public void setJdbcFieldDefsMap() {
-        //TODO (set fdid in test db?)
-    }
-
+    //TODO remove
     public FieldDefinitionValue getFdid(int fdid, String s) {
         return new FieldDefinitionValue(fdid, s);
     }
@@ -204,15 +212,10 @@ public class ImportEngineIT {
      * Test file constants
      */
     public class FileConstants {
-
         static final String TEST_XLS_FILE = "4654-pt1-READY-FOR-INGEST-A.xlsx";
-
         static final int ROW_COUNT = 78;
-
         static final int COL_COUNT = 31; //Actual number
-
         static final int FDID_COL_COUNT = 30; //COL_COUNT (regular fdids) minus a FunctionConstants (F1)
-
     }
 
     /* Creates the file in the user home directory. */

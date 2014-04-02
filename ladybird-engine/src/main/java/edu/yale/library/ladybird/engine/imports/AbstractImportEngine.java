@@ -4,6 +4,7 @@ package edu.yale.library.ladybird.engine.imports;
 import edu.yale.library.ladybird.engine.model.ImportReaderValidationException;
 import edu.yale.library.ladybird.engine.model.DefaultFieldDataValidator;
 import edu.yale.library.ladybird.engine.model.ReadMode;
+import edu.yale.library.ladybird.engine.oai.OaiProvider;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,6 +17,12 @@ public abstract class AbstractImportEngine implements ImportEngine {
     private SpreadsheetFile spreadsheetFile = null;
 
     protected static final Integer USER_ID = 0; //todo
+
+    protected OaiProvider oaiProvider; //TODO design
+
+    public void setOaiProvider(OaiProvider oaiProvider) {
+        this.oaiProvider = oaiProvider;
+    }
 
     /**
      * Read with default param settings.

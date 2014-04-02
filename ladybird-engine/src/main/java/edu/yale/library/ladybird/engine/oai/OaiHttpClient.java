@@ -119,6 +119,7 @@ public class OaiHttpClient {
      */
     private String harvest(final String URL) throws IOException {
         try {
+            logger.debug("Hitting OAI-PMH url={}", URL);
             HttpGet getRequest = new HttpGet(URL);
             final HttpResponse response = httpClient.execute(getRequest);
             if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {

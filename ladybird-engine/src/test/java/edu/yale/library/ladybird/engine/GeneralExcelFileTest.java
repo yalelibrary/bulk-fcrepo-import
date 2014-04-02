@@ -16,30 +16,38 @@ import static org.junit.Assert.assertEquals;
  */
 public class GeneralExcelFileTest {
 
+    private static class TestFileConstants {
+        static final String TEST_XLS_FILE = "excel/4654-pt1-READY-FOR-INGEST-A.xlsx";
+        static final int TEST_SHEET_NUM = 0;
+        static final int HEADER_COL_COUNT = 31;
+        static final int COL_COUNT = 30;
+        static final int ROW_COUNT = 78;
+    }
+
     /**
      * Tests number of rows and columns
      *
      * @throws Exception
      */
     @Test
-    public void testColumnsandRows() throws IOException {
+    public void shouldEqualExpectedColumnsandRows() throws IOException {
 
         InputStream TEST_EXCEL_FILE = getClass().getClassLoader()
-                .getResourceAsStream(DefaultImportReaderTest.FileConstants.TEST_XLS_FILE);
+                .getResourceAsStream(TestFileConstants.TEST_XLS_FILE);
         XSSFWorkbook workbook = new XSSFWorkbook(TEST_EXCEL_FILE);
-        XSSFSheet sheet = workbook.getSheetAt(DefaultImportReaderTest.FileConstants.TEST_SHEET_NUM);
+        XSSFSheet sheet = workbook.getSheetAt(TestFileConstants.TEST_SHEET_NUM);
 
         Iterator<org.apache.poi.ss.usermodel.Row> it = sheet.iterator();
-        assertEquals("Expected rows mismatch", sheet.getPhysicalNumberOfRows(), DefaultImportReaderTest.FileConstants.ROW_COUNT);
+        assertEquals("Expected rows mismatch", sheet.getPhysicalNumberOfRows(), TestFileConstants.ROW_COUNT);
 
         org.apache.poi.ss.usermodel.Row header = it.next();
         assertEquals("Expected header count mismatch", header.getPhysicalNumberOfCells(),
-                DefaultImportReaderTest.FileConstants.HEADER_COL_COUNT);
+                TestFileConstants.HEADER_COL_COUNT);
 
         while (it.hasNext()) {
             org.apache.poi.ss.usermodel.Row row = it.next();
             assertEquals("Expected columns mismatch in row num. " + row.getRowNum(),
-                    row.getPhysicalNumberOfCells(), DefaultImportReaderTest.FileConstants.COL_COUNT);
+                    row.getPhysicalNumberOfCells(), TestFileConstants.COL_COUNT);
         }
     }
 

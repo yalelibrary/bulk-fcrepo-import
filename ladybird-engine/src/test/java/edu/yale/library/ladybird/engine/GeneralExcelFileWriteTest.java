@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
- * Exercises general Excel writing. The test is meant for testing the format of the test file.
+ * Exercises general Excel writing. Subject to removal
  */
 public class GeneralExcelFileWriteTest {
 
@@ -39,10 +39,10 @@ public class GeneralExcelFileWriteTest {
      */
     @Test
     public void testWrite() throws IOException {
-        XSSFWorkbook workbook = new XSSFWorkbook();
-        XSSFSheet sheet = workbook.createSheet("Default Sheet");
+        final XSSFWorkbook workbook = new XSSFWorkbook();
+        final XSSFSheet sheet = workbook.createSheet("Default Sheet");
 
-        Map<String, Object[]> map = new HashMap<>();
+        final Map<String, Object[]> map = new HashMap<>();
         map.put("1", new Object[]{"No.", "Path", "Oid"});
         map.put("2", new Object[]{1, "/tmp", 58400});
         map.put("3", new Object[]{2, "/tmp2", 5500});
@@ -69,7 +69,7 @@ public class GeneralExcelFileWriteTest {
         }
 
         try {
-            FileOutputStream out = new FileOutputStream(new File(PATHNAME));
+            final FileOutputStream out = new FileOutputStream(new File(PATHNAME));
             workbook.write(out);
             out.close();
         } catch (Exception e) {

@@ -1,10 +1,8 @@
 package edu.yale.library.ladybird.engine.oai;
 
-/**
- * TODO This would be set up from config
- */
+
 public class OaiProvider {
-    private String identifier; //todo if needed
+    private String identifier;
     private String url;
     private String bibIdPrefix;
 

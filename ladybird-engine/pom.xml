@@ -20,6 +20,7 @@
         <poi-ooxml.version>3.8</poi-ooxml.version>
         <xpathapi-jaxp.version>0.4</xpathapi-jaxp.version>
         <ladybird-kernel.version>0.0.1-SNAPSHOT</ladybird-kernel.version>
+        <guava.version>16.0.1</guava.version>
     </properties>
 
     <dependencies>
@@ -93,6 +94,11 @@
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
             <version>${guice.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
         </dependency>
         <!--  Java EE -->
         <dependency>
