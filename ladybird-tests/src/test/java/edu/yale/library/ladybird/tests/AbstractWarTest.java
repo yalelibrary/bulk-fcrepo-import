@@ -28,7 +28,7 @@ public class AbstractWarTest {
     private static final String TEST_PORT = "8081";
     protected static final String SERVER_PREFIX = "http://localhost:" + TEST_PORT + "/";
     private static final String TOMCAT_7_X = "tomcat7x";
-    protected static final String WAR = System.getProperty("user.home") + APP_PREFIX + APP_ARTIFACT + ".war";
+    protected static final String WAR = System.getProperty("java.io.tmpdir") + APP_PREFIX + APP_ARTIFACT + ".war";
 
     protected static void setupContainer() throws MalformedURLException {
         Deployable war = new org.codehaus.cargo.container.deployable.WAR(WAR);

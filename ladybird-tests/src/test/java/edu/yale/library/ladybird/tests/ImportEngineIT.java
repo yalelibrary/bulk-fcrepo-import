@@ -148,7 +148,7 @@ public class ImportEngineIT {
     }
 
     public SpreadsheetFile getExportSpreadsheeet() throws FileNotFoundException {
-        final String testPath = System.getProperty("user.home")
+        final String testPath = System.getProperty("java.io.tmpdir")
                 + System.getProperty("file.separator") + "test_export.xlsx";
         SpreadsheetFile file = new SpreadsheetFileBuilder().setFileName("test_export_xlsx")
                 .setAltName("Test export xls")
@@ -221,7 +221,7 @@ public class ImportEngineIT {
     /* Creates the file in the user home directory. */
     @Deprecated
     private static String asTmp(final String s) {
-        return System.getProperty("user.home") + System.getProperty("file.separator") + s;
+        return System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + s;
     }
 
     @Before

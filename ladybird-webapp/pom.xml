@@ -201,7 +201,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${user.home}/${project.artifactId}</outputDirectory>
+                            <outputDirectory>${java.io.tmpdir}/${project.artifactId}</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>target</directory>
