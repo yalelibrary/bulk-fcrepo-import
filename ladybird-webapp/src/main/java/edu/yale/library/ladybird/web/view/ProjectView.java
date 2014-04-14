@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.kernel.beans.Project;
 import edu.yale.library.ladybird.kernel.beans.ProjectBuilder;
-import edu.yale.library.ladybird.kernel.dao.ProjectDAO;
+import edu.yale.library.ladybird.persistence.dao.ProjectDAO;
 import org.slf4j.Logger;
 
 import javax.annotation.PostConstruct;

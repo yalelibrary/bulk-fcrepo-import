@@ -6,8 +6,8 @@ import edu.yale.library.ladybird.kernel.TimeUtils;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
 import edu.yale.library.ladybird.kernel.JobModule;
 import edu.yale.library.ladybird.kernel.KernelContext;
-import edu.yale.library.ladybird.kernel.ServicesManager;
-import edu.yale.library.ladybird.kernel.persistence.HibernateUtil;
+import edu.yale.library.ladybird.persistence.HibernateUtil;
+import edu.yale.library.ladybird.persistence.ServicesManager;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;

@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.web.view;
 
-import edu.yale.library.ladybird.kernel.dao.HydraPublishPathDAO;
 
+import edu.yale.library.ladybird.persistence.dao.HydraPublishPathDAO;
 import org.slf4j.Logger;
 
 import javax.faces.bean.ManagedBean;

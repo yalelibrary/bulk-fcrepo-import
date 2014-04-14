@@ -3,18 +3,10 @@ package edu.yale.library.ladybird.web.view;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 
-import edu.yale.library.ladybird.kernel.dao.*;
-import edu.yale.library.ladybird.kernel.dao.hibernate.CollectionHibernateDAO;
-import edu.yale.library.ladybird.kernel.dao.hibernate.ImportSourceHibernateDAO;
-import edu.yale.library.ladybird.kernel.dao.hibernate.ImportSourceDataHibernateDAO;
-import edu.yale.library.ladybird.kernel.dao.hibernate.MonitorHibernateDAO;
-import edu.yale.library.ladybird.kernel.dao.hibernate.ProjectHibernateDAO;
-import edu.yale.library.ladybird.kernel.dao.hibernate.UserHibernateDAO;
-import edu.yale.library.ladybird.kernel.dao.hibernate.FieldDefinitionHibernateDAO;
-import edu.yale.library.ladybird.kernel.dao.hibernate.FieldMarcMappingHibernateDAO;
-
 import edu.yale.library.ladybird.kernel.beans.User;
 import edu.yale.library.ladybird.kernel.beans.Project;
+import edu.yale.library.ladybird.persistence.dao.*;
+import edu.yale.library.ladybird.persistence.dao.hibernate.*;
 
 public class DaoHibernateModule extends AbstractModule {
     @Override

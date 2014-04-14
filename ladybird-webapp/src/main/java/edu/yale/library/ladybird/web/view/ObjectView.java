@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.web.view;
 
-import edu.yale.library.ladybird.kernel.dao.ObjectDAO;
 
+import edu.yale.library.ladybird.persistence.dao.ObjectDAO;
 import org.slf4j.Logger;
 
 import javax.faces.bean.ManagedBean;

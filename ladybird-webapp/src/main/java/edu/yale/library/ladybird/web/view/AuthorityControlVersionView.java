@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.web.view;
 
-import edu.yale.library.ladybird.kernel.dao.AuthorityControlVersionDAO;
 
+import edu.yale.library.ladybird.persistence.dao.AuthorityControlVersionDAO;
 import org.slf4j.Logger;
 
 import javax.faces.bean.ManagedBean;

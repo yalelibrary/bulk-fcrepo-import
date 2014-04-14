@@ -19,10 +19,16 @@
         <poi-ooxml.version>3.8</poi-ooxml.version>
         <xpathapi-jaxp.version>0.4</xpathapi-jaxp.version>
         <ladybird-kernel.version>0.0.1-SNAPSHOT</ladybird-kernel.version>
+        <ladybird-persistence.version>0.0.1-SNAPSHOT</ladybird-persistence.version>
         <guava.version>16.0.1</guava.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>edu.yale.library</groupId>
+            <artifactId>ladybird-persistence</artifactId>
+            <version>${ladybird-persistence.version}</version>
+        </dependency>
         <dependency>
             <groupId>edu.yale.library</groupId>
             <artifactId>ladybird-kernel</artifactId>

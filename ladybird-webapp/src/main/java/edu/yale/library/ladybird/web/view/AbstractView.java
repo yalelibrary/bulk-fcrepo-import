@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.web.view;
 
-import edu.yale.library.ladybird.kernel.dao.GenericDAO;
+
+import edu.yale.library.ladybird.persistence.dao.GenericDAO;
 
 public class AbstractView<T> {
     protected GenericDAO<T, Integer> dao;

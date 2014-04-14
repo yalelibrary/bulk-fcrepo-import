@@ -33,6 +33,7 @@
         <dumbster.version>1.6</dumbster.version>
         <ladybird-engine.version>0.0.1-SNAPSHOT</ladybird-engine.version>
         <ladybird-kernel.version>0.0.1-SNAPSHOT</ladybird-kernel.version>
+        <ladybird-persistence.version>0.0.1-SNAPSHOT</ladybird-persistence.version>
     </properties>
 
     <dependencies>
@@ -45,6 +46,11 @@
             <groupId>edu.yale.library</groupId>
             <artifactId>ladybird-kernel</artifactId>
             <version>${ladybird-kernel.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>edu.yale.library</groupId>
+            <artifactId>ladybird-persistence</artifactId>
+            <version>${ladybird-persistence.version}</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>

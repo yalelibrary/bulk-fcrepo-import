@@ -1,10 +1,10 @@
 package edu.yale.library.ladybird.web.view;
 
-import edu.yale.library.ladybird.kernel.ServicesManager;
 import edu.yale.library.ladybird.kernel.beans.UserBuilder;
 import edu.yale.library.ladybird.kernel.beans.User;
-import edu.yale.library.ladybird.kernel.dao.UserDAO;
 
+import edu.yale.library.ladybird.persistence.ServicesManager;
+import edu.yale.library.ladybird.persistence.dao.UserDAO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

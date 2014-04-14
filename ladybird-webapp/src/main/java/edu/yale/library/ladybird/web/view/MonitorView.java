@@ -2,11 +2,11 @@ package edu.yale.library.ladybird.web.view;
 
 
 import edu.yale.library.ladybird.kernel.beans.Monitor;
-import edu.yale.library.ladybird.kernel.dao.MonitorDAO;
 import edu.yale.library.ladybird.engine.cron.ExportScheduler;
 import edu.yale.library.ladybird.engine.cron.FilePickerScheduler;
 import edu.yale.library.ladybird.engine.cron.ImportScheduler;
 import edu.yale.library.ladybird.engine.model.CronSchedulingException;
+import edu.yale.library.ladybird.persistence.dao.MonitorDAO;
 import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 

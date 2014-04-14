@@ -30,6 +30,7 @@
         <module>ladybird-tests</module>
         <module>ladybird-kernel</module>
         <module>ladybird-engine</module>
+        <module>ladybird-persistence</module>
     </modules>
 
     <scm/>

@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.kernel.beans.Collection;
-import edu.yale.library.ladybird.kernel.dao.CollectionDAO;
+import edu.yale.library.ladybird.persistence.dao.CollectionDAO;
 import org.slf4j.Logger;
 
 import javax.annotation.PostConstruct;

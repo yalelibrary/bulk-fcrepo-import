@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.kernel.beans.FieldDefinition;
 import edu.yale.library.ladybird.kernel.beans.FieldDefinitionBuilder;
-import edu.yale.library.ladybird.kernel.dao.FieldDefinitionDAO;
+import edu.yale.library.ladybird.persistence.dao.FieldDefinitionDAO;
 import org.slf4j.Logger;
 
 import javax.annotation.PostConstruct;

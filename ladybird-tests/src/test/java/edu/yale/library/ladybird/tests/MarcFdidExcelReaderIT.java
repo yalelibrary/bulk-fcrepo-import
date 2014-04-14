@@ -1,10 +1,10 @@
 package edu.yale.library.ladybird.tests;
 
 
-import edu.yale.library.ladybird.kernel.ServicesManager;
 import edu.yale.library.ladybird.kernel.beans.FieldMarcMapping;
-import edu.yale.library.ladybird.kernel.dao.FieldMarcMappingDAO;
-import edu.yale.library.ladybird.kernel.dao.hibernate.FieldMarcMappingHibernateDAO;
+import edu.yale.library.ladybird.persistence.ServicesManager;
+import edu.yale.library.ladybird.persistence.dao.FieldMarcMappingDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.FieldMarcMappingHibernateDAO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

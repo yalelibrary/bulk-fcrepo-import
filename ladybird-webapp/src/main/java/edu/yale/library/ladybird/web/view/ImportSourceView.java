@@ -3,7 +3,8 @@ package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.kernel.beans.ImportSource;
 import edu.yale.library.ladybird.kernel.beans.ImportSourceBuilder;
-import edu.yale.library.ladybird.kernel.dao.ImportSourceDAO;
+
+import edu.yale.library.ladybird.persistence.dao.ImportSourceDAO;
 import org.slf4j.Logger;
 
 import javax.annotation.PostConstruct;

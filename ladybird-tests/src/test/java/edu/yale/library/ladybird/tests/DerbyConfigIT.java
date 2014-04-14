@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.tests;
 
 import edu.yale.library.ladybird.kernel.AppConfigException;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
-import edu.yale.library.ladybird.kernel.ServicesManager;
+import edu.yale.library.ladybird.persistence.ServicesManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
