@@ -15,7 +15,7 @@ public class ApplicationProperties {
     public static final boolean RUN_WITH_INCOMPLETE_CONFIG = false;
     public static final String ALREADY_RUNNING = "Driver already RUNNING.";
     public static final String ALREADY_STOPPED = "Driver already STOPPED.";
-    public static final String SCHEMA_PROPS_FILE = "/default.schema.properties";
+    public static final String SCHEMA_PROPS_FILE = "/derby.schema.properties";
     private static final String EMAIL_PORT_IDENTIFIER = "mail_port";
     private static final String HOST_NAME_IDENTIFIER = "mail_host";
     private static final String ADMIN_EMAIL_IDENTIFIER = "mail_admin";
