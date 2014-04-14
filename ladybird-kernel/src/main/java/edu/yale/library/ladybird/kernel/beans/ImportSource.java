@@ -8,6 +8,7 @@ public class ImportSource implements java.io.Serializable {
     private String url;
     private String xmlType;
     private String getPrefix;
+    private boolean active;
 
     public ImportSource() {
     }
@@ -64,6 +65,14 @@ public class ImportSource implements java.io.Serializable {
         this.getPrefix = getPrefix;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     @Override
     public String toString() {
         return "ImportSource{"
@@ -72,6 +81,7 @@ public class ImportSource implements java.io.Serializable {
                 + ", url='" + url + '\''
                 + ", xmlType=" + xmlType
                 + ", getPrefix='" + getPrefix + '\''
+                + ", active='" + active + '\''
                 + '}';
     }
 }

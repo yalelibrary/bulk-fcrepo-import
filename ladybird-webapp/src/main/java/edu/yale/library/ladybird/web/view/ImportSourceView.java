@@ -34,14 +34,39 @@ public class ImportSourceView extends AbstractView {
         dao = entityDAO;
     }
 
+    /**
+     * Saves and marks it as the active provider.
+     */
     public void save() {
+
+        item.setActive(true);
+        setDefaults(item);
+
+        //Mark old as inactive
+        final List<ImportSource> list = getItemList();
+
+        for (ImportSource importSource: list) {
+            importSource.setActive(false);
+        }
+
+        list.add(item);
+        dao.saveOrUpdateList(list);
+
         try {
-            logger.debug("Saving item", item);
-            setDefaults(item);
-            dao.save(item);
+            dao.saveOrUpdateList(list);
         } catch (Throwable e) {
             logger.error("Error saving item", e);
         }
+
+        logger.debug("Saved annd updated list");
+
+        final List<ImportSource> readlist = getItemList();
+
+        for (ImportSource i: readlist) {
+            logger.debug(i.toString());
+        }
+
+
     }
 
    @Deprecated

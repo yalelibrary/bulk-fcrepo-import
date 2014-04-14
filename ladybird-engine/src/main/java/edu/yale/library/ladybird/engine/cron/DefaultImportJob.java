@@ -3,6 +3,7 @@ package edu.yale.library.ladybird.engine.cron;
 
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
 import edu.yale.library.ladybird.kernel.TimeUtils;
+import edu.yale.library.ladybird.kernel.beans.ImportSource;
 import edu.yale.library.ladybird.kernel.beans.User;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
 import edu.yale.library.ladybird.engine.imports.ImportEngine;
@@ -17,6 +18,8 @@ import edu.yale.library.ladybird.engine.model.ImportEngineException;
 import edu.yale.library.ladybird.engine.model.ReadMode;
 import edu.yale.library.ladybird.kernel.events.Event;
 import edu.yale.library.ladybird.kernel.events.NotificationEventQueue;
+import edu.yale.library.ladybird.persistence.dao.ImportSourceDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceHibernateDAO;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -51,12 +54,10 @@ public class DefaultImportJob implements Job, ImportJob {
 
             logger.debug("Read rows. list size={}", rowList.size());
 
-            //TODO SET VIA webapp
-
-            final OaiProvider provider = new OaiProvider("id",
-                    "http://columbus.library.yale.edu:8055/OAI_Orbis/src/OAIOrbisTool.jsp",
-                    "oai:orbis.library.yale.edu:");
+            //TODO provide
+            final OaiProvider provider = getCtxOaiProvider();
             importEngine.setOaiProvider(provider);
+            logger.debug("Set OAI Provider={}", provider);
 
             logger.debug("Writing to import table(s)");
 
@@ -90,6 +91,26 @@ public class DefaultImportJob implements Job, ImportJob {
 
     private void sendNotification(final Event importEvent, final List<User> userList) {
         NotificationEventQueue.addEvent(new NotificationEventQueue().new NotificationItem(importEvent, userList));
+    }
+
+    /**
+     * Returns OAI provider. Subject to removal.
+     * Note: returns the 1st provider with status active.
+     * @return
+     */
+    private OaiProvider getCtxOaiProvider() {
+        //Note: Full list is importted. This will be removed when some sort of ctx is available.
+        final ImportSourceDAO importSourceDAO = new ImportSourceHibernateDAO();
+        final List<ImportSource> importSourceList = importSourceDAO.findAll();
+
+        for (ImportSource importSource: importSourceList) {
+            if (importSource.isActive()) {
+                return  new OaiProvider("id",
+                        importSource.getUrl(),
+                        importSource.getGetPrefix());
+            }
+        }
+        return null;
     }
 
 }

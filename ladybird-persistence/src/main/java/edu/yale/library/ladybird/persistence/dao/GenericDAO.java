@@ -12,5 +12,7 @@ public interface GenericDAO<T, ID extends Serializable> {
 
     Integer save(T entity);
 
+    void saveOrUpdateList(List<T> itemList);
+
 
 }

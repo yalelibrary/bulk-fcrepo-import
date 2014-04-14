@@ -23,4 +23,13 @@ public class OaiProvider {
     public String getBibIdPrefix() {
         return bibIdPrefix;
     }
+
+    @Override
+    public String toString() {
+        return "OaiProvider{" + "identifier='"
+                + identifier + '\''
+                + ", url='" + url + '\''
+                + ", bibIdPrefix='" + bibIdPrefix + '\''
+                + '}';
+    }
 }

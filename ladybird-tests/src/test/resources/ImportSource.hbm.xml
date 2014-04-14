@@ -19,5 +19,8 @@
         <property name="getPrefix" type="string">
             <column name="get_prefix" length="200" />
         </property>
+        <property name="active" type="boolean">
+            <column name="active"/>
+        </property>
     </class>
 </hibernate-mapping>
