@@ -21,6 +21,7 @@ public class Project implements java.io.Serializable {
     private String state;
     private String zip;
     private String phone;
+    private User creator = new User();
 
     public Project() {
     }
@@ -126,6 +127,14 @@ public class Project implements java.io.Serializable {
         this.phone = phone;
     }
 
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
+
     @Override
     public String toString() {
         return "Project{"
@@ -141,6 +150,7 @@ public class Project implements java.io.Serializable {
                 + ", state='" + state + '\''
                 + ", zip='" + zip + '\''
                 + ", phone='" + phone + '\''
+                + ", user='" + creator.toString() + '\''
                 + '}';
     }
 

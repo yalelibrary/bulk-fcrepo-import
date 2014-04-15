@@ -52,10 +52,26 @@
                         </div>
 
                         <div>
-                            <label>Creator User</label>
+                            <label>Notification E-mail</label>
+
                             <div>
-                                <p:inputText value="#{ProjectView.item.userId}"/>
+                                <label class="control-label" for="userSelectBox">Select creator e-mail </label>
+
+                                <div>
+                                    <p:selectOneMenu id="userSelectBox"
+                                                     value="#{ProjectView.item.creator.email}">
+
+                                        <f:selectItems value="#{userView.userEmailList}"
+                                                       var="select_user_var"
+                                                       itemLabel="#{select_user_var}"
+                                                       itemValue="#{select_user_var}" />
+
+                                    </p:selectOneMenu>
+                                    <h:message for="userSelectBox" style="color:red" />
+
+                                </div>
                             </div>
+
                         </div>
 
                         <div>

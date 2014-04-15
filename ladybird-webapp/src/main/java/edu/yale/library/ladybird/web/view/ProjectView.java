@@ -2,7 +2,10 @@ package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.kernel.beans.Project;
 import edu.yale.library.ladybird.kernel.beans.ProjectBuilder;
+import edu.yale.library.ladybird.kernel.beans.User;
 import edu.yale.library.ladybird.persistence.dao.ProjectDAO;
+import edu.yale.library.ladybird.persistence.dao.UserDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.UserHibernateDAO;
 import org.slf4j.Logger;
 
 import javax.annotation.PostConstruct;
@@ -33,8 +36,15 @@ public class ProjectView extends AbstractView {
     }
 
     public void save() {
+
+        //TODO tmp until linked
+        final UserDAO userDao = new UserHibernateDAO();
+        final List<User> userList = userDao.findByEmail(item.getCreator().getEmail());
+        final int creatorId = userList.get(0).getUserId();
+        item.setUserId(creatorId);
+
         try {
-            logger.debug("Saving item", item);
+            logger.debug("Saving item={}", item);
             setDefaults(item);
             dao.save(item);
         } catch (Throwable e) {
@@ -43,7 +53,7 @@ public class ProjectView extends AbstractView {
     }
 
     public List<Project> getItemList() {
-        List<Project> list = dao.findAll();
+        final List<Project> list = dao.findAll();
         return list;
     }
 
