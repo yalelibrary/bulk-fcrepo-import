@@ -8,24 +8,18 @@
         <property name="hibernate.connection.url">jdbc:derby:memory:pamoja</property>
         <property name="show_sql">false</property>
         <property name="hibernate.dialect"> org.hibernate.dialect.DerbyTenSevenDialect</property>
-        <!--Import-->
-        <mapping resource="ladybird-hbm/ImportFile.hbm.xml"></mapping>
-        <mapping resource="ladybird-hbm/ImportJob.hbm.xml"></mapping>
-        <mapping resource="ladybird-hbm/ImportJobContents.hbm.xml"></mapping>
-        <mapping resource="ladybird-hbm/ImportJobExhead.hbm.xml"></mapping>
-        <mapping resource="ladybird-hbm/ImportSourceData.hbm.xml"></mapping>
-
-        <mapping resource="ladybird-hbm/Users.hbm.xml"></mapping>
-        <mapping resource="ladybird-hbm/Monitor.hbm.xml"></mapping>
-        <mapping resource="ladybird-hbm/ImportSource.hbm.xml"></mapping>
-        <mapping resource="ladybird-hbm/Collection.hbm.xml"></mapping>
-        <mapping resource="ladybird-hbm/Project.hbm.xml"></mapping>
-
-        <mapping resource="ladybird-hbm/FieldDefinition.hbm.xml"></mapping>
-        <mapping resource="ladybird-hbm/FieldMarcMapping.hbm.xml"></mapping>
-
-        <mapping resource="ladybird-hbm/Object.hbm.xml"></mapping>
-
-
+        <mapping resource="ladybird-hbm/Collection.hbm.xml"/>
+        <mapping resource="ladybird-hbm/FieldDefinition.hbm.xml"/>
+        <mapping resource="ladybird-hbm/FieldMarcMapping.hbm.xml"/>
+        <mapping resource="ladybird-hbm/ImportFile.hbm.xml"/>
+        <mapping resource="ladybird-hbm/ImportJob.hbm.xml"/>
+        <mapping resource="ladybird-hbm/ImportJobContents.hbm.xml"/>
+        <mapping resource="ladybird-hbm/ImportJobExhead.hbm.xml"/>
+        <mapping resource="ladybird-hbm/ImportSource.hbm.xml"/>
+        <mapping resource="ladybird-hbm/ImportSourceData.hbm.xml"/>
+        <mapping resource="ladybird-hbm/Project.hbm.xml"/>
+        <mapping resource="ladybird-hbm/Monitor.hbm.xml"/>
+        <mapping resource="ladybird-hbm/Object.hbm.xml"/>
+        <mapping resource="ladybird-hbm/Users.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>
