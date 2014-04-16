@@ -287,7 +287,7 @@
                         <id>validate</id>
                         <phase>verify</phase>
                         <configuration>
-                            <configLocation>ladybird-webapp/src/main/resources/ladybird-sun.xml</configLocation>
+                            <configLocation>ladybird-sun.xml</configLocation>
                             <encoding>UTF-8</encoding>
                             <consoleOutput>true</consoleOutput>
                             <failsOnError>false</failsOnError>
