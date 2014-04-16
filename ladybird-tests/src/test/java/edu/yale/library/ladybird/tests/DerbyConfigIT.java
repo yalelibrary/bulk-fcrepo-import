@@ -6,6 +6,8 @@ import edu.yale.library.ladybird.persistence.ServicesManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -20,38 +22,36 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class DerbyConfigIT {
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private ServicesManager servicesManager;
-
     private static final String TESTDB = "pamoja";
+
 
     @Before
     public void init() {
         servicesManager = new ServicesManager();
     }
 
-
-    //TODO might conflict with testing shutdown
     @After
     public void shtudown() {
         try {
             servicesManager.stopDB();
         } catch (SQLException e) {
-            //TODO error code check
             e.printStackTrace();
         }
     }
 
     @Test
     public void testMultipleInst() {
-        servicesManager.startDB(); //TODO chk w. @Before
+        servicesManager.startDB();
         try {
             servicesManager.startDB();
             fail("Failed. Tried to re-init driver.");
         } catch (AppConfigException e) {
             if (!e.getMessage().equalsIgnoreCase(ApplicationProperties.ALREADY_RUNNING)) {
+                logger.error("Error", e);
                 fail("Failed. Tried to re-init driver.");
-                e.printStackTrace();
             }
         }
     }
@@ -63,9 +63,8 @@ public class DerbyConfigIT {
         fetchData();
     }
 
-    public void loadDataJdbc() {
+    private void loadDataJdbc() {
         Connection conn;
-        //List<PreparedStatement> statements = new ArrayList<>();
         PreparedStatement stmt;
         final String protocol = "jdbc:derby:";
         final String dbName = "memory:" + TESTDB;
@@ -74,31 +73,33 @@ public class DerbyConfigIT {
             props.put("user", TESTDB);
             conn = DriverManager.getConnection(protocol + dbName + ";create=false", props);
             conn.setAutoCommit(false);
-            stmt = conn.prepareStatement(
-                    "insert into users values (?,?,?,?,?,?,?,?,?,?)");
-            //statements.add(stmt);
+            stmt = conn.prepareStatement("insert into users values (?,?,?,?,?,?,?,?,?,?)");
+
+            final Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
+
             stmt.setInt(1, 1956);
-            stmt.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+            stmt.setTimestamp(2, timeStamp);
             stmt.setString(3, "test_user");
             stmt.setString(4, "test_pw");
-            stmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
-            stmt.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
-            stmt.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
+            stmt.setTimestamp(5, timeStamp);
+            stmt.setTimestamp(6, timeStamp);
+            stmt.setTimestamp(7, timeStamp);
             stmt.setInt(8, 555);
             stmt.setString(9, "John Doe");
             stmt.setString(10, "doe@doe.pk");
+
             stmt.executeUpdate();
+
             conn.commit();
         } catch (SQLException s) {
-            s.printStackTrace();
-            //TODO error code check
+            logger.error("Error", s);
         } catch (Exception e) {
             e.printStackTrace();
-            fail("Exception loading data");
+            fail("Error retrieving data from derby");
         }
     }
 
-    public void fetchData() throws SQLException {
+    private void fetchData() throws SQLException {
         Connection conn = null;
         Statement statement = null;
         final String protocol = "jdbc:derby:";
@@ -111,14 +112,15 @@ public class DerbyConfigIT {
             statement = conn.createStatement();
             ResultSet rs = statement.executeQuery(selectTableSQL);
             while (rs.next()) {
-                String userName = rs.getString("username");
-                String userPwd = rs.getString("password");
-                assertEquals("Username mismatch.", userName, "test_user");
-                assertEquals("Password mismatch.", userPwd, "test_pw");
+                final String userName = rs.getString("username");
+                final String userPwd = rs.getString("password");
+
+                assertEquals("Value mismatch.", userName, "test_user");
+                assertEquals("Value mismatch.", userPwd, "test_pw");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-            fail("Exception getting data");
+            logger.error("Error", e);
+            fail("Error retrieving data from derby");
         } finally {
             if (statement != null) {
                 statement.close();

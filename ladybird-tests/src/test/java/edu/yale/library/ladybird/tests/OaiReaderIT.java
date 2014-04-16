@@ -8,7 +8,6 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.junit.Test;
-import org.slf4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -16,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.slf4j.LoggerFactory.getLogger;
 
 
 /**
@@ -28,9 +26,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 
 public class OaiReaderIT {
-    private static final Logger logger = getLogger(OaiReaderIT.class);
-    private static final String DC_OAI_PROVIDER = getProp("oai_test_url");
 
+    private static final String DC_OAI_PROVIDER = getProp("oai_test_url");
     private static final String MARC_OAI_PROVIDER = getMarcString();
     private final PoolingHttpClientConnectionManager connectionManager;
     private final HttpClient httpClient;
@@ -69,14 +66,14 @@ public class OaiReaderIT {
 
     private String fetchContents(final String URL) throws Exception {
         try {
-            HttpGet getRequest = new HttpGet(URL);
+            final HttpGet getRequest = new HttpGet(URL);
             getRequest.addHeader("accept", "application/json"); //TODO remove
-            HttpResponse response = httpClient.execute(getRequest);
+            final HttpResponse response = httpClient.execute(getRequest);
             if (response.getStatusLine().getStatusCode() != 200) {
                 throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
             }
-            BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
-            StringBuffer sb = new StringBuffer();
+            final BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
+            final StringBuffer sb = new StringBuffer();
             String output;
             while ((output = br.readLine()) != null) {
                 sb.append(output);
@@ -87,7 +84,7 @@ public class OaiReaderIT {
         }
     }
 
-    public static String getMarcString() {
+    private static String getMarcString() {
         URIBuilder uriBuilder = new URIBuilder();
         uriBuilder.setPath(Util.getProperty("oai_test_url_prefix"));
         uriBuilder.addParameter("verb", "GetRecord");

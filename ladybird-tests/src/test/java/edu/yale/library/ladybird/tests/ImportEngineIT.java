@@ -162,14 +162,14 @@ public class ImportEngineIT {
     /**
      * Sets business logic data
      */
-    public void setApplicationData() {
+    private void setApplicationData() {
         initFieldDefMap(); //set default fdids
     }
 
     /**
      * Inits fdids
      */
-    public void initFieldDefMap() {
+    private void initFieldDefMap() {
         try {
             new FieldDefinitionValue().setFieldDefMap(getTextFieldDefsMap());
         } catch (IOException | NullPointerException e) {
@@ -185,7 +185,7 @@ public class ImportEngineIT {
      * @throws IOException
      * @throws NullPointerException
      */
-    public Map<String, FieldConstant> getTextFieldDefsMap() throws IOException {
+    private Map<String, FieldConstant> getTextFieldDefsMap() throws IOException {
         Map<String, FieldConstant> fdidsMap = new HashMap<>();
 
         final Properties properties = new Properties();
@@ -205,14 +205,14 @@ public class ImportEngineIT {
     }
 
     //TODO remove
-    public FieldDefinitionValue getFdid(int fdid, String s) {
+    private FieldDefinitionValue getFdid(int fdid, String s) {
         return new FieldDefinitionValue(fdid, s);
     }
 
     /**
      * Test file constants
      */
-    public class FileConstants {
+    private class FileConstants {
         static final String TEST_XLS_FILE = "4654-pt1-READY-FOR-INGEST-A.xlsx";
         static final int ROW_COUNT = 78;
         static final int COL_COUNT = 31; //Actual number

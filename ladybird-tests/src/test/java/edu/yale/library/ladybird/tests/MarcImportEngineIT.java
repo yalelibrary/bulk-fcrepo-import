@@ -159,14 +159,14 @@ public class MarcImportEngineIT {
     /**
      * Sets business logic data
      */
-    public void setApplicationData() {
+    private void setApplicationData() {
         initFieldDefMap(); //set default fdids
     }
 
     /**
      * Init fdids
      */
-    public void initFieldDefMap() {
+    private void initFieldDefMap() {
         try {
             new FieldDefinitionValue().setFieldDefMap(getTextFieldDefsMap());
         } catch (IOException | NullPointerException e) {
@@ -183,7 +183,7 @@ public class MarcImportEngineIT {
      * @throws NullPointerException
      * @see #FDID_TEST_PROPS_FILE
      */
-    public Map<String, FieldConstant> getTextFieldDefsMap() throws IOException {
+    private Map<String, FieldConstant> getTextFieldDefsMap() throws IOException {
         final Map<String, FieldConstant> fdidsMap = new HashMap<>();
 
         final Properties properties = new Properties();
@@ -202,7 +202,7 @@ public class MarcImportEngineIT {
     }
 
     //TODO remove
-    public FieldDefinitionValue getFdid(final int fdid, final String s) {
+    private FieldDefinitionValue getFdid(final int fdid, final String s) {
         return new FieldDefinitionValue(fdid, s);
     }
 
@@ -212,7 +212,7 @@ public class MarcImportEngineIT {
      * @return a SpreadsheetFile instance
      * @see edu.yale.library.ladybird.engine.imports.SpreadsheetFile
      */
-    public SpreadsheetFile getImportSpreadsheeet() {
+    private SpreadsheetFile getImportSpreadsheeet() {
         final SpreadsheetFile file = new SpreadsheetFileBuilder().setFileName(ExportFileConstants.TEST_XLS_FILE)
                 .setAltName("Test spreadsheet").setPath(ExportFileConstants.TEST_XLS_FILE)
                 .setFileStream(getClass().getClassLoader().getResourceAsStream(ExportFileConstants.TEST_XLS_FILE))
