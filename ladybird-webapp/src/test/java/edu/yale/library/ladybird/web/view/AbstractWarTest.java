@@ -1,5 +1,4 @@
-package edu.yale.library.ladybird.tests;
-
+package edu.yale.library.ladybird.web.view;
 
 import org.codehaus.cargo.container.ContainerType;
 import org.codehaus.cargo.container.InstalledLocalContainer;
@@ -37,17 +36,17 @@ public class AbstractWarTest {
             return; //already running
         }
 
-        Deployable war = new org.codehaus.cargo.container.deployable.WAR(WAR);
+        final Deployable war = new org.codehaus.cargo.container.deployable.WAR(WAR);
 
         logger.debug("Installing test container");
 
-        Installer installer = new ZipURLInstaller(new java.net.URL(TOMCAT_INSTALL_URL));
+        final Installer installer = new ZipURLInstaller(new java.net.URL(TOMCAT_INSTALL_URL));
         installer.install();
 
-        LocalConfiguration configuration = (LocalConfiguration) new DefaultConfigurationFactory().createConfiguration(
+        final LocalConfiguration configuration = (LocalConfiguration) new DefaultConfigurationFactory().createConfiguration(
                 TOMCAT_7_X, ContainerType.INSTALLED, ConfigurationType.STANDALONE);
         configuration.setProperty(ServletPropertySet.PORT, TEST_PORT);
-        InstalledLocalContainer container =
+        final InstalledLocalContainer container =
                 (InstalledLocalContainer) new DefaultContainerFactory().createContainer(
                         TOMCAT_7_X, ContainerType.INSTALLED, configuration);
         container.setHome(installer.getHome());
@@ -62,7 +61,7 @@ public class AbstractWarTest {
         containerStarted = true;
     }
 
-    protected static String getUrl(String s) {
+    protected static String getUrl(final String s) {
         return  SERVER_PREFIX + APP_ARTIFACT + DEFAULT_PAGE_PREFIX + s + ".xhtml";
     }
 }

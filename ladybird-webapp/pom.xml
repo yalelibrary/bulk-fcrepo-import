@@ -28,9 +28,12 @@
         <bootstrap-theme.version>1.0.10</bootstrap-theme.version>
         <commons-logging.version>1.1.1</commons-logging.version>
         <maven-surefire-plugin.version>2.16</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>2.16</maven-failsafe-plugin.version>
         <tomcat7-maven-plugin.version>2.2</tomcat7-maven-plugin.version>
         <maven-war-plugin.version>2.0</maven-war-plugin.version>
         <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
+        <cargo-core-uberjar.version>1.4.7</cargo-core-uberjar.version>
+        <htmlunit.version>2.4</htmlunit.version>
         <ladybird-engine.version>0.0.1-SNAPSHOT</ladybird-engine.version>
         <ladybird-kernel.version>0.0.1-SNAPSHOT</ladybird-kernel.version>
         <ladybird-persistence.version>0.0.1-SNAPSHOT</ladybird-persistence.version>
@@ -128,6 +131,16 @@
             <version>${validation-api.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.codehaus.cargo</groupId>
+            <artifactId>cargo-core-uberjar</artifactId>
+            <version>${cargo-core-uberjar.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.htmlunit</groupId>
+            <artifactId>htmlunit</artifactId>
+            <version>${htmlunit.version}</version>
+        </dependency>
         <!-- Java EE -->
         <dependency>
             <groupId>javax</groupId>
@@ -191,11 +204,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>${maven-war-plugin.version}</version>
-            </plugin>
-            <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>${maven-resources-plugin.version}</version>
                 <executions>
@@ -217,6 +225,66 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>${tomcat7-maven-plugin.version}</version>
+                <configuration>
+                    <path>/ladybird-webapp</path>
+                    <useTestClasspath>false</useTestClasspath>
+                    <tomcatWebXml>src/test/resources/web.xml</tomcatWebXml>
+                    <jarScanAllDirectories>true</jarScanAllDirectories>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>failsafe-integration-test</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>exec-war-only</goal>
+                        </goals>
+                        <configuration>
+                            <path>ladybird-webapp</path>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>tomcat-shutdown</id>
+                        <goals>
+                            <goal>shutdown</goal>
+                        </goals>
+                        <phase>post-integration-test</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-failsafe-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>pre-integration-test</id>
+                    </execution>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>verify</id>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <systemProperties>
+                        <property>
+                            <name>derby.stream.error.file</name>
+                            <value>target/derby.log</value>
+                        </property>
+                    </systemProperties>
+                </configuration>
             </plugin>
         </plugins>
     </build>

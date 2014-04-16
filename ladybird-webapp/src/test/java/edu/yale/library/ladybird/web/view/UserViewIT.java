@@ -1,4 +1,4 @@
-package edu.yale.library.ladybird.tests;
+package edu.yale.library.ladybird.web.view;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
@@ -15,13 +15,13 @@ import java.net.MalformedURLException;
 /**
  * Tests html for user crud related page(s)
  */
-public class ObjectViewIT extends AbstractWarTest {
-    private static final Logger logger = LoggerFactory.getLogger(ObjectViewIT.class);
+public class UserViewIT extends AbstractWarTest {
+    private static final Logger logger = LoggerFactory.getLogger(UserViewIT.class);
 
     /**
      * Page to test
      */
-    private static final String PAGE_TO_TEST = getUrl("object/Object");
+    private static final String PAGE_TO_TEST = getUrl("Users");
 
     @BeforeClass
     public static void setup() throws MalformedURLException {
@@ -45,12 +45,12 @@ public class ObjectViewIT extends AbstractWarTest {
     }
 
     @Test
-    public void shouldContainColumn() throws Exception {
+    public void shouldContainString_LastUsed() throws Exception {
         final WebClient webClient = new WebClient();
         webClient.setJavaScriptEnabled(false);
         final HtmlPage page = webClient.getPage(PAGE_TO_TEST);
         final String pageAsText = page.asText();
-        Assert.assertTrue(pageAsText.contains("ProjectId"));
+        Assert.assertTrue(pageAsText.contains("Last used"));
         webClient.closeAllWindows();
     }
 }
