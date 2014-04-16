@@ -104,7 +104,7 @@ public class ImportWriter {
             }
         }
 
-        logger.debug("Marc21 field map is={}", marc21FieldMap.toString());
+        //logger.debug("Marc21 field map is={}", marc21FieldMap.toString());
 
         //Find the column number of the spreadsheet with F104 or F105 column.
         //TODO move this to some exhead method
@@ -165,7 +165,7 @@ public class ImportWriter {
 
                 while (it.hasNext()) {
                     ImportSourceData importSourceEntry = it.next();
-                    logger.debug("Saving entry={}", importSourceEntry.toString());
+                    //logger.debug("Saving entry={}", importSourceEntry.toString());
                     dao.save(importSourceEntry);
                 }
             }
@@ -189,12 +189,12 @@ public class ImportWriter {
         for (final String id: bibIds) {
             final OaiHttpClient oaiClient = new OaiHttpClient(oaiProvider);
             try {
-                logger.debug("Reading bibId={}", id);
+                //logger.debug("Reading bibId={}", id);
 
                 final Record recordForBibId = oaiClient.readMarc(id); //Read OAI feed for a specific barcode or bibid
                 final Multimap<Marc21Field, ImportSourceData> marc21Values = populateMarcData(recordForBibId, importId); //FIXME passing map eachtime
 
-                logger.debug("Marc for bibId={} equals={}", id, marc21Values.toString());
+                //logger.debug("Marc for bibId={} equals={}", id, marc21Values.toString());
 
                 bibIdMarcValues.put(id, marc21Values);
             } catch (IOException e) {

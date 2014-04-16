@@ -11,7 +11,7 @@ import javax.inject.Inject;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-@ManagedBean
+@ManagedBean (name = "ObjectStringView")
 @RequestScoped
 @SuppressWarnings("unchecked")
 public class ObjectStringView extends AbstractView {

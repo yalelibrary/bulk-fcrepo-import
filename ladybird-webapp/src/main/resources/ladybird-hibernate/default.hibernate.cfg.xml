@@ -9,20 +9,22 @@
         <property name="show_sql">false</property>
         <property name="hibernate.dialect"> org.hibernate.dialect.DerbyTenSevenDialect</property>
         <!--Import-->
-        <mapping resource="ImportFile.hbm.xml"></mapping>
-        <mapping resource="ImportJob.hbm.xml"></mapping>
-        <mapping resource="ImportJobContents.hbm.xml"></mapping>
-        <mapping resource="ImportJobExhead.hbm.xml"></mapping>
-        <mapping resource="ImportSourceData.hbm.xml"></mapping>
+        <mapping resource="ladybird-hbm/ImportFile.hbm.xml"></mapping>
+        <mapping resource="ladybird-hbm/ImportJob.hbm.xml"></mapping>
+        <mapping resource="ladybird-hbm/ImportJobContents.hbm.xml"></mapping>
+        <mapping resource="ladybird-hbm/ImportJobExhead.hbm.xml"></mapping>
+        <mapping resource="ladybird-hbm/ImportSourceData.hbm.xml"></mapping>
 
-        <mapping resource="Users.hbm.xml"></mapping>
-        <mapping resource="Monitor.hbm.xml"></mapping>
-        <mapping resource="ImportSource.hbm.xml"></mapping>
-        <mapping resource="Collection.hbm.xml"></mapping>
-        <mapping resource="Project.hbm.xml"></mapping>
+        <mapping resource="ladybird-hbm/Users.hbm.xml"></mapping>
+        <mapping resource="ladybird-hbm/Monitor.hbm.xml"></mapping>
+        <mapping resource="ladybird-hbm/ImportSource.hbm.xml"></mapping>
+        <mapping resource="ladybird-hbm/Collection.hbm.xml"></mapping>
+        <mapping resource="ladybird-hbm/Project.hbm.xml"></mapping>
 
-        <mapping resource="FieldDefinition.hbm.xml"></mapping>
-        <mapping resource="FieldMarcMapping.hbm.xml"></mapping>
+        <mapping resource="ladybird-hbm/FieldDefinition.hbm.xml"></mapping>
+        <mapping resource="ladybird-hbm/FieldMarcMapping.hbm.xml"></mapping>
+
+        <mapping resource="ladybird-hbm/Object.hbm.xml"></mapping>
 
 
     </session-factory>

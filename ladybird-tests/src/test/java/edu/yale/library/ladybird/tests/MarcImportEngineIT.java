@@ -143,13 +143,13 @@ public class MarcImportEngineIT {
 
         assert (listExportRows != null);
         logger.debug("Size={}", listExportRows.size());
-        logger.debug(listExportRows.toString());
+        //logger.debug(listExportRows.toString());
         for (ImportEntity.Row importRow: listExportRows) {
-            logger.debug("Col size={}", importRow.getColumns().size());
+            //logger.debug("Col size={}", importRow.getColumns().size());
             List<ImportEntity.Column> col = importRow.getColumns();
-            for (ImportEntity.Column c: col) {
-                logger.debug("Col val={}", c.toString());
-            }
+            //for (ImportEntity.Column c: col) {
+                //logger.debug("Col val={}", c.toString());
+            //}
 
         }
         //assertEquals("Export rows don't equal import expected rows", listExportRows.size(), 3);

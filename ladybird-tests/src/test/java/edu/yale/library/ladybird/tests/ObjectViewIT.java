@@ -15,13 +15,13 @@ import java.net.MalformedURLException;
 /**
  * Tests html for user crud related page(s)
  */
-public class UserViewIT extends AbstractWarTest {
-    private static final Logger logger = LoggerFactory.getLogger(UserViewIT.class);
+public class ObjectViewIT extends AbstractWarTest {
+    private static final Logger logger = LoggerFactory.getLogger(ObjectViewIT.class);
 
     /**
      * Page to test
      */
-    private static final String PAGE_TO_TEST = getUrl("Users");
+    private static final String PAGE_TO_TEST = getUrl("object/Object");
 
     @BeforeClass
     public static void setup() throws MalformedURLException {
@@ -45,12 +45,12 @@ public class UserViewIT extends AbstractWarTest {
     }
 
     @Test
-    public void shouldContainString_LastUsed() throws Exception {
+    public void shouldContainColumn() throws Exception {
         final WebClient webClient = new WebClient();
         webClient.setJavaScriptEnabled(false);
         final HtmlPage page = webClient.getPage(PAGE_TO_TEST);
         final String pageAsText = page.asText();
-        Assert.assertTrue(pageAsText.contains("Last used"));
+        Assert.assertTrue(pageAsText.contains("ProjectId"));
         webClient.closeAllWindows();
     }
 }

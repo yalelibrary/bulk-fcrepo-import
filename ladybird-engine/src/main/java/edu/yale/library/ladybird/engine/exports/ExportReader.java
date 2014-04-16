@@ -56,8 +56,8 @@ public class ExportReader {
             //Read all bibIds data
         bibIdDataFieldTypeMap = readBibIdData(importId, expectedNumRowsToWrite);
 
-        logger.debug("BibIdDataFieldTypeMap size={}", bibIdDataFieldTypeMap.size());
-        logger.debug("BibIdDataFieldTypeMap={}", bibIdDataFieldTypeMap.toString());
+        //logger.debug("BibIdDataFieldTypeMap size={}", bibIdDataFieldTypeMap.size());
+        //logger.debug("BibIdDataFieldTypeMap={}", bibIdDataFieldTypeMap.toString());
 
 
         //Get all FunctionConstants. Every FunctionConstant should have a column in the output spreadsheet.
@@ -74,7 +74,7 @@ public class ExportReader {
 
         for (final FieldConstant fConst: globalFConstantsList) {
             ImportEntity importEntity = new ImportEntity();
-            logger.debug("Adding header={}", fConst.toString());
+            //logger.debug("Adding header={}", fConst.toString());
             exheadRow.getColumns().add(importEntity.new Column(fConst, fConst.getName()));
         }
         resultRowList.add(exheadRow);
@@ -93,7 +93,7 @@ public class ExportReader {
 
             for (final FieldConstant fieldConst: globalFConstantsList) {
 
-                logger.debug("Writing FieldConstant={}", fieldConst.getName());
+                //logger.debug("Writing FieldConstant={}", fieldConst.getName());
 
                 final String regularValue = findColValueForThisFieldConstant(fieldConst, cols);
 
@@ -113,7 +113,7 @@ public class ExportReader {
                 final ImportEntity importEntity = new ImportEntity();
 
                 //The end value:
-                logger.debug("Merged value={}", mergedValue);
+                //logger.debug("Merged value={}", mergedValue);
 
                 rowToWrite.getColumns().add(importEntity.new Column<>(fieldConst, mergedValue));
 
@@ -191,18 +191,18 @@ public class ExportReader {
                 try {
                     final ImportJobExhead importJobExhead = importJobExheads.get(j);
                     String headerValue = importJobExhead.getValue();
-                    logger.debug("Header val={}", headerValue);
+                    //logger.debug("Header val={}", headerValue);
                     final FieldConstant fieldConstant = convertStringToFieldConstant(headerValue);
                     if (fieldConstant == null) {
                         logger.debug("Field Constant null for headerValue={}", headerValue);
                     }
                     final ImportJobContents jobContents = rowJobContentsList.get(j);
-                    logger.debug("JobContents={}", jobContents.toString());
+                    //logger.debug("JobContents={}", jobContents.toString());
                     row.getColumns().add(new ImportEntity()
                             .new Column<>(fieldConstant, jobContents.getValue()));
-                    logger.debug("Added value={}", jobContents.getValue());
+                    //logger.debug("Added value={}", jobContents.getValue());
                 } catch (Exception e) {
-                    logger.error("Error retrieving value", e.getMessage());
+                    //logger.error("Error retrieving value", e.getMessage());
                     continue;
                 }
             }
@@ -225,11 +225,11 @@ public class ExportReader {
         //Find all ImportSourceData entries pertaining to a particular row:
         for (int i = 0; i < expectedNumRowsToWrite; i++) {
             final List<ImportSourceData> importSourcesList = importSourceDataDAO.findByImportId(importId, i);
-            logger.debug("ImportSourceDataList={}", importSourcesList.toString());
+            //logger.debug("ImportSourceDataList={}", importSourcesList.toString());
             map.put(i, marshallMarcData(importSourcesList));
         }
 
-        logger.debug("All import source contents={}" + importSourceDataDAO.findAll().toString());
+        //logger.debug("All import source contents={}" + importSourceDataDAO.findAll().toString());
         return map;
     }
 
@@ -247,10 +247,10 @@ public class ExportReader {
 
             switch(k1) {
                 case "880":
-                    logger.debug("Ignoring field 880");
+                    //logger.debug("Ignoring field 880");
                     break;
                 default:
-                    logger.debug("Putting field={}", k1);
+                    //logger.debug("Putting field={}", k1);
                     final Map<String, String> attrValue = new HashMap<>();
                     attrValue.put(entry.getK2(), entry.getValue());
                     map.put(getMar21FieldForString(k1), attrValue);
@@ -273,8 +273,8 @@ public class ExportReader {
                     return col.getValue();
                 }
             } catch (Exception e) {
-                logger.error("Null value for={} or={}", f.toString(), column.toString());
-                logger.error(e.getMessage());
+                //logger.error("Null value for={} or={}", f.toString(), column.toString());
+                //logger.error(e.getMessage());
             }
         }
         return "";
@@ -306,11 +306,11 @@ public class ExportReader {
      */
     public FieldConstant convertStringToFieldConstant(final String value){
         final Map<String, FieldConstant> map =  FieldDefinitionValue.getFieldDefMap();
-        logger.debug(map.toString());
+        //logger.debug(map.toString());
         final FieldConstant val;
         try {
             val = map.get(value);
-            logger.debug("Found val={}", val.toString());
+            //logger.debug("Found val={}", val.toString());
             return val;
         } catch (Exception e) {
             logger.error("Error converting to FieldConstant(FieldDefinition) value={}",value);

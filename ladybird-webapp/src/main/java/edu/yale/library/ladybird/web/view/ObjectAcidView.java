@@ -12,7 +12,7 @@ import javax.inject.Inject;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-@ManagedBean
+@ManagedBean (name = "ObjectAcidView")
 @RequestScoped
 @SuppressWarnings("unchecked")
 public class ObjectAcidView extends AbstractView {

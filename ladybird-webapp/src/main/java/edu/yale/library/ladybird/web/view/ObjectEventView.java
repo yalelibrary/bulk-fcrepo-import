@@ -12,8 +12,7 @@ import javax.inject.Inject;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-@SuppressWarnings("unchecked")
-@ManagedBean
+@ManagedBean (name = "ObjectEventView")
 @RequestScoped
 public class ObjectEventView extends AbstractView {
     private final Logger logger = getLogger(this.getClass());

@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.sql.SQLException;
 import java.util.Date;
@@ -18,11 +19,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 
-public class UserViewTest {
+public class UserViewTest extends AbstractPersistenceTest {
 
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(UserViewTest.class);
-
-    private ServicesManager servicesManager;
 
     {
         DaoInitializer.injectFields(this);
@@ -30,32 +29,32 @@ public class UserViewTest {
 
     @Before
     public void init() {
-        servicesManager = new ServicesManager();
+        initDB();
+
     }
 
     @After
-    public void stopDB() throws SQLException {
-        servicesManager.stopDB();
+    public void stop() throws SQLException {
+        //TODO
     }
 
     @Inject
-    private UserDAO userDAO;
+    private UserDAO dao;
 
     @Test
     public void testSave() {
-        servicesManager.initDB();
-        User user = buildUser();
+        final User user = build();
         try {
-            userDAO.save(user);
+            dao.save(user);
             logger.debug("Saved item.");
-            List list = userDAO.findAll();
+            final List list = dao.findAll();
             assertEquals("Item count incorrect", list.size(), 1);
         } catch (Throwable e) {
-            logger.error("Error testing saving or finding item", e);
+            fail("Error testing saving or finding item");
         }
     }
 
-    User buildUser() {
+    private User build() {
         User item = new UserBuilder().createUser();
         item.setUsername("test user");
         item.setPassword("test_pw");

@@ -29,8 +29,14 @@ public class AbstractWarTest {
     protected static final String SERVER_PREFIX = "http://localhost:" + TEST_PORT + "/";
     private static final String TOMCAT_7_X = "tomcat7x";
     protected static final String WAR = System.getProperty("java.io.tmpdir") + APP_PREFIX + APP_ARTIFACT + ".war";
+    private static boolean containerStarted = false;
 
     protected static void setupContainer() throws MalformedURLException {
+
+        if (containerStarted) {
+            return; //already running
+        }
+
         Deployable war = new org.codehaus.cargo.container.deployable.WAR(WAR);
 
         logger.debug("Installing test container");
@@ -52,6 +58,8 @@ public class AbstractWarTest {
 
         container.start();
         logger.debug("Started container");
+
+        containerStarted = true;
     }
 
     protected static String getUrl(String s) {

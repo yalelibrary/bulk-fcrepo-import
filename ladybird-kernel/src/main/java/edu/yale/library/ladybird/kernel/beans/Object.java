@@ -1,6 +1,8 @@
 package edu.yale.library.ladybird.kernel.beans;
 
 
+import java.util.Date;
+
 /**
  * Object
  */
@@ -9,12 +11,18 @@ public class Object implements java.io.Serializable {
 
     private Integer oid;
     private int projectId;
+    private Date date;
 
     public Object() {
     }
 
     public Object(int projectId) {
         this.projectId = projectId;
+    }
+
+    public Object(int projectId, Date date) {
+        this.projectId = projectId;
+        this.date = date;
     }
 
     public Integer getOid() {
@@ -33,7 +41,22 @@ public class Object implements java.io.Serializable {
         this.projectId = projectId;
     }
 
+    public Date getDate() {
+        return date;
+    }
 
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    @Override
+    public String toString() {
+        return "Object{"
+                + "oid=" + oid
+                + ", projectId=" + projectId
+                + ", date=" + date
+                + '}';
+    }
 }
 
 

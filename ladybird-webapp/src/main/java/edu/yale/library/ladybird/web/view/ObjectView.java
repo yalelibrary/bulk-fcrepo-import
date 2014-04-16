@@ -9,13 +9,17 @@ import javax.faces.bean.RequestScoped;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import java.util.List;
+
 import static org.slf4j.LoggerFactory.getLogger;
 
-@ManagedBean
+@ManagedBean (name = "ObjectView")
 @RequestScoped
 @SuppressWarnings("unchecked")
 public class ObjectView extends AbstractView {
     private final Logger logger = getLogger(this.getClass());
+
+    private List<Object> itemList;
 
     @Inject
     private ObjectDAO entityDAO;
@@ -26,6 +30,13 @@ public class ObjectView extends AbstractView {
         dao = entityDAO;
     }
 
+    public List<Object> getItemList() {
+        return itemList;
+    }
+
+    public void setItemList(List<Object> itemList) {
+        this.itemList = itemList;
+    }
 }
 
 
