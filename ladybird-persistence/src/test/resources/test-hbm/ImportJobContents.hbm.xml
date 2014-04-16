@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="edu.yale.library.ladybird.kernel.beans.ImportJobContents" table="import_job_contents" catalog="pamoja">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="importId" type="int">
+            <column name="import_id" not-null="true" />
+        </property>
+        <property name="date" type="timestamp">
+            <column name="date" length="19" not-null="true" />
+        </property>
+        <property name="row" type="int">
+            <column name="row" not-null="true" />
+        </property>
+        <property name="col" type="int">
+            <column name="col" not-null="true" />
+        </property>
+        <property name="value" type="string">
+            <column name="value" />
+        </property>
+        <property name="complete" type="string">
+            <column name="complete" length="1" />
+        </property>
+    </class>
+</hibernate-mapping>

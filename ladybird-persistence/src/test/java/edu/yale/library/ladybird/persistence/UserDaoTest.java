@@ -1,27 +1,24 @@
-package edu.yale.library.ladybird.web.view;
+package edu.yale.library.ladybird.persistence;
 
-import edu.yale.library.ladybird.kernel.beans.UserBuilder;
 import edu.yale.library.ladybird.kernel.beans.User;
-
-import edu.yale.library.ladybird.persistence.ServicesManager;
+import edu.yale.library.ladybird.kernel.beans.UserBuilder;
 import edu.yale.library.ladybird.persistence.dao.UserDAO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
+import javax.inject.Inject;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
-import javax.inject.Inject;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 
-public class UserViewTest extends AbstractPersistenceTest {
+public class UserDaoTest extends AbstractPersistenceTest {
 
-    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(UserViewTest.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(UserDaoTest.class);
 
     {
         DaoInitializer.injectFields(this);

@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="edu.yale.library.ladybird.kernel.beans.FieldDefinition" table="field_definition" catalog="pamoja">
+        <id name="fdid" type="int">
+            <column name="fdid" />
+            <generator class="assigned" />
+        </id>
+        <property name="date" type="timestamp">
+            <column name="date" length="19"/>
+        </property>
+        <property name="type" type="string">
+            <column name="type" length="15"/>
+        </property>
+        <property name="acid" type="int">
+            <column name="acid" />
+        </property>
+        <property name="faid" type="int">
+            <column name="faid" />
+        </property>
+        <property name="handle" type="string">
+            <column name="handle"/>
+        </property>
+        <property name="tooltip" type="string">
+            <column name="tooltip" length="500" />
+        </property>
+        <property name="multivalue" type="int">
+            <column name="multivalue" />
+        </property>
+        <property name="display" type="int">
+            <column name="display" />
+        </property>
+        <property name="technical" type="int">
+            <column name="technical" />
+        </property>
+        <property name="export" type="int">
+            <column name="export" />
+        </property>
+        <property name="locked" type="int">
+            <column name="locked" />
+        </property>
+        <property name="required" type="string">
+            <column name="required" length="1" />
+        </property>
+        <property name="style" type="string">
+            <column name="style" length="10" />
+        </property>
+    </class>
+</hibernate-mapping>

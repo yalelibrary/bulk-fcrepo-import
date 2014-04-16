@@ -1,6 +1,4 @@
-package edu.yale.library.ladybird.web.view;
-
-import edu.yale.library.ladybird.persistence.ServicesManager;
+package edu.yale.library.ladybird.persistence;
 
 import java.sql.SQLException;
 

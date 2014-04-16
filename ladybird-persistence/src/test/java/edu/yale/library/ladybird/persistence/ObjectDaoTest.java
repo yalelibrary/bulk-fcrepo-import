@@ -1,4 +1,4 @@
-package edu.yale.library.ladybird.web.view;
+package edu.yale.library.ladybird.persistence;
 
 import edu.yale.library.ladybird.kernel.beans.Object;
 import edu.yale.library.ladybird.persistence.dao.ObjectDAO;
@@ -15,9 +15,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 
-public class ObjectViewTest extends AbstractPersistenceTest {
+public class ObjectDaoTest extends AbstractPersistenceTest {
 
-    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(ObjectViewTest.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(ObjectDaoTest.class);
 
     {
         DaoInitializer.injectFields(this);

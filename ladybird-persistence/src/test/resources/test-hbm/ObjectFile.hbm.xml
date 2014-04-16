@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="edu.yale.library.ladybird.kernel.beans.ObjectFile" table="object_file" catalog="pamoja">
+        <id name="dataId" type="java.lang.Integer">
+            <column name="data_id" />
+            <generator class="identity" />
+        </id>
+        <property name="date" type="timestamp">
+            <column name="date" length="19" not-null="true" />
+        </property>
+        <property name="userId" type="int">
+            <column name="user_id" not-null="true" />
+        </property>
+        <property name="oid" type="int">
+            <column name="oid" not-null="true" />
+        </property>
+        <property name="fileLabel" type="string">
+            <column name="file_label" length="150" />
+        </property>
+        <property name="fileName" type="string">
+            <column name="file_name" length="150" />
+        </property>
+        <property name="filePath" type="string">
+            <column name="file_path" length="2500" />
+        </property>
+        <property name="fileExt" type="string">
+            <column name="file_ext" length="15" />
+        </property>
+        <property name="fileSize" type="java.lang.Integer">
+            <column name="file_size" />
+        </property>
+        <property name="md5" type="string">
+            <column name="md5" length="32" />
+        </property>
+        <property name="sha256" type="string">
+            <column name="sha256" length="64" />
+        </property>
+        <property name="hydraPublishId" type="java.lang.Integer">
+            <column name="hydra_publish_id" />
+        </property>
+        <property name="status" type="string">
+            <column name="status" length="10" />
+        </property>
+    </class>
+</hibernate-mapping>
