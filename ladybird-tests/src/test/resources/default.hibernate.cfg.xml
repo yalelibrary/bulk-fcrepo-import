@@ -11,6 +11,7 @@
         <mapping resource="test-hbm/Collection.hbm.xml"/>
         <mapping resource="test-hbm/FieldDefinition.hbm.xml"/>
         <mapping resource="test-hbm/FieldMarcMapping.hbm.xml"/>
+        <mapping resource="test-hbm/ImportFile.hbm.xml"/>
         <mapping resource="test-hbm/ImportJob.hbm.xml"/>
         <mapping resource="test-hbm/ImportJobContents.hbm.xml"/>
         <mapping resource="test-hbm/ImportJobExhead.hbm.xml"/>

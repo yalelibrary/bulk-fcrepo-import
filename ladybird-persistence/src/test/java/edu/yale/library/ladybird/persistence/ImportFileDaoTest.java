@@ -1,7 +1,8 @@
 package edu.yale.library.ladybird.persistence;
 
-import edu.yale.library.ladybird.kernel.beans.Object;
-import edu.yale.library.ladybird.persistence.dao.ObjectDAO;
+import edu.yale.library.ladybird.kernel.beans.ImportFile;
+import edu.yale.library.ladybird.kernel.beans.ImportFileBuilder;
+import edu.yale.library.ladybird.persistence.dao.ImportFileDAO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,9 +16,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 
-public class ObjectDaoTest extends AbstractPersistenceTest {
+public class ImportFileDaoTest extends AbstractPersistenceTest {
 
-    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(ObjectDaoTest.class);
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(ImportFileDaoTest.class);
 
     {
         DaoInitializer.injectFields(this);
@@ -26,7 +27,6 @@ public class ObjectDaoTest extends AbstractPersistenceTest {
     @Before
     public void init() {
         initDB();
-
     }
 
     @After
@@ -35,27 +35,29 @@ public class ObjectDaoTest extends AbstractPersistenceTest {
     }
 
     @Inject
-    private ObjectDAO dao;
+    private ImportFileDAO dao;
 
     @Test
     public void testSave() {
-        final Object item = build();
+        final ImportFile item = build();
         List list = null;
         try {
             dao.save(item);
             list = dao.findAll();
+
         } catch (Throwable e) {
             e.printStackTrace();
             fail("Error testing saving or finding item");
         }
 
         assertEquals("Item count incorrect", list.size(), 1);
-        final Object o = (Object) list.get(0);
-        assertEquals("Value mismatch", o.getProjectId(), 1);
+        final ImportFile importFile = (ImportFile) list.get(0);
+        assertEquals("Value mismatch", (long) importFile.getImportId(), 555);
     }
 
-    private Object build() {
-        final Object item = new Object(1);
+    private ImportFile build() {
+        final ImportFile item = new ImportFileBuilder()
+                .setImportId(555).setFileLocation("").createImportFile();
         final Date date = new Date(System.currentTimeMillis());
         item.setDate(date);
         return item;

@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template.xhtml">
+    <ui:define name="content">
+        <h2>ImportFile</h2>
+        <h:form id="ImportFileForm" enctype="multipart/form-data"
+                styleClass=""
+                style="">
+            <br/>
+
+            <div style="">
+                <div class="" style="">
+
+                    <!-- Data Table -->
+
+                    <p:dataTable id="ImportFileDatatable" value="#{ImportFileView.itemList}"
+                                 var="item" paginator="true" rows="10"
+                                 tableStyle="" paginatorPosition="bottom"
+                                 editable="false">
+
+                        <p:column width="70">
+                            <f:facet name="header">
+                                <h:outputText value="ImportId"/>
+                            </f:facet>
+                            <h:outputText value="#{item.importId}"/>
+                        </p:column>
+                        <p:column width="70">
+                            <f:facet name="header">
+                                <h:outputText value="Date"/>
+                            </f:facet>
+                            <h:outputText value="#{item.date}"/>
+                        </p:column>
+                        <p:column width="70">
+                            <f:facet name="header">
+                                <h:outputText value="FileLocation"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fileLocation}"/>
+                        </p:column>
+                        <p:column width="70">
+                            <f:facet name="header">
+                                <h:outputText value="Oid"/>
+                            </f:facet>
+                            <h:outputText value="#{item.oid}"/>
+                        </p:column>
+                        <p:column width="70">
+                            <f:facet name="header">
+                                <h:outputText value="UserId"/>
+                            </f:facet>
+                            <h:outputText value="#{item.userId}"/>
+                        </p:column>
+                        <p:column width="70">
+                            <f:facet name="header">
+                                <h:outputText value="Code"/>
+                            </f:facet>
+                            <h:outputText value="#{item.code}"/>
+                        </p:column>
+                        <p:column width="70">
+                            <f:facet name="header">
+                                <h:outputText value="Error"/>
+                            </f:facet>
+                            <h:outputText value="#{item.error}"/>
+                        </p:column>
+                        <p:column width="70">
+                            <f:facet name="header">
+                                <h:outputText value="Type"/>
+                            </f:facet>
+                            <h:outputText value="#{item.type}"/>
+                        </p:column>
+                        <p:column width="70">
+                            <f:facet name="header">
+                                <h:outputText value="Label"/>
+                            </f:facet>
+                            <h:outputText value="#{item.label}"/>
+                        </p:column>
+
+                        <p:column width="80" rendered="false">
+                            <f:facet name="header">
+                                <h:outputText value="Remove?"/>
+                            </f:facet>
+                            <p:commandButton icon="ui-icon-close" title="remove from db"
+                                             actionListener="#{ImportFileView.remove(c)}" update="ImportFileDatatable"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

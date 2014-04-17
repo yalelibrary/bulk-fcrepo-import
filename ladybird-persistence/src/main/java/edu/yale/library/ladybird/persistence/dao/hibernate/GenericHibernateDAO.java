@@ -49,7 +49,7 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 
     @SuppressWarnings("unchecked")
     public List<T> findAll() {
-        Query q = getSession().createQuery("from " + persistentClass.getName());
+        final Query q = getSession().createQuery("from " + persistentClass.getName());
         return q.list();
     }
 
