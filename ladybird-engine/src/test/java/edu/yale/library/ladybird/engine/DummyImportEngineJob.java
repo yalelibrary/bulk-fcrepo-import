@@ -20,7 +20,7 @@ public class DummyImportEngineJob implements Job, ImportJob, ExportJob {
         final Email email = new SimpleEmail();
         try {
             email.setHostName("localhost");
-            email.setSmtpPort(8082);
+            email.setSmtpPort(ImportExportSchedulerTest.PORT);
             email.setFrom("test@test.edu");
             email.setSubject("Test");
             email.setMsg("Test Message");
@@ -28,7 +28,7 @@ public class DummyImportEngineJob implements Job, ImportJob, ExportJob {
             email.send();
         } catch (EmailException e) {
             logger.error("Exception sending notification");
-            e.printStackTrace(); //TODO
+            throw new JobExecutionException(e);
         }
     }
 }

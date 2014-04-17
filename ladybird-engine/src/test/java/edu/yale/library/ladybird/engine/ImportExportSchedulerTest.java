@@ -10,7 +10,11 @@ import edu.yale.library.ladybird.kernel.beans.Monitor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.quartz.SimpleScheduleBuilder;
+import org.quartz.Trigger;
+import org.quartz.TriggerBuilder;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -20,10 +24,17 @@ import static org.junit.Assert.fail;
 public class ImportExportSchedulerTest {
 
     private SimpleSmtpServer server = null;
+    public static final int PORT = 8082;
+
 
     @Before
     public void setup() {
-        server = SimpleSmtpServer.start(8082); //FIXME
+        try {
+            server = SimpleSmtpServer.start(PORT);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Error starting server");
+        }
     }
 
     @After
@@ -43,17 +54,19 @@ public class ImportExportSchedulerTest {
      */
     @Test
     public void testImportScheduler() throws Exception {
+        if (server.isStopped()) {
+            fail("Server stopped");
+        }
         assertTrue(server.getReceivedEmailSize() == 0);
         try {
             ImportJobFactory.setInstance(new DummyImportEngineJob());
             final ImportScheduler importScheduler = new ImportScheduler();
-            importScheduler.scheduleJob("test", "test", getTestImportCronSchedule());
+            importScheduler.scheduleJob("test", getSimpleTrigger());
             Thread.sleep(3000); //TODO
         } catch (Exception e) {
-            e.printStackTrace();
             fail("Exception= " + e);
         }
-        assertTrue(server.getReceivedEmailSize() >= 1);
+        assertEquals("Server received wrong number of emails", server.getReceivedEmailSize(), 1);
     }
 
     /**
@@ -68,20 +81,23 @@ public class ImportExportSchedulerTest {
             final ExportScheduler exportScheduler = new ExportScheduler();
             final Monitor monitorUnit = new Monitor();
             monitorUnit.setUser(null);
-            exportScheduler.scheduleJob("test", "test", getTestExportCronSchedule(), monitorUnit);
+            exportScheduler.scheduleJob("test", monitorUnit, getSimpleTrigger());
             Thread.sleep(3000); //TODO
         } catch (Exception e) {
-            e.printStackTrace();
             fail("Exception= " + e);
         }
-        assertTrue(server.getReceivedEmailSize() >= 1);
+        assertEquals("Server received wrong number of emails", server.getReceivedEmailSize(), 1);
     }
 
-    private String getTestImportCronSchedule() {
-        return "0/2 * * * * ?";
-    }
+    private Trigger getSimpleTrigger() {
+        return TriggerBuilder
+                .newTrigger()
+                .withIdentity("dummyTriggerName", "group1")
+                .withSchedule(
+                        SimpleScheduleBuilder.simpleSchedule()
+                                .withIntervalInSeconds(3)
+                                .withRepeatCount(0))
+                                .build();
 
-    private String getTestExportCronSchedule() {
-        return "0/2 * * * * ?";
     }
 }

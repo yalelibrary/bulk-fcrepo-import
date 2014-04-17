@@ -16,6 +16,8 @@ import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 
+import java.lang.Deprecated;
+
 public class ImportScheduler {
 
     private final Logger logger = getLogger(this.getClass());
@@ -28,29 +30,51 @@ public class ImportScheduler {
      * @param cronExpression
      * @throws Exception
      */
-    public void scheduleJob(final String jobName, final String triggerName, String cronExpression) {
+    public void scheduleJob(final String jobName, final String triggerName, final String cronExpression) {
         logger.debug("Scheduling import job");
 
         JobDetail job;
         try {
-            Scheduler scheduler = new StdSchedulerFactory().getScheduler();
-            scheduler.start();
             job = getJob(jobName, ImportJobFactory.getInstance().getClass());
             Trigger trigger = TriggerBuilder
                     .newTrigger()
                     .withIdentity("IMG-TRIGER", "IMJ")
                     .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
                     .build();
-            scheduler.scheduleJob(job, trigger);
+            doScheduleJob(job, trigger);
         } catch (SchedulerException e) {
             throw new CronSchedulingException(e);
         }
 
-        //add to jobs manager
         DefaultJobsManager defaultJobsManager = new DefaultJobsManager();
         defaultJobsManager.addJob(job);
     }
 
+    @Deprecated
+    public void scheduleJob(final String jobName, final Trigger trigger) {
+        logger.debug("Scheduling import job");
+
+        JobDetail job;
+        try {
+            job = getJob(jobName, ImportJobFactory.getInstance().getClass());
+            doScheduleJob(job, trigger);
+        } catch (SchedulerException e) {
+            throw new CronSchedulingException(e);
+        }
+
+        DefaultJobsManager defaultJobsManager = new DefaultJobsManager();
+        defaultJobsManager.addJob(job);
+    }
+
+    private void doScheduleJob(final JobDetail job, final Trigger trigger) throws SchedulerException{
+        try {
+            final Scheduler scheduler = new StdSchedulerFactory().getScheduler();
+            scheduler.start();
+            scheduler.scheduleJob(job, trigger);
+        } catch (SchedulerException e) {
+            throw e;
+        }
+    }
 
     @SuppressWarnings("unchecked")
     protected JobDetail getJob(String jobName, Class klass) {

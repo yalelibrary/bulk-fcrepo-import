@@ -34,18 +34,45 @@ public class ExportScheduler {
             Scheduler scheduler = new StdSchedulerFactory().getScheduler();
             scheduler.start();
             job = getJob(jobName, ExportJobFactory.getInstance().getClass(), monitorItem);
-            Trigger trigger = TriggerBuilder
+            final Trigger trigger = TriggerBuilder
                     .newTrigger()
                     .withIdentity("EXJ-TRIGER", "EXJ")
                     .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
                     .build();
-            scheduler.scheduleJob(job, trigger);
+            doScheduleJob(job, trigger);
         } catch (SchedulerException e) {
             throw new CronSchedulingException(e);
         }
-        //add to jobs manager
+
         DefaultJobsManager defaultJobsManager = new DefaultJobsManager();
         defaultJobsManager.addJob(job);
+    }
+
+
+    @Deprecated
+    public void scheduleJob(final String jobName, final Monitor monitorItem, final Trigger trigger) {
+        logger.debug("Scheduling export job");
+
+        JobDetail job;
+        try {
+            job = getJob(jobName, ExportJobFactory.getInstance().getClass(), monitorItem);
+            doScheduleJob(job, trigger);
+        } catch (SchedulerException e) {
+            throw new CronSchedulingException(e);
+        }
+
+        DefaultJobsManager defaultJobsManager = new DefaultJobsManager();
+        defaultJobsManager.addJob(job);
+    }
+
+    private void doScheduleJob(final JobDetail job, final Trigger trigger) throws SchedulerException{
+        try {
+            final Scheduler scheduler = new StdSchedulerFactory().getScheduler();
+            scheduler.start();
+            scheduler.scheduleJob(job, trigger);
+        } catch (SchedulerException e) {
+            throw e;
+        }
     }
 
 
