@@ -59,6 +59,6 @@ public class ImportFileBuilder {
     }
 
     public ImportFile createImportFile() {
-        return new ImportFile(importId, date, fileLocation, oid, userId);
+        return new ImportFile(importId, date, fileLocation, oid, userId, code, error, type, label);
     }
 }

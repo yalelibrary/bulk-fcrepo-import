@@ -21,12 +21,16 @@ public class ImportFile implements java.io.Serializable {
     public ImportFile() {
     }
 
-    public ImportFile(Integer importId, Date date, String fileLocation, int oid, int userId) {
+    public ImportFile(Integer importId, Date date, String fileLocation, int oid, int userId, Integer code, String error, String type, String label) {
         this.importId = importId;
         this.date = date;
         this.fileLocation = fileLocation;
         this.oid = oid;
         this.userId = userId;
+        this.code = code;
+        this.error = error;
+        this.type = type;
+        this.label = label;
     }
 
     public Integer getImportId() {
@@ -113,7 +117,21 @@ public class ImportFile implements java.io.Serializable {
         this.label = label;
     }
 
-
+    @Override
+    public String toString() {
+        return "ImportFile{" +
+                "id=" + id +
+                ", importId=" + importId +
+                ", date=" + date +
+                ", fileLocation='" + fileLocation + '\'' +
+                ", oid=" + oid +
+                ", userId=" + userId +
+                ", code=" + code +
+                ", error='" + error + '\'' +
+                ", type='" + type + '\'' +
+                ", label='" + label + '\'' +
+                '}';
+    }
 }
 
 

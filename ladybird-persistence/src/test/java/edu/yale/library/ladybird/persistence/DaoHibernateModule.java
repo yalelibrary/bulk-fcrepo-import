@@ -19,6 +19,7 @@ public class DaoHibernateModule extends AbstractModule {
         bind(userDaoType).to(UserDAO.class);
         bind(UserDAO.class).to(UserHibernateDAO.class);
         bind(MonitorDAO.class).to(MonitorHibernateDAO.class);
+        bind(ImportFileDAO.class).to(ImportFileHibernateDAO.class);
         bind(ImportSourceDAO.class).to(ImportSourceHibernateDAO.class);
         bind(ImportSourceDataDAO.class).to(ImportSourceDataHibernateDAO.class);
         bind(ProjectDAO.class).to(ProjectHibernateDAO.class);
