@@ -121,6 +121,10 @@ public class ImportWriter {
         //Save to import_source_data:
         persistMarcData(bibIdMarcValues, importId);
 
+        final short columnWithImageField = findImageColumn(Collections.singletonList(rowList.get(0)));
+        logger.debug("Column with image field={}", columnWithImageField);
+
+
         //Save all columns to import_job_contents:
         for (int i = 0; i < rowList.size(); i++) {
             final ImportEntity.Row row = rowList.get(i);
@@ -171,7 +175,6 @@ public class ImportWriter {
             }
         }
     }
-
 
     /**
      * Hits OAI feed and gets a Record
@@ -253,7 +256,7 @@ public class ImportWriter {
     }
 
     /**
-     * Returns list of bibIds from a specific column.
+     * Returns specific column.
      * TODO 1.ensure only one column 2. F105
      * @param rowList spreadsheet rows
      * @return column order of F104, F105 field. Or -1 if no such column exists
@@ -271,6 +274,26 @@ public class ImportWriter {
         }
         return -1;
     }
+
+    /**
+     * Returns specific column.
+     * @param rowList spreadsheet rows
+     * @return column order of F104, F105 field. Or -1 if no such column exists
+     */
+    public short findImageColumn(final List<ImportEntity.Row> rowList) {
+        short order = 0;
+        for (final ImportEntity.Row row: rowList) {
+            final List<ImportEntity.Column> columns = row.getColumns();
+            for (final ImportEntity.Column<String> col: columns) {
+                if (isOAIFunction(col)) {
+                    return order;
+                }
+            }
+            order++;
+        }
+        return -1;
+    }
+
 
     /**
      * Returns a list of bibIds from a specific column
@@ -304,6 +327,17 @@ public class ImportWriter {
         final String fieldName = col.getField().getName();
         return (fieldName.equals(FunctionConstants.F104.getName()))
                 || fieldName.equals(FunctionConstants.F105.getName()) ? true : false;
+    }
+
+    /**
+     * Determines if a column is a function that should kick off some sort of image processing.
+     * @param col A spreadsheet column value
+     * @return whether a column matches an image processing function
+     */
+
+    public boolean isImageProcessingFunction(final ImportEntity.Column col) {
+        final String fieldName = col.getField().getName();
+        return (fieldName.equals(FunctionConstants.F3.getName()))? true : false;
     }
 
     /**

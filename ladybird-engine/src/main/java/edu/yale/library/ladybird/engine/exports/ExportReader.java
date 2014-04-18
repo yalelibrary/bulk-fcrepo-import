@@ -53,7 +53,7 @@ public class ExportReader {
 
         Map<Integer, Multimap<Marc21Field, Map<String, String>>> bibIdDataFieldTypeMap = null;
 
-            //Read all bibIds data
+        //Read all bibIds data
         bibIdDataFieldTypeMap = readBibIdData(importId, expectedNumRowsToWrite);
 
         //logger.debug("BibIdDataFieldTypeMap size={}", bibIdDataFieldTypeMap.size());
@@ -61,14 +61,12 @@ public class ExportReader {
 
 
         //Get all FunctionConstants. Every FunctionConstant should have a column in the output spreadsheet.
-
         final List<FieldConstant> globalFConstantsList = getApplicationFieldConstants();
 
 
         final List<ImportEntity.Row> resultRowList = new ArrayList<>();
 
         //Write exhead
-
         final ImportEntity.Row exheadRow = new ImportEntity().new Row();
 
 
