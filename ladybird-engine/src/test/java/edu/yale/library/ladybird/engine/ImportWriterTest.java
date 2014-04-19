@@ -37,9 +37,9 @@ public class ImportWriterTest {
         assert (column1 == column1);
         assert (column1 != column2);
         rowList.add(row);
-        assert (importWriter.findBibIdColumn(rowList) == 0);
+        assert (importWriter.findColumn(rowList, f1) == 0);
         rowList.remove(0);
-        assert (importWriter.findBibIdColumn(rowList) == -1);
+        assert (importWriter.findColumn(rowList, f1) == -1);
     }
 
     @Test
@@ -125,6 +125,28 @@ public class ImportWriterTest {
         assert(marc21Field.equals(Marc21Field._245));
     }
 
+    @Test
+    public void shouldFindColumn(){
+        final ImportWriter importWriter = new ImportWriter();
+        final List<ImportEntity.Row> rowList = new ArrayList<>();
+        final ImportEntity.Row row = new ImportEntity().new Row();
+        final FieldConstant f1 = FunctionConstants.F104;
+        final ImportEntity.Column<String> column1 = new ImportEntity().new Column<>(f1,
+                String.valueOf("2222"));
+        row.getColumns().add(column1);
+        final FieldConstant f2 = FunctionConstants.F1;
+        final ImportEntity.Column<String> column2 = new ImportEntity().new Column<>(f2,
+                String.valueOf("2222"));
+        row.getColumns().add(column2);
+        assert (f1 == f1);
+        assert (f1 != f2);
+        assert (column1 == column1);
+        assert (column1 != column2);
+        rowList.add(row);
+        System.out.println(rowList);
+        assert (importWriter.findColumn(rowList, f1) == 0);
+        assertEquals ("Value mismatch", importWriter.findColumn(rowList, f2), 1);
+    }
     /**
      * General utility. Subject to removal.
      */

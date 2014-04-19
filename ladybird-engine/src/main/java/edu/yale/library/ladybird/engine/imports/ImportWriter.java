@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.engine.imports;
 
 
+import edu.yale.library.ladybird.engine.model.FieldConstant;
 import edu.yale.library.ladybird.engine.model.Marc21Field;
 import edu.yale.library.ladybird.engine.oai.OaiHttpClient;
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
@@ -108,21 +109,28 @@ public class ImportWriter {
 
         //Find the column number of the spreadsheet with F104 or F105 column.
         //TODO move this to some exhead method
-        final short columnWithOAIField = findBibIdColumn(Collections.singletonList(rowList.get(0)));
+        final short columnWithOAIField = findColumn(Collections.singletonList(rowList.get(0)), FunctionConstants.F104);
         logger.debug("Column with oai field={}", columnWithOAIField);
 
         //Get all the bibIds from this column
         final List<String> bibIds = readBibIdsFromColumn(rowList, columnWithOAIField);
         logger.debug("bibIds size={}", bibIds.size());
 
-        final Map<String, Multimap<Marc21Field, ImportSourceData>> bibIdMarcValues = readBibIdMarcData(bibIds, marc21FieldMap, importId);
+        final Map<String, Multimap<Marc21Field, ImportSourceData>> bibIdMarcValues =
+                readBibIdMarcData(bibIds, marc21FieldMap, importId);
         logger.debug("bibIdMarcValues size={}", bibIdMarcValues.size());
 
         //Save to import_source_data:
         persistMarcData(bibIdMarcValues, importId);
 
-        final short columnWithImageField = findImageColumn(Collections.singletonList(rowList.get(0)));
+        final ImportEntity.Row firstRow = rowList.get(0);
+
+        final short columnWithImageField = findColumn(Collections.singletonList(firstRow), FunctionConstants.F3);
         logger.debug("Column with image field={}", columnWithImageField);
+
+        //Get oids
+        final short columnWithF1Field = findColumn(Collections.singletonList(firstRow), FunctionConstants.F1);
+        logger.debug("Column with F1={}", columnWithF1Field);
 
 
         //Save all columns to import_job_contents:
@@ -255,41 +263,16 @@ public class ImportWriter {
         }
     }
 
-    /**
-     * Returns specific column.
-     * TODO 1.ensure only one column 2. F105
-     * @param rowList spreadsheet rows
-     * @return column order of F104, F105 field. Or -1 if no such column exists
-     */
-    public short findBibIdColumn(final List<ImportEntity.Row> rowList) {
+    public short findColumn(final List<ImportEntity.Row> rowList, final FieldConstant f) {
         short order = 0;
         for (final ImportEntity.Row row: rowList) {
             final List<ImportEntity.Column> columns = row.getColumns();
             for (final ImportEntity.Column<String> col: columns) {
-                if (col.getField().toString().equals(FunctionConstants.F104.getName())) {
+                if (col.getField().getName().equals(f.getName())) {
                     return order;
                 }
-            }
             order++;
-        }
-        return -1;
-    }
-
-    /**
-     * Returns specific column.
-     * @param rowList spreadsheet rows
-     * @return column order of F104, F105 field. Or -1 if no such column exists
-     */
-    public short findImageColumn(final List<ImportEntity.Row> rowList) {
-        short order = 0;
-        for (final ImportEntity.Row row: rowList) {
-            final List<ImportEntity.Column> columns = row.getColumns();
-            for (final ImportEntity.Column<String> col: columns) {
-                if (isOAIFunction(col)) {
-                    return order;
-                }
             }
-            order++;
         }
         return -1;
     }
@@ -339,6 +322,12 @@ public class ImportWriter {
         final String fieldName = col.getField().getName();
         return (fieldName.equals(FunctionConstants.F3.getName()))? true : false;
     }
+
+    public boolean isF1Function(final ImportEntity.Column col) {
+        final String fieldName = col.getField().getName();
+        return (fieldName.equals(FunctionConstants.F1.getName()))? true : false;
+    }
+
 
     /**
      * Writes import job
