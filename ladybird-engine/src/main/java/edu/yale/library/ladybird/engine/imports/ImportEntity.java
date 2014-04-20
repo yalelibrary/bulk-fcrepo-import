@@ -37,6 +37,32 @@ public class ImportEntity {
                     + ", value=" + value
                     + '}';
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
+
+            Column column = (Column) o;
+
+            if (field != null ? !field.equals(column.field) : column.field != null) {
+                return false;
+            }
+            if (value != null ? !value.equals(column.value) : column.value != null) {
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = field != null ? field.hashCode() : 0;
+            result = 31 * result + (value != null ? value.hashCode() : 0);
+            return result;
+        }
     }
 
     public class Row {
