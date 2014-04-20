@@ -109,7 +109,9 @@ public class ImportWriter {
 
         //Find the column number of the spreadsheet with F104 or F105 column.
         //TODO move this to some exhead method
-        final short columnWithOAIField = findColumn(Collections.singletonList(rowList.get(0)), FunctionConstants.F104);
+        final ImportEntity.Row firstRow = rowList.get(0);
+
+        final short columnWithOAIField = findColumn(Collections.singletonList(firstRow), FunctionConstants.F104);
         logger.debug("Column with oai field={}", columnWithOAIField);
 
         //Get all the bibIds from this column
@@ -123,8 +125,6 @@ public class ImportWriter {
         //Save to import_source_data:
         persistMarcData(bibIdMarcValues, importId);
 
-        final ImportEntity.Row firstRow = rowList.get(0);
-
         final short columnWithImageField = findColumn(Collections.singletonList(firstRow), FunctionConstants.F3);
         logger.debug("Column with image field={}", columnWithImageField);
 
@@ -132,6 +132,9 @@ public class ImportWriter {
         final short columnWithF1Field = findColumn(Collections.singletonList(firstRow), FunctionConstants.F1);
         logger.debug("Column with F1={}", columnWithF1Field);
 
+        //Process Media stuff
+        MediaFunctionProcessor mediaFunctionProcessor = new MediaFunctionProcessor();
+        mediaFunctionProcessor.process(rowList);
 
         //Save all columns to import_job_contents:
         for (int i = 0; i < rowList.size(); i++) {

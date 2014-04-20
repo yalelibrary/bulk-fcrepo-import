@@ -2,6 +2,7 @@
 package edu.yale.library.ladybird.web.view;
 
 
+import edu.yale.library.ladybird.kernel.beans.ObjectFile;
 import edu.yale.library.ladybird.persistence.dao.ObjectFileDAO;
 import org.slf4j.Logger;
 
@@ -10,6 +11,8 @@ import javax.faces.bean.RequestScoped;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import java.util.List;
+
 import static org.slf4j.LoggerFactory.getLogger;
 
 @ManagedBean (name = "ObjectFileView")
@@ -17,6 +20,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 @SuppressWarnings("unchecked")
 public class ObjectFileView extends AbstractView {
     private final Logger logger = getLogger(this.getClass());
+
+    private List<ObjectFile> itemList;
+
 
     @Inject
     private ObjectFileDAO entityDAO;
@@ -27,6 +33,13 @@ public class ObjectFileView extends AbstractView {
         dao = entityDAO;
     }
 
+    public List<ObjectFile> getItemList() {
+        return itemList;
+    }
+
+    public void setItemList(final List<ObjectFile> itemList) {
+        this.itemList = itemList;
+    }
 }
 
 

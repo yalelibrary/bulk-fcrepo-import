@@ -16,15 +16,6 @@
             <div style="">
                 <div class="" style="">
 
-                    <!--Add Button -->
-
-                    <p:commandButton id="chartBtn" icon="ui-icon-plusthick"
-                                     value="New User" type="button" style="color:#103480;"
-                                     onclick="dlg.show();"/>
-
-                    <br/>
-                    <br/>
-
                     <!-- Data Table -->
 
                     <p:dataTable id="ObjectFileDatatable" value="#{ObjectFileView.itemList}"
@@ -105,13 +96,6 @@
                             <h:outputText value="#{item.status}"/>
                         </p:column>
 
-                        <p:column width="80" rendered="false">
-                            <f:facet name="header">
-                                <h:outputText value="Remove?"/>
-                            </f:facet>
-                            <p:commandButton icon="ui-icon-close" title="remove from db"
-                                             actionListener="#{ObjectFileView.remove(c)}" update="ObjectFileDatatable"/>
-                        </p:column>
                     </p:dataTable>
                 </div>
             </div>

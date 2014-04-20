@@ -1,17 +1,15 @@
 package edu.yale.library.ladybird.engine.model;
 
 /**
- * Business logic level (or so it seems) column header constants.
+ * LB processing function constants.
  *
  * @see FieldDefinitionValue
- *      <p/>
- *      TODO revise name,title per logic requirements
  */
 public enum FunctionConstants implements FieldConstant {
     /**
-     * unspecified function. @see ReadMode
+     * Unspecified function.
      */
-    UNK("Test", "Test"),
+    UNK("UNK", "UNKNOWN-FUNCTION"),
     /**
      * Oid *
      */
@@ -20,7 +18,26 @@ public enum FunctionConstants implements FieldConstant {
      * File location *
      */
     F3("F3", "Image"),
-
+    /**
+     * File attached to an OID from the import folder
+     */
+    F31("F31","OID-ATTACHED-IN-IMPORT-FOLDER"),
+    /**
+     * File which represents an OID from the /OID/ folder, outside /import
+     */
+    F32("F31","OID-ATTACHED-IN-OTHER-FOLDER"),
+    /**
+     * File representing an OID from the /tracking folder, outside /import
+     */
+    F33("F31","OID-ATTACHED-IN-TRACKING-FOLDER"),
+    /**
+     * HTTP link to an external file
+     */
+    F300("F300","EXTERNAL-FILE-HTTP-LINK"),
+    /**
+     * An external file that must be pulled into the local file store for processing
+     */
+    F301("F301", "EXTERNAL-FILE-PULL"),
     /**
      * BibId Import
      */

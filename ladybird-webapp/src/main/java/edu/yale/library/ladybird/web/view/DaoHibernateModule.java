@@ -30,5 +30,6 @@ public class DaoHibernateModule extends AbstractModule {
         bind(FieldDefinitionDAO.class).to(FieldDefinitionHibernateDAO.class);
         bind(FieldMarcMappingDAO.class).to(FieldMarcMappingHibernateDAO.class);
         bind(ObjectDAO.class).to(ObjectHibernateDAO.class);
+        bind(ObjectFileDAO.class).to(ObjectFileHibernateDAO.class);
     }
 }

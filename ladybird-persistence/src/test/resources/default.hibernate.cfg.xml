@@ -20,6 +20,7 @@
         <mapping resource="test-hbm/Monitor.hbm.xml"/>
         <mapping resource="test-hbm/Project.hbm.xml"/>
         <mapping resource="test-hbm/Object.hbm.xml"/>
+        <mapping resource="test-hbm/ObjectFile.hbm.xml"/>
         <mapping resource="test-hbm/Users.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

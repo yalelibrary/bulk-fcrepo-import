@@ -24,16 +24,16 @@ public class ExportReaderTest {
     public void shouldContainApplicationFunctions() {
         final ExportReader exportReader = new ExportReader();
         final List<FieldConstant> fieldConstantList = exportReader.getApplicationFieldConstants();
-
-        //assertEquals("Size mismatch", fieldConstantList.size(), 5);
-
         final FieldDefinitionValue fieldDefinitionValue = new FieldDefinitionValue();
         final Map<String, FieldConstant> fdidMap = new HashMap<>();
+
         fdidMap.put("", new FieldDefinitionValue(70, "fdid=70"));
         fieldDefinitionValue.setFieldDefMap(fdidMap);
+
         final List<FieldConstant> fieldConstantList2 = exportReader.getApplicationFieldConstants();
 
-        assertEquals("List size mismatch", fieldConstantList2.size(), 6);
+        assertEquals("FieldConstants list size mismatch", fieldConstantList2.size(),
+                FunctionConstants.values().length + 1);
     }
 
     @Test
