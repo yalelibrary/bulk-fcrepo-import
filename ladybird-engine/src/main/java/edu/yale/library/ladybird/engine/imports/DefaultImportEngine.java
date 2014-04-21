@@ -30,8 +30,8 @@ public class DefaultImportEngine extends AbstractImportEngine {
         ImportWriter importWriter = new ImportWriter();
         //TODO obtain file,dir,user //?
         importWriter.setOaiProvider(oaiProvider);  //TODO
-        return importWriter.write(list, new ImportJobContextBuilder().userId(USER_ID).file("").dir("").build());
+        ImportEntityValue importEntityValue = new ImportEntityValue(list);
+        return importWriter.write(importEntityValue,
+                new ImportJobContextBuilder().userId(USER_ID).file("").dir("").build());
     }
-
-
 }
