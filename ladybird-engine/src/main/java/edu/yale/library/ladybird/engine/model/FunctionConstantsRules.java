@@ -2,6 +2,11 @@ package edu.yale.library.ladybird.engine.model;
 
 import edu.yale.library.ladybird.engine.imports.ImportEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  *
  */
@@ -34,4 +39,32 @@ public class FunctionConstantsRules {
         final String fieldName = col.getField().getName();
         return (fieldName.equals(FunctionConstants.F1.getName())) ? true : false;
     }
+
+    /**
+     * Gets all FieldConstants (fdids etc) pertaining to the application
+     * @return list of field constants
+     * TODO move
+     */
+    public static List<FieldConstant> getApplicationFieldConstants() {
+
+        final List<FieldConstant> globalFunctionConstants = new ArrayList<>();
+
+        //add fdids
+        final Map<String, FieldConstant> fdidMap = FieldDefinitionValue.getFieldDefMap();
+        final Set<String> keySet = fdidMap.keySet();
+
+        for (final String s: keySet) {
+            final FieldConstant f = fdidMap.get(s);
+            globalFunctionConstants.add(f);
+        }
+
+        //add F1, F104 etc
+        final FunctionConstants[] functionConstants = FunctionConstants.values();
+
+        for (final FieldConstant f: functionConstants) {
+            globalFunctionConstants.add(f);
+        }
+        return globalFunctionConstants;
+    }
+
 }

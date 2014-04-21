@@ -1,11 +1,11 @@
 package edu.yale.library.ladybird.engine;
 
 import edu.yale.library.ladybird.engine.exports.ExportReader;
-import edu.yale.library.ladybird.engine.imports.ImportEntity;
 import edu.yale.library.ladybird.engine.model.FieldConstant;
 import edu.yale.library.ladybird.engine.model.FieldDefinitionValue;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.engine.model.Marc21Field;
+import edu.yale.library.ladybird.engine.model.FunctionConstantsRules;
 import org.junit.Test;
 
 import java.util.*;
@@ -17,17 +17,16 @@ import static org.junit.Assert.assertEquals;
  */
 public class ExportReaderTest {
 
+    //TODO move
     @Test
     public void shouldContainApplicationFunctions() {
-        final ExportReader exportReader = new ExportReader();
-        final List<FieldConstant> fieldConstantList = exportReader.getApplicationFieldConstants();
         final FieldDefinitionValue fieldDefinitionValue = new FieldDefinitionValue();
         final Map<String, FieldConstant> fdidMap = new HashMap<>();
 
         fdidMap.put("", new FieldDefinitionValue(70, "fdid=70"));
         fieldDefinitionValue.setFieldDefMap(fdidMap);
 
-        final List<FieldConstant> fieldConstantList2 = exportReader.getApplicationFieldConstants();
+        final List<FieldConstant> fieldConstantList2 = FunctionConstantsRules.getApplicationFieldConstants();
 
         assertEquals("FieldConstants list size mismatch", fieldConstantList2.size(),
                 FunctionConstants.values().length + 1);
@@ -36,7 +35,6 @@ public class ExportReaderTest {
     @Test
     public void shouldConvertStringToFieldConst() {
         final ExportReader exportReader = new ExportReader();
-
         final FieldDefinitionValue fieldDefinitionValue = new FieldDefinitionValue();
         final Map<String, FieldConstant> fdidMap = new HashMap<>();
         fdidMap.put("70", new FieldDefinitionValue(70, "fdid=70"));

@@ -2,10 +2,11 @@ package edu.yale.library.ladybird.engine.exports;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import edu.yale.library.ladybird.engine.model.FieldConstant;
-import edu.yale.library.ladybird.engine.model.FieldDefinitionValue;
-import edu.yale.library.ladybird.engine.model.FunctionConstants;
+import edu.yale.library.ladybird.engine.model.FunctionConstantsRules;
 import edu.yale.library.ladybird.engine.model.Marc21Field;
+import edu.yale.library.ladybird.engine.model.FieldConstant;
+import edu.yale.library.ladybird.engine.model.FunctionConstants;
+import edu.yale.library.ladybird.engine.model.FieldDefinitionValue;
 import edu.yale.library.ladybird.engine.oai.DatafieldType;
 import edu.yale.library.ladybird.kernel.beans.ImportJobContents;
 import edu.yale.library.ladybird.kernel.beans.ImportJobExhead;
@@ -22,7 +23,12 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceDataHiber
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * Reads from import job tables
@@ -58,7 +64,7 @@ public class ExportReader {
 
 
         //Get all FunctionConstants. Every FunctionConstant should have a column in the output spreadsheet.
-        final List<FieldConstant> globalFConstantsList = getApplicationFieldConstants();
+        final List<FieldConstant> globalFConstantsList = FunctionConstantsRules.getApplicationFieldConstants();
 
 
         final List<ImportEntity.Row> resultRowList = new ArrayList<>();
@@ -276,12 +282,6 @@ public class ExportReader {
     }
 
     @Deprecated
-    public Marc21Field stringToMarc21Field(String tag) {
-        final String TAG_ID = "_"; //TODO
-        return Marc21Field.valueOf(TAG_ID + tag);
-    }
-
-    @Deprecated
     public Marc21Field getMar21FieldForString(String tag) {
         final String TAG_ID = "_"; //TODO
         try {
@@ -321,38 +321,5 @@ public class ExportReader {
 
         return null;
     }
-
-    /**
-     * Gets all FieldConstants (fdids etc) pertaining to the application
-     * @return list of field constants
-     */
-    public List<FieldConstant> getApplicationFieldConstants() {
-
-        final List<FieldConstant> globalFunctionConstants = new ArrayList<>();
-
-        //add fdids
-        final Map<String, FieldConstant> fdidMap = FieldDefinitionValue.getFieldDefMap();
-
-        if (fdidMap.size() == 0) {
-            logger.error("FieldDefMap size numero 0");
-        }
-
-        final Set<String> keySet = fdidMap.keySet();
-        for (final String s: keySet) {
-            final FieldConstant f = fdidMap.get(s);
-            globalFunctionConstants.add(f);
-        }
-
-        //add F1, F104 etc
-        final FunctionConstants[] functionConstants = FunctionConstants.values();
-
-        for (final FieldConstant f: functionConstants) {
-            globalFunctionConstants.add(f);
-        }
-
-        logger.debug("App FieldConstant size={}", globalFunctionConstants.size());
-        return globalFunctionConstants;
-    }
-
 
 }
