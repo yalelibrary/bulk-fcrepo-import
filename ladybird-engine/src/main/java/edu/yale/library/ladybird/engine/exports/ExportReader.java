@@ -5,8 +5,6 @@ import com.google.common.collect.Multimap;
 import edu.yale.library.ladybird.engine.model.FunctionConstantsRules;
 import edu.yale.library.ladybird.engine.model.Marc21Field;
 import edu.yale.library.ladybird.engine.model.FieldConstant;
-import edu.yale.library.ladybird.engine.model.FunctionConstants;
-import edu.yale.library.ladybird.engine.model.FieldDefinitionValue;
 import edu.yale.library.ladybird.engine.oai.DatafieldType;
 import edu.yale.library.ladybird.kernel.beans.ImportJobContents;
 import edu.yale.library.ladybird.kernel.beans.ImportJobExhead;
@@ -193,7 +191,7 @@ public class ExportReader {
                     final ImportJobExhead importJobExhead = importJobExheads.get(j);
                     String headerValue = importJobExhead.getValue();
                     //logger.debug("Header val={}", headerValue);
-                    final FieldConstant fieldConstant = convertStringToFieldConstant(headerValue);
+                    final FieldConstant fieldConstant = FunctionConstantsRules.convertStringToFieldConstant(headerValue);
                     if (fieldConstant == null) {
                         logger.debug("Field Constant null for headerValue={}", headerValue);
                     }
@@ -292,34 +290,6 @@ public class ExportReader {
             logger.error(e.getMessage());
             return Marc21Field.UNK;
         }
-    }
-
-    /**
-     * Converts string to a FieldConstant (fdid or a FunctionConstants)
-     * @param value
-     * @return
-     */
-    public FieldConstant convertStringToFieldConstant(final String value){
-        final Map<String, FieldConstant> map =  FieldDefinitionValue.getFieldDefMap();
-        //logger.debug(map.toString());
-        final FieldConstant val;
-        try {
-            val = map.get(value);
-            //logger.debug("Found val={}", val.toString());
-            return val;
-        } catch (Exception e) {
-            logger.error("Error converting to FieldConstant(FieldDefinition) value={}", value);
-        }
-
-        //See if it's a function constant
-        try {
-            final FunctionConstants f  = FunctionConstants.valueOf(value);
-            return f;
-        } catch (Exception e) {
-            logger.error("Error converting to FieldConstant(FunctionConstant) value={}", value);
-        }
-
-        return null;
     }
 
 }

@@ -67,4 +67,34 @@ public class FunctionConstantsRules {
         return globalFunctionConstants;
     }
 
+    /**
+     * Converts string to a FieldConstant (fdid or a FunctionConstants)
+     * @param value
+     * @return
+     * //TODO move
+     */
+    public static FieldConstant convertStringToFieldConstant(final String value){
+        final Map<String, FieldConstant> map =  FieldDefinitionValue.getFieldDefMap();
+        //logger.debug(map.toString());
+        final FieldConstant val;
+        try {
+            val = map.get(value);
+            //logger.debug("Found val={}", val.toString());
+            return val;
+        } catch (Exception e) {
+            //logger.error("Error converting to FieldConstant(FieldDefinition) value={}", value);
+        }
+
+        //See if it's a function constant
+        try {
+            final FunctionConstants f  = FunctionConstants.valueOf(value);
+            return f;
+        } catch (Exception e) {
+           // logger.error("Error converting to FieldConstant(FunctionConstant) value={}", value);
+        }
+
+        return null;
+    }
+
+
 }

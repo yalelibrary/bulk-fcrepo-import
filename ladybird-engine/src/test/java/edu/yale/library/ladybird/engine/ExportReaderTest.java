@@ -40,7 +40,7 @@ public class ExportReaderTest {
         fdidMap.put("70", new FieldDefinitionValue(70, "fdid=70"));
         fieldDefinitionValue.setFieldDefMap(fdidMap);
 
-        final FieldConstant f = exportReader.convertStringToFieldConstant("70");
+        final FieldConstant f = FunctionConstantsRules.convertStringToFieldConstant("70");
         assertEquals("Value mismatch", f.getName(), "fdid=70");
     }
 
