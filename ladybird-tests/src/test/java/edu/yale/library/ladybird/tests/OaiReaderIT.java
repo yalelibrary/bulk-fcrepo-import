@@ -1,5 +1,9 @@
 package edu.yale.library.ladybird.tests;
 
+import edu.yale.library.ladybird.engine.model.MarcReadingException;
+import edu.yale.library.ladybird.engine.oai.OaiHttpClient;
+import edu.yale.library.ladybird.engine.oai.OaiProvider;
+import edu.yale.library.ladybird.engine.oai.Record;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -10,6 +14,7 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.junit.Test;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.concurrent.TimeUnit;
 
@@ -18,17 +23,13 @@ import static org.junit.Assert.fail;
 
 
 /**
- * Generic OAI feed reading test
- * <p/>
- * FIXME decide to test live OAI urls, versus reading some xml from test resources
- * (if live urls are to be used, should probably have this as an IT with a test OAI provider)
+ * OAI feed reading test (for now, against a known external OAI provider)
  */
-
 
 public class OaiReaderIT {
 
     private static final String DC_OAI_PROVIDER = getProp("oai_test_url");
-    private static final String MARC_OAI_PROVIDER = getMarcString();
+    private static final String MARC_OAI_PROVIDER = getOaiRequestVerbForMarcFeed();
     private final PoolingHttpClientConnectionManager connectionManager;
     private final HttpClient httpClient;
     private static final int IDLE_TIMEOUT = 3;
@@ -39,35 +40,43 @@ public class OaiReaderIT {
         httpClient = HttpClients.custom().setConnectionManager(connectionManager).build();
     }
 
-    /**
-     * Raw string test
-     *
-     * @see edu.yale.library.ladybird.tests.OaiHttpClientTest
-     */
     @Test
-    public void testOAI_MARC21() {
+    public void shouldGetMarcFeed() {
         try {
             final String s = fetchContents(MARC_OAI_PROVIDER);
-            assertEquals(StringUtils.countMatches(s, "marc:subfield"), 88); //TODO see class comment
+            assertEquals(StringUtils.countMatches(s, "marc:subfield"), 88);
         } catch (Exception e) {
-            fail("Error retreiving OAI feed");
+            fail("Error retrieving OAI feed");
         }
     }
 
     @Test
-    public void testOAI_DC() {
+    public void shouldGetDCFeed() {
         try {
             final String s = fetchContents(DC_OAI_PROVIDER);
-            assertEquals(StringUtils.countMatches(s, "dc:subject"), 8); //TODO see class comment
+            assertEquals(StringUtils.countMatches(s, "dc:subject"), 8);
         } catch (Exception e) {
-            fail("Error retreiving OAI feed");
+            fail("Error retrieving OAI feed");
+        }
+    }
+
+    @Test
+    public void shouldReadMarcRecord() {
+        final String bibId = getProp("oai_bibid");
+        final OaiProvider provider = new OaiProvider("id", getProp("oai_test_url_prefix"),
+                getProp("oai_url_id"));
+        final OaiHttpClient client = new OaiHttpClient(provider);
+        try {
+            Record record = client.readMarc(bibId);
+            assertEquals("DataField size mismatch", record.getDatafield().size(), 24);
+        } catch (IOException | MarcReadingException e) {
+            fail();
         }
     }
 
     private String fetchContents(final String URL) throws Exception {
         try {
             final HttpGet getRequest = new HttpGet(URL);
-            getRequest.addHeader("accept", "application/json"); //TODO remove
             final HttpResponse response = httpClient.execute(getRequest);
             if (response.getStatusLine().getStatusCode() != 200) {
                 throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
@@ -84,8 +93,8 @@ public class OaiReaderIT {
         }
     }
 
-    private static String getMarcString() {
-        URIBuilder uriBuilder = new URIBuilder();
+    private static String getOaiRequestVerbForMarcFeed() {
+        final URIBuilder uriBuilder = new URIBuilder();
         uriBuilder.setPath(Util.getProperty("oai_test_url_prefix"));
         uriBuilder.addParameter("verb", "GetRecord");
         uriBuilder.addParameter("identifier", getProp("oai_url_id") + getProp("oai_bibid"));
@@ -96,6 +105,4 @@ public class OaiReaderIT {
     private static String getProp(final String p) {
         return Util.getProperty(p);
     }
-
-
 }
