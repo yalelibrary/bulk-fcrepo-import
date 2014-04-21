@@ -66,7 +66,10 @@ public class FilePickerJob implements Job {
 
                         final File fullPath = new File(path.toAbsolutePath() + System.getProperty("file.separator")
                                 + watchEvent.context().toString());
-                        final SpreadsheetFile file = new SpreadsheetFileBuilder().setFileName(watchEvent.context().toString()).setAltName(path.toAbsolutePath().toString()).setPath("DefaultImportJob-X-" + watchEvent.context().toString()).setFileStream(FileUtils.openInputStream(fullPath)).createSpreadsheetFile();
+                        final SpreadsheetFile file = new SpreadsheetFileBuilder()
+                                .setFileName(watchEvent.context().toString()).setAltName(path.toAbsolutePath().toString())
+                                .setPath("DefaultImportJob-X-" + watchEvent.context().toString())
+                                .setFileStream(FileUtils.openInputStream(fullPath)).createSpreadsheetFile();
                         final ImportRequestEvent importEvent = new ImportRequestEvent(file, monitorItem);
 
                         logger.debug("Prepared event=" + importEvent.toString());

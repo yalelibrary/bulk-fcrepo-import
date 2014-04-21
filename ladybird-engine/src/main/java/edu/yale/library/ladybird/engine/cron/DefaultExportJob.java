@@ -72,7 +72,6 @@ public class DefaultExportJob implements Job, ExportJob {
     }
 
     private String tmpFile(final String folder) {
-        logger.debug("Generate tmp name");
         return folder + System.getProperty("file.separator") + "export-results.xlsx"; //todo
     }
 
