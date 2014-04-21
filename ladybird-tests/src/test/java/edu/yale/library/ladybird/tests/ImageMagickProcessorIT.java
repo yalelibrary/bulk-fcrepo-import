@@ -17,7 +17,7 @@ public class ImageMagickProcessorIT {
         final ImageMagickProcessor imageMagickProcessor = new ImageMagickProcessor();
         try {
             final String inputFile = getPath("lux-et-veritas.jpg");
-            final String outputFile = inputFile.replace(".jpg","");
+            final String outputFile = inputFile.replace(".jpg", "");
             imageMagickProcessor.resizeImage(inputFile, outputFile, 200, 200);
         } catch (ImageProcessingException e) {
             e.printStackTrace();
@@ -41,7 +41,7 @@ public class ImageMagickProcessorIT {
         }
     }
 
-    private static String getPath(final String fileName){
+    private static String getPath(final String fileName) {
         return System.getProperty("ladybird-tests/src/test/resources/") + fileName;
     }
 

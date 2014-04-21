@@ -65,7 +65,7 @@ public class ExportScheduler {
         defaultJobsManager.addJob(job);
     }
 
-    private void doScheduleJob(final JobDetail job, final Trigger trigger) throws SchedulerException{
+    private void doScheduleJob(final JobDetail job, final Trigger trigger) throws SchedulerException {
         try {
             final Scheduler scheduler = new StdSchedulerFactory().getScheduler();
             scheduler.start();

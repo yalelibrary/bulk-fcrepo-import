@@ -31,7 +31,6 @@ import com.google.common.collect.HashMultimap;
 import java.io.IOException;
 import java.util.*;
 
-import static java.util.Collections.unmodifiableList;
 import static org.slf4j.LoggerFactory.getLogger;
 
 
@@ -55,7 +54,7 @@ public class ImportWriter {
         //header
         writeExHead(importId, importEntityValue.getHeaderRow().getColumns());
         //contents
-        writeContents(importId, importEntityValue);//change to only columns
+        writeContents(importId, importEntityValue); //change to only columns
 
         return importId;
     }
@@ -126,7 +125,7 @@ public class ImportWriter {
         for (ImportEntity.Column c: bibIdColumn) {
             bibIds.add(c.getValue().toString());
         }
-        
+
         logger.debug("bibIds size={}", bibIds.size());
 
         final Map<String, Multimap<Marc21Field, ImportSourceData>> bibIdMarcValues =
@@ -323,12 +322,12 @@ public class ImportWriter {
 
     public boolean isImageProcessingFunction(final ImportEntity.Column col) {
         final String fieldName = col.getField().getName();
-        return (fieldName.equals(FunctionConstants.F3.getName()))? true : false;
+        return (fieldName.equals(FunctionConstants.F3.getName())) ? true : false;
     }
 
     public boolean isF1Function(final ImportEntity.Column col) {
         final String fieldName = col.getField().getName();
-        return (fieldName.equals(FunctionConstants.F1.getName()))? true : false;
+        return (fieldName.equals(FunctionConstants.F1.getName())) ? true : false;
     }
 
     /**

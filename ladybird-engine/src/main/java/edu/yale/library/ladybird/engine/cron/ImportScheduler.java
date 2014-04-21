@@ -16,8 +16,6 @@ import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 
-import java.lang.Deprecated;
-
 public class ImportScheduler {
 
     private final Logger logger = getLogger(this.getClass());
@@ -66,7 +64,7 @@ public class ImportScheduler {
         defaultJobsManager.addJob(job);
     }
 
-    private void doScheduleJob(final JobDetail job, final Trigger trigger) throws SchedulerException{
+    private void doScheduleJob(final JobDetail job, final Trigger trigger) throws SchedulerException {
         try {
             final Scheduler scheduler = new StdSchedulerFactory().getScheduler();
             scheduler.start();

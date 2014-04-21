@@ -18,17 +18,16 @@ public class ImageIOProcessor implements ImageProcessor {
 
 
     @Override
-    public void resizeImage(final String fileName, final String outputFileName, final int width, final int height)
-            throws ImageProcessingException {
+    public void resizeImage(final String fileName, final String outputFileName, final int width, final int height){
         logger.debug("Resizing image file={}", fileName);
         doResize(fileName, outputFileName, width, height);
     }
 
     private void doResize(final String fileName, final String outputFileName,
-                          final int width, final int height) throws RuntimeException{
+                          final int width, final int height) {
         try {
             final BufferedImage originalImage = ImageIO.read(new File(fileName));
-            int type = originalImage.getType() == 0? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
+            int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
             final BufferedImage resizeImageJpg = resizeImage(originalImage, type, width, height);
             ImageIO.write(resizeImageJpg, "jpg", new File(outputFileName));
         } catch (IOException e) {

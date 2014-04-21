@@ -11,7 +11,6 @@ import org.junit.Test;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Collections;
 import java.util.NoSuchElementException;
 
@@ -109,6 +108,7 @@ public class ImportEntityValueTest {
             importEntityValue.getFunctionPosition(FunctionConstants.F3);
             fail("Mishandled function location");
         } catch (NoSuchElementException e) {
+            //ignore
         }
     }
 
@@ -119,11 +119,12 @@ public class ImportEntityValueTest {
             final List<Row> rowsList = importEntityvalue.getContentRows();
             assertTrue(rowsList.size() == 1);
         } catch (Exception e) {
+            //ignore
         }
     }
 
     @Test
-    public void shouldGetExHeadOnly(){
+    public void shouldGetExHeadOnly() {
         ImportEntityValue importEntityValue = getTestExheadAndContentRowsImportEntityValue();
         final Row headerRow = importEntityValue.getHeaderRow();
         for (final Column c: headerRow.getColumns()) {
@@ -134,7 +135,7 @@ public class ImportEntityValueTest {
         }
     }
 
-    public ImportEntityValue getTestSingleColumnRowImportEntityValue() {
+    private ImportEntityValue getTestSingleColumnRowImportEntityValue() {
         final List<ImportEntity.Column> columns = new ArrayList<>();
         columns.add(getTestColumn(FunctionConstants.F1, "333993"));
         final Row row = getTestRow(columns);
@@ -142,7 +143,7 @@ public class ImportEntityValueTest {
         return importEntityValue;
     }
 
-    public ImportEntityValue getTestExheadAndContentRowsImportEntityValue() {
+    private ImportEntityValue getTestExheadAndContentRowsImportEntityValue() {
         final List<ImportEntity.Column> columnList1 = new ArrayList<>();
         columnList1.add(getTestColumn(FunctionConstants.F1, ""));
         final Row row = getTestRow(columnList1);
@@ -159,11 +160,11 @@ public class ImportEntityValueTest {
         return importEntityValue;
     }
 
-    public Column getTestColumn(final FieldConstant f, final String value) {
+    private Column getTestColumn(final FieldConstant f, final String value) {
         return new ImportEntity().new Column<>(f, value);
     }
 
-    public Row getTestRow(final List<Column> columns) {
+    private Row getTestRow(final List<Column> columns) {
         Row row = new ImportEntity().new Row();
         row.setColumns(columns);
         return row;

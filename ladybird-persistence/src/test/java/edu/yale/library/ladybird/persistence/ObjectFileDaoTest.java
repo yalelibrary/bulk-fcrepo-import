@@ -51,7 +51,7 @@ public class ObjectFileDaoTest extends AbstractPersistenceTest {
         }
 
         assertEquals("Item count incorrect", list.size(), 1);
-        assertEquals("Value mismatch",list.get(0).getFileName(), "tmpFile");
+        assertEquals("Value mismatch", list.get(0).getFileName(), "tmpFile");
     }
 
     private ObjectFile build() {

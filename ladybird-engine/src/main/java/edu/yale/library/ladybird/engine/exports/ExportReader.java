@@ -7,11 +7,8 @@ import edu.yale.library.ladybird.engine.model.FieldDefinitionValue;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.engine.model.Marc21Field;
 import edu.yale.library.ladybird.engine.oai.DatafieldType;
-import edu.yale.library.ladybird.engine.oai.Record;
-import edu.yale.library.ladybird.engine.oai.SubfieldType;
 import edu.yale.library.ladybird.kernel.beans.ImportJobContents;
 import edu.yale.library.ladybird.kernel.beans.ImportJobExhead;
-import edu.yale.library.ladybird.kernel.beans.ImportSource;
 import edu.yale.library.ladybird.kernel.beans.ImportSourceData;
 import edu.yale.library.ladybird.persistence.dao.ImportJobContentsDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobExheadDAO;
@@ -134,11 +131,11 @@ public class ExportReader {
 
         final Collection<Map<String, String>> attrCollection = map.get(fieldToQuery);
 
-        final Iterator<Map<String,String>> it = attrCollection.iterator();
+        final Iterator<Map<String, String>> it = attrCollection.iterator();
         String oaiValue = "";
 
         while (it.hasNext()) {
-            final Map<String,String> attrValueMap = it.next();
+            final Map<String, String> attrValueMap = it.next();
             if (attrValueMap.get("a") != null) {
                 oaiValue = attrValueMap.get("a");
             }
@@ -311,7 +308,7 @@ public class ExportReader {
             //logger.debug("Found val={}", val.toString());
             return val;
         } catch (Exception e) {
-            logger.error("Error converting to FieldConstant(FieldDefinition) value={}",value);
+            logger.error("Error converting to FieldConstant(FieldDefinition) value={}", value);
         }
 
         //See if it's a function constant

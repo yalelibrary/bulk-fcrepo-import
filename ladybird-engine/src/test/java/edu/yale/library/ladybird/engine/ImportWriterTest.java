@@ -100,7 +100,7 @@ public class ImportWriterTest {
     public void shouldTranslateToMarc21Field() {
         final ImportWriter importWriter = new ImportWriter();
         final Marc21Field marc21Field = importWriter.getMar21FieldForString("245");
-        assert(marc21Field.equals(Marc21Field._245));
+        assert (marc21Field.equals(Marc21Field._245));
     }
 
     /**

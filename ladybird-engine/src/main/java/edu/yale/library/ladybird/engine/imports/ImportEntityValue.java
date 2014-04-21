@@ -67,7 +67,7 @@ public class ImportEntityValue {
         for (int i = 0; i < rowList.size(); i++) {
             for (Column c: rowList.get(i).getColumns()) {
                 if (c.getField().getName().equals(fieldConstant.getName())) {
-                    rowIdMap.put(i,c);
+                    rowIdMap.put(i, c);
                 }
             }
         }
@@ -80,7 +80,7 @@ public class ImportEntityValue {
      * @return
      */
     public Map<Column,  Column> getColumnValuesWithOIds(final FieldConstant fieldConstant) {
-        Map<Column,Column> rowIdMap = new HashMap<>();
+        Map<Column, Column> rowIdMap = new HashMap<>();
         int order = getFunctionPosition(FunctionConstants.F1);
         for (int i = 0; i < rowList.size(); i++) {
             Column o = rowList.get(i).getColumns().get(order);
@@ -144,12 +144,15 @@ public class ImportEntityValue {
                 count++;
             }
         }
-        if (count == 0)
+        if (count == 0) {
             return FieldOccurrence.NEVER;
-        else if (count == 1)
+        }
+        else if (count == 1) {
             return FieldOccurrence.ONCE;
-        else
+        }
+        else {
             return FieldOccurrence.MULTIPLE;
+        }
     }
 
     /**
@@ -199,10 +202,10 @@ public class ImportEntityValue {
 
     @Override
     public String toString() {
-        return "ImportEntityValue{" +
-                "rowList=" + rowList +
-                ", HEADER_ROW=" + HEADER_ROW +
-                ", CONTENT_ROW=" + CONTENT_ROW +
-                '}';
+        return "ImportEntityValue{"
+                + "rowList=" + rowList
+                + ", HEADER_ROW=" + HEADER_ROW
+                + ", CONTENT_ROW=" + CONTENT_ROW
+                + '}';
     }
 }

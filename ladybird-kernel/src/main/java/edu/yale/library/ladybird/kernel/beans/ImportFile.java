@@ -119,18 +119,18 @@ public class ImportFile implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return "ImportFile{" +
-                "id=" + id +
-                ", importId=" + importId +
-                ", date=" + date +
-                ", fileLocation='" + fileLocation + '\'' +
-                ", oid=" + oid +
-                ", userId=" + userId +
-                ", code=" + code +
-                ", error='" + error + '\'' +
-                ", type='" + type + '\'' +
-                ", label='" + label + '\'' +
-                '}';
+        return "ImportFile{"
+                + "id=" + id
+                + ", importId=" + importId
+                + ", date=" + date
+                + ", fileLocation='" + fileLocation + '\''
+                + ", oid=" + oid
+                + ", userId=" + userId
+                + ", code=" + code
+                + ", error='" + error + '\''
+                + ", type='" + type + '\''
+                + ", label='" + label + '\''
+                + '}';
     }
 }
 

@@ -3,8 +3,6 @@ package edu.yale.library.ladybird.engine.file;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 
 /**
  * Processes files using ImageMagick or markes files for ImageMagick processing
@@ -24,7 +22,6 @@ public class ImageMagickProcessor implements ImageProcessor {
     /**
      * This will be replaced with a call to the actual service.
      * @param fileName
-     * @throws IOException
      */
     @Override
     public void converToJp2(final String fileName) {
