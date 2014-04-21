@@ -47,7 +47,6 @@ public class ImportEntityValue {
      */
     public List<Column> getColumnValues(final FieldConstant fieldConstant, final List<Row> rowList) {
        final  List<Column> columns = new ArrayList<>();
-        System.out.println(rowList.toString());
         for (ImportEntity.Row r: rowList) {
             for (Column c: r.getColumns()) {
                 if (c.getField() != null) {

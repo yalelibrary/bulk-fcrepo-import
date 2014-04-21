@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  *
  */
-public class FunctionConstantsRules {
+public class FieldConstantRules {
 
     /**
      * Determines if a column is an OAI field.
@@ -94,6 +94,19 @@ public class FunctionConstantsRules {
         }
 
         return null;
+    }
+
+    /**
+     * Note: Mappings are defined via db, and will be injected.
+     * @param fieldConstant
+     * @return
+     */
+    @Deprecated
+    public static Marc21Field getFieldConstantToMarc21Mapping(final FieldConstant fieldConstant) {
+        if (fieldConstant.getName().equals("70") || fieldConstant.getName().equals("Title{fdid=70}")) {
+            return Marc21Field._245;
+        }
+        return Marc21Field.UNK;
     }
 
 

@@ -119,7 +119,6 @@ public class ImportEntityValueTest {
         final Row headerRow = importEntityValue.getHeaderRow();
         for (final Column c: headerRow.getColumns()) {
             if (c.getValue().toString().length() != 0) {
-                System.out.println(c.getValue());
                 fail("Wrong value found");
             }
         }

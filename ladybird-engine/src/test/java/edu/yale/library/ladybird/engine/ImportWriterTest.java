@@ -4,8 +4,8 @@ import com.google.common.collect.Multimap;
 import edu.yale.library.ladybird.engine.imports.ImportEntity;
 import edu.yale.library.ladybird.engine.imports.ImportWriter;
 import edu.yale.library.ladybird.engine.model.FieldConstant;
+import edu.yale.library.ladybird.engine.model.FieldConstantRules;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
-import edu.yale.library.ladybird.engine.model.FunctionConstantsRules;
 import edu.yale.library.ladybird.engine.model.Marc21Field;
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
 import edu.yale.library.ladybird.kernel.beans.ImportSourceData;
@@ -29,16 +29,16 @@ public class ImportWriterTest {
 
     @Test
     public void shoudEqualOAIFunction() {
-        final FunctionConstantsRules  functionConstantsRules = new FunctionConstantsRules();
+        final FieldConstantRules fieldConstantRules = new FieldConstantRules();
         final FieldConstant f104 = FunctionConstants.F104;
         final ImportEntity.Column<String> column1 = new ImportEntity().new Column<>(f104, String.valueOf("2222"));
 
-        assert (functionConstantsRules.isOAIFunction(column1));
+        assert (fieldConstantRules.isOAIFunction(column1));
 
         final FieldConstant f1 = FunctionConstants.F1;
         final ImportEntity.Column<String> column2 = new ImportEntity().new Column<>(f1, String.valueOf("2222"));
 
-        assert (!functionConstantsRules.isOAIFunction(column2));
+        assert (!fieldConstantRules.isOAIFunction(column2));
     }
 
 

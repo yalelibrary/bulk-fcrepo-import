@@ -1,5 +1,8 @@
 package edu.yale.library.ladybird.engine.model;
 
+import com.google.common.base.Converter;
+import com.google.common.base.Enums;
+
 public enum Marc21Field {
 
     UNK("UNK"),
@@ -86,8 +89,18 @@ public enum Marc21Field {
 
     String name;
 
+    private final static Converter<String, Marc21Field> converter = Enums.stringConverter(Marc21Field.class);
+
     private Marc21Field(final String name) {
         this.name = name;
+    }
+
+    public static Marc21Field valueOfTag(final String s) {
+        try {
+            return converter.convert("_" + s);
+        } catch (IllegalArgumentException e) {
+            return Marc21Field.UNK;
+        }
     }
 
 }

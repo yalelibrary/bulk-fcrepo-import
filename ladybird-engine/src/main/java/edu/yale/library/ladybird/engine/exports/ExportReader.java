@@ -2,10 +2,9 @@ package edu.yale.library.ladybird.engine.exports;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import edu.yale.library.ladybird.engine.model.FunctionConstantsRules;
+import edu.yale.library.ladybird.engine.model.FieldConstantRules;
 import edu.yale.library.ladybird.engine.model.Marc21Field;
 import edu.yale.library.ladybird.engine.model.FieldConstant;
-import edu.yale.library.ladybird.engine.oai.DatafieldType;
 import edu.yale.library.ladybird.kernel.beans.ImportJobContents;
 import edu.yale.library.ladybird.kernel.beans.ImportJobExhead;
 import edu.yale.library.ladybird.kernel.beans.ImportSourceData;
@@ -15,6 +14,8 @@ import edu.yale.library.ladybird.persistence.dao.ImportSourceDataDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobContentsHibernateDAO;
 import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
 import edu.yale.library.ladybird.engine.imports.ImportEntity;
+import edu.yale.library.ladybird.engine.imports.ImportEntity.Column;
+import edu.yale.library.ladybird.engine.imports.ImportEntity.Row;
 
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobExheadHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceDataHibernateDAO;
@@ -36,9 +37,9 @@ public class ExportReader {
 
     /**
      * Main method. Reads import tables (import job contents and import source) to construct data.
-     * @return
+     * @return list of ImportEntity.Row
      */
-    public List<ImportEntity.Row> readRowsFromImportTables() {
+    public List<Row> readRowsFromImportTables() {
 
         //Get the job from the queue
         final ExportRequestEvent exportRequestEvent = ExportEngineQueue.getJob();
@@ -50,8 +51,6 @@ public class ExportReader {
 
         logger.debug("Num. import job content entries={} for jobId={}", expectedNumRowsToWrite, importId);
 
-        final ImportSourceDataDAO importSourceDataDAO = new ImportSourceDataHibernateDAO();
-
         Map<Integer, Multimap<Marc21Field, Map<String, String>>> bibIdDataFieldTypeMap = null;
 
         //Read all bibIds data
@@ -60,16 +59,13 @@ public class ExportReader {
         //logger.debug("BibIdDataFieldTypeMap size={}", bibIdDataFieldTypeMap.size());
         //logger.debug("BibIdDataFieldTypeMap={}", bibIdDataFieldTypeMap.toString());
 
-
         //Get all FunctionConstants. Every FunctionConstant should have a column in the output spreadsheet.
-        final List<FieldConstant> globalFConstantsList = FunctionConstantsRules.getApplicationFieldConstants();
+        final List<FieldConstant> globalFConstantsList = FieldConstantRules.getApplicationFieldConstants();
 
-
-        final List<ImportEntity.Row> resultRowList = new ArrayList<>();
+        final List<Row> resultRowList = new ArrayList<>();
 
         //Write exhead
-        final ImportEntity.Row exheadRow = new ImportEntity().new Row();
-
+        final Row exheadRow = new ImportEntity().new Row();
 
         for (final FieldConstant fConst: globalFConstantsList) {
             ImportEntity importEntity = new ImportEntity();
@@ -80,21 +76,18 @@ public class ExportReader {
         logger.debug("Header row col size={}", exheadRow.getColumns().size());
 
         //Get import job contents rows of columns. These will be merged with the oai data:
-        final List<ImportEntity.Row> regularRows = marshallImportJobContents(importId);
-
-        logger.debug("Done reading Import job contents");
+        final List<Row> regularRows = getImportJobContents(importId);
 
         for (int i = 0; i < expectedNumRowsToWrite; i++) {
-            final ImportEntity.Row row = regularRows.get(i);
-            final ImportEntity.Row rowToWrite = new ImportEntity().new Row();
-
-            final List<ImportEntity.Column> cols = row.getColumns();
+            final Row row = regularRows.get(i);
+            final Row rowToWrite = new ImportEntity().new Row();
+            final List<Column> cols = row.getColumns();
 
             for (final FieldConstant fieldConst: globalFConstantsList) {
 
                 //logger.debug("Writing FieldConstant={}", fieldConst.getName());
 
-                final String regularValue = findColValueForThisFieldConstant(fieldConst, cols);
+                final String nonOaiValue = findColValueForThisFieldConstant(fieldConst, cols);
 
                 final Multimap<Marc21Field, Map<String, String>> map = bibIdDataFieldTypeMap.get(i);
 
@@ -106,16 +99,11 @@ public class ExportReader {
                     logger.debug("No oai value exists for this FieldConstant={}", fieldConst.getName());
                 }
 
-                final String mergedValue = regularValue + oaiValue;
-
-                //Save this:
-                final ImportEntity importEntity = new ImportEntity();
-
-                //The end value:
+                final String mergedValue = nonOaiValue + oaiValue;
                 //logger.debug("Merged value={}", mergedValue);
 
+                final ImportEntity importEntity = new ImportEntity();
                 rowToWrite.getColumns().add(importEntity.new Column<>(fieldConst, mergedValue));
-
             }
             resultRowList.add(rowToWrite);
         }
@@ -127,15 +115,15 @@ public class ExportReader {
      * @param map
      * @return
      */
-    public String extractValue(FieldConstant fieldConstant, final Multimap<Marc21Field, Map<String, String>> map) {
+    private String extractValue(FieldConstant fieldConstant, final Multimap<Marc21Field, Map<String, String>> map) {
 
         //Following is an example of one field (245), and one subfield("a")
-
-        Marc21Field fieldToQuery = getFieldConstantToMarc21Mapping(fieldConstant);
+        final Marc21Field fieldToQuery = FieldConstantRules.getFieldConstantToMarc21Mapping(fieldConstant);
 
         final Collection<Map<String, String>> attrCollection = map.get(fieldToQuery);
 
         final Iterator<Map<String, String>> it = attrCollection.iterator();
+
         String oaiValue = "";
 
         while (it.hasNext()) {
@@ -145,30 +133,17 @@ public class ExportReader {
             }
         }
         return oaiValue;
-
     }
 
-    /**
-     * Mapping (rules) will be defined via db. Subject to removal
-     * @param fieldConstant
-     * @return
-     */
-    public Marc21Field getFieldConstantToMarc21Mapping(final FieldConstant fieldConstant) {
-        //TODO simplify
-        if (fieldConstant.getName().equals("70") || fieldConstant.getName().equals("Title{fdid=70}")) {
-            return Marc21Field._245;
-        }
-        return Marc21Field.UNK;
-    }
 
     /**
      * Populates Rows of ImportJobContents
-     * @param importId The import id of hte job
+     * @param importId The import id of the job
      * @return list of ImportEntity.Row
      */
-    private List<ImportEntity.Row> marshallImportJobContents(final int importId) {
+    private List<Row> getImportJobContents(final int importId) {
 
-        final List<ImportEntity.Row> resultList = new ArrayList<>();
+        final List<Row> resultList = new ArrayList<>();
 
         final ImportJobExheadDAO importJobExheadDAO = new ImportJobExheadHibernateDAO();
         final List<ImportJobExhead> importJobExheads = importJobExheadDAO.findByImportId(importId);
@@ -182,7 +157,7 @@ public class ExportReader {
         for (int i = 0; i < numRowsPerImportJob; i++) {
             final List<ImportJobContents> rowJobContentsList = importJobContentsDAO.findByRow(i);
             //logger.debug("Job contents for row={}" + rowJobContentsList.toString());
-            final ImportEntity.Row row = new ImportEntity().new Row();
+            final Row row = new ImportEntity().new Row();
 
             //Warning: Gets all columns (including F104/F105 COLUMN)
             for (int j = 0; j < rowJobContentsList.size(); j++) {
@@ -191,7 +166,7 @@ public class ExportReader {
                     final ImportJobExhead importJobExhead = importJobExheads.get(j);
                     String headerValue = importJobExhead.getValue();
                     //logger.debug("Header val={}", headerValue);
-                    final FieldConstant fieldConstant = FunctionConstantsRules.convertStringToFieldConstant(headerValue);
+                    final FieldConstant fieldConstant = FieldConstantRules.convertStringToFieldConstant(headerValue);
                     if (fieldConstant == null) {
                         logger.debug("Field Constant null for headerValue={}", headerValue);
                     }
@@ -210,8 +185,13 @@ public class ExportReader {
         return resultList;
     }
 
-
-    public Map<Integer, Multimap<Marc21Field, Map<String, String>>> readBibIdData(final int importId,
+    /**
+     * @see #getImportJobContents(int)
+     * @param importId
+     * @param expectedNumRowsToWrite
+     * @return
+     */
+    private Map<Integer, Multimap<Marc21Field, Map<String, String>>> readBibIdData(final int importId,
                                                                                   final int expectedNumRowsToWrite) {
         logger.debug("Reading F104 or F105 data from import source table, and populating the value map");
         logger.debug("ImportId={}, ExpectedNumRowsToWrite={}", importId, expectedNumRowsToWrite);
@@ -232,13 +212,17 @@ public class ExportReader {
         return map;
     }
 
-    public Multimap<Marc21Field, Map<String, String>> marshallMarcData(final List<ImportSourceData> importSourceDataList) {
+    /**
+     * @see #readBibIdData(int, int)
+     * @param importSourceDataList
+     * @return
+     */
+    private Multimap<Marc21Field, Map<String, String>> marshallMarcData(final List<ImportSourceData> importSourceDataList) {
 
-        final Map<Marc21Field, DatafieldType> marcTagData = new HashMap<>();
+        //final Map<Marc21Field, DatafieldType> marcTagData = new HashMap<>();
 
         //populate map (e.g. (245,{a,"text"}), (245, {b,"text b"}). This map will then be read.
         final Multimap<Marc21Field, Map<String, String>> map = HashMultimap.create(); //k=tag, v={subfield,value}
-
 
         for (int i = 0; i < importSourceDataList.size(); i++) {
             final ImportSourceData entry = importSourceDataList.get(i);
@@ -249,10 +233,10 @@ public class ExportReader {
                     //logger.debug("Ignoring field 880");
                     break;
                 default:
-                    //logger.debug("Putting field={}", k1);
+                    //logger.debug("Putting field={} value={}", k1, entry.getValue());
                     final Map<String, String> attrValue = new HashMap<>();
                     attrValue.put(entry.getK2(), entry.getValue());
-                    map.put(getMar21FieldForString(k1), attrValue);
+                    map.put(Marc21Field.valueOfTag(k1), attrValue);
                     break;
             }
         }
@@ -265,10 +249,11 @@ public class ExportReader {
      * @param column
      * @return
      */
-    public String findColValueForThisFieldConstant(final FieldConstant f, final List<ImportEntity.Column> column) {
-        for (final ImportEntity.Column<String> col: column) {
+    private String findColValueForThisFieldConstant(final FieldConstant f, final List<Column> column) {
+        for (final Column<String> col: column) {
             try {
                 if (col.getField().getName().equals(f.getName())) {
+                    //logger.debug("Col value={}", col.getValue());
                     return col.getValue();
                 }
             } catch (Exception e) {
@@ -277,19 +262,6 @@ public class ExportReader {
             }
         }
         return "";
-    }
-
-    @Deprecated
-    public Marc21Field getMar21FieldForString(String tag) {
-        final String TAG_ID = "_"; //TODO
-        try {
-            Marc21Field mf =  Marc21Field.valueOf(TAG_ID + tag);
-            return mf;
-        } catch (IllegalArgumentException e) {
-            //ignore fields since need to fill the Mar21Field list
-            logger.error(e.getMessage());
-            return Marc21Field.UNK;
-        }
     }
 
 }
