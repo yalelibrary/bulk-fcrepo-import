@@ -20,29 +20,6 @@ import static org.junit.Assert.assertTrue;
 public class ImportWriterTest {
 
     @Test
-    public void shouldFindF104Column() {
-        final ImportWriter importWriter = new ImportWriter();
-        final List<ImportEntity.Row> rowList = new ArrayList<>();
-        final ImportEntity.Row row = new ImportEntity().new Row();
-        final FieldConstant f1 = FunctionConstants.F104;
-        final ImportEntity.Column<String> column1 = new ImportEntity().new Column<>(f1,
-                String.valueOf("2222"));
-        row.getColumns().add(column1);
-        final FieldConstant f2 = FunctionConstants.F1;
-        final ImportEntity.Column<String> column2 = new ImportEntity().new Column<>(f2,
-                String.valueOf("2222"));
-        row.getColumns().add(column2);
-        assert (f1 == f1);
-        assert (f1 != f2);
-        assert (column1 == column1);
-        assert (column1 != column2);
-        rowList.add(row);
-        assert (importWriter.findColumn(rowList, f1) == 0);
-        rowList.remove(0);
-        assert (importWriter.findColumn(rowList, f1) == -1);
-    }
-
-    @Test
     public void shouldMatchExpectedBibIds() {
         final ImportWriter importWriter = new ImportWriter();
         final ImportEntity.Row row = new ImportEntity().new Row();
@@ -102,7 +79,8 @@ public class ImportWriterTest {
         importWriter.setOaiProvider(provider);
         final String bibId = "9807234";
         final List<String> bibIds = Collections.singletonList(bibId);
-        final Map<String, Multimap<Marc21Field, ImportSourceData>> map = importWriter.readBibIdMarcData(bibIds, null, 0); //FIXME params null and 0 for importid
+        final Map<String, Multimap<Marc21Field, ImportSourceData>> map =
+                importWriter.readBibIdMarcData(bibIds, null, 0); //FIXME params null and 0 for importid
         assertEquals("Map size mismatch", map.size(), 1);
         final Multimap<Marc21Field, ImportSourceData> innerMap = map.get(bibId);
         Collection<ImportSourceData> collection = innerMap.get(Marc21Field._520);
@@ -125,28 +103,6 @@ public class ImportWriterTest {
         assert(marc21Field.equals(Marc21Field._245));
     }
 
-    @Test
-    public void shouldFindColumn(){
-        final ImportWriter importWriter = new ImportWriter();
-        final List<ImportEntity.Row> rowList = new ArrayList<>();
-        final ImportEntity.Row row = new ImportEntity().new Row();
-        final FieldConstant f1 = FunctionConstants.F104;
-        final ImportEntity.Column<String> column1 = new ImportEntity().new Column<>(f1,
-                String.valueOf("2222"));
-        row.getColumns().add(column1);
-        final FieldConstant f2 = FunctionConstants.F1;
-        final ImportEntity.Column<String> column2 = new ImportEntity().new Column<>(f2,
-                String.valueOf("2222"));
-        row.getColumns().add(column2);
-        assert (f1 == f1);
-        assert (f1 != f2);
-        assert (column1 == column1);
-        assert (column1 != column2);
-        rowList.add(row);
-        System.out.println(rowList);
-        assert (importWriter.findColumn(rowList, f1) == 0);
-        assertEquals ("Value mismatch", importWriter.findColumn(rowList, f2), 1);
-    }
     /**
      * General utility. Subject to removal.
      */

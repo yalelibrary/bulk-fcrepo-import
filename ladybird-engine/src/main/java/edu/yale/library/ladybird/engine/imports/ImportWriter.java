@@ -1,7 +1,6 @@
 package edu.yale.library.ladybird.engine.imports;
 
 
-import edu.yale.library.ladybird.engine.model.FieldConstant;
 import edu.yale.library.ladybird.engine.model.Marc21Field;
 import edu.yale.library.ladybird.engine.oai.OaiHttpClient;
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
@@ -46,17 +45,17 @@ public class ImportWriter {
     private OaiProvider oaiProvider; //TODO
 
     /**
-     * Full cycle import writing.
-     *
-     * @param list list containing rows of data
-     * @param ctx  import job context (contains information about the job)
+     * Full cycle import writing
+     * @param importEntityValue
+     * @param ctx
+     * @return
      */
-    public int write(final List<ImportEntity.Row> list, final ImportJobContext ctx) {
+    public int write(final ImportEntityValue importEntityValue, final ImportJobContext ctx) {
         final int importId = writeImportJob(ctx);
         //header
-        writeExHead(importId, getHeaderRow(unmodifiableList(list)).getColumns());
+        writeExHead(importId, importEntityValue.getHeaderRow().getColumns());
         //contents
-        writeContents(importId, getContentRows(unmodifiableList(list)));
+        writeContents(importId, importEntityValue);//change to only columns
 
         return importId;
     }
@@ -84,12 +83,12 @@ public class ImportWriter {
 
     /**
      * Writes content body
-     *
      * @param importId
-     * @param rowList
+     * @param importEntityValue
      */
     @SuppressWarnings("unchecked")
-    public void writeContents(final int importId, final List<ImportEntity.Row> rowList) {
+    public void writeContents(final int importId, final ImportEntityValue importEntityValue) {
+        List<ImportEntity.Row> rowList = importEntityValue.getContentRows();
         logger.debug("Writing spreadsheet body contents. Row list size={}", rowList.size());
 
         final ImportJobContentsDAO dao = new ImportJobContentsHibernateDAO();
@@ -108,14 +107,26 @@ public class ImportWriter {
         //logger.debug("Marc21 field map is={}", marc21FieldMap.toString());
 
         //Find the column number of the spreadsheet with F104 or F105 column.
-        //TODO move this to some exhead method
-        final ImportEntity.Row firstRow = rowList.get(0);
+        //final ImportEntity.Row firstRow = rowList.get(0);
 
-        final short columnWithOAIField = findColumn(Collections.singletonList(firstRow), FunctionConstants.F104);
-        logger.debug("Column with oai field={}", columnWithOAIField);
+        //final short columnWithOAIField = findColumn(Collections.singletonList(firstRow), FunctionConstants.F104);
+
+        if (importEntityValue.fieldConstantsInExhead(FunctionConstants.F104)) {
+            final int columnWithOAIField = importEntityValue.getFunctionPosition(FunctionConstants.F104);
+            logger.debug("Column with oai field={}", columnWithOAIField);
+        }
 
         //Get all the bibIds from this column
-        final List<String> bibIds = readBibIdsFromColumn(rowList, columnWithOAIField);
+        final List<ImportEntity.Column> bibIdColumn = importEntityValue.getColumnValues(FunctionConstants.F104);
+        final List<String> bibIds = new ArrayList<>();
+
+        logger.debug("bibIdColumn size={}", bibIdColumn.size());
+
+
+        for (ImportEntity.Column c: bibIdColumn) {
+            bibIds.add(c.getValue().toString());
+        }
+        
         logger.debug("bibIds size={}", bibIds.size());
 
         final Map<String, Multimap<Marc21Field, ImportSourceData>> bibIdMarcValues =
@@ -125,12 +136,16 @@ public class ImportWriter {
         //Save to import_source_data:
         persistMarcData(bibIdMarcValues, importId);
 
-        final short columnWithImageField = findColumn(Collections.singletonList(firstRow), FunctionConstants.F3);
-        logger.debug("Column with image field={}", columnWithImageField);
+        if (importEntityValue.fieldConstantsInExhead(FunctionConstants.F3)) {
+            final int columnWithImageField = importEntityValue.getFunctionPosition(FunctionConstants.F3);
+            logger.debug("Column with image field={}", columnWithImageField);
+        }
 
         //Get oids
-        final short columnWithF1Field = findColumn(Collections.singletonList(firstRow), FunctionConstants.F1);
-        logger.debug("Column with F1={}", columnWithF1Field);
+        if (importEntityValue.fieldConstantsInExhead(FunctionConstants.F1)) {
+            final int columnWithF1Field = importEntityValue.getFunctionPosition(FunctionConstants.F1);
+            logger.debug("Column with F1={}", columnWithF1Field);
+        }
 
         //Process Media stuff
         MediaFunctionProcessor mediaFunctionProcessor = new MediaFunctionProcessor();
@@ -155,7 +170,7 @@ public class ImportWriter {
     }
 
     public void persistMarcData(final Map<String, Multimap<Marc21Field, ImportSourceData>> bibIdValueMap,
-                                final int importId) {
+            final int importId) {
         final ImportSourceDataDAO dao = new ImportSourceDataHibernateDAO();
 
         //TODO remove
@@ -194,8 +209,7 @@ public class ImportWriter {
      * @return
      */
     public Map<String, Multimap<Marc21Field, ImportSourceData>> readBibIdMarcData(final List<String> bibIds,
-                                                                   final Map<Marc21Field, FieldMarcMapping> marc21FieldMap,
-                                                                   final int importId) {
+        final Map<Marc21Field, FieldMarcMapping> marc21FieldMap, final int importId) {
         logger.debug("Reading marc data for the bibIds");
 
         final Map<String, Multimap<Marc21Field, ImportSourceData>> bibIdMarcValues = new HashMap<>();
@@ -206,7 +220,8 @@ public class ImportWriter {
                 //logger.debug("Reading bibId={}", id);
 
                 final Record recordForBibId = oaiClient.readMarc(id); //Read OAI feed for a specific barcode or bibid
-                final Multimap<Marc21Field, ImportSourceData> marc21Values = populateMarcData(recordForBibId, importId); //FIXME passing map eachtime
+                final Multimap<Marc21Field, ImportSourceData> marc21Values = populateMarcData(recordForBibId, importId);
+                //FIXME passing map eachtime
 
                 //logger.debug("Marc for bibId={} equals={}", id, marc21Values.toString());
 
@@ -266,21 +281,6 @@ public class ImportWriter {
         }
     }
 
-    public short findColumn(final List<ImportEntity.Row> rowList, final FieldConstant f) {
-        short order = 0;
-        for (final ImportEntity.Row row: rowList) {
-            final List<ImportEntity.Column> columns = row.getColumns();
-            for (final ImportEntity.Column<String> col: columns) {
-                if (col.getField().getName().equals(f.getName())) {
-                    return order;
-                }
-            order++;
-            }
-        }
-        return -1;
-    }
-
-
     /**
      * Returns a list of bibIds from a specific column
      * TODO what if a row doesn't have a bibId or barcode?
@@ -331,7 +331,6 @@ public class ImportWriter {
         return (fieldName.equals(FunctionConstants.F1.getName()))? true : false;
     }
 
-
     /**
      * Writes import job
      *
@@ -342,24 +341,6 @@ public class ImportWriter {
         ImportJobDAO importJobDAO = new ImportJobHibernateDAO();
         return importJobDAO.save(new ImportJobBuilder().setDate(JOB_EXEC_DATE).setJobDirectory(ctx.getJobDir()).
                 setJobFile(ctx.getJobFile()).setUserId(ctx.getUserId()).createImportJob());
-    }
-
-    /**
-     * Returns the first row. The first row represents the Excel headers.
-     * @param rowList a list of ImportEntity.Row
-     * @return an ImportEntity.Row
-     */
-    private ImportEntity.Row getHeaderRow(final List<ImportEntity.Row> rowList) {
-        return rowList.get(0);
-    }
-
-    /**
-     * Returns all the rows but the first one from the spreadsheet. The rows represents contents.
-     * @param rowList a list of ImportEntity.Row
-     * @return a list of ImportEntity.Row
-     */
-    private List<ImportEntity.Row> getContentRows(final List<ImportEntity.Row> rowList) {
-        return rowList.subList(1, rowList.size());
     }
 
     /**
