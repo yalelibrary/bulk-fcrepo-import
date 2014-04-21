@@ -17,8 +17,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 @ManagedBean (name = "ImportFileView")
 @RequestScoped
-public class ImportFileView extends AbstractView
-{
+public class ImportFileView extends AbstractView {
     private final Logger logger = getLogger(this.getClass());
 
     private List<ImportFile> itemList;
@@ -27,8 +26,7 @@ public class ImportFileView extends AbstractView
     private ImportFileDAO entityDAO;
 
     @PostConstruct
-    public void init()
-    {
+    public void init() {
        initFields();
        dao = entityDAO;
     }

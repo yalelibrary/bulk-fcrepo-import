@@ -5,7 +5,6 @@ import edu.yale.library.ladybird.engine.imports.ImportEntityValue;
 import edu.yale.library.ladybird.engine.model.FieldConstant;
 import edu.yale.library.ladybird.engine.model.FieldOccurrence;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -29,15 +28,6 @@ public class ImportEntityValueTest {
         final ImportEntityValue importEntityValue = getTestSingleColumnRowImportEntityValue();
         final List<Column> columnsList = importEntityValue.getColumnValues((short) 0);
         assertTrue(columnsList.get(0).getField().equals(FunctionConstants.F1));
-    }
-
-    @Test
-    @Ignore
-    public void shouldGetColumnValuesForFieldConstant() {
-        final ImportEntityValue importEntityValue = getTestSingleColumnRowImportEntityValue();
-        final List<Column> columnsList = importEntityValue.getColumnValues(FunctionConstants.F1);
-        assertTrue(columnsList.get(0).getField().equals(FunctionConstants.F1));
-        assertTrue(columnsList.get(0).getValue().equals("333993"));
     }
 
     @Test

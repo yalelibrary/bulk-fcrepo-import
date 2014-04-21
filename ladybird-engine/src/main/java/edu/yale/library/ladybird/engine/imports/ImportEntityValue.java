@@ -41,6 +41,26 @@ public class ImportEntityValue {
     }
 
     /**
+     * Get column values for a specific column for a subset of rows. Assumes only one occurrence.
+     * @param fieldConstant
+     * @return
+     */
+    public List<Column> getColumnValues(final FieldConstant fieldConstant, final List<Row> rowList) {
+       final  List<Column> columns = new ArrayList<>();
+        System.out.println(rowList.toString());
+        for (ImportEntity.Row r: rowList) {
+            for (Column c: r.getColumns()) {
+                if (c.getField() != null) {
+                    if (c.getField().getName().equals(fieldConstant.getName())) {
+                        columns.add(c);
+                    }
+                }
+            }
+        }
+        return columns;
+    }
+
+    /**
      * Get all column values for a specific column. Assumes only one occurrence.
      * @param fieldConstant
      * @return
@@ -98,7 +118,7 @@ public class ImportEntityValue {
      * @param rowNum
      * @return
      */
-    public List<Column> getRowColumns (short rowNum) {
+    public List<Column> getRowColumns(short rowNum) {
         return rowList.get(rowNum).getColumns();
     }
 
@@ -146,11 +166,9 @@ public class ImportEntityValue {
         }
         if (count == 0) {
             return FieldOccurrence.NEVER;
-        }
-        else if (count == 1) {
+        } else if (count == 1) {
             return FieldOccurrence.ONCE;
-        }
-        else {
+        } else {
             return FieldOccurrence.MULTIPLE;
         }
     }

@@ -18,7 +18,7 @@ public class ImageIOProcessor implements ImageProcessor {
 
 
     @Override
-    public void resizeImage(final String fileName, final String outputFileName, final int width, final int height){
+    public void resizeImage(final String fileName, final String outputFileName, final int width, final int height) {
         logger.debug("Resizing image file={}", fileName);
         doResize(fileName, outputFileName, width, height);
     }
@@ -36,7 +36,7 @@ public class ImageIOProcessor implements ImageProcessor {
     }
 
     private BufferedImage resizeImage(final BufferedImage originalImage,
-                                      final int type, final int width, final int height){
+                                      final int type, final int width, final int height) {
         final BufferedImage resizedImage = new BufferedImage(width, height, type);
         final Graphics2D g = resizedImage.createGraphics();
         g.drawImage(originalImage, 0, 0, width, height, null);

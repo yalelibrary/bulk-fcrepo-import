@@ -19,17 +19,28 @@ import edu.yale.library.ladybird.persistence.dao.ImportJobContentsDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobExheadDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportSourceDataDAO;
-import edu.yale.library.ladybird.persistence.dao.hibernate.*;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobHibernateDAO;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.engine.model.MarcReadingException;
+import edu.yale.library.ladybird.persistence.dao.hibernate.FieldMarcMappingHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobContentsHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobExheadHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceDataHibernateDAO;
+
 import org.slf4j.Logger;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.HashMultimap;
 
-
 import java.io.IOException;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -39,12 +50,12 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public class ImportWriter {
     private final Logger logger = getLogger(this.getClass());
-
     private final Date JOB_EXEC_DATE = new Date(System.currentTimeMillis()); //TODO
     private OaiProvider oaiProvider; //TODO
 
     /**
      * Full cycle import writing
+     *
      * @param importEntityValue
      * @param ctx
      * @return
@@ -82,6 +93,7 @@ public class ImportWriter {
 
     /**
      * Writes content body
+     *
      * @param importId
      * @param importEntityValue
      */
@@ -94,12 +106,12 @@ public class ImportWriter {
 
         final List<FieldMarcMapping> fieldMarcMappingList = new FieldMarcMappingHibernateDAO().findAll();
         final Map<Marc21Field, FieldMarcMapping> marc21FieldMap = new HashMap<>(); //e.g. 880 -> FieldMarcMapping
-        for (final FieldMarcMapping f: fieldMarcMappingList) {
+        for (final FieldMarcMapping f : fieldMarcMappingList) {
             try {
                 marc21FieldMap.put(Marc21Field.valueOf("_" + f.getK1()), f);
             } catch (IllegalArgumentException e) {  //No matching enum
-               logger.debug("No such enum={}", f.getK1());
-               continue;
+                logger.debug("No such enum={}", f.getK1());
+                continue;
             }
         }
 
@@ -121,8 +133,7 @@ public class ImportWriter {
 
         logger.debug("bibIdColumn size={}", bibIdColumn.size());
 
-
-        for (ImportEntity.Column c: bibIdColumn) {
+        for (ImportEntity.Column c : bibIdColumn) {
             bibIds.add(c.getValue().toString());
         }
 
@@ -161,15 +172,19 @@ public class ImportWriter {
                 //logger.debug("Row={}, Col={}, Val={}", i, j, col.getField().getName());
                 final ImportJobContents imjContentsEntry = new ImportJobContentsBuilder()
                         .setImportId(importId).setDate(JOB_EXEC_DATE).
-                        setCol(j).setRow(i).setValue(col.getValue()).build();
+                                setCol(j).setRow(i).setValue(col.getValue()).build();
                 dao.save(imjContentsEntry);
                 //logger.debug("Saved Import Job Contents entry={}", imjContentsEntry.toString());
             }
         }
     }
 
+    /**
+     * @param bibIdValueMap
+     * @param importId
+     */
     public void persistMarcData(final Map<String, Multimap<Marc21Field, ImportSourceData>> bibIdValueMap,
-            final int importId) {
+                                final int importId) {
         final ImportSourceDataDAO dao = new ImportSourceDataHibernateDAO();
 
         //TODO remove
@@ -179,14 +194,14 @@ public class ImportWriter {
         }
 
         //Read values:
-        final Set<String> bibIds =  bibIdValueMap.keySet();
+        final Set<String> bibIds = bibIdValueMap.keySet();
 
-        for (final String id: bibIds) {
-            final Multimap<Marc21Field, ImportSourceData> m  = bibIdValueMap.get(id);
+        for (final String id : bibIds) {
+            final Multimap<Marc21Field, ImportSourceData> m = bibIdValueMap.get(id);
 
             final Set<Marc21Field> marc21FieldsKeySet = m.keySet();
 
-            for (final Marc21Field marc21Field: marc21FieldsKeySet) {
+            for (final Marc21Field marc21Field : marc21FieldsKeySet) {
                 //final ImportSourceData importSourceEntry = m.get(marc21Field);
                 final Collection<ImportSourceData> importSourceDataList = m.get(marc21Field);
 
@@ -194,7 +209,6 @@ public class ImportWriter {
 
                 while (it.hasNext()) {
                     ImportSourceData importSourceEntry = it.next();
-                    //logger.debug("Saving entry={}", importSourceEntry.toString());
                     dao.save(importSourceEntry);
                 }
             }
@@ -203,17 +217,18 @@ public class ImportWriter {
 
     /**
      * Hits OAI feed and gets a Record
+     *
      * @param bibIds
      * @param marc21FieldMap
      * @return
      */
     public Map<String, Multimap<Marc21Field, ImportSourceData>> readBibIdMarcData(final List<String> bibIds,
-        final Map<Marc21Field, FieldMarcMapping> marc21FieldMap, final int importId) {
+                                                                                  final Map<Marc21Field, FieldMarcMapping> marc21FieldMap, final int importId) {
         logger.debug("Reading marc data for the bibIds");
 
         final Map<String, Multimap<Marc21Field, ImportSourceData>> bibIdMarcValues = new HashMap<>();
           /* Read marc values for all these bibids */
-        for (final String id: bibIds) {
+        for (final String id : bibIds) {
             final OaiHttpClient oaiClient = new OaiHttpClient(oaiProvider);
             try {
                 //logger.debug("Reading bibId={}", id);
@@ -237,42 +252,43 @@ public class ImportWriter {
     }
 
     /**
-     *
-     * @param record
+     * @param record MarcRecord
      * @return a map(k,v) where k=Tag, v=ImportSourceData
      */
     private Multimap<Marc21Field, ImportSourceData> populateMarcData(final Record record, final int importId) {
         final List<DatafieldType> datafieldTypeList = record.getDatafield();
         final Multimap<Marc21Field, ImportSourceData> attrMap = HashMultimap.create();
 
-        for (final DatafieldType type: datafieldTypeList) {
+        for (final DatafieldType type : datafieldTypeList) {
             final String tag = type.getTag();
 
             //Get subfields:
             final List<SubfieldType> subfieldTypeList = type.getSubfield();
 
             //Get k2 values
-            for (final SubfieldType s: subfieldTypeList) {
+            for (final SubfieldType s : subfieldTypeList) {
                 final String code = s.getCode(); //e.g "a", "c", "d"
                 final String codeValue = s.getValue(); //e.g. "(oOCoLC) ocn709288147"
 
-                //Populate ImportSourceData:
                 final ImportSourceData importSourceData =
                         new ImportSourceDataBuilder().setK1(tag).setK2(code).setValue(codeValue).
                                 setZindex(0).setDate(JOB_EXEC_DATE).setImportSourceId(importId)
                                 .createImportSourceData(); //FIXME zindex, date
-
                 attrMap.put(getMar21FieldForString(tag), importSourceData);
             }
         }
         return attrMap;
     }
 
-    public Marc21Field getMar21FieldForString(String tag) {
+    /**
+     * @param tag
+     * @return
+     */
+    public Marc21Field getMar21FieldForString(final String tag) {
         final String TAG_ID = "_"; //TODO
         try {
-            Marc21Field mf =  Marc21Field.valueOf(TAG_ID + tag);
-            return mf;
+            Marc21Field marc21Field = Marc21Field.valueOf(TAG_ID + tag);
+            return marc21Field;
         } catch (IllegalArgumentException e) {
             //ignore fields since need to fill the Mar21Field list
             logger.error(e.getMessage());
@@ -281,62 +297,12 @@ public class ImportWriter {
     }
 
     /**
-     * Returns a list of bibIds from a specific column
-     * TODO what if a row doesn't have a bibId or barcode?
-     * @param rowList
-     * @param columnNum
-     * @return
-     */
-    public List<String> readBibIdsFromColumn(final List<ImportEntity.Row> rowList, final short columnNum) {
-        if (columnNum == -1) {
-            return Collections.EMPTY_LIST;
-        }
-
-        final List<String> bibIdList = new ArrayList<>();
-        for (final ImportEntity.Row row: rowList) {
-            final ImportEntity.Column<String> column = row.getColumns().get(columnNum);
-            if (column.getField().getName().equals(FunctionConstants.F104.getName())) {
-                bibIdList.add(column.getValue());
-            }
-        }
-        return bibIdList;
-    }
-
-    /**
-     * Determines if a column is an OAI field.
-     * @param col A spreadsheet column value
-     * @return whether a column matches an official OAI field
-     */
-
-    public boolean isOAIFunction(final ImportEntity.Column col) {
-        final String fieldName = col.getField().getName();
-        return (fieldName.equals(FunctionConstants.F104.getName()))
-                || fieldName.equals(FunctionConstants.F105.getName()) ? true : false;
-    }
-
-    /**
-     * Determines if a column is a function that should kick off some sort of image processing.
-     * @param col A spreadsheet column value
-     * @return whether a column matches an image processing function
-     */
-
-    public boolean isImageProcessingFunction(final ImportEntity.Column col) {
-        final String fieldName = col.getField().getName();
-        return (fieldName.equals(FunctionConstants.F3.getName())) ? true : false;
-    }
-
-    public boolean isF1Function(final ImportEntity.Column col) {
-        final String fieldName = col.getField().getName();
-        return (fieldName.equals(FunctionConstants.F1.getName())) ? true : false;
-    }
-
-    /**
      * Writes import job
      *
      * @param ctx Context containing information about the job
      * @return newly minted job id
      */
-    public Integer writeImportJob(ImportJobContext ctx) {
+    public Integer writeImportJob(final ImportJobContext ctx) {
         ImportJobDAO importJobDAO = new ImportJobHibernateDAO();
         return importJobDAO.save(new ImportJobBuilder().setDate(JOB_EXEC_DATE).setJobDirectory(ctx.getJobDir()).
                 setJobFile(ctx.getJobFile()).setUserId(ctx.getUserId()).createImportJob());
@@ -344,6 +310,7 @@ public class ImportWriter {
 
     /**
      * Sets OAI Provider. Subject to removal.
+     *
      * @param oaiProvider The default OaiProvider
      */
     public void setOaiProvider(final OaiProvider oaiProvider) {

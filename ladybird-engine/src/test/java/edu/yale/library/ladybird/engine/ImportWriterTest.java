@@ -5,6 +5,7 @@ import edu.yale.library.ladybird.engine.imports.ImportEntity;
 import edu.yale.library.ladybird.engine.imports.ImportWriter;
 import edu.yale.library.ladybird.engine.model.FieldConstant;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
+import edu.yale.library.ladybird.engine.model.FunctionConstantsRules;
 import edu.yale.library.ladybird.engine.model.Marc21Field;
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
 import edu.yale.library.ladybird.kernel.beans.ImportSourceData;
@@ -20,52 +21,17 @@ import static org.junit.Assert.assertTrue;
 public class ImportWriterTest {
 
     @Test
-    public void shouldMatchExpectedBibIds() {
-        final ImportWriter importWriter = new ImportWriter();
-        final ImportEntity.Row row = new ImportEntity().new Row();
-        final FieldConstant f104 = FunctionConstants.F104;
-        final ImportEntity.Column<String> column1 = new ImportEntity().new Column<>(f104, String.valueOf("2222"));
-
-        row.getColumns().add(column1);
-
-        assert (row.getColumns().size() == 1);
-
-        final List<String> bibIds = importWriter.readBibIdsFromColumn(Collections.singletonList(row), (short) 0);
-
-        assert (bibIds.size() == 1);
-        assert (bibIds.get(0).equals("2222"));
-
-        final FieldConstant f2 = FunctionConstants.F1;
-        final ImportEntity.Column<String> column2 = new ImportEntity().new Column<>(f2,
-                String.valueOf("555"));
-        row.getColumns().add(column2);
-
-        final List<String> bibIds2 = importWriter.readBibIdsFromColumn(Collections.singletonList(row), (short) 1);
-        assert (bibIds2.size() == 0);
-
-        final List<String> bibIds3 = importWriter.readBibIdsFromColumn(Collections.singletonList(row), (short) 0);
-        assert (bibIds3.size() == 1);
-
-        row.getColumns().clear();
-        row.getColumns().add(column2);
-
-        final List<String> bibIds4 = importWriter.readBibIdsFromColumn(Collections.singletonList(row), (short) -1);
-        assert (bibIds4.size() == 0);
-    }
-
-
-    @Test
     public void shoudEqualOAIFunction() {
-        final ImportWriter importWriter = new ImportWriter();
+        final FunctionConstantsRules  functionConstantsRules = new FunctionConstantsRules();
         final FieldConstant f104 = FunctionConstants.F104;
         final ImportEntity.Column<String> column1 = new ImportEntity().new Column<>(f104, String.valueOf("2222"));
 
-        assert (importWriter.isOAIFunction(column1));
+        assert (functionConstantsRules.isOAIFunction(column1));
 
         final FieldConstant f1 = FunctionConstants.F1;
         final ImportEntity.Column<String> column2 = new ImportEntity().new Column<>(f1, String.valueOf("2222"));
 
-        assert (!importWriter.isOAIFunction(column2));
+        assert (!functionConstantsRules.isOAIFunction(column2));
     }
 
 

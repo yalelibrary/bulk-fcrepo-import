@@ -47,24 +47,6 @@ public class ExportReaderTest {
     }
 
     @Test
-    public void shouldEqualColValueForFieldConstant() {
-        final ExportReader exportReader = new ExportReader();
-        final List<ImportEntity.Column> columnList = new ArrayList<>();
-        final FieldConstant f = new FieldDefinitionValue(70, "fdid=70");
-        final ImportEntity.Column column = new ImportEntity(). new Column<>(f, "Test Col Value");
-        columnList.add(column);
-
-        assertEquals("Value mismatch", "Test Col Value", exportReader.findColValueForThisFieldConstant(f, columnList));
-    }
-
-    public Marc21Field getFieldConstantToMarc21Mapping(final FieldConstant fieldConstant) {
-        if (fieldConstant.getName().equals("70")) {
-            return Marc21Field._245;
-        }
-        return Marc21Field.UNK;
-    }
-
-    @Test
     public void shouldEqualMarc21Mapping() {
         final ExportReader exportReader = new ExportReader();
         final FieldConstant f = new FieldDefinitionValue(70, "70");

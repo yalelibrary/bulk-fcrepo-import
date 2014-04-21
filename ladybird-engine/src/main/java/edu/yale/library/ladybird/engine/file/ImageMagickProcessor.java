@@ -13,8 +13,7 @@ public class ImageMagickProcessor implements ImageProcessor {
 
 
     @Override
-     public void resizeImage(final String fileName, final String outputFileName, final int width, final int height)
-            throws ImageProcessingException {
+     public void resizeImage(final String fileName, final String outputFileName, final int width, final int height) {
         logger.debug("Resizing image file={}", fileName);
         throw new UnsupportedOperationException("Not implemented");
     }
