@@ -9,7 +9,7 @@ public class Monitor implements java.io.Serializable {
     private Integer id;
     private String dirPath;
     private String exportPath;
-    private User user = new User();
+    private User user = new UserBuilder().createUser();
     @Deprecated
     private String notificationEmail; //todo remove
 

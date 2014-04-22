@@ -7,6 +7,7 @@ import edu.yale.library.ladybird.kernel.beans.User;
 import edu.yale.library.ladybird.kernel.beans.Project;
 import edu.yale.library.ladybird.persistence.dao.*;
 import edu.yale.library.ladybird.persistence.dao.hibernate.*;
+import edu.yale.library.ladybird.web.http.*;
 
 public class DaoHibernateModule extends AbstractModule {
     @Override
@@ -18,9 +19,8 @@ public class DaoHibernateModule extends AbstractModule {
                 = new TypeLiteral<GenericDAO<Project, Integer>>() { };
 
         bind(userDaoType).to(UserDAO.class);
-        //bind(projectDaoType).to(ProjectDAO.class);
 
-        bind(UserDAO.class).to(UserHibernateDAO.class);  //N.B. a.l. stub required.
+        bind(UserDAO.class).to(UserHibernateDAO.class);
         bind(MonitorDAO.class).to(MonitorHibernateDAO.class);
         bind(ImportSourceDAO.class).to(ImportSourceHibernateDAO.class);
         bind(ImportSourceDataDAO.class).to(ImportSourceDataHibernateDAO.class);
@@ -31,5 +31,11 @@ public class DaoHibernateModule extends AbstractModule {
         bind(FieldMarcMappingDAO.class).to(FieldMarcMappingHibernateDAO.class);
         bind(ObjectDAO.class).to(ObjectHibernateDAO.class);
         bind(ObjectFileDAO.class).to(ObjectFileHibernateDAO.class);
+
+        bind(UserHttpService.class);
+        bind(ImportSourcerHttpService.class);
+        bind(ProjectHttpService.class);
+        bind(CollectionHttpService.class);
+        bind(FieldDefinitionHttpService.class);
     }
 }

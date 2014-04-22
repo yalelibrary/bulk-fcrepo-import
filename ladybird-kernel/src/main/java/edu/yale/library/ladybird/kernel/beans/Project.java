@@ -21,7 +21,7 @@ public class Project implements java.io.Serializable {
     private String state;
     private String zip;
     private String phone;
-    private User creator = new User();
+    private User creator = new UserBuilder().createUser();
 
     public Project() {
     }

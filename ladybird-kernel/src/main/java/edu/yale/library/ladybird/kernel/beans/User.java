@@ -24,13 +24,16 @@ public class User implements java.io.Serializable {
     }
 
 
-    public User(Date date, String username, Date dateCreated, Date dateEdited, Date dateLastused, int userId_1) {
+    public User(Date date, String username, String password, Date dateCreated, Date dateEdited, Date dateLastused, int userId_1, String name, String email) {
         this.date = date;
         this.username = username;
+        this.password = password;
         this.dateCreated = dateCreated;
         this.dateEdited = dateEdited;
         this.dateLastused = dateLastused;
         this.userId_1 = userId_1;
+        this.name = name;
+        this.email = email;
     }
 
     public Integer getUserId() {

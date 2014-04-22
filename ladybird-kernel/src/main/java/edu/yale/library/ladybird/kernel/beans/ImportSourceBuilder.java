@@ -5,7 +5,7 @@ import java.util.Date;
 public class ImportSourceBuilder {
     private Date createdDate;
     private String url;
-    private Integer xmlType;
+    private Integer xmlType = 0;
     private String getPrefix;
 
     public ImportSourceBuilder setCreatedDate(Date createdDate) {
@@ -29,6 +29,6 @@ public class ImportSourceBuilder {
     }
 
     public ImportSource createImportSource() {
-        return new ImportSource(createdDate);
+        return new ImportSource(createdDate, url, xmlType.toString(), getPrefix);
     }
 }

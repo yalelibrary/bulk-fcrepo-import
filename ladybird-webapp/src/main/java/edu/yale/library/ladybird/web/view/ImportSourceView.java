@@ -57,19 +57,9 @@ public class ImportSourceView extends AbstractView {
         } catch (Throwable e) {
             logger.error("Error saving item", e);
         }
-
-        logger.debug("Saved annd updated list");
-
-        final List<ImportSource> readlist = getItemList();
-
-        for (ImportSource i: readlist) {
-            logger.debug(i.toString());
-        }
-
-
     }
 
-   @Deprecated
+    @Deprecated
     public void setDefaults(ImportSource item) {
         final Date date = new Date(System.currentTimeMillis());
         item.setCreatedDate(date);

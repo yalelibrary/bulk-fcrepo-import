@@ -5,11 +5,11 @@ import java.util.Date;
 public class UserBuilder {
     private Date date;
     private String username;
+    private String password;
     private Date dateCreated;
     private Date dateEdited;
     private Date dateLastused;
     private int userId_1;
-    private String password;
     private String name;
     private String email;
 
@@ -20,6 +20,11 @@ public class UserBuilder {
 
     public UserBuilder setUsername(String username) {
         this.username = username;
+        return this;
+    }
+
+    public UserBuilder setPassword(String password) {
+        this.password = password;
         return this;
     }
 
@@ -43,11 +48,6 @@ public class UserBuilder {
         return this;
     }
 
-    public UserBuilder setPassword(String password) {
-        this.password = password;
-        return this;
-    }
-
     public UserBuilder setName(String name) {
         this.name = name;
         return this;
@@ -59,6 +59,6 @@ public class UserBuilder {
     }
 
     public User createUser() {
-        return new User(date, username, dateCreated, dateEdited, dateLastused, userId_1);
+        return new User(date, username, password, dateCreated, dateEdited, dateLastused, userId_1, name, email);
     }
 }

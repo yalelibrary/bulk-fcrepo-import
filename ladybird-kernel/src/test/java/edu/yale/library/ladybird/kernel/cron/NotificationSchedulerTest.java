@@ -3,7 +3,7 @@ package edu.yale.library.ladybird.kernel.cron;
 
 import com.dumbster.smtp.SimpleSmtpServer;
 import edu.yale.library.ladybird.kernel.KernelContext;
-import edu.yale.library.ladybird.kernel.beans.User;
+import edu.yale.library.ladybird.kernel.beans.UserBuilder;
 import edu.yale.library.ladybird.kernel.events.NotificationEventQueue;
 import edu.yale.library.ladybird.kernel.events.imports.ImportEvent;
 import org.junit.Test;
@@ -33,7 +33,7 @@ public class NotificationSchedulerTest {
             KernelContext.initNotificationScheduler();
             //Add dummy event:
             NotificationEventQueue.addEvent(new NotificationEventQueue().
-                    new NotificationItem(new ImportEvent(), Collections.singletonList(new User())));
+                    new NotificationItem(new ImportEvent(), Collections.singletonList(new UserBuilder().createUser())));
             Thread.sleep(6000); //TODO
         } catch (Exception e) {
             e.printStackTrace();
