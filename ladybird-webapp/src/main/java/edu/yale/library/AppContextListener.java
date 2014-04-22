@@ -30,6 +30,10 @@ public class AppContextListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         logger.debug("Application Start up.");
         try {
+            if (System.getProperty("file.encoding").equals("UTF-8")) {
+                logger.warn("UTF-8 file encoding not detected.");
+            }
+
             if (ApplicationProperties.CONFIG_STATE.DEFAULT_DB_CONFIGURED) {
                 logger.debug("Trying to start embedded DB");
                 servicesManager.initDB();
