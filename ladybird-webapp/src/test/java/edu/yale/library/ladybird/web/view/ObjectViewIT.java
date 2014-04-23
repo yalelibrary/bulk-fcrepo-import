@@ -2,6 +2,7 @@ package edu.yale.library.ladybird.web.view;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import edu.yale.library.ladybird.web.AbstractWarTest;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;

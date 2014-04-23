@@ -1,0 +1,19 @@
+package edu.yale.library.ladybird.persistence.dao;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+
+
+@SuppressWarnings("unchecked")
+public class DaoInitializer {
+
+    private static final Injector injector;
+
+    static {
+        injector = Guice.createInjector(new DaoHibernateModule());
+    }
+
+    public static void injectFields(Object object) {
+        injector.injectMembers(object);
+    }
+}
