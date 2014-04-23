@@ -1,14 +1,10 @@
-package edu.yale.library.ladybird.tests;
+package edu.yale.library.ladybird.engine;
 
 import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
 import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
-import edu.yale.library.ladybird.engine.imports.ImportEngine;
-import edu.yale.library.ladybird.engine.imports.ImportEntity;
-import edu.yale.library.ladybird.engine.imports.DefaultImportEngine;
-import edu.yale.library.ladybird.engine.imports.SpreadsheetFile;
-import edu.yale.library.ladybird.engine.imports.SpreadsheetFileBuilder;
+import edu.yale.library.ladybird.engine.imports.*;
 import edu.yale.library.ladybird.engine.model.DefaultFieldDataValidator;
 import edu.yale.library.ladybird.engine.model.FieldConstant;
 import edu.yale.library.ladybird.engine.model.FieldDefinitionValue;
@@ -42,11 +38,9 @@ import static org.junit.Assert.fail;
 /**
  * Tests full cycle for read/write import/export w/ F104 (OAI-PMH marc import).
  */
-public class MarcImportEngineIT {
+public class MarcImportEngineIT extends AbstractDBTest {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    private ServicesManager servicesManager;
 
     /* Contains test fdids corresponding to test excel file (instead of via db) */
     private static final String FDID_TEST_PROPS_FILE = "/fdids.test.properties";
@@ -72,12 +66,12 @@ public class MarcImportEngineIT {
 
     @Before
     public void init() {
-        servicesManager = new ServicesManager();
+        super.init();
     }
 
     @After
     public void stopDB() throws SQLException {
-        servicesManager.stopDB();
+        super.stop();
     }
 
     /**
@@ -88,7 +82,6 @@ public class MarcImportEngineIT {
     @Test
     public void execute() throws Exception {
         //start the engine
-        servicesManager.startDB(); //TODO
 
         setApplicationData(); //TODO tmp. Inst app. rules for test (since db state is cleaned)
 

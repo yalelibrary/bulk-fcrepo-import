@@ -1,11 +1,15 @@
 package edu.yale.library.ladybird.persistence.derby;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.SQLException;
 
 /**
- * A facade to derby. Subject to change.
+ * A facade to derby.
  */
 public final class EmbeddedDatabaseUtil {
+    private static Logger logger = LoggerFactory.getLogger(EmbeddedDatabaseUtil.class);
     private EmbeddedDatabaseUtil() {
     }
 
@@ -13,7 +17,12 @@ public final class EmbeddedDatabaseUtil {
         DerbyManager.getINSTANCE().start();
     }
 
-    public static void stop() throws SQLException {
+    public static void stop() throws SQLException{
+        try {
+            new DerbySchemaUtil().killSchema();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
         DerbyManager.getINSTANCE().stop();
     }
 

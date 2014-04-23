@@ -34,7 +34,43 @@ public final class DerbySchemaUtil {
             Statement statement = conn.createStatement();
             logger.debug("Creating table(s)");
 
-            final java.util.Map<String, String> m = SchemaBean.getSchema();
+            final SchemaBean schemaBean = new SchemaBean();
+
+            final java.util.Map<String, String> m = schemaBean.getSchema();
+            if (m == null || 0 == m.size()) {
+                throw new AppConfigException("Schema empty");
+            }
+            Iterator it = m.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry p = (Map.Entry) it.next();
+                logger.debug("Executing: " + p.getKey() + " = " + p.getValue());
+                statement.execute(p.getValue().toString());
+            }
+            conn.commit();
+            logger.debug("Created table(s)");
+        } catch (SQLException e) {
+            throw new AppConfigException(e);
+        }
+    }
+
+    /**
+     * Init schema
+     *
+     * @throws edu.yale.library.ladybird.kernel.AppConfigException
+     */
+    protected void killSchema() {
+        try {
+            Connection conn = DriverManager.getConnection(Config.PROTOCOL
+                    + Config.DB + ";create=false", Config.PROPS);
+            //logger.debug("Connected to DB and created a schema: " + Config.DB);
+            conn.setAutoCommit(false);
+            Statement statement = conn.createStatement();
+            logger.debug("Killing table(s)");
+
+            final SchemaBean schemaBean = new SchemaBean();
+
+            final java.util.Map<String, String> m = schemaBean.getKillSchema();
+
             if (m == null || 0 == m.size()) {
                 throw new AppConfigException("Schema empty");
             }

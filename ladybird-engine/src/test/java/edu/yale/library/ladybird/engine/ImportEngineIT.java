@@ -1,22 +1,17 @@
-package edu.yale.library.ladybird.tests;
-
-import edu.yale.library.ladybird.engine.imports.ImportEngine;
-import edu.yale.library.ladybird.engine.imports.ImportEntity;
-import edu.yale.library.ladybird.engine.imports.DefaultImportEngine;
-import edu.yale.library.ladybird.engine.imports.SpreadsheetFile;
-import edu.yale.library.ladybird.engine.imports.SpreadsheetFileBuilder;
-import edu.yale.library.ladybird.kernel.beans.ImportJob;
-import edu.yale.library.ladybird.kernel.beans.ImportJobContents;
-import edu.yale.library.ladybird.kernel.beans.ImportJobExhead;
+package edu.yale.library.ladybird.engine;
 
 import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
 import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
+import edu.yale.library.ladybird.engine.imports.*;
+import edu.yale.library.ladybird.engine.model.DefaultFieldDataValidator;
+import edu.yale.library.ladybird.engine.model.FieldConstant;
 import edu.yale.library.ladybird.engine.model.FieldDefinitionValue;
 import edu.yale.library.ladybird.engine.model.ReadMode;
-import edu.yale.library.ladybird.engine.model.FieldConstant;
-import edu.yale.library.ladybird.engine.model.DefaultFieldDataValidator;
+import edu.yale.library.ladybird.kernel.beans.ImportJob;
+import edu.yale.library.ladybird.kernel.beans.ImportJobContents;
+import edu.yale.library.ladybird.kernel.beans.ImportJobExhead;
 import edu.yale.library.ladybird.persistence.ServicesManager;
 import edu.yale.library.ladybird.persistence.dao.ImportJobContentsDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
@@ -46,11 +41,9 @@ import static org.junit.Assert.fail;
 /**
  * Tests full cycle for read/write import/export.
  */
-public class ImportEngineIT {
+public class ImportEngineIT extends AbstractDBTest {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    private ServicesManager servicesManager;
 
     /* Contains test fdids corresponding to test excel file (instead of via db) */
     private static final String FDID_TEST_PROPS_FILE = "/fdids.test.properties";
@@ -66,7 +59,7 @@ public class ImportEngineIT {
     @Test
     public void execute() throws Exception {
         //start the engine
-        servicesManager.startDB(); //TODO
+        //servicesManager.startDB(); //TODO
 
         setApplicationData(); //TODO tmp. Inst app. rules for test (since db state is cleaned)
 
@@ -137,7 +130,7 @@ public class ImportEngineIT {
     /**
      * Utility to create SpreadsheetFile
      * @return a SpreadsheetFile instance
-     * @see SpreadsheetFile
+     * @see edu.yale.library.ladybird.engine.imports.SpreadsheetFile
      */
     public SpreadsheetFile getImportSpreadsheeet() {
         final SpreadsheetFile file = new SpreadsheetFileBuilder().setFileName(FileConstants.TEST_XLS_FILE)
@@ -182,7 +175,7 @@ public class ImportEngineIT {
      * Helps in initing fdids via a tex tfile
      *
      * @return
-     * @throws IOException
+     * @throws java.io.IOException
      * @throws NullPointerException
      */
     private Map<String, FieldConstant> getTextFieldDefsMap() throws IOException {
@@ -227,12 +220,12 @@ public class ImportEngineIT {
 
     @Before
     public void init() {
-        servicesManager = new ServicesManager();
+        super.init();
     }
 
     @After
     public void stopDB() throws SQLException {
-        servicesManager.stopDB();
+       super.stop();
     }
 
 }

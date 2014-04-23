@@ -15,8 +15,9 @@ public class SchemaBean {
     private static final Logger logger = LoggerFactory.getLogger(SchemaBean.class);
 
     final PropertyReader reader = new PropertyReader(ApplicationProperties.SCHEMA_PROPS_FILE);
+    final PropertyReader killReader = new PropertyReader(ApplicationProperties.KILL_SCHEMA_PROPS_FILE);
 
-    private Map<String,String> build() throws IOException {
+    private Map<String,String> build(PropertyReader reader) throws IOException {
         final Map<String, String> map = new HashMap<>();
         final Properties props = reader.readAll();
         for (final String key : props.stringPropertyNames()) {
@@ -25,9 +26,18 @@ public class SchemaBean {
         return map;
     }
 
-    public static Map<String,String> getSchema() {
+    public Map<String,String> getSchema() {
         try {
-            final Map<String,String> map = new SchemaBean().build();
+            final Map<String,String> map = new SchemaBean().build(reader);
+            return Collections.unmodifiableMap(map);
+        } catch (IOException e) {
+            return Collections.emptyMap(); //ignore exception
+        }
+    }
+
+    public Map<String,String> getKillSchema() {
+        try {
+            final Map<String,String> map = new SchemaBean().build(killReader);
             return Collections.unmodifiableMap(map);
         } catch (IOException e) {
             return Collections.emptyMap(); //ignore exception

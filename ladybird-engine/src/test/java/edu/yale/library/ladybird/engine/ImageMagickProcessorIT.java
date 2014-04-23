@@ -1,4 +1,4 @@
-package edu.yale.library.ladybird.tests;
+package edu.yale.library.ladybird.engine;
 
 import edu.yale.library.ladybird.engine.file.ImageMagickProcessor;
 import edu.yale.library.ladybird.engine.file.ImageProcessingException;
