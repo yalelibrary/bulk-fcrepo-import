@@ -2,10 +2,6 @@ package edu.yale.library.ladybird.kernel.events;
 
 import com.google.inject.Binder;
 import com.google.inject.Module;
-import edu.yale.library.ladybird.kernel.events.AbstractNotificationJob;
-import edu.yale.library.ladybird.kernel.events.DummyEMailNotificationHandler;
-import edu.yale.library.ladybird.kernel.events.NotificationHandler;
-import edu.yale.library.ladybird.kernel.events.NotificationJob;
 
 /**
  *  Used for testing

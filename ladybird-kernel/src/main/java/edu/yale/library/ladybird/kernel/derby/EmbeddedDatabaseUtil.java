@@ -1,4 +1,4 @@
-package edu.yale.library.ladybird.persistence.derby;
+package edu.yale.library.ladybird.kernel.derby;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

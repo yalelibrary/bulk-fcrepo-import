@@ -1,8 +1,6 @@
 package edu.yale.library.ladybird.engine.model;
 
 import edu.yale.library.ladybird.engine.imports.ImportReader;
-import edu.yale.library.ladybird.engine.model.FieldConstant;
-import edu.yale.library.ladybird.engine.model.UnknownFunctionException;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

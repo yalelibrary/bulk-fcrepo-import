@@ -13,8 +13,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Path("/{path: .*}/project")
-public class ProjectHttpService
-{
+public class ProjectHttpService {
     private final Logger logger = getLogger(this.getClass());
 
     @Inject
@@ -34,7 +33,7 @@ public class ProjectHttpService
     @Produces(APPLICATION_JSON)
     public Response save(@QueryParam("label") String label,
         @QueryParam("url") String url,
-        @QueryParam("address") String address){
+        @QueryParam("address") String address) {
         final Project item = new Project();
         item.setLabel(label);
         item.setUrl(url);

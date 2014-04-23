@@ -13,8 +13,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Path("/{path: .*}/collection")
-public class CollectionHttpService
-{
+public class CollectionHttpService {
     private final Logger logger = getLogger(this.getClass());
 
     @Inject

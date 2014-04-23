@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.engine;
 
-import edu.yale.library.ladybird.persistence.ServicesManager;
+
+import edu.yale.library.ladybird.kernel.ServicesManager;
 
 import java.sql.SQLException;
 

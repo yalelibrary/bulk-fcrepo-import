@@ -1,6 +1,5 @@
 package edu.yale.library.ladybird.engine.model;
 
-import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

@@ -2,9 +2,6 @@ package edu.yale.library.ladybird.engine.oai;
 
 import edu.yale.library.ladybird.engine.Util;
 import edu.yale.library.ladybird.engine.model.MarcReadingException;
-import edu.yale.library.ladybird.engine.oai.OaiHttpClient;
-import edu.yale.library.ladybird.engine.oai.OaiProvider;
-import edu.yale.library.ladybird.engine.oai.Record;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;

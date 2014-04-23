@@ -1,8 +1,8 @@
-package edu.yale.library.ladybird.persistence.derby;
+package edu.yale.library.ladybird.kernel.derby;
 
 import edu.yale.library.ladybird.kernel.AppConfigException;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
-import edu.yale.library.ladybird.persistence.ServicesManager;
+import edu.yale.library.ladybird.kernel.ServicesManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

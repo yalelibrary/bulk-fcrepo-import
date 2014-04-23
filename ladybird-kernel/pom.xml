@@ -75,6 +75,11 @@
             <artifactId>dumbster</artifactId>
             <version>${dumbster.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

@@ -13,8 +13,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Path("/{path: .*}/fielddefinition")
-public class FieldDefinitionHttpService
-{
+public class FieldDefinitionHttpService {
     private final Logger logger = getLogger(this.getClass());
 
     @Inject

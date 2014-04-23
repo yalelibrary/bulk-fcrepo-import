@@ -1,4 +1,4 @@
-package edu.yale.library.ladybird.persistence.derby;
+package edu.yale.library.ladybird.kernel.derby;
 
 
 import edu.yale.library.ladybird.kernel.AppConfigException;
@@ -9,9 +9,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Properties;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 
 
 /**
@@ -36,7 +36,7 @@ public final class DerbySchemaUtil {
 
             final SchemaBean schemaBean = new SchemaBean();
 
-            final java.util.Map<String, String> m = schemaBean.getSchema();
+            final Map<String, String> m = schemaBean.getSchema();
             if (m == null || 0 == m.size()) {
                 throw new AppConfigException("Schema empty");
             }
@@ -69,7 +69,7 @@ public final class DerbySchemaUtil {
 
             final SchemaBean schemaBean = new SchemaBean();
 
-            final java.util.Map<String, String> m = schemaBean.getKillSchema();
+            final Map<String, String> m = schemaBean.getKillSchema();
 
             if (m == null || 0 == m.size()) {
                 throw new AppConfigException("Schema empty");

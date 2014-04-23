@@ -1,9 +1,6 @@
-package edu.yale.library.ladybird.persistence;
+package edu.yale.library.ladybird.kernel;
 
-
-import edu.yale.library.ladybird.kernel.AppConfigException;
-import edu.yale.library.ladybird.kernel.ApplicationProperties;
-import edu.yale.library.ladybird.persistence.derby.EmbeddedDatabaseUtil;
+import edu.yale.library.ladybird.kernel.derby.EmbeddedDatabaseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
