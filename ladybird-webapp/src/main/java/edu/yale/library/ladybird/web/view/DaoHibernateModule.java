@@ -5,9 +5,34 @@ import com.google.inject.TypeLiteral;
 
 import edu.yale.library.ladybird.kernel.model.User;
 import edu.yale.library.ladybird.kernel.model.Project;
-import edu.yale.library.ladybird.persistence.dao.*;
-import edu.yale.library.ladybird.persistence.dao.hibernate.*;
-import edu.yale.library.ladybird.web.http.*;
+import edu.yale.library.ladybird.persistence.dao.GenericDAO;
+import edu.yale.library.ladybird.persistence.dao.CollectionDAO;
+import edu.yale.library.ladybird.persistence.dao.ImportFileDAO;
+import edu.yale.library.ladybird.persistence.dao.ImportSourceDAO;
+import edu.yale.library.ladybird.persistence.dao.ImportSourceDataDAO;
+import edu.yale.library.ladybird.persistence.dao.FieldDefinitionDAO;
+import edu.yale.library.ladybird.persistence.dao.FieldMarcMappingDAO;
+import edu.yale.library.ladybird.persistence.dao.MonitorDAO;
+import edu.yale.library.ladybird.persistence.dao.ObjectFileDAO;
+import edu.yale.library.ladybird.persistence.dao.ObjectDAO;
+import edu.yale.library.ladybird.persistence.dao.ProjectDAO;
+import edu.yale.library.ladybird.persistence.dao.UserDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.CollectionHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ImportFileHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceDataHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.FieldDefinitionHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.FieldMarcMappingHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.MonitorHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectFileHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ProjectHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.UserHibernateDAO;
+import edu.yale.library.ladybird.web.http.CollectionHttpService;
+import edu.yale.library.ladybird.web.http.FieldDefinitionHttpService;
+import edu.yale.library.ladybird.web.http.ImportSourcerHttpService;
+import edu.yale.library.ladybird.web.http.ProjectHttpService;
+import edu.yale.library.ladybird.web.http.UserHttpService;
 
 public class DaoHibernateModule extends AbstractModule {
     @Override

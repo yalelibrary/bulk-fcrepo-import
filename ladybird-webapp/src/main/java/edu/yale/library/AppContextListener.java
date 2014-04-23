@@ -27,7 +27,7 @@ public class AppContextListener implements ServletContextListener {
 
     private final ServicesManager servicesManager = new ServicesManager();
 
-    /* TODO: remove. Contains test fdids corresponding to test excel file (instead of via db) */
+    //TODO remove. Contains test fdids corresponding to test excel file (instead of via db)
     private static final String FDID_TEST_PROPS_FILE = "/fdids.test.properties";
 
     @Override
@@ -65,7 +65,7 @@ public class AppContextListener implements ServletContextListener {
             if (ApplicationProperties.CONFIG_STATE.DEFAULT_DB_CONFIGURED) {
                 logger.debug("Trying to stop embedded DB");
                 servicesManager.stopDB();
-                logger.debug("Closed embedded database. Time: " + getTime(DB_UPTIME) );
+                logger.debug("Closed embedded database. Time: " + getTime(DB_UPTIME));
             }
             HibernateUtil.shutdown();
             logger.debug("Closed Hibernate Session Factory. Time: " + getTime(HIBERNATE_UPTIME));

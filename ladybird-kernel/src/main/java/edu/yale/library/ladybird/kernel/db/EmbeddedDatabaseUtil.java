@@ -17,7 +17,7 @@ public final class EmbeddedDatabaseUtil {
         DerbyManager.getINSTANCE().start();
     }
 
-    public static void stop() throws SQLException{
+    public static void stop() throws SQLException {
         try {
             new DerbySchemaUtil().killSchema();
         } catch (Exception e) {

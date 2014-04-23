@@ -13,12 +13,16 @@ import java.util.NoSuchElementException;
 
 import edu.yale.library.ladybird.engine.imports.ImportEntity.Column;
 import edu.yale.library.ladybird.engine.imports.ImportEntity.Row;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class ImportEntityValueTest {
+
+    Logger logger = LoggerFactory.getLogger(ImportEntityValueTest.class);
 
     @Test
     public void getColumnValues() {
@@ -95,19 +99,15 @@ public class ImportEntityValueTest {
             importEntityValue.getFunctionPosition(FunctionConstants.F3);
             fail("Mishandled function location");
         } catch (NoSuchElementException e) {
-            //ignore
+            assert (e.getMessage().contains(FunctionConstants.F3.getName()));
         }
     }
 
     @Test
-    public void shouldGetContentRows() {
+    public void shouldGetContentRows() throws Exception {
         final ImportEntityValue importEntityvalue = getTestExheadAndContentRowsImportEntityValue();
-        try {
-            final List<Row> rowsList = importEntityvalue.getContentRows();
-            assertTrue(rowsList.size() == 1);
-        } catch (Exception e) {
-            //ignore
-        }
+        final List<Row> rowsList = importEntityvalue.getContentRows();
+        assertTrue(rowsList.size() == 1);
     }
 
     @Test

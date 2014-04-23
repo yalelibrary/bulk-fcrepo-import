@@ -1,6 +1,8 @@
 package edu.yale.library.ladybird.engine.model;
 
 import edu.yale.library.ladybird.engine.imports.ImportEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +13,8 @@ import java.util.Set;
  *
  */
 public class FieldConstantRules {
+
+    private static final Logger logger = LoggerFactory.getLogger(FieldConstantRules.class);
 
     /**
      * Determines if a column is an OAI field.
@@ -73,7 +77,7 @@ public class FieldConstantRules {
      * @return
      * //TODO move
      */
-    public static FieldConstant convertStringToFieldConstant(final String value){
+    public static FieldConstant convertStringToFieldConstant(final String value) {
         final Map<String, FieldConstant> map =  FieldDefinitionValue.getFieldDefMap();
         //logger.debug(map.toString());
         final FieldConstant val;
@@ -82,7 +86,7 @@ public class FieldConstantRules {
             //logger.debug("Found val={}", val.toString());
             return val;
         } catch (Exception e) {
-            //logger.error("Error converting to FieldConstant(FieldDefinition) value={}", value);
+            logger.warn("Error converting to FieldConstant(FieldDefinition) value={}", value);
         }
 
         //See if it's a function constant
@@ -90,7 +94,7 @@ public class FieldConstantRules {
             final FunctionConstants f  = FunctionConstants.valueOf(value);
             return f;
         } catch (Exception e) {
-           // logger.error("Error converting to FieldConstant(FunctionConstant) value={}", value);
+            logger.warn("Error converting to FieldConstant(FunctionConstant) value={}", value);
         }
 
         return null;

@@ -4,7 +4,17 @@ import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import edu.yale.library.ladybird.kernel.model.Project;
 import edu.yale.library.ladybird.kernel.model.User;
-import edu.yale.library.ladybird.persistence.dao.hibernate.*;
+import edu.yale.library.ladybird.persistence.dao.hibernate.CollectionHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ImportFileHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceDataHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.FieldDefinitionHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.FieldMarcMappingHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.MonitorHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectFileHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ProjectHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.UserHibernateDAO;
 
 public class DaoHibernateModule extends AbstractModule {
     @Override

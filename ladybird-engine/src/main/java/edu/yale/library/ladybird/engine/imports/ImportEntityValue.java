@@ -2,7 +2,11 @@ package edu.yale.library.ladybird.engine.imports;
 
 import edu.yale.library.ladybird.engine.model.FieldConstant;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 import edu.yale.library.ladybird.engine.imports.ImportEntity.Column;
 import edu.yale.library.ladybird.engine.imports.ImportEntity.Row;
@@ -214,7 +218,7 @@ public class ImportEntityValue {
                 return i;
             }
         }
-        throw new NoSuchElementException();
+        throw new NoSuchElementException(f.getName());
     }
 
     @Override

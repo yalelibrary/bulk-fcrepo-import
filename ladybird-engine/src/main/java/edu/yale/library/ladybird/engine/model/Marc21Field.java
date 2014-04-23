@@ -89,7 +89,7 @@ public enum Marc21Field {
 
     String name;
 
-    private final static Converter<String, Marc21Field> converter = Enums.stringConverter(Marc21Field.class);
+    private static final Converter<String, Marc21Field> converter = Enums.stringConverter(Marc21Field.class);
 
     private Marc21Field(final String name) {
         this.name = name;

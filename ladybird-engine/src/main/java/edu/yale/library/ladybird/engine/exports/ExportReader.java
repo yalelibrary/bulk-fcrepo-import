@@ -244,7 +244,8 @@ public class ExportReader {
     }
 
     /**
-     * Returns the value in List of columns corresponding to a FieldConstant. TODO Use exhead to read the col directly.
+     * Returns the value in List of columns corresponding to a FieldConstant.
+     * TODO Use exhead to read the col directly.
      * @param f
      * @param column
      * @return
@@ -258,7 +259,7 @@ public class ExportReader {
                 }
             } catch (Exception e) {
                 //logger.error("Null value for={} or={}", f.toString(), column.toString());
-                //logger.error(e.getMessage());
+                logger.error(e.getMessage());
             }
         }
         return "";
