@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.engine.imports;
 
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
-import edu.yale.library.ladybird.kernel.beans.FieldMarcMapping;
+import edu.yale.library.ladybird.kernel.model.FieldMarcMapping;
 import edu.yale.library.ladybird.persistence.dao.FieldMarcMappingDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.FieldMarcMappingHibernateDAO;
 import org.junit.After;

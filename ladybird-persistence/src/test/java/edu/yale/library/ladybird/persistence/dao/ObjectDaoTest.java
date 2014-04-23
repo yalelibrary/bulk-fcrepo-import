@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.persistence.dao;
 
-import edu.yale.library.ladybird.kernel.beans.Object;
+import edu.yale.library.ladybird.kernel.model.Object;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

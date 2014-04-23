@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.web.view;
 
-import edu.yale.library.ladybird.kernel.beans.User;
+import edu.yale.library.ladybird.kernel.model.User;
 
 import edu.yale.library.ladybird.persistence.dao.UserDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserHibernateDAO;

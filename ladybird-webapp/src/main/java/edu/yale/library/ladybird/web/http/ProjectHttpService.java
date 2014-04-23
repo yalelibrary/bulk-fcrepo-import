@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.web.http;
 
-import edu.yale.library.ladybird.kernel.beans.Project;
+import edu.yale.library.ladybird.kernel.model.Project;
 import edu.yale.library.ladybird.persistence.dao.ProjectDAO;
 
 import javax.inject.Inject;

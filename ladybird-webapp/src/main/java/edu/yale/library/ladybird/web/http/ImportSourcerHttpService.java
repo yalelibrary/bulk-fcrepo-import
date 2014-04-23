@@ -1,8 +1,8 @@
 package edu.yale.library.ladybird.web.http;
 
 
-import edu.yale.library.ladybird.kernel.beans.ImportSource;
-import edu.yale.library.ladybird.kernel.beans.ImportSourceBuilder;
+import edu.yale.library.ladybird.kernel.model.ImportSource;
+import edu.yale.library.ladybird.kernel.model.ImportSourceBuilder;
 import edu.yale.library.ladybird.persistence.dao.ImportSourceDAO;
 import org.slf4j.Logger;
 

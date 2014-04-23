@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.web.view;
 
 
-import edu.yale.library.ladybird.kernel.beans.Monitor;
+import edu.yale.library.ladybird.kernel.model.Monitor;
 import edu.yale.library.ladybird.engine.cron.ExportScheduler;
 import edu.yale.library.ladybird.engine.cron.FilePickerScheduler;
 import edu.yale.library.ladybird.engine.cron.ImportScheduler;

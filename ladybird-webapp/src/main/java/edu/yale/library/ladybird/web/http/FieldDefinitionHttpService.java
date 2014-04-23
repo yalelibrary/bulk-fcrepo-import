@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.web.http;
 
-import edu.yale.library.ladybird.kernel.beans.FieldDefinition;
+import edu.yale.library.ladybird.kernel.model.FieldDefinition;
 import edu.yale.library.ladybird.persistence.dao.FieldDefinitionDAO;
 
 import javax.inject.Inject;

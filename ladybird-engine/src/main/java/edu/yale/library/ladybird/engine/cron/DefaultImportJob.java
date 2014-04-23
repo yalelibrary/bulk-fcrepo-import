@@ -3,8 +3,8 @@ package edu.yale.library.ladybird.engine.cron;
 
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
 import edu.yale.library.ladybird.kernel.TimeUtils;
-import edu.yale.library.ladybird.kernel.beans.ImportSource;
-import edu.yale.library.ladybird.kernel.beans.User;
+import edu.yale.library.ladybird.kernel.model.ImportSource;
+import edu.yale.library.ladybird.kernel.model.User;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
 import edu.yale.library.ladybird.engine.imports.ImportEngine;
 import edu.yale.library.ladybird.engine.imports.ImportRequestEvent;

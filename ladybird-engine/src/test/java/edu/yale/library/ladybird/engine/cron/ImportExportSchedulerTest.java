@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.engine.cron;
 
 
 import com.dumbster.smtp.SimpleSmtpServer;
-import edu.yale.library.ladybird.kernel.beans.Monitor;
+import edu.yale.library.ladybird.kernel.model.Monitor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

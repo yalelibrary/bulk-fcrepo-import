@@ -3,7 +3,7 @@
 
 package edu.yale.library.ladybird.persistence.dao.hibernate;
 
-import edu.yale.library.ladybird.kernel.beans.ImportJobExhead;
+import edu.yale.library.ladybird.kernel.model.ImportJobExhead;
 import edu.yale.library.ladybird.persistence.dao.ImportJobExheadDAO;
 import org.hibernate.Query;
 

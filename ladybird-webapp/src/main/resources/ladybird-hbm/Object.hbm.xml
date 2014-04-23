@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class name="edu.yale.library.ladybird.kernel.beans.Object" table="object" catalog="pamoja">
+    <class name="edu.yale.library.ladybird.kernel.model.Object" table="object" catalog="pamoja">
         <id name="oid" type="java.lang.Integer">
             <column name="oid" />
             <generator class="identity" />

@@ -2,8 +2,8 @@ package edu.yale.library.ladybird.kernel.events;
 
 import com.dumbster.smtp.SimpleSmtpServer;
 import com.dumbster.smtp.SmtpMessage;
-import edu.yale.library.ladybird.kernel.beans.User;
-import edu.yale.library.ladybird.kernel.beans.UserBuilder;
+import edu.yale.library.ladybird.kernel.model.User;
+import edu.yale.library.ladybird.kernel.model.UserBuilder;
 import edu.yale.library.ladybird.kernel.events.imports.ImportEvent;
 import org.junit.Test;
 import org.slf4j.Logger;

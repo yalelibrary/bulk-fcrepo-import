@@ -3,7 +3,7 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Add extra params to reflect User, export path etc -->
 <hibernate-mapping>
-    <class name="edu.yale.library.ladybird.kernel.beans.Monitor" table="monitor" catalog="pamoja">
+    <class name="edu.yale.library.ladybird.kernel.model.Monitor" table="monitor" catalog="pamoja">
         <id name="id" type="java.lang.Integer">
             <column name="id" />
             <generator class="identity" />

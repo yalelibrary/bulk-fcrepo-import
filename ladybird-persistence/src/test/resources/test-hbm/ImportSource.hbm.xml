@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class name="edu.yale.library.ladybird.kernel.beans.ImportSource" table="import_source" catalog="pamoja">
+    <class name="edu.yale.library.ladybird.kernel.model.ImportSource" table="import_source" catalog="pamoja">
         <id name="importSourceId" type="java.lang.Integer">
             <column name="import_source_id" />
             <generator class="identity" />

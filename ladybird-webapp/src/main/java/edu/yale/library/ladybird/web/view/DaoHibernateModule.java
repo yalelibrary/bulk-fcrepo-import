@@ -3,8 +3,8 @@ package edu.yale.library.ladybird.web.view;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 
-import edu.yale.library.ladybird.kernel.beans.User;
-import edu.yale.library.ladybird.kernel.beans.Project;
+import edu.yale.library.ladybird.kernel.model.User;
+import edu.yale.library.ladybird.kernel.model.Project;
 import edu.yale.library.ladybird.persistence.dao.*;
 import edu.yale.library.ladybird.persistence.dao.hibernate.*;
 import edu.yale.library.ladybird.web.http.*;

@@ -2,8 +2,8 @@ package edu.yale.library.ladybird.engine.cron;
 
 
 import edu.yale.library.ladybird.kernel.TimeUtils;
-import edu.yale.library.ladybird.kernel.beans.Monitor;
-import edu.yale.library.ladybird.kernel.beans.User;
+import edu.yale.library.ladybird.kernel.model.Monitor;
+import edu.yale.library.ladybird.kernel.model.User;
 import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportCompleteEventBuilder;
 import edu.yale.library.ladybird.engine.exports.ExportEngine;

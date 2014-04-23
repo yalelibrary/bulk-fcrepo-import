@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.engine.imports;
 
-import edu.yale.library.ladybird.kernel.beans.FieldMarcMapping;
-import edu.yale.library.ladybird.kernel.beans.FieldMarcMappingBuilder;
+import edu.yale.library.ladybird.kernel.model.FieldMarcMapping;
+import edu.yale.library.ladybird.kernel.model.FieldMarcMappingBuilder;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;

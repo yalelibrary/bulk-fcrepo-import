@@ -3,7 +3,7 @@
 
 package edu.yale.library.ladybird.persistence.dao.hibernate;
 
-import edu.yale.library.ladybird.kernel.beans.ImportSourceData;
+import edu.yale.library.ladybird.kernel.model.ImportSourceData;
 import edu.yale.library.ladybird.persistence.dao.ImportSourceDataDAO;
 import org.hibernate.Query;
 import org.slf4j.Logger;

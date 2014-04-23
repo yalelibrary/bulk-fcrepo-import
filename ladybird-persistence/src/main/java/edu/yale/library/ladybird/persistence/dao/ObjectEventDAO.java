@@ -2,7 +2,7 @@
 
 package edu.yale.library.ladybird.persistence.dao;
 
-import edu.yale.library.ladybird.kernel.beans.ObjectEvent;
+import edu.yale.library.ladybird.kernel.model.ObjectEvent;
 
 public interface ObjectEventDAO extends GenericDAO<ObjectEvent, Integer> {
 
