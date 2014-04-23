@@ -1,7 +1,6 @@
 package edu.yale.library.ladybird.engine.cron;
 
 
-import edu.yale.library.ladybird.kernel.TimeUtils;
 import edu.yale.library.ladybird.kernel.model.Monitor;
 import edu.yale.library.ladybird.kernel.model.User;
 import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
@@ -11,6 +10,7 @@ import edu.yale.library.ladybird.engine.imports.ImportEntity;
 import edu.yale.library.ladybird.engine.model.ImportEngineException;
 import edu.yale.library.ladybird.kernel.events.Event;
 import edu.yale.library.ladybird.kernel.events.NotificationEventQueue;
+import org.apache.commons.lang.time.DurationFormatUtils;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -42,7 +42,7 @@ public class DefaultExportJob implements Job, ExportJob {
             final long startTime = System.currentTimeMillis();
             final List<ImportEntity.Row>  list = exportEngine.read();
 
-            logger.debug("Read rows from import tables, list size=" + list.size());
+            logger.debug("Read rows from import tables, list size={}", list.size());
 
             final Monitor monitorItem = (Monitor) ctx.getJobDetail().getJobDataMap().get("event");
 
@@ -51,12 +51,12 @@ public class DefaultExportJob implements Job, ExportJob {
             exportEngine.write(list, tmpFile(monitorItem.getExportPath()));
 
             logger.debug("Finished writing content rows to spreadsheet.");
-            logger.debug("[end] Completed export job in " + TimeUtils.elapsedMilli(startTime));
+            logger.debug("[end] Completed export job in={}", DurationFormatUtils.formatDuration(System.currentTimeMillis() - startTime, "HH:mm:ss:SS"));
 
             /* Add params as desired */
             final Event exportEvent = new ExportCompleteEventBuilder().setRowsProcessed(list.size()).createExportCompleteEvent();
 
-            logger.debug("Adding export event; notifying user registered for this event instance. .");
+            logger.debug("Adding export event; notifying user registered for this event instance.");
 
             sendNotification(exportEvent, Collections.singletonList(monitorItem.getUser())); //todo
 

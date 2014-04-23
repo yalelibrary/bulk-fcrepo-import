@@ -2,7 +2,6 @@ package edu.yale.library.ladybird.engine.cron;
 
 
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
-import edu.yale.library.ladybird.kernel.TimeUtils;
 import edu.yale.library.ladybird.kernel.model.ImportSource;
 import edu.yale.library.ladybird.kernel.model.User;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
@@ -20,6 +19,7 @@ import edu.yale.library.ladybird.kernel.events.Event;
 import edu.yale.library.ladybird.kernel.events.NotificationEventQueue;
 import edu.yale.library.ladybird.persistence.dao.ImportSourceDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceHibernateDAO;
+import org.apache.commons.lang.time.DurationFormatUtils;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -63,7 +63,7 @@ public class DefaultImportJob implements Job, ImportJob {
 
             final int imid = importEngine.write(rowList);
 
-            logger.debug("[end] Completed import job in {}", TimeUtils.elapsedMilli(startTime));
+            logger.debug("[end] Completed import job in {}", DurationFormatUtils.formatDuration(System.currentTimeMillis() - startTime, "HH:mm:ss:SS"));
 
             /* Add params as desired */
             final Event importEvent = new ImportCompleteEventBuilder().
