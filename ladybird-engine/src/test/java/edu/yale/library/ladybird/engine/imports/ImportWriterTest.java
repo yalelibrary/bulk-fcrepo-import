@@ -4,9 +4,9 @@ import com.google.common.collect.Multimap;
 import edu.yale.library.ladybird.engine.model.FieldConstant;
 import edu.yale.library.ladybird.engine.model.FieldConstantRules;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
-import edu.yale.library.ladybird.engine.model.Marc21Field;
+import edu.yale.library.ladybird.engine.oai.Marc21Field;
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
-import edu.yale.library.ladybird.kernel.model.ImportSourceData;
+import edu.yale.library.entity.model.ImportSourceData;
 import org.junit.Test;
 
 import java.io.IOException;

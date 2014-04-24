@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.engine.cron;
 
 
 import edu.yale.library.ladybird.engine.imports.SpreadsheetFileBuilder;
-import edu.yale.library.ladybird.kernel.model.Monitor;
+import edu.yale.library.entity.model.Monitor;
 import edu.yale.library.ladybird.engine.imports.ImportRequestEvent;
 import edu.yale.library.ladybird.engine.imports.SpreadsheetFile;
 import org.apache.commons.io.FileUtils;

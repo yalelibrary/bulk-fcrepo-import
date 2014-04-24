@@ -23,7 +23,7 @@
     <dependencies>
         <dependency>
             <groupId>edu.yale.library</groupId>
-            <artifactId>ladybird-kernel</artifactId>
+            <artifactId>ladybird-entity</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>

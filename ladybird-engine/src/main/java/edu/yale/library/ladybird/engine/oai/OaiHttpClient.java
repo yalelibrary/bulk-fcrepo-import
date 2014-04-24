@@ -1,6 +1,5 @@
 package edu.yale.library.ladybird.engine.oai;
 
-import edu.yale.library.ladybird.engine.model.MarcReadingException;
 import it.svario.xpathapi.jaxp.XPathAPI;
 import org.xml.sax.SAXException;
 import org.apache.commons.io.IOUtils;

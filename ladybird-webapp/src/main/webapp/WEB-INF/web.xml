@@ -93,7 +93,7 @@
     </context-param>
 
     <listener>
-        <listener-class>edu.yale.library.AppContextListener</listener-class>
+        <listener-class>edu.yale.library.ladybird.AppContextListener</listener-class>
     </listener>
 
 </web-app>

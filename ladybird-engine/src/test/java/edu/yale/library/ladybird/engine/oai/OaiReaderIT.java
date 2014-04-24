@@ -1,7 +1,6 @@
 package edu.yale.library.ladybird.engine.oai;
 
 import edu.yale.library.ladybird.engine.Util;
-import edu.yale.library.ladybird.engine.model.MarcReadingException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;

@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.kernel.cron;
 
 
 import com.google.inject.Inject;
-import edu.yale.library.ladybird.kernel.KernelContext;
+import edu.yale.library.ladybird.kernel.KernelBootstrap;
 import edu.yale.library.ladybird.kernel.events.AbstractNotificationJob;
 import edu.yale.library.ladybird.kernel.events.NotificationJob;
 import org.quartz.Scheduler;
@@ -46,7 +46,7 @@ public final class NotificationScheduler {
      * @return
      */
     public void doSchedule(final String jobName, final String cronExpression) {
-        KernelContext.scheduleGenericJob(notificationJob, jobName, cronExpression);
+        KernelBootstrap.scheduleGenericJob(notificationJob, jobName, cronExpression);
     }
 
     private static String getNotificationCronSchedule() {

@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.web.view;
 
-import edu.yale.library.ladybird.kernel.model.Collection;
+import edu.yale.library.entity.model.Collection;
 import edu.yale.library.ladybird.persistence.dao.CollectionDAO;
 import org.slf4j.Logger;
 

@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.web.view;
 
-import edu.yale.library.ladybird.kernel.model.FieldMarcMapping;
-import edu.yale.library.ladybird.kernel.model.FieldMarcMappingBuilder;
+import edu.yale.library.entity.model.FieldMarcMapping;
+import edu.yale.library.entity.model.FieldMarcMappingBuilder;
 
 import edu.yale.library.ladybird.persistence.dao.FieldMarcMappingDAO;
 import org.slf4j.Logger;

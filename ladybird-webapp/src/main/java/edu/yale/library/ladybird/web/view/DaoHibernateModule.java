@@ -3,8 +3,8 @@ package edu.yale.library.ladybird.web.view;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 
-import edu.yale.library.ladybird.kernel.model.User;
-import edu.yale.library.ladybird.kernel.model.Project;
+import edu.yale.library.entity.model.User;
+import edu.yale.library.entity.model.Project;
 import edu.yale.library.ladybird.persistence.dao.GenericDAO;
 import edu.yale.library.ladybird.persistence.dao.CollectionDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportFileDAO;

@@ -3,7 +3,7 @@ package edu.yale.library.ladybird.engine.exports;
 import edu.yale.library.ladybird.engine.model.FieldConstant;
 import edu.yale.library.ladybird.engine.model.FieldConstantRules;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
-import edu.yale.library.ladybird.engine.model.Marc21Field;
+import edu.yale.library.ladybird.engine.oai.Marc21Field;
 import edu.yale.library.ladybird.engine.model.FieldDefinitionValue;
 import org.junit.Test;
 

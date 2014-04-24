@@ -1,7 +1,6 @@
 package edu.yale.library.ladybird.engine.imports;
 
-import edu.yale.library.ladybird.engine.model.DefaultFieldDataValidator;
-import edu.yale.library.ladybird.engine.model.ReadMode;
+import edu.yale.library.ladybird.engine.DefaultFieldDataValidator;
 import org.junit.Assert;
 import org.junit.Test;
 

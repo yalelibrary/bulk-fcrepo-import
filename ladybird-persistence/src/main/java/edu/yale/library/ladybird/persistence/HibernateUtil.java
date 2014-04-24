@@ -1,6 +1,5 @@
 package edu.yale.library.ladybird.persistence;
 
-import edu.yale.library.ladybird.kernel.ApplicationProperties;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;

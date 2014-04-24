@@ -1,7 +1,5 @@
 package edu.yale.library.ladybird.persistence;
 
-import edu.yale.library.ladybird.kernel.ApplicationProperties;
-
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

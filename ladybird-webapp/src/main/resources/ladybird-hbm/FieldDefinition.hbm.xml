@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class name="edu.yale.library.ladybird.kernel.model.FieldDefinition" table="field_definition" catalog="pamoja">
+    <class name="edu.yale.library.entity.model.FieldDefinition" table="field_definition" catalog="pamoja">
         <id name="fdid" type="int">
             <column name="fdid" />
             <generator class="assigned" />

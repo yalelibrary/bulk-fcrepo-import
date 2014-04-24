@@ -1,8 +1,8 @@
 package edu.yale.library.ladybird.engine.cron;
 
-import edu.yale.library.ladybird.kernel.model.Monitor;
+import edu.yale.library.entity.model.Monitor;
 import edu.yale.library.ladybird.kernel.cron.DefaultJobsManager;
-import edu.yale.library.ladybird.engine.model.CronSchedulingException;
+import edu.yale.library.ladybird.engine.CronSchedulingException;
 import org.quartz.JobDetail;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.SchedulerException;

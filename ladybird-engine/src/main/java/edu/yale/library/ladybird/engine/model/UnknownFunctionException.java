@@ -3,7 +3,7 @@ package edu.yale.library.ladybird.engine.model;
 /**
  * An exception to represent unrecongized F or Fdid value.
  *
- * @see ImportReaderValidationException
+ * @see edu.yale.library.ladybird.engine.imports.ImportReaderValidationException
  */
 public class UnknownFunctionException extends Exception {
     public UnknownFunctionException() {

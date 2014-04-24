@@ -1,8 +1,8 @@
 package edu.yale.library.ladybird.web.http;
 
 
-import edu.yale.library.ladybird.kernel.model.User;
-import edu.yale.library.ladybird.kernel.model.UserBuilder;
+import edu.yale.library.entity.model.User;
+import edu.yale.library.entity.model.UserBuilder;
 import edu.yale.library.ladybird.persistence.dao.UserDAO;
 import org.slf4j.Logger;
 

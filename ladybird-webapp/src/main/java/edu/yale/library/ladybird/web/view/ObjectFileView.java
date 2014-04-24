@@ -2,7 +2,7 @@
 package edu.yale.library.ladybird.web.view;
 
 
-import edu.yale.library.ladybird.kernel.model.ObjectFile;
+import edu.yale.library.entity.model.ObjectFile;
 import edu.yale.library.ladybird.persistence.dao.ObjectFileDAO;
 import org.slf4j.Logger;
 

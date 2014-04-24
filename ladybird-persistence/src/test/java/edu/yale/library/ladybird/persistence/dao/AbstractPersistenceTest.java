@@ -1,7 +1,8 @@
 package edu.yale.library.ladybird.persistence.dao;
 
 
-import edu.yale.library.ladybird.kernel.ServicesManager;
+
+import edu.yale.library.ladybird.persistence.ServicesManager;
 
 import java.sql.SQLException;
 

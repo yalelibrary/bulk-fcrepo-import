@@ -5,7 +5,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 
 import edu.yale.library.ladybird.kernel.cron.DefaultJobsManager;
-import edu.yale.library.ladybird.engine.model.CronSchedulingException;
+import edu.yale.library.ladybird.engine.CronSchedulingException;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
 import org.quartz.CronScheduleBuilder;

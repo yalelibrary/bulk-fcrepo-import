@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.engine.model;
 
-import edu.yale.library.ladybird.kernel.model.FieldDefinition;
+import edu.yale.library.entity.model.FieldDefinition;
 
 import java.util.Map;
 import java.util.HashMap;

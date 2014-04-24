@@ -1,27 +1,27 @@
 package edu.yale.library.ladybird.engine.imports;
 
 
-import edu.yale.library.ladybird.engine.model.Marc21Field;
+import edu.yale.library.ladybird.engine.oai.Marc21Field;
 import edu.yale.library.ladybird.engine.oai.OaiHttpClient;
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
 import edu.yale.library.ladybird.engine.oai.Record;
 import edu.yale.library.ladybird.engine.oai.SubfieldType;
 import edu.yale.library.ladybird.engine.oai.DatafieldType;
-import edu.yale.library.ladybird.kernel.model.FieldMarcMapping;
-import edu.yale.library.ladybird.kernel.model.ImportJobContents;
-import edu.yale.library.ladybird.kernel.model.ImportJobExhead;
-import edu.yale.library.ladybird.kernel.model.ImportJobExheadBuilder;
-import edu.yale.library.ladybird.kernel.model.ImportJobBuilder;
-import edu.yale.library.ladybird.kernel.model.ImportJobContentsBuilder;
-import edu.yale.library.ladybird.kernel.model.ImportSourceData;
-import edu.yale.library.ladybird.kernel.model.ImportSourceDataBuilder;
+import edu.yale.library.entity.model.FieldMarcMapping;
+import edu.yale.library.entity.model.ImportJobContents;
+import edu.yale.library.entity.model.ImportJobExhead;
+import edu.yale.library.entity.model.ImportJobExheadBuilder;
+import edu.yale.library.entity.model.ImportJobBuilder;
+import edu.yale.library.entity.model.ImportJobContentsBuilder;
+import edu.yale.library.entity.model.ImportSourceData;
+import edu.yale.library.entity.model.ImportSourceDataBuilder;
 import edu.yale.library.ladybird.persistence.dao.ImportJobContentsDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobExheadDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportSourceDataDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobHibernateDAO;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
-import edu.yale.library.ladybird.engine.model.MarcReadingException;
+import edu.yale.library.ladybird.engine.oai.MarcReadingException;
 import edu.yale.library.ladybird.persistence.dao.hibernate.FieldMarcMappingHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobContentsHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobExheadHibernateDAO;

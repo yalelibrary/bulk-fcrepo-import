@@ -2,7 +2,7 @@
 
 package edu.yale.library.ladybird.persistence.dao;
 
-import edu.yale.library.ladybird.kernel.model.User;
+import edu.yale.library.entity.model.User;
 
 import java.util.List;
 

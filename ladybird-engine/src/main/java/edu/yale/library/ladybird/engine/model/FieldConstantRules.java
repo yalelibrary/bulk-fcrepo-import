@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.engine.model;
 
 import edu.yale.library.ladybird.engine.imports.ImportEntity;
+import edu.yale.library.ladybird.engine.oai.Marc21Field;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
