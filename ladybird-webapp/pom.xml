@@ -37,7 +37,7 @@
         <ladybird-engine.version>0.0.1-SNAPSHOT</ladybird-engine.version>
         <ladybird-kernel.version>0.0.1-SNAPSHOT</ladybird-kernel.version>
         <ladybird-persistence.version>0.0.1-SNAPSHOT</ladybird-persistence.version>
-        <cas-client-core.version>3.1.10</cas-client-core.version>
+        <ladybird-auth.version>0.0.1-SNAPSHOT</ladybird-auth.version>
     </properties>
 
     <dependencies>
@@ -50,11 +50,16 @@
             <groupId>edu.yale.library</groupId>
             <artifactId>ladybird-kernel</artifactId>
             <version>${ladybird-kernel.version}</version>
-       </dependency>
+        </dependency>
         <dependency>
             <groupId>edu.yale.library</groupId>
             <artifactId>ladybird-persistence</artifactId>
             <version>${ladybird-persistence.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>edu.yale.library</groupId>
+            <artifactId>ladybird-auth</artifactId>
+            <version>${ladybird-auth.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -141,17 +146,6 @@
             <groupId>net.sourceforge.htmlunit</groupId>
             <artifactId>htmlunit</artifactId>
             <version>${htmlunit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jasig.cas</groupId>
-            <artifactId>cas-client-core</artifactId>
-            <version>${cas-client-core.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>servlet-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <!-- Java EE -->
         <dependency>

@@ -43,14 +43,28 @@
         <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
 
+
     <filter>
         <filter-name>AuthFilter</filter-name>
-        <filter-class>edu.yale.library.ladybird.AuthFilter</filter-class>
+        <filter-class>edu.yale.library.ladybird.auth.AuthFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>AuthFilter</filter-name>
         <url-pattern>/pages/index.xhtml</url-pattern>
     </filter-mapping>
+    <filter>
+        <filter-name>CasNetIdFilter</filter-name>
+        <filter-class>edu.yale.library.ladybird.auth.CasNetIdFilter</filter-class>
+        <init-param>
+            <param-name>admin_page</param-name>
+            <param-value>/pages/index.xhtml</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>CasNetIdFilter</filter-name>
+        <url-pattern>/pages/index.xhtml</url-pattern>
+    </filter-mapping>
+
 
     <context-param>
         <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
