@@ -5,10 +5,10 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
-<ui:composition template="../../templates/template.xhtml">
+<ui:composition template="../../../templates/template.xhtml">
     <ui:define name="content">
-        <h2>ImportFile</h2>
-        <h:form id="ImportFileForm" enctype="multipart/form-data"
+        <h2>Object</h2>
+        <h:form id="ObjectForm" enctype="multipart/form-data"
                 styleClass=""
                 style="">
             <br/>
@@ -16,19 +16,16 @@
             <div style="">
                 <div class="" style="">
 
+                    <br/>
+                    <br/>
+
                     <!-- Data Table -->
 
-                    <p:dataTable id="ImportFileDatatable" value="#{ImportFileView.itemList}"
+                    <p:dataTable id="ObjectDatatable" value="#{ObjectView.itemList}"
                                  var="item" paginator="true" rows="10"
                                  tableStyle="" paginatorPosition="bottom"
                                  editable="false">
 
-                        <p:column width="70">
-                            <f:facet name="header">
-                                <h:outputText value="ImportId"/>
-                            </f:facet>
-                            <h:outputText value="#{item.importId}"/>
-                        </p:column>
                         <p:column width="70">
                             <f:facet name="header">
                                 <h:outputText value="Date"/>
@@ -37,15 +34,9 @@
                         </p:column>
                         <p:column width="70">
                             <f:facet name="header">
-                                <h:outputText value="FileLocation"/>
+                                <h:outputText value="ProjectId"/>
                             </f:facet>
-                            <h:outputText value="#{item.fileLocation}"/>
-                        </p:column>
-                        <p:column width="70">
-                            <f:facet name="header">
-                                <h:outputText value="Oid"/>
-                            </f:facet>
-                            <h:outputText value="#{item.oid}"/>
+                            <h:outputText value="#{item.projectId}"/>
                         </p:column>
                         <p:column width="70">
                             <f:facet name="header">
@@ -55,27 +46,45 @@
                         </p:column>
                         <p:column width="70">
                             <f:facet name="header">
-                                <h:outputText value="Code"/>
+                                <h:outputText value="Oid_1"/>
                             </f:facet>
-                            <h:outputText value="#{item.code}"/>
+                            <h:outputText value="#{item.oid_1}"/>
                         </p:column>
                         <p:column width="70">
                             <f:facet name="header">
-                                <h:outputText value="Error"/>
+                                <h:outputText value="Zindex"/>
                             </f:facet>
-                            <h:outputText value="#{item.error}"/>
+                            <h:outputText value="#{item.zindex}"/>
                         </p:column>
                         <p:column width="70">
                             <f:facet name="header">
-                                <h:outputText value="Type"/>
+                                <h:outputText value="Parent"/>
                             </f:facet>
-                            <h:outputText value="#{item.type}"/>
+                            <h:outputText value="#{item.parent}"/>
                         </p:column>
                         <p:column width="70">
                             <f:facet name="header">
-                                <h:outputText value="Label"/>
+                                <h:outputText value="Boid"/>
                             </f:facet>
-                            <h:outputText value="#{item.label}"/>
+                            <h:outputText value="#{item.boid}"/>
+                        </p:column>
+                        <p:column width="70">
+                            <f:facet name="header">
+                                <h:outputText value="Bindex"/>
+                            </f:facet>
+                            <h:outputText value="#{item.bindex}"/>
+                        </p:column>
+                        <p:column width="70">
+                            <f:facet name="header">
+                                <h:outputText value="Bparent"/>
+                            </f:facet>
+                            <h:outputText value="#{item.bparent}"/>
+                        </p:column>
+                        <p:column width="70">
+                            <f:facet name="header">
+                                <h:outputText value="Roid"/>
+                            </f:facet>
+                            <h:outputText value="#{item.roid}"/>
                         </p:column>
 
                         <p:column width="80" rendered="false">
@@ -83,7 +92,7 @@
                                 <h:outputText value="Remove?"/>
                             </f:facet>
                             <p:commandButton icon="ui-icon-close" title="remove from db"
-                                             actionListener="#{ImportFileView.remove(c)}" update="ImportFileDatatable"/>
+                                             actionListener="#{ObjectView.remove(c)}" update="ObjectDatatable"/>
                         </p:column>
                     </p:dataTable>
                 </div>

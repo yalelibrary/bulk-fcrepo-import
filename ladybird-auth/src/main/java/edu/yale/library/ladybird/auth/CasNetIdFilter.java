@@ -18,6 +18,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class CasNetIdFilter implements Filter {
 
@@ -41,24 +43,31 @@ public class CasNetIdFilter implements Filter {
 
         final HttpServletRequest request = (HttpServletRequest) req;
         final String indexPage = getAdminPagePath(request);
-        final String ticket = req.getParameter("ticket").toString();
-
-        if (ticket == null || ticket.isEmpty()) {
-            throw new ServletException("Failure to log in.");
-        }
-
-        final String service = URLEncoder.encode(indexPage);
-        final String param = "ticket=" + ticket + "&service=" + service;
 
         try {
+
+            final String ticket = req.getParameter("ticket");
+
+            if (ticket == null || ticket.isEmpty()) {
+                throw new ServletException("Failure to log in.");
+            }
+
+            final String service = URLEncoder.encode(indexPage);
+            final String param = "ticket=" + ticket + "&service=" + service;
+
             final UserAuthResponse userAuthResponse = getUser(getProp("cas_server_validate_url"), param);
             final String user = userAuthResponse.principal;
+
+            if (user == null) {
+                throw new IOException("Error auth user");
+            }
             logger.debug("Put user={} in session", user);
             request.getSession().setAttribute("netid", user);
+            request.getSession().setAttribute("netid-last-act-time", getCurrentTime());
         } catch (UnknownHostException e) {
             logger.error("Error finding server or service.", e);
             throw new UnknownHostException("Error contacting CAS server.");
-        } catch (IOException e) {
+        } catch (NullPointerException| IOException e) {
             logger.error("Exception finding/validating CAS ticket.", e);
             throw new IOException(e);
         }
@@ -122,6 +131,14 @@ public class CasNetIdFilter implements Filter {
 
     private String getProp(final String property) throws IOException {
         return Util.getProperty(property);
+    }
+
+    //TODO
+    private String getCurrentTime() {
+        LocalDate date = LocalDate.now();
+        LocalTime time = LocalTime.now();
+        return String.format("%s-%s-%s %s:%s",
+                date.getYear(), date.getMonthValue(), date.getDayOfMonth(), time.getHour(), time.getMinute());
     }
 
     private class UserAuthResponse {

@@ -30,6 +30,6 @@ public final class AuthFilter implements Filter {
     }
 
     public String getServerName() throws IOException {
-        return InetAddress.getLocalHost().getCanonicalHostName();
+        return InetAddress.getLocalHost().getCanonicalHostName().toLowerCase();
     }
 }

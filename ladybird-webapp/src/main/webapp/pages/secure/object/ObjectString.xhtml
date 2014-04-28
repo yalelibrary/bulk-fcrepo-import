@@ -5,10 +5,10 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
-<ui:composition template="../../templates/template.xhtml">
+<ui:composition template="../../../templates/template.xhtml">
     <ui:define name="content">
-        <h2>ObjectLongstring</h2>
-        <h:form id="ObjectLongstringForm" enctype="multipart/form-data"
+        <h2>ObjectString</h2>
+        <h:form id="ObjectStringForm" enctype="multipart/form-data"
                 styleClass=""
                 style="">
             <br/>
@@ -27,7 +27,7 @@
 
                     <!-- Data Table -->
 
-                    <p:dataTable id="ObjectLongstringDatatable" value="#{ObjectLongstringView.itemList}"
+                    <p:dataTable id="ObjectStringDatatable" value="#{ObjectStringView.itemList}"
                                  var="item" paginator="true" rows="10"
                                  tableStyle="" paginatorPosition="bottom"
                                  editable="false">
@@ -68,8 +68,8 @@
                                 <h:outputText value="Remove?"/>
                             </f:facet>
                             <p:commandButton icon="ui-icon-close" title="remove from db"
-                                             actionListener="#{ObjectLongstringView.remove(c)}"
-                                             update="ObjectLongstringDatatable"/>
+                                             actionListener="#{ObjectStringView.remove(c)}"
+                                             update="ObjectStringDatatable"/>
                         </p:column>
                     </p:dataTable>
                 </div>
