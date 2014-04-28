@@ -29,6 +29,10 @@
                     <li><a href="http://localhost:8080/ladybird-webapp/web/pages/crons.xhtml">System Crons</a></li>
                     <li><a href="http://localhost:8080/ladybird-webapp/web/pages/Jobs.xhtml">Crons Service</a></li>
                 </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#">Login</a></li>
+                </ul>
             </div>
         </div>
     </div>
@@ -56,13 +60,17 @@
             </div>
             --> <!--/span-->
 
-            <div class="col-xs-12 col-sm-10">
+            <div class="col-xs-12 col-sm-9">
                 <div class="row">
-                    <br/>
                     <ui:insert name="content" />
                 </div><!--/row-->
             </div><!--/span-->
 
+            <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+                <div class="list-group">
+                    <ui:insert name="offcanvas" />
+                </div>
+            </div>
 
         </div><!--/row-->
     </div> <!--main -->
