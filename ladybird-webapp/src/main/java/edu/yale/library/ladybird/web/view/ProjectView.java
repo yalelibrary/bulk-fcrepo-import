@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -51,6 +52,16 @@ public class ProjectView extends AbstractView {
             logger.error("Error saving item", e);
         }
     }
+    //TODO replace with DAO call
+    public List<String> getProjectNames() {
+        List<Project> items = getItemList();
+        List<String> list = new ArrayList<>();
+        for (Project p: items) {
+            list.add(p.getLabel());
+        }
+        return list;
+    }
+
 
     public List<Project> getItemList() {
         final List<Project> list = dao.findAll();

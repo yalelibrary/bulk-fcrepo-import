@@ -10,6 +10,7 @@ public interface UserDAO extends GenericDAO<User, Integer> {
 
     List<User> findByEmail(String field);
 
+    List<User> findByUsername(String field);
 
 }
 

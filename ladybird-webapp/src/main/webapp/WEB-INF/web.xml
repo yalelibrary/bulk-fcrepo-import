@@ -67,10 +67,6 @@
         <filter-name>CasNetIdFilter</filter-name>
         <url-pattern>/web/pages/secure/welcome.xhtml</url-pattern>
     </filter-mapping>
-    <filter-mapping>
-        <filter-name>AuthFilter</filter-name>
-        <url-pattern>/web/pages/secure/Users.xhtml</url-pattern>
-    </filter-mapping>
 
     <context-param>
         <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>

@@ -23,7 +23,7 @@ public class AbstractWarTest {
             + "/v7.0.42/bin/apache-tomcat-7.0.42-windows-x86.zip";
     protected static final String APP_ARTIFACT = "ladybird-webapp-0.0.1-SNAPSHOT";
     protected static final String APP_PREFIX = "/ladybird-webapp/";
-    protected static final String DEFAULT_PAGE_PREFIX = "/pages/";
+    protected static final String DEFAULT_PAGE_PREFIX = "/pages/secure/";
     private static final String TEST_PORT = "8081";
     protected static final String SERVER_PREFIX = "http://localhost:" + TEST_PORT + "/";
     private static final String TOMCAT_7_X = "tomcat7x";

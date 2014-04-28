@@ -22,5 +22,6 @@
         <mapping resource="test-hbm/Object.hbm.xml"/>
         <mapping resource="test-hbm/ObjectFile.hbm.xml"/>
         <mapping resource="test-hbm/Users.hbm.xml"/>
+        <mapping resource="test-hbm/UserPreferences.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

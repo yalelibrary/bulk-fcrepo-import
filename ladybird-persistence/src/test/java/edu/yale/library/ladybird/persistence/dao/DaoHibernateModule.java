@@ -15,6 +15,7 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectFileHibernateDA
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ProjectHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.UserPreferencesHibernateDAO;
 
 public class DaoHibernateModule extends AbstractModule {
     @Override
@@ -27,6 +28,7 @@ public class DaoHibernateModule extends AbstractModule {
 
         bind(userDaoType).to(UserDAO.class);
         bind(UserDAO.class).to(UserHibernateDAO.class);
+        bind(UserPreferencesDAO.class).to(UserPreferencesHibernateDAO.class);
         bind(MonitorDAO.class).to(MonitorHibernateDAO.class);
         bind(ImportFileDAO.class).to(ImportFileHibernateDAO.class);
         bind(ImportSourceDAO.class).to(ImportSourceHibernateDAO.class);
