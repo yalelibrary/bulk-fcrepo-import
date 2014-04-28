@@ -5,10 +5,10 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
-<ui:composition template="../../templates/template.xhtml">
+<ui:composition template="../../../templates/template.xhtml">
     <ui:define name="content">
-        <h2>Object</h2>
-        <h:form id="ObjectForm" enctype="multipart/form-data"
+        <h2>ObjectAcid</h2>
+        <h:form id="ObjectAcidForm" enctype="multipart/form-data"
                 styleClass=""
                 style="">
             <br/>
@@ -16,12 +16,18 @@
             <div style="">
                 <div class="" style="">
 
+                    <!--Add Button -->
+
+                    <p:commandButton id="chartBtn" icon="ui-icon-plusthick"
+                                     value="New User" type="button" style="color:#103480;"
+                                     onclick="dlg.show();"/>
+
                     <br/>
                     <br/>
 
                     <!-- Data Table -->
 
-                    <p:dataTable id="ObjectDatatable" value="#{ObjectView.itemList}"
+                    <p:dataTable id="ObjectAcidDatatable" value="#{ObjectAcidView.itemList}"
                                  var="item" paginator="true" rows="10"
                                  tableStyle="" paginatorPosition="bottom"
                                  editable="false">
@@ -34,57 +40,27 @@
                         </p:column>
                         <p:column width="70">
                             <f:facet name="header">
-                                <h:outputText value="ProjectId"/>
-                            </f:facet>
-                            <h:outputText value="#{item.projectId}"/>
-                        </p:column>
-                        <p:column width="70">
-                            <f:facet name="header">
                                 <h:outputText value="UserId"/>
                             </f:facet>
                             <h:outputText value="#{item.userId}"/>
                         </p:column>
                         <p:column width="70">
                             <f:facet name="header">
-                                <h:outputText value="Oid_1"/>
+                                <h:outputText value="ObjectId"/>
                             </f:facet>
-                            <h:outputText value="#{item.oid_1}"/>
+                            <h:outputText value="#{item.objectId}"/>
                         </p:column>
                         <p:column width="70">
                             <f:facet name="header">
-                                <h:outputText value="Zindex"/>
+                                <h:outputText value="Value"/>
                             </f:facet>
-                            <h:outputText value="#{item.zindex}"/>
+                            <h:outputText value="#{item.value}"/>
                         </p:column>
                         <p:column width="70">
                             <f:facet name="header">
-                                <h:outputText value="Parent"/>
+                                <h:outputText value="Fdid"/>
                             </f:facet>
-                            <h:outputText value="#{item.parent}"/>
-                        </p:column>
-                        <p:column width="70">
-                            <f:facet name="header">
-                                <h:outputText value="Boid"/>
-                            </f:facet>
-                            <h:outputText value="#{item.boid}"/>
-                        </p:column>
-                        <p:column width="70">
-                            <f:facet name="header">
-                                <h:outputText value="Bindex"/>
-                            </f:facet>
-                            <h:outputText value="#{item.bindex}"/>
-                        </p:column>
-                        <p:column width="70">
-                            <f:facet name="header">
-                                <h:outputText value="Bparent"/>
-                            </f:facet>
-                            <h:outputText value="#{item.bparent}"/>
-                        </p:column>
-                        <p:column width="70">
-                            <f:facet name="header">
-                                <h:outputText value="Roid"/>
-                            </f:facet>
-                            <h:outputText value="#{item.roid}"/>
+                            <h:outputText value="#{item.fdid}"/>
                         </p:column>
 
                         <p:column width="80" rendered="false">
@@ -92,7 +68,7 @@
                                 <h:outputText value="Remove?"/>
                             </f:facet>
                             <p:commandButton icon="ui-icon-close" title="remove from db"
-                                             actionListener="#{ObjectView.remove(c)}" update="ObjectDatatable"/>
+                                             actionListener="#{ObjectAcidView.remove(c)}" update="ObjectAcidDatatable"/>
                         </p:column>
                     </p:dataTable>
                 </div>

@@ -5,16 +5,9 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
-<ui:composition template="../templates/default.xhtml">
+<ui:composition template="../../templates/template.xhtml">
     <ui:define name="content">
-        <div class="jumbotron">
-            <h2>LadyBird</h2>
-
-            <p>LadyBird is a collection of services and utilities for digital asset management.</p>
-
-            <p><a class="btn btn-primary btn-lg" role="button"
-                  href="http://localhost:8080/ladybird-webapp/web/pages/secure/welcome.xhtml">Log in</a></p>
-        </div>
+        #{defaultImportHttpServiceClient.getJobs()}
     </ui:define>
 </ui:composition>
 </html>
