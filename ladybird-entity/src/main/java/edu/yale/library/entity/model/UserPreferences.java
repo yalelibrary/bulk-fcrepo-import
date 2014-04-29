@@ -2,15 +2,10 @@ package edu.yale.library.entity.model;
 
 public class UserPreferences implements java.io.Serializable {
 
-
     private Integer userId;
     private Integer projectId;
 
     public UserPreferences() {
-    }
-
-    public UserPreferences(Integer projectId) {
-        this.projectId = projectId;
     }
 
     public Integer getUserId() {
@@ -29,13 +24,6 @@ public class UserPreferences implements java.io.Serializable {
         this.projectId = projectId;
     }
 
-    @Override
-    public String toString() {
-        return "UserPreferences{" +
-                "userId=" + userId +
-                ", projectId=" + projectId +
-                '}';
-    }
 }
 
 

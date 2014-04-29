@@ -21,9 +21,7 @@ public class UserDataModel extends LazyDataModel<User> {
                            final Map<String, String> filters) {
         final UserDAO userDAO = new UserHibernateDAO(); //TODO
         try {
-            logger.debug("Loading results. first={}, pageSize={}", first, pageSize);
             final List<User> list = userDAO.find(first, first + pageSize);
-            logger.debug("Obtained list size={}", list.size());
             this.setRowCount(list.size());
             return list;
         } catch (Throwable e) {

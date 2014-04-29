@@ -42,7 +42,6 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 
     @SuppressWarnings("unchecked")
     public List<T> find(int startRow, int count) {
-        logger.debug("Finding subset, startRow={}, count={}", startRow, count);
         Query q = getSession().createQuery("from " + persistentClass.getName());
         return q.list();
     }
