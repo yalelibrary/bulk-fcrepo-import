@@ -27,23 +27,24 @@ public final class DerbySchemaUtil {
      */
     protected void init() {
         try {
-            Connection conn = DriverManager.getConnection(Config.PROTOCOL
+            final Connection conn = DriverManager.getConnection(Config.PROTOCOL
                     + Config.DB + ";create=true", Config.PROPS);
             logger.debug("Connected to DB and created a schema: " + Config.DB);
             conn.setAutoCommit(false);
-            Statement statement = conn.createStatement();
+            final Statement statement = conn.createStatement();
+
             logger.debug("Creating table(s)");
 
             final SchemaBean schemaBean = new SchemaBean();
-
             final Map<String, String> m = schemaBean.getSchema();
+
             if (m == null || 0 == m.size()) {
                 throw new AppConfigException("Schema empty");
             }
             Iterator it = m.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry p = (Map.Entry) it.next();
-                logger.debug("Executing: " + p.getKey() + " = " + p.getValue());
+                logger.debug("Executing create statement for table={}", p.getKey());
                 statement.execute(p.getValue().toString());
             }
             conn.commit();
@@ -54,21 +55,20 @@ public final class DerbySchemaUtil {
     }
 
     /**
-     * Init schema
+     * Remove schema
      *
      * @throws edu.yale.library.ladybird.kernel.AppConfigException
      */
     protected void killSchema() {
         try {
-            Connection conn = DriverManager.getConnection(Config.PROTOCOL
+            final Connection conn = DriverManager.getConnection(Config.PROTOCOL
                     + Config.DB + ";create=false", Config.PROPS);
-            //logger.debug("Connected to DB and created a schema: " + Config.DB);
             conn.setAutoCommit(false);
-            Statement statement = conn.createStatement();
+            final Statement statement = conn.createStatement();
+
             logger.debug("Killing table(s)");
 
             final SchemaBean schemaBean = new SchemaBean();
-
             final Map<String, String> m = schemaBean.getKillSchema();
 
             if (m == null || 0 == m.size()) {
@@ -77,11 +77,10 @@ public final class DerbySchemaUtil {
             Iterator it = m.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry p = (Map.Entry) it.next();
-                logger.debug("Executing: " + p.getKey() + " = " + p.getValue());
+                logger.debug("Executing drop statement for table={}",  p.getKey());
                 statement.execute(p.getValue().toString());
             }
             conn.commit();
-            logger.debug("Created table(s)");
         } catch (SQLException e) {
             throw new AppConfigException(e);
         }
