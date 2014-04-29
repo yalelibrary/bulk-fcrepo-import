@@ -20,7 +20,8 @@
 
                     <p:commandButton id="chartBtn" icon="ui-icon-plusthick"
                                      value="New Item" type="button" style="color:#103480;"
-                                     onclick="dlg.show();"/>
+                                     onclick="dlg.show();"
+                                     rendered="#{not empty userView.userEmailList}"/>
 
                     <br/>
                     <br/>
@@ -90,12 +91,20 @@
 
                     </p:dialog>
 
+
+                    <p:contextMenu for="ProjectDatatable">
+                        <p:menuitem value="Watch" action="#{ProjectView.selectElement}"/>
+                    </p:contextMenu>
+
                     <!-- Data Table -->
 
                     <p:dataTable id="ProjectDatatable" value="#{ProjectView.itemList}"
                                  var="item" paginator="true" rows="10"
                                  tableStyle="" paginatorPosition="bottom"
-                                 editable="false">
+                                 editable="false"
+                                 selection="#{ProjectView.selectedItem}"
+                                 selectionMode="single"
+                                 rowKey="#{item.projectId}">
 
                         <p:column>
                             <f:facet name="header">

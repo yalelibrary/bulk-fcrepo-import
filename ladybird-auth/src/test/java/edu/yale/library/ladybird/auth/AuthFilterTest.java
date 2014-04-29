@@ -18,7 +18,7 @@ public class AuthFilterTest {
         ServletRequest servletRequest = Mockito.mock(ServletRequest.class);
         when(servletRequest.getServerPort()).thenReturn(8080);
         final String expectedHost = InetAddress.getLocalHost().getCanonicalHostName().toLowerCase();
-        assert(expectedHost != null);
+        assert (expectedHost != null);
         assertEquals("Value mismatch", expectedHost, authFilter.getServerName());
     }
 

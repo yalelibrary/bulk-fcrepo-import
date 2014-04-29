@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,6 +27,7 @@ public class ProjectView extends AbstractView {
 
     private Project item = new ProjectBuilder().createProject();
     private List<Project> itemList;
+    private Project selectedItem = new ProjectBuilder().createProject();
 
     @Inject
     private ProjectDAO entityDAO;
@@ -37,7 +39,6 @@ public class ProjectView extends AbstractView {
     }
 
     public void save() {
-
         //TODO tmp until linked
         final UserDAO userDao = new UserHibernateDAO();
         final List<User> userList = userDao.findByEmail(item.getCreator().getEmail());
@@ -54,14 +55,13 @@ public class ProjectView extends AbstractView {
     }
     //TODO replace with DAO call
     public List<String> getProjectNames() {
-        List<Project> items = getItemList();
-        List<String> list = new ArrayList<>();
+        final List<Project> items = getItemList();
+        final  List<String> list = new ArrayList<>();
         for (Project p: items) {
             list.add(p.getLabel());
         }
         return list;
     }
-
 
     public List<Project> getItemList() {
         final List<Project> list = dao.findAll();
@@ -80,6 +80,24 @@ public class ProjectView extends AbstractView {
 
     public Project getItem() {
         return item;
+    }
+
+    public Project getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(Project selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
+
+    public void selectElement() {
+        saveInSession(selectedItem.getProjectId());
+    }
+
+    private void saveInSession(final int projectId) {
+        logger.debug("Saving in session projectId={}", projectId);
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("projectId", projectId);
     }
 }
 

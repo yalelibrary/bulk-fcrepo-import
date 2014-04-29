@@ -24,6 +24,7 @@ import java.time.LocalTime;
 public class CasNetIdFilter implements Filter {
 
     private static final Logger logger = LoggerFactory.getLogger(CasNetIdFilter.class);
+    private static String netIdSessionIdentifer;
 
     private String adminPage;
 
@@ -33,6 +34,7 @@ public class CasNetIdFilter implements Filter {
 
     public void init(FilterConfig filterConfig) {
         adminPage = filterConfig.getInitParameter("admin_page");
+        netIdSessionIdentifer = filterConfig.getInitParameter("net_id_identifier");
     }
 
     public void destroy() {
@@ -44,28 +46,37 @@ public class CasNetIdFilter implements Filter {
         final HttpServletRequest request = (HttpServletRequest) req;
         final String indexPage = getAdminPagePath(request);
 
-        try {
+        String netIdSessionValue = "";
 
+        //Check if netid is in session. Skip validation if so.
+        if (request.getSession().getAttribute(netIdSessionIdentifer) != null) {
+            netIdSessionValue = request.getSession().getAttribute(netIdSessionIdentifer).toString();
+            chain.doFilter(req, res);
+        }
+
+        if (!netIdSessionValue.isEmpty()) {
+            return;
+        }
+
+        try {
             final String ticket = req.getParameter("ticket");
 
             if (ticket == null || ticket.isEmpty()) {
-                throw new ServletException("Failure to log in.");
+                throw new ServletException("Ticket null. Failed to log in.");
             }
 
             final String service = URLEncoder.encode(indexPage);
             final String param = "ticket=" + ticket + "&service=" + service;
-
             final UserAuthResponse userAuthResponse = getUser(getProp("cas_server_validate_url"), param);
             final String user = userAuthResponse.principal;
 
             if (user == null) {
-                throw new IOException("Error auth user");
+                throw new IOException("Error authorizing user.");
             }
-            logger.debug("Put user={} in session", user);
-            request.getSession().setAttribute("netid", user);
+            request.getSession().setAttribute(netIdSessionIdentifer, user);
             request.getSession().setAttribute("netid-last-act-time", getCurrentTime());
         } catch (UnknownHostException e) {
-            logger.error("Error finding server or service.", e);
+            logger.error("Error communicating with CAS server or service.", e);
             throw new UnknownHostException("Error contacting CAS server.");
         } catch (NullPointerException| IOException e) {
             logger.error("Exception finding/validating CAS ticket.", e);
@@ -133,10 +144,9 @@ public class CasNetIdFilter implements Filter {
         return Util.getProperty(property);
     }
 
-    //TODO
-    private String getCurrentTime() {
-        LocalDate date = LocalDate.now();
-        LocalTime time = LocalTime.now();
+    public String getCurrentTime() {
+        final LocalDate date = LocalDate.now();
+        final LocalTime time = LocalTime.now();
         return String.format("%s-%s-%s %s:%s",
                 date.getYear(), date.getMonthValue(), date.getDayOfMonth(), time.getHour(), time.getMinute());
     }
@@ -147,10 +157,10 @@ public class CasNetIdFilter implements Filter {
 
         @Override
         public String toString() {
-            return "UserAuthResponse{" +
-                    "isCasAuthenticated=" + isCasAuthenticated +
-                    ", principal='" + principal + '\'' +
-                    '}';
+            return "UserAuthResponse{"
+                    + "isCasAuthenticated=" + isCasAuthenticated
+                    + ", principal='" + principal + '\''
+                    + '}';
         }
     }
 

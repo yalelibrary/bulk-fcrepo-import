@@ -20,7 +20,8 @@
                     <p:commandButton icon="ui-icon-plusthick"
                                      type="button"
                                      onclick="dlg.show();"
-                                     value="Update Item"/>
+                                     value="Update Item"
+                                     rendered="#{not empty userView.userEmailList}"/>
 
                     <!-- Modal pop up for + Button -->
 

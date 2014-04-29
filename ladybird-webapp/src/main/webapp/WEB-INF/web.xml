@@ -58,6 +58,10 @@
             <param-name>admin_page</param-name>
             <param-value>/web/pages/secure/welcome.xhtml</param-value>
         </init-param>
+        <init-param>
+            <param-name>net_id_identifier</param-name>
+            <param-value>netid</param-value>
+        </init-param>
     </filter>
     <filter-mapping>
         <filter-name>CasNetIdFilter</filter-name>
@@ -65,7 +69,7 @@
     </filter-mapping>
     <filter-mapping>
         <filter-name>CasNetIdFilter</filter-name>
-        <url-pattern>/web/pages/secure/welcome.xhtml</url-pattern>
+        <url-pattern>/web/pages/secure/*</url-pattern>
     </filter-mapping>
 
     <context-param>

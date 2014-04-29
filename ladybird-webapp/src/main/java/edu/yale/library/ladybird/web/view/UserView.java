@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class UserView extends AbstractView implements Serializable {
 
     private List<User> itemList;
     private User item = new UserBuilder().createUser();
+    private User selectedItem = new UserBuilder().createUser();
 
     /**
      * Used for lazy loading
@@ -91,13 +93,14 @@ public class UserView extends AbstractView implements Serializable {
      *
      * @param item
      */
-    public void setDefaults(User item) {
+    public void setDefaults(final User item) {
         Date date = new Date(System.currentTimeMillis());
         item.setDate(date);
         item.setDateCreated(date);
         item.setDateEdited(date);
         item.setDateEdited(date);
         item.setDateLastused(date);
+        item.setUserId_1(getUserIdForUsername(getCurrentUserName()));
     }
 
     @Override
@@ -111,6 +114,35 @@ public class UserView extends AbstractView implements Serializable {
 
     public void setSubItemList(LazyDataModel<User> subItemList) {
         this.subItemList = subItemList;
+    }
+
+    public User getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(User selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+
+    //TODO, TODO test
+    public void assignProjectAccess() {
+        logger.debug("Setting project level access for user={}", selectedItem.getUsername());
+        //TODO set access
+    }
+
+    //TODO
+    private int getUserIdForUsername(final String username) {
+        final List<User> userList = userDAO.findByUsername(username);
+        if (userList.size() == 0) { //FIXME it's for the 1st user
+            logger.debug("Returning 1st user id, since user list={}", userList.toString());
+            return 1;
+        }
+        return userList.get(0).getUserId(); //TODO only one anyway
+    }
+
+    private String getCurrentUserName() {
+        final String netid = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("netid").toString();
+        return netid;
     }
 }
 
