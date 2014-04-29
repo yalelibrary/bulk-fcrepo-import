@@ -21,5 +21,6 @@
         <mapping resource="ladybird-hbm/Monitor.hbm.xml"/>
         <mapping resource="ladybird-hbm/Object.hbm.xml"/>
         <mapping resource="ladybird-hbm/Users.hbm.xml"/>
+        <mapping resource="ladybird-hbm/UserPreferences.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

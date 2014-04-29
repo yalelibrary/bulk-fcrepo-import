@@ -22,7 +22,7 @@ public class UserViewIT extends AbstractWarTest {
     /**
      * Page to test
      */
-    private static final String PAGE_TO_TEST = getUrl("Users");
+    private static final String PAGE_TO_TEST = getUrl("user_manager");
 
     @BeforeClass
     public static void setup() throws MalformedURLException {

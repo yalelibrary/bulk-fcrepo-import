@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template.xhtml">
+
+    <ui:define name="content">
+        <h2>User Preferences</h2>
+
+        <h3>Activity</h3>
+
+        <h:outputText value="Last login activity at #{sessionScope['netid-last-act-time']} for #{sessionScope['netid']}" />
+        <br/>
+        <h:outputText value="Watching project #{sessionScope['projectId']}" rendered="#{not empty sessionScope['projectId']}" />
+
+
+        <h3> Preferences</h3>
+
+        <h:form id="UserPreferencesForm" enctype="multipart/form-data">
+
+            <div>
+
+                <div>
+                        <div>
+                            <label class="control-label" for="projectSelectOneMenu">Default project </label>
+                            <h:outputText value=" No project yet. " rendered="#{empty ProjectView.projectNames}" />
+
+                            <div>
+                                <p:selectOneMenu id="projectSelectOneMenu" value="#{userPreferencesView.defaultProject.label}" rendered="#{not empty ProjectView.projectNames}">
+
+                                    <f:selectItems value="#{ProjectView.projectNames}"
+                                                   var="select_project_var"
+                                                   itemLabel="#{select_project_var}"
+                                                   itemValue="#{select_project_var}" />
+                                </p:selectOneMenu>
+                                <h:message for="projectSelectOneMenu" style="color:red" />
+
+                                <br/>
+                                <!-- Submit Button -->
+
+
+                                <h:commandButton id="jump_link" value="Submit"
+                                                 style="background-color:#fff" action="#{userPreferencesView.updatePreferences}"
+                                                 ajax="false"/>
+                            </div>
+                        </div>
+                    </div>
+
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+
