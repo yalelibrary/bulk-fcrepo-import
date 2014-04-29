@@ -8,13 +8,11 @@
 <ui:composition template="../../../templates/template.xhtml">
     <ui:define name="content">
         <h2>Import Source</h2>
-        <h:form id="ImportSourceForm" enctype="multipart/form-data"
-                styleClass=""
-                style="">
+        <h:form id="ImportSourceForm" enctype="multipart/form-data">
             <br/>
 
-            <div style="">
-                <div class="" style="">
+            <div>
+                <div>
 
                     <!--Add Button -->
 
@@ -43,12 +41,14 @@
                             </div>
                         </div>
 
+                        <!--
                         <div>
                             <label>XML Type</label>
                             <div>
                                 <p:inputText value="#{ImportSourceView.item.xmlType}"/>
                             </div>
                         </div>
+                        -->
 
 
                         <div>
@@ -60,7 +60,7 @@
 
                         <!-- Submit Button -->
 
-                        <p:commandButton update="ImportSourceDatatable, messages_pf"
+                        <p:commandButton update="ImportSourceDatatable"
                                          value="Submit" styleClass="btn" action="#{ImportSourceView.save}">
                         </p:commandButton>
 
@@ -85,7 +85,7 @@
                             </f:facet>
                             <h:outputText value="#{item.url}"/>
                         </p:column>
-                        <p:column>
+                        <p:column rendered="false">
                             <f:facet name="header">
                                 <h:outputText value="XmlType"/>
                             </f:facet>

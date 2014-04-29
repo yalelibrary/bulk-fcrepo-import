@@ -22,7 +22,7 @@ public class ImportFileViewIT extends AbstractWarTest {
     /**
      * Page to test
      */
-    private static final String PAGE_TO_TEST = getUrl("import/ImportFile");
+    private static final String PAGE_TO_TEST = getUrl("import/import_file");
 
     @BeforeClass
     public static void setup() throws MalformedURLException {

@@ -22,7 +22,7 @@ public class ObjectViewIT extends AbstractWarTest {
     /**
      * Page to test
      */
-    private static final String PAGE_TO_TEST = getUrl("object/Object");
+    private static final String PAGE_TO_TEST = getUrl("object/object");
 
     @BeforeClass
     public static void setup() throws MalformedURLException {

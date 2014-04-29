@@ -44,7 +44,8 @@
 
                                 <h:commandButton id="jump_link" value="Submit"
                                                  style="background-color:#fff" action="#{userPreferencesView.updatePreferences}"
-                                                 ajax="false"/>
+                                                 ajax="false"
+                                                 rendered="#{not empty ProjectView.projectNames}"/>
                             </div>
                         </div>
                     </div>

@@ -21,7 +21,7 @@ public class ObjectFileViewIT extends AbstractWarTest {
     /**
      * Page to test
      */
-    private static final String PAGE_TO_TEST = getUrl("object/ObjectFile");
+    private static final String PAGE_TO_TEST = getUrl("object/object_file");
 
     @BeforeClass
     public static void setup() throws MalformedURLException {

@@ -7,8 +7,8 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../../templates/template.xhtml">
     <ui:define name="content">
-        <h2>ImportFile</h2>
-        <h:form id="ImportFileForm" enctype="multipart/form-data"
+        <h2>Object File</h2>
+        <h:form id="ObjectFileForm" enctype="multipart/form-data"
                 styleClass=""
                 style="">
             <br/>
@@ -18,34 +18,16 @@
 
                     <!-- Data Table -->
 
-                    <p:dataTable id="ImportFileDatatable" value="#{ImportFileView.itemList}"
+                    <p:dataTable id="ObjectFileDatatable" value="#{ObjectFileView.itemList}"
                                  var="item" paginator="true" rows="10"
                                  tableStyle="" paginatorPosition="bottom"
                                  editable="false">
 
                         <p:column width="70">
                             <f:facet name="header">
-                                <h:outputText value="ImportId"/>
-                            </f:facet>
-                            <h:outputText value="#{item.importId}"/>
-                        </p:column>
-                        <p:column width="70">
-                            <f:facet name="header">
                                 <h:outputText value="Date"/>
                             </f:facet>
                             <h:outputText value="#{item.date}"/>
-                        </p:column>
-                        <p:column width="70">
-                            <f:facet name="header">
-                                <h:outputText value="FileLocation"/>
-                            </f:facet>
-                            <h:outputText value="#{item.fileLocation}"/>
-                        </p:column>
-                        <p:column width="70">
-                            <f:facet name="header">
-                                <h:outputText value="Oid"/>
-                            </f:facet>
-                            <h:outputText value="#{item.oid}"/>
                         </p:column>
                         <p:column width="70">
                             <f:facet name="header">
@@ -55,36 +37,65 @@
                         </p:column>
                         <p:column width="70">
                             <f:facet name="header">
-                                <h:outputText value="Code"/>
+                                <h:outputText value="Oid"/>
                             </f:facet>
-                            <h:outputText value="#{item.code}"/>
+                            <h:outputText value="#{item.oid}"/>
                         </p:column>
                         <p:column width="70">
                             <f:facet name="header">
-                                <h:outputText value="Error"/>
+                                <h:outputText value="FileLabel"/>
                             </f:facet>
-                            <h:outputText value="#{item.error}"/>
+                            <h:outputText value="#{item.fileLabel}"/>
                         </p:column>
                         <p:column width="70">
                             <f:facet name="header">
-                                <h:outputText value="Type"/>
+                                <h:outputText value="FileName"/>
                             </f:facet>
-                            <h:outputText value="#{item.type}"/>
+                            <h:outputText value="#{item.fileName}"/>
                         </p:column>
                         <p:column width="70">
                             <f:facet name="header">
-                                <h:outputText value="Label"/>
+                                <h:outputText value="FilePath"/>
                             </f:facet>
-                            <h:outputText value="#{item.label}"/>
+                            <h:outputText value="#{item.filePath}"/>
+                        </p:column>
+                        <p:column width="70">
+                            <f:facet name="header">
+                                <h:outputText value="FileExt"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fileExt}"/>
+                        </p:column>
+                        <p:column width="70">
+                            <f:facet name="header">
+                                <h:outputText value="FileSize"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fileSize}"/>
+                        </p:column>
+                        <p:column width="70">
+                            <f:facet name="header">
+                                <h:outputText value="Md5"/>
+                            </f:facet>
+                            <h:outputText value="#{item.md5}"/>
+                        </p:column>
+                        <p:column width="70">
+                            <f:facet name="header">
+                                <h:outputText value="Sha256"/>
+                            </f:facet>
+                            <h:outputText value="#{item.sha256}"/>
+                        </p:column>
+                        <p:column width="70">
+                            <f:facet name="header">
+                                <h:outputText value="HydraPublishId"/>
+                            </f:facet>
+                            <h:outputText value="#{item.hydraPublishId}"/>
+                        </p:column>
+                        <p:column width="70">
+                            <f:facet name="header">
+                                <h:outputText value="Status"/>
+                            </f:facet>
+                            <h:outputText value="#{item.status}"/>
                         </p:column>
 
-                        <p:column width="80" rendered="false">
-                            <f:facet name="header">
-                                <h:outputText value="Remove?"/>
-                            </f:facet>
-                            <p:commandButton icon="ui-icon-close" title="remove from db"
-                                             actionListener="#{ImportFileView.remove(c)}" update="ImportFileDatatable"/>
-                        </p:column>
                     </p:dataTable>
                 </div>
             </div>
