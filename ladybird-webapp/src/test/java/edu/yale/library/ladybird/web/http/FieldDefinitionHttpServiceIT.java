@@ -16,7 +16,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class FieldDefinitionHttpServiceIT extends AbstractWarTest {
 
-    private final String HTTP_SERVICE = "fielddefinition";
+    private final String HTTP_SERVICE = "fielddefinitions";
 
     @BeforeClass
     public static void setup() throws MalformedURLException {

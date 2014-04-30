@@ -16,7 +16,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class ProjectHttpServiceIT extends AbstractWarTest {
 
-    private final String HTTP_SERVICE = "project";
+    private final String HTTP_SERVICE = "projects";
 
     @BeforeClass
     public static void setup() throws MalformedURLException {

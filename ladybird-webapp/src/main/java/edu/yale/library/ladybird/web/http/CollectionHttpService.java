@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.slf4j.LoggerFactory.getLogger;
 
-@Path("/{path: .*}/collection")
+@Path("/{path: .*}/collections")
 public class CollectionHttpService {
     private final Logger logger = getLogger(this.getClass());
 
