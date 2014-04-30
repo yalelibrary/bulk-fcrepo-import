@@ -1,8 +1,8 @@
 package edu.yale.library.ladybird.engine.cron;
 
 
-import edu.yale.library.entity.model.Monitor;
-import edu.yale.library.entity.model.User;
+import edu.yale.library.ladybird.entity.Monitor;
+import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportCompleteEventBuilder;
 import edu.yale.library.ladybird.engine.exports.ExportEngine;

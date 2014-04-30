@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.web.view;
 
-import edu.yale.library.entity.model.FieldDefinition;
-import edu.yale.library.entity.model.FieldDefinitionBuilder;
+import edu.yale.library.ladybird.entity.FieldDefinition;
+import edu.yale.library.ladybird.entity.FieldDefinitionBuilder;
 import edu.yale.library.ladybird.persistence.dao.FieldDefinitionDAO;
 import org.slf4j.Logger;
 

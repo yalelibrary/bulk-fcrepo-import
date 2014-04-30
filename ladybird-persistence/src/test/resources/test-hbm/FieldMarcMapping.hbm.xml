@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class name="edu.yale.library.entity.model.FieldMarcMapping" table="field_marc_mapping" catalog="pamoja">
+    <class name="edu.yale.library.ladybird.entity.FieldMarcMapping" table="field_marc_mapping" catalog="pamoja">
         <id name="id" type="int">
             <column name="id" />
             <generator class="identity" />

@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.persistence.dao;
 
 
-import edu.yale.library.entity.model.UserPreferences;
+import edu.yale.library.ladybird.entity.UserPreferences;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

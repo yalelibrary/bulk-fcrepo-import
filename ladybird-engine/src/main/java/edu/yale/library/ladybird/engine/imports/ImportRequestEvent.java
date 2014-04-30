@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.engine.imports;
 
-import edu.yale.library.entity.model.Monitor;
+import edu.yale.library.ladybird.entity.Monitor;
 import edu.yale.library.ladybird.kernel.events.imports.ImportEvent;
 
 /**

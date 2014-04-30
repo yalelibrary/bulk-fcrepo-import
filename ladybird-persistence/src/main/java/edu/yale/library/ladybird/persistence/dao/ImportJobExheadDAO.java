@@ -1,8 +1,6 @@
-
-
 package edu.yale.library.ladybird.persistence.dao;
 
-import edu.yale.library.entity.model.ImportJobExhead;
+import edu.yale.library.ladybird.entity.ImportJobExhead;
 
 import java.util.List;
 

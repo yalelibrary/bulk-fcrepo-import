@@ -6,10 +6,10 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
-import edu.yale.library.entity.model.Project;
-import edu.yale.library.entity.model.ProjectRoles;
-import edu.yale.library.entity.model.UserProject;
-import edu.yale.library.entity.model.UserProjectBuilder;
+import edu.yale.library.ladybird.entity.Project;
+import edu.yale.library.ladybird.entity.ProjectRoles;
+import edu.yale.library.ladybird.entity.UserProject;
+import edu.yale.library.ladybird.entity.UserProjectBuilder;
 import edu.yale.library.ladybird.persistence.dao.UserProjectDAO;
 
 import org.slf4j.Logger;

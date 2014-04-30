@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.kernel.events;
 
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
-import edu.yale.library.entity.model.User;
+import edu.yale.library.ladybird.entity.User;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;

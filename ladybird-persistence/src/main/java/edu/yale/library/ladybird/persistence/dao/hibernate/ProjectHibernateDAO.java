@@ -1,9 +1,6 @@
-
-
-
 package edu.yale.library.ladybird.persistence.dao.hibernate;
 
-import edu.yale.library.entity.model.Project;
+import edu.yale.library.ladybird.entity.Project;
 import edu.yale.library.ladybird.persistence.dao.ProjectDAO;
 import org.hibernate.Query;
 

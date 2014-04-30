@@ -2,8 +2,8 @@ package edu.yale.library.ladybird.persistence.dao;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
-import edu.yale.library.entity.model.Project;
-import edu.yale.library.entity.model.User;
+import edu.yale.library.ladybird.entity.Project;
+import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.persistence.dao.hibernate.CollectionHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportFileHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceHibernateDAO;

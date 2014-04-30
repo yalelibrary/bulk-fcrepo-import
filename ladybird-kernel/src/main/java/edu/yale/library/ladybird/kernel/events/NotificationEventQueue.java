@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.kernel.events;
 
-import edu.yale.library.entity.model.User;
+import edu.yale.library.ladybird.entity.User;
 
 import java.util.List;
 import java.util.Queue;

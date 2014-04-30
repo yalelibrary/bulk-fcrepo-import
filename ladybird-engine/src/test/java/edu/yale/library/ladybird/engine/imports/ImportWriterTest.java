@@ -6,7 +6,7 @@ import edu.yale.library.ladybird.engine.model.FieldConstantRules;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.engine.oai.Marc21Field;
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
-import edu.yale.library.entity.model.ImportSourceData;
+import edu.yale.library.ladybird.entity.ImportSourceData;
 import org.junit.Test;
 
 import java.io.IOException;

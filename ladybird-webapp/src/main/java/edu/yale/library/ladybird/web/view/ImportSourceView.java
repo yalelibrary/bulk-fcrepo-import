@@ -1,8 +1,8 @@
 
 package edu.yale.library.ladybird.web.view;
 
-import edu.yale.library.entity.model.ImportSource;
-import edu.yale.library.entity.model.ImportSourceBuilder;
+import edu.yale.library.ladybird.entity.ImportSource;
+import edu.yale.library.ladybird.entity.ImportSourceBuilder;
 
 import edu.yale.library.ladybird.persistence.dao.ImportSourceDAO;
 import org.slf4j.Logger;

@@ -1,8 +1,8 @@
 package edu.yale.library.ladybird.web.view;
 
 
-import edu.yale.library.entity.model.User;
-import edu.yale.library.entity.model.UserBuilder;
+import edu.yale.library.ladybird.entity.User;
+import edu.yale.library.ladybird.entity.UserBuilder;
 import edu.yale.library.ladybird.persistence.dao.UserDAO;
 import org.primefaces.model.LazyDataModel;
 import org.slf4j.Logger;

@@ -3,7 +3,7 @@ package edu.yale.library.ladybird.kernel.events;
 
 import com.dumbster.smtp.SimpleSmtpServer;
 import edu.yale.library.ladybird.kernel.KernelBootstrap;
-import edu.yale.library.entity.model.UserBuilder;
+import edu.yale.library.ladybird.entity.UserBuilder;
 import edu.yale.library.ladybird.kernel.events.imports.ImportEvent;
 import org.junit.Test;
 

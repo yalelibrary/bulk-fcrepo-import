@@ -1,9 +1,6 @@
-
-
-
 package edu.yale.library.ladybird.persistence.dao.hibernate;
 
-import edu.yale.library.entity.model.ImportJobExhead;
+import edu.yale.library.ladybird.entity.ImportJobExhead;
 import edu.yale.library.ladybird.persistence.dao.ImportJobExheadDAO;
 import org.hibernate.Query;
 

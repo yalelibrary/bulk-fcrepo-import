@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.persistence.dao.hibernate;
 
 
-import edu.yale.library.entity.model.User;
+import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.persistence.dao.UserDAO;
 import org.hibernate.Query;
 

@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.persistence.dao;
 
-import edu.yale.library.entity.model.ImportFile;
-import edu.yale.library.entity.model.ImportFileBuilder;
+import edu.yale.library.ladybird.entity.ImportFile;
+import edu.yale.library.ladybird.entity.ImportFileBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

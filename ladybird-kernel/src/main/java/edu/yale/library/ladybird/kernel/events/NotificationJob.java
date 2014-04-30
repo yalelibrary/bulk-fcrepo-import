@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.kernel.events;
 
 
 import com.google.inject.Inject;
-import edu.yale.library.entity.model.User;
+import edu.yale.library.ladybird.entity.User;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;

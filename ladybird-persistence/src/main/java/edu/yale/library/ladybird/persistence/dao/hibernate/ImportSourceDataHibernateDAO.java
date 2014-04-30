@@ -1,9 +1,6 @@
-
-
-
 package edu.yale.library.ladybird.persistence.dao.hibernate;
 
-import edu.yale.library.entity.model.ImportSourceData;
+import edu.yale.library.ladybird.entity.ImportSourceData;
 import edu.yale.library.ladybird.persistence.dao.ImportSourceDataDAO;
 import org.hibernate.Query;
 import org.slf4j.Logger;

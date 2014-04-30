@@ -1,8 +1,6 @@
-
-
 package edu.yale.library.ladybird.persistence.dao;
 
-import edu.yale.library.entity.model.AuthorityControl;
+import edu.yale.library.ladybird.entity.AuthorityControl;
 
 public interface AuthorityControlDAO extends GenericDAO<AuthorityControl, Integer> {
 

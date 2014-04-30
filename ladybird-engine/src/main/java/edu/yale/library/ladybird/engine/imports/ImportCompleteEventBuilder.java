@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.engine.imports;
 
-import edu.yale.library.entity.model.User;
+import edu.yale.library.ladybird.entity.User;
 
 public class ImportCompleteEventBuilder {
     private User user;

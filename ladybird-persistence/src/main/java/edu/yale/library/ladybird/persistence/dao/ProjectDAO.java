@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.persistence.dao;
 
-import edu.yale.library.entity.model.Project;
+import edu.yale.library.ladybird.entity.Project;
 
 import java.util.List;
 

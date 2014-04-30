@@ -2,8 +2,8 @@ package edu.yale.library.ladybird.engine.cron;
 
 
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
-import edu.yale.library.entity.model.ImportSource;
-import edu.yale.library.entity.model.User;
+import edu.yale.library.ladybird.entity.ImportSource;
+import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
 import edu.yale.library.ladybird.engine.imports.ImportEngine;
 import edu.yale.library.ladybird.engine.imports.ImportRequestEvent;

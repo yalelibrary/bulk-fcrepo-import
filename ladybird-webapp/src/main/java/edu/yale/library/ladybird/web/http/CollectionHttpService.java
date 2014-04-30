@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.web.http;
 
-import edu.yale.library.entity.model.Collection;
+import edu.yale.library.ladybird.entity.Collection;
 import edu.yale.library.ladybird.persistence.dao.CollectionDAO;
 
 import javax.inject.Inject;

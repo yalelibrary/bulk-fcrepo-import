@@ -1,9 +1,9 @@
 package edu.yale.library.ladybird.web.view;
 
 
-import edu.yale.library.entity.model.Project;
-import edu.yale.library.entity.model.User;
-import edu.yale.library.entity.model.UserPreferences;
+import edu.yale.library.ladybird.entity.Project;
+import edu.yale.library.ladybird.entity.User;
+import edu.yale.library.ladybird.entity.UserPreferences;
 import edu.yale.library.ladybird.persistence.dao.ProjectDAO;
 import edu.yale.library.ladybird.persistence.dao.UserDAO;
 import edu.yale.library.ladybird.persistence.dao.UserPreferencesDAO;
