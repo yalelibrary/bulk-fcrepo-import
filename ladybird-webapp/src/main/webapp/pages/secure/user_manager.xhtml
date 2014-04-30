@@ -7,8 +7,9 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../templates/template.xhtml">
     <ui:define name="offcanvas">
-        <a href="#" class="list-group-item">Search Users</a>
-        <a href="#" class="list-group-item">Delete Users</a>
+        <a href="/ladybird-webapp/pages/secure/users_projects.xhtml"
+           class="list-group-item">Users Projects Access</a>
+        <!-- <a href="#" class="list-group-item">Delete Users</a> -->
     </ui:define>
 
     <ui:define name="content">
@@ -80,7 +81,7 @@
                     <br/>
 
                     <p:contextMenu for="UserDatatable">
-                        <p:menuitem value="Assign Process Access" action="#{userView.assignProjectAccess}"/>
+                        <p:menuitem value="Assign Project Access" action="#{userView.assignProjectAccess}"/>
                     </p:contextMenu>
 
                     <!-- Data Table -->
@@ -123,7 +124,7 @@
                             <h:outputText value=""/>
                         </p:column>
                         <p:column headerText="Creator Id">
-                            <h:outputText value="#{item.userId_1}"/>
+                            <h:outputText value="#{item.creatorId}"/>
                         </p:column>
                         <p:column headerText="E-mail">
                             <h:outputText value="#{item.email}"/>

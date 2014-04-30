@@ -100,7 +100,7 @@ public class UserView extends AbstractView implements Serializable {
         item.setDateEdited(date);
         item.setDateEdited(date);
         item.setDateLastused(date);
-        item.setUserId_1(getUserIdForUsername(getCurrentUserName()));
+        item.setCreatorId(getUserIdForUsername(getCurrentUserName()));
     }
 
     @Override
@@ -124,13 +124,10 @@ public class UserView extends AbstractView implements Serializable {
         this.selectedItem = selectedItem;
     }
 
-    //TODO, TODO test
-    public void assignProjectAccess() {
-        logger.debug("Setting project level access for user={}", selectedItem.getUsername());
-        //TODO set access
+    public String assignProjectAccess() {
+        return "assign_project_access.xhtml?faces-redirect=true&id=" + selectedItem.getUserId();
     }
 
-    //TODO
     private int getUserIdForUsername(final String username) {
         final List<User> userList = userDAO.findByUsername(username);
         if (userList.size() == 0) { //FIXME it's for the 1st user
@@ -141,7 +138,8 @@ public class UserView extends AbstractView implements Serializable {
     }
 
     private String getCurrentUserName() {
-        final String netid = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("netid").toString();
+        final String netid = FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+                .get("netid").toString();
         return netid;
     }
 }

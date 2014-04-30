@@ -7,9 +7,7 @@ public class UserBuilder {
     private String username;
     private String password;
     private Date dateCreated;
-    private Date dateEdited;
-    private Date dateLastused;
-    private int userId_1;
+    private int creatorId;
     private String name;
     private String email;
 
@@ -33,18 +31,8 @@ public class UserBuilder {
         return this;
     }
 
-    public UserBuilder setDateEdited(Date dateEdited) {
-        this.dateEdited = dateEdited;
-        return this;
-    }
-
-    public UserBuilder setDateLastused(Date dateLastused) {
-        this.dateLastused = dateLastused;
-        return this;
-    }
-
-    public UserBuilder setUserId_1(int userId_1) {
-        this.userId_1 = userId_1;
+    public UserBuilder setCreatorId(int creatorId) {
+        this.creatorId = creatorId;
         return this;
     }
 
@@ -59,6 +47,6 @@ public class UserBuilder {
     }
 
     public User createUser() {
-        return new User(date, username, password, dateCreated, dateEdited, dateLastused, userId_1, name, email);
+        return new User(date, username, password, dateCreated, creatorId, name, email);
     }
 }

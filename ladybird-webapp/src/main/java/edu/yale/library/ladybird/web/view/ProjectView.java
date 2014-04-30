@@ -46,7 +46,6 @@ public class ProjectView extends AbstractView {
         item.setUserId(creatorId);
 
         try {
-            logger.debug("Saving item={}", item);
             setDefaults(item);
             dao.save(item);
         } catch (Throwable e) {
@@ -90,13 +89,11 @@ public class ProjectView extends AbstractView {
         this.selectedItem = selectedItem;
     }
 
-
     public void selectElement() {
         saveInSession(selectedItem.getProjectId());
     }
 
     private void saveInSession(final int projectId) {
-        logger.debug("Saving in session projectId={}", projectId);
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("projectId", projectId);
     }
 }

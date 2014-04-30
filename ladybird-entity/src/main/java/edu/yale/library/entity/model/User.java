@@ -8,7 +8,6 @@ import java.util.Date;
  */
 public class User implements java.io.Serializable {
 
-
     private Integer userId;
     private Date date;
     private String username;
@@ -16,7 +15,7 @@ public class User implements java.io.Serializable {
     private Date dateCreated;
     private Date dateEdited;
     private Date dateLastused;
-    private int userId_1;
+    private int creatorId;
     private String name;
     private String email;
 
@@ -24,14 +23,12 @@ public class User implements java.io.Serializable {
     }
 
 
-    public User(Date date, String username, String password, Date dateCreated, Date dateEdited, Date dateLastused, int userId_1, String name, String email) {
+    public User(Date date, String username, String password, Date dateCreated, int creatorId, String name, String email) {
         this.date = date;
         this.username = username;
         this.password = password;
         this.dateCreated = dateCreated;
-        this.dateEdited = dateEdited;
-        this.dateLastused = dateLastused;
-        this.userId_1 = userId_1;
+        this.creatorId = creatorId;
         this.name = name;
         this.email = email;
     }
@@ -92,12 +89,12 @@ public class User implements java.io.Serializable {
         this.dateLastused = dateLastused;
     }
 
-    public int getUserId_1() {
-        return this.userId_1;
+    public int getCreatorId() {
+        return this.creatorId;
     }
 
-    public void setUserId_1(int userId_1) {
-        this.userId_1 = userId_1;
+    public void setCreatorId(int creatorId) {
+        this.creatorId = creatorId;
     }
 
     public String getName() {
@@ -126,7 +123,7 @@ public class User implements java.io.Serializable {
                 + ", dateCreated=" + dateCreated
                 + ", dateEdited=" + dateEdited
                 + ", dateLastused=" + dateLastused
-                + ", userId_1=" + userId_1
+                + ", creatorId=" + creatorId
                 + ", name='" + name + '\''
                 + ", email='" + email + '\''
                 + '}';

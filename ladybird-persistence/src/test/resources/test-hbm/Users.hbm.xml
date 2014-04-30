@@ -25,7 +25,7 @@
         <property name="dateLastused" type="timestamp">
             <column name="date_lastused" length="19" not-null="true" />
         </property>
-        <property name="userId_1" type="int">
+        <property name="creatorId" type="int">
             <column name="creator_id" not-null="true">
                 <comment>user ID of the person that created this account</comment>
             </column>
