@@ -15,15 +15,15 @@ public class HttpServiceTestUtil {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
-    public HttpClient httpClient;
+    protected HttpClient httpClient; //TODO
     private static final int DEFAULT_MAX_PER_ROUTE = 5;
     private static final int IDLE_TIMEOUT = 3;
     private static final String DEFAULT_TEST_PORT = "8081";
-    protected static final int SERVER_PORT = Integer.parseInt(System
+    private static final int SERVER_PORT = Integer.parseInt(System
             .getProperty("test.port", DEFAULT_TEST_PORT));
-    protected static final String HOSTNAME = "localhost";
-    protected static final String SUFFIX = "";
-    protected static final String serverAddress = "http://" + HOSTNAME + ":"
+    private static final String HOSTNAME = "localhost";
+    private static final String SUFFIX = "";
+    private static final String serverAddress = "http://" + HOSTNAME + ":"
             + SERVER_PORT + "/ladybird-webapp-0.0.1-SNAPSHOT/rest/";
 
     public HttpServiceTestUtil() {
@@ -39,7 +39,6 @@ public class HttpServiceTestUtil {
 
     public HttpGet doGET(final String param) {
         final String url = serverAddress + param + "/" + SUFFIX;
-        logger.debug("Hitting http url={}", url);
         HttpGet get = new HttpGet(url);
         return get;
     }

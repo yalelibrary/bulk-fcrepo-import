@@ -9,7 +9,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
-import java.io.IOException;
 import java.net.MalformedURLException;
 
 /**
@@ -34,22 +33,13 @@ public class ObjectFileViewIT extends AbstractWarTest {
     }
 
     @Test
-    public void shouldContainEmptyTable() throws IOException {
-        final WebClient webClient = new WebClient();
-        webClient.setJavaScriptEnabled(false);
-        final HtmlPage page = webClient.getPage(PAGE_TO_TEST);
-        final String pageAsText = page.asText();
-        Assert.assertTrue(pageAsText.contains("No records found."));
-        webClient.closeAllWindows();
-    }
-
-    @Test
     public void shouldContainColumn() throws Exception {
         final WebClient webClient = new WebClient();
         webClient.setJavaScriptEnabled(false);
         final HtmlPage page = webClient.getPage(PAGE_TO_TEST);
         final String pageAsText = page.asText();
         Assert.assertTrue(pageAsText.contains("FileName"));
+        Assert.assertTrue(pageAsText.contains("No records found."));
         webClient.closeAllWindows();
     }
 }

@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 
 /**
@@ -26,7 +25,6 @@ public class ObjectViewIT extends AbstractWarTest {
 
     @BeforeClass
     public static void setup() throws MalformedURLException {
-        logger.debug("Setting up container");
         setupContainer();
     }
 
@@ -36,21 +34,12 @@ public class ObjectViewIT extends AbstractWarTest {
     }
 
     @Test
-    public void shouldContainEmptyTable() throws IOException {
-        final WebClient webClient = new WebClient();
-        webClient.setJavaScriptEnabled(false);
-        final HtmlPage page = webClient.getPage(PAGE_TO_TEST);
-        final String pageAsText = page.asText();
-        Assert.assertTrue(pageAsText.contains("No records found."));
-        webClient.closeAllWindows();
-    }
-
-    @Test
     public void shouldContainColumn() throws Exception {
         final WebClient webClient = new WebClient();
         webClient.setJavaScriptEnabled(false);
         final HtmlPage page = webClient.getPage(PAGE_TO_TEST);
         final String pageAsText = page.asText();
+        Assert.assertTrue(pageAsText.contains("No records found."));
         Assert.assertTrue(pageAsText.contains("ProjectId"));
         webClient.closeAllWindows();
     }

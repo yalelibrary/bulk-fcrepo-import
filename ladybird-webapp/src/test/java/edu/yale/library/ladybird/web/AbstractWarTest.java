@@ -19,15 +19,15 @@ public class AbstractWarTest {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractWarTest.class);
 
-    protected static final String TOMCAT_INSTALL_URL = "http://archive.apache.org/dist/tomcat/tomcat-7"
+    private static final String TOMCAT_INSTALL_URL = "http://archive.apache.org/dist/tomcat/tomcat-7"
             + "/v7.0.42/bin/apache-tomcat-7.0.42-windows-x86.zip";
-    protected static final String APP_ARTIFACT = "ladybird-webapp-0.0.1-SNAPSHOT";
-    protected static final String APP_PREFIX = "/ladybird-webapp/";
-    protected static final String DEFAULT_PAGE_PREFIX = "/pages/secure/";
+    private static final String APP_ARTIFACT = "ladybird-webapp-0.0.1-SNAPSHOT";
+    private static final String APP_PREFIX = "/ladybird-webapp/";
+    private static final String DEFAULT_PAGE_PREFIX = "/pages/secure/";
     private static final String TEST_PORT = "8081";
-    protected static final String SERVER_PREFIX = "http://localhost:" + TEST_PORT + "/";
+    private static final String SERVER_PREFIX = "http://localhost:" + TEST_PORT + "/";
     private static final String TOMCAT_7_X = "tomcat7x";
-    protected static final String WAR = System.getProperty("java.io.tmpdir") + APP_PREFIX + APP_ARTIFACT + ".war";
+    private static final String WAR = System.getProperty("java.io.tmpdir") + APP_PREFIX + APP_ARTIFACT + ".war";
     private static boolean containerStarted = false;
 
     protected static void setupContainer() throws MalformedURLException {
@@ -43,8 +43,8 @@ public class AbstractWarTest {
         final Installer installer = new ZipURLInstaller(new java.net.URL(TOMCAT_INSTALL_URL));
         installer.install();
 
-        final LocalConfiguration configuration = (LocalConfiguration) new DefaultConfigurationFactory().createConfiguration(
-                TOMCAT_7_X, ContainerType.INSTALLED, ConfigurationType.STANDALONE);
+        final LocalConfiguration configuration = (LocalConfiguration) new DefaultConfigurationFactory()
+                .createConfiguration(TOMCAT_7_X, ContainerType.INSTALLED, ConfigurationType.STANDALONE);
         configuration.setProperty(ServletPropertySet.PORT, TEST_PORT);
         final InstalledLocalContainer container =
                 (InstalledLocalContainer) new DefaultContainerFactory().createContainer(
