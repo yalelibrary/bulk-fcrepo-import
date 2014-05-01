@@ -83,7 +83,20 @@ public class ObjectFileBuilder {
     }
 
     public ObjectFile createObjectFile() {
-        return new ObjectFile(dataId, date, userId, oid, fileLabel, fileName, filePath, fileExt, fileSize,
-                md5, sha256, hydraPublishId, status);
+        final ObjectFile objectFile = new ObjectFile();
+        objectFile.setDataId(dataId);
+        objectFile.setDate(date);
+        objectFile.setUserId(userId);
+        objectFile.setOid(oid);
+        objectFile.setFileLabel(fileLabel);
+        objectFile.setFileName(fileName);
+        objectFile.setFilePath(filePath);
+        objectFile.setFileExt(fileExt);
+        objectFile.setFileSize(fileSize);
+        objectFile.setMd5(md5);
+        objectFile.setSha256(sha256);
+        objectFile.setHydraPublishId(hydraPublishId);
+        objectFile.setStatus(status);
+        return objectFile;
     }
 }

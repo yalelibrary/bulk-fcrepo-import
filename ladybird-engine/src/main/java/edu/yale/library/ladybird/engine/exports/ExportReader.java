@@ -258,8 +258,7 @@ public class ExportReader {
                     return col.getValue();
                 }
             } catch (Exception e) {
-                //logger.error("Null value for={} or={}", f.toString(), column.toString());
-                //logger.error(e.getMessage());
+                logger.trace("Null value for={} or={}", f.toString(), column.toString());
             }
         }
         return "";

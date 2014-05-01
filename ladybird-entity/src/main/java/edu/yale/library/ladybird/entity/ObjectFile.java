@@ -26,26 +26,6 @@ public class ObjectFile implements java.io.Serializable {
     public ObjectFile() {
     }
 
-
-    public ObjectFile(final Integer dataId, final Date date, final int userId, final int oid,
-                      final String fileLabel, final String fileName, final String filePath, final String fileExt,
-                      final Integer fileSize, final String md5, final String sha256, final Integer hydraPublishId,
-                      final String status) {
-        this.dataId = dataId;
-        this.date = date;
-        this.userId = userId;
-        this.oid = oid;
-        this.fileLabel = fileLabel;
-        this.fileName = fileName;
-        this.filePath = filePath;
-        this.fileExt = fileExt;
-        this.fileSize = fileSize;
-        this.md5 = md5;
-        this.sha256 = sha256;
-        this.hydraPublishId = hydraPublishId;
-        this.status = status;
-    }
-
     public Integer getDataId() {
         return this.dataId;
     }

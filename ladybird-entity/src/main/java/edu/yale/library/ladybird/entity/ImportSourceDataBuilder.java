@@ -71,6 +71,18 @@ public class ImportSourceDataBuilder {
     }
 
     public ImportSourceData createImportSourceData() {
-        return new ImportSourceData(id, date, importSourceId, k1, k2, k3, attr, attrVal, value, zindex, notes);
+        final ImportSourceData importSourceData = new ImportSourceData();
+        importSourceData.setId(id);
+        importSourceData.setDate(date);
+        importSourceData.setImportSourceId(importSourceId);
+        importSourceData.setK1(k1);
+        importSourceData.setK2(k2);
+        importSourceData.setK3(k3);
+        importSourceData.setAttr(attr);
+        importSourceData.setAttrVal(attrVal);
+        importSourceData.setValue(value);
+        importSourceData.setZindex(zindex);
+        importSourceData.setNotes(notes);
+        return importSourceData;
     }
 }

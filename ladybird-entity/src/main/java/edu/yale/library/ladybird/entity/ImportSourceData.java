@@ -21,22 +21,6 @@ public class ImportSourceData implements java.io.Serializable {
     public ImportSourceData() {
     }
 
-
-    public ImportSourceData(Integer id, Date date, int importSourceId, String k1, String k2, String k3,
-                            String attr, String attrVal, String value, Integer zindex, String notes) {
-        this.id = id;
-        this.date = date;
-        this.importSourceId = importSourceId;
-        this.k1 = k1;
-        this.k2 = k2;
-        this.k3 = k3;
-        this.attr = attr;
-        this.attrVal = attrVal;
-        this.value = value;
-        this.zindex = zindex;
-        this.notes = notes;
-    }
-
     public Integer getId() {
         return this.id;
     }

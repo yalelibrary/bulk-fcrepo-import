@@ -59,6 +59,16 @@ public class ImportFileBuilder {
     }
 
     public ImportFile createImportFile() {
-        return new ImportFile(importId, date, fileLocation, oid, userId, code, error, type, label);
+        final ImportFile importFile = new ImportFile();
+        importFile.setImportId(importId);
+        importFile.setDate(date);
+        importFile.setFileLocation(fileLocation);
+        importFile.setOid(oid);
+        importFile.setUserId(userId);
+        importFile.setCode(code);
+        importFile.setError(error);
+        importFile.setType(type);
+        importFile.setLabel(label);
+        return importFile;
     }
 }
