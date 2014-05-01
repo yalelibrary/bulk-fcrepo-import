@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template.xhtml">
+    <ui:define name="content">
+        <h2>Add Project</h2>
+        <h:form id="ProjectForm" enctype="multipart/form-data"
+                styleClass=""
+                style="">
+            <br/>
+
+            <div style="">
+                <div class="" style="">
+
+                    <div>
+                        <label>Project Label</label>
+                        <div>
+                            <p:inputText value="#{ProjectView.item.label}">
+                            </p:inputText>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label>Project Url</label>
+                        <div>
+                            <p:inputText value="#{ProjectView.item.url}">
+                            </p:inputText>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label>Notification E-mail</label>
+
+                        <div>
+                            <label class="control-label" for="userSelectBox">Select creator e-mail </label>
+
+                            <div>
+                                <p:selectOneMenu id="userSelectBox"
+                                                 value="#{ProjectView.item.creator.email}">
+
+                                    <f:selectItems value="#{userView.userEmailList}"
+                                                   var="select_user_var"
+                                                   itemLabel="#{select_user_var}"
+                                                   itemValue="#{select_user_var}" />
+
+                                </p:selectOneMenu>
+                                <h:message for="userSelectBox" style="color:red" />
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div>
+                        <label>Project Address</label>
+                        <div>
+                            <p:inputText value="#{ProjectView.item.add1}"/>
+                        </div>
+                    </div>
+
+
+                    <!-- Submit Button -->
+
+                    <p:commandButton value="Submit" ajax="false" styleClass="btn" action="#{ProjectView.save}"
+                                     rendered="#{not empty userView.userEmailList}">
+                    </p:commandButton>
+
+
+
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

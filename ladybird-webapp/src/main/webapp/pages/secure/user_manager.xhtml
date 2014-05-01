@@ -7,78 +7,16 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../templates/template.xhtml">
     <ui:define name="offcanvas">
+        <a href="/ladybird-webapp/pages/secure/user_manager_form.xhtml" class="list-group-item">Add Users</a>
         <a href="/ladybird-webapp/pages/secure/users_projects.xhtml"
            class="list-group-item">Users Projects Access</a>
-        <!-- <a href="#" class="list-group-item">Delete Users</a> -->
     </ui:define>
 
     <ui:define name="content">
         <h2>Users</h2>
         <h:form id="UserForm" enctype="multipart/form-data">
-
             <div>
-
                 <div>
-
-                    <br/>
-
-                    <!--Add Button -->
-
-                    <p:commandButton icon="ui-icon-plusthick"
-                                     type="button"
-                                     onclick="dlg.show();"
-                                     value="New Item" />
-
-                    <!-- Modal pop up for + Button -->
-
-                    <p:dialog id="modalDialog"
-                              header="New Item"
-                              height="350"
-                              modal="true"
-                              resizable="false"
-                              width="350"
-                              widgetVar="dlg">
-
-                        <div>
-                            <span class="help-block">
-                                <p:messages id="messages_pf" showDetail="true" autoUpdate="true" closable="true"/>
-                            </span>
-                        </div>
-
-                        <div>
-                            <label>Username</label>
-                            <div>
-                                <p:inputText value="#{userView.item.username}"/>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label>Name</label>
-                            <div>
-                                <p:inputText value="#{userView.item.name}"/>
-                            </div>
-                        </div>
-
-
-                        <div>
-                            <label>E-mail</label>
-                            <div>
-                                <p:inputText value="#{userView.item.email}"/>
-                            </div>
-                        </div>
-
-
-                        <!-- Submit Button -->
-
-                        <p:commandButton action="#{userView.save}"
-                                         styleClass="btn"
-                                         update="UserDatatable, messages_pf"
-                                         value="Submit"/>
-
-                    </p:dialog>
-
-                    <br/>
-                    <br/>
 
                     <p:contextMenu for="UserDatatable">
                         <p:menuitem value="Assign Project Access" action="#{userView.assignProjectAccess}"/>

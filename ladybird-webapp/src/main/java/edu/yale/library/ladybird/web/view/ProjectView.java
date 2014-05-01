@@ -38,7 +38,7 @@ public class ProjectView extends AbstractView {
         dao = entityDAO;
     }
 
-    public void save() {
+    public String save() {
         //TODO tmp until linked
         final UserDAO userDao = new UserHibernateDAO();
         final List<User> userList = userDao.findByEmail(item.getCreator().getEmail());
@@ -48,8 +48,10 @@ public class ProjectView extends AbstractView {
         try {
             setDefaults(item);
             dao.save(item);
+            return "ok";
         } catch (Throwable e) {
             logger.error("Error saving item", e);
+            return "failed";
         }
     }
     //TODO replace with DAO call

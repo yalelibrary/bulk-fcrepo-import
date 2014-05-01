@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template.xhtml">
+    <ui:define name="offcanvas">
+        <a href="/ladybird-webapp/pages/secure/users_projects.xhtml"
+           class="list-group-item">Users Projects Access</a>
+    </ui:define>
+
+    <ui:define name="content">
+        <h2>Add User</h2>
+        <h:form id="UserForm" enctype="multipart/form-data">
+            <div>
+                <div>
+
+                    <div>
+                        <label>Username</label>
+                        <div>
+                            <p:inputText value="#{userView.item.username}"/>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label>Name</label>
+                        <div>
+                            <p:inputText value="#{userView.item.name}"/>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label>E-mail</label>
+                        <div>
+                            <p:inputText value="#{userView.item.email}"/>
+                        </div>
+                    </div>
+
+                    <p:commandButton action="#{userView.save}"
+                                     styleClass="btn"
+                                     ajax="false"
+                                     value="Submit"/>
+
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

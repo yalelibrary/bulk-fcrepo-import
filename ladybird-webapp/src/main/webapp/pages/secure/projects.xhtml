@@ -6,6 +6,10 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../templates/template.xhtml">
+    <ui:define name="offcanvas">
+        <a href="/ladybird-webapp/pages/secure/projects_form.xhtml" class="list-group-item">Add Project</a>
+    </ui:define>
+
     <ui:define name="content">
         <h2>Projects</h2>
         <h:form id="ProjectForm" enctype="multipart/form-data"
@@ -15,82 +19,6 @@
 
             <div style="">
                 <div class="" style="">
-
-                    <!--Add Button -->
-
-                    <p:commandButton id="chartBtn" icon="ui-icon-plusthick"
-                                     value="New Item" type="button" style="color:#103480;"
-                                     onclick="dlg.show();"
-                                     rendered="#{not empty userView.userEmailList}"/>
-
-                    <br/>
-                    <br/>
-
-                    <!-- Modal pop up for + Button -->
-
-                    <p:dialog id="modalDialog" header="New Item" widgetVar="dlg"
-                              modal="true" height="350" width="350" resizable="false">
-                        <div class="control-group">
-                            <span class="help-block">
-                              <p:messages id="messages_pf" showDetail="true" autoUpdate="true" closable="true"/>
-                            </span>
-                        </div>
-
-                        <div>
-                            <label>Project Label</label>
-                            <div>
-                                <p:inputText value="#{ProjectView.item.label}">
-                                </p:inputText>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label>Project Url</label>
-                            <div>
-                                <p:inputText value="#{ProjectView.item.url}">
-                                </p:inputText>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label>Notification E-mail</label>
-
-                            <div>
-                                <label class="control-label" for="userSelectBox">Select creator e-mail </label>
-
-                                <div>
-                                    <p:selectOneMenu id="userSelectBox"
-                                                     value="#{ProjectView.item.creator.email}">
-
-                                        <f:selectItems value="#{userView.userEmailList}"
-                                                       var="select_user_var"
-                                                       itemLabel="#{select_user_var}"
-                                                       itemValue="#{select_user_var}" />
-
-                                    </p:selectOneMenu>
-                                    <h:message for="userSelectBox" style="color:red" />
-
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div>
-                            <label>Project Address</label>
-                            <div>
-                                <p:inputText value="#{ProjectView.item.add1}"/>
-                            </div>
-                        </div>
-
-
-                        <!-- Submit Button -->
-
-                        <p:commandButton update="ProjectDatatable, messages_pf"
-                                         value="Submit" styleClass="btn" action="#{ProjectView.save}">
-                        </p:commandButton>
-
-                    </p:dialog>
-
 
                     <p:contextMenu for="ProjectDatatable">
                         <p:menuitem value="Watch" action="#{ProjectView.selectElement}"/>
@@ -173,13 +101,6 @@
                             <h:outputText value="#{item.phone}"/>
                         </p:column>
 
-                        <p:column width="80" rendered="false">
-                            <f:facet name="header">
-                                <h:outputText value="Remove?"/>
-                            </f:facet>
-                            <p:commandButton icon="ui-icon-close" title="remove from db"
-                                             actionListener="#{ProjectView.remove(c)}" update="ProjectDatatable"/>
-                        </p:column>
                     </p:dataTable>
                 </div>
             </div>

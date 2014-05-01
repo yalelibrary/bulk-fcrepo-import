@@ -12,5 +12,21 @@
             <redirect/>
         </navigation-case>
     </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/pages/secure/user_manager_form.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>ok</from-outcome>
+            <to-view-id>/pages/secure/user_manager.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/pages/secure/projects_form.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>ok</from-outcome>
+            <to-view-id>/pages/secure/projects.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+    </navigation-rule>
 
 </faces-config>
