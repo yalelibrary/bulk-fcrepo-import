@@ -130,6 +130,10 @@ public class UserView extends AbstractView implements Serializable {
         return "assign_project_access.xhtml?faces-redirect=true&id=" + selectedItem.getUserId();
     }
 
+    public String assignProjectFieldMetadataAccess() {
+        return "user_metadata_access.xhtml?faces-redirect=true&id=" + selectedItem.getUserId();
+    }
+
     private int getUserIdForUsername(final String username) {
         final List<User> userList = userDAO.findByUsername(username);
         if (userList.size() == 0) { //FIXME it's for the 1st user
