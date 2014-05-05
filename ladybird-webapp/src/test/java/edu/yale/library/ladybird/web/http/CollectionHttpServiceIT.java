@@ -13,6 +13,7 @@ import java.net.MalformedURLException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 public class CollectionHttpServiceIT extends AbstractWarTest {
 
@@ -20,7 +21,11 @@ public class CollectionHttpServiceIT extends AbstractWarTest {
 
     @BeforeClass
     public static void setup() throws MalformedURLException {
-        setupContainer();
+        try {
+            AbstractWarTest.setupContainer();
+        } catch (RuntimeException e) {
+            fail("Error starting container");
+        }
     }
 
     @AfterClass

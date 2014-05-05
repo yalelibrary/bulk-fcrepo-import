@@ -7,25 +7,25 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
 
-/**
- * Tests html for user crud related page(s)
- */
+import static org.junit.Assert.fail;
+
 public class UserProjectFieldViewIT extends AbstractWarTest {
-    private static final Logger logger = LoggerFactory.getLogger(UserProjectFieldViewIT.class);
 
     /**
      * Page to test
      */
-    private static final String PAGE_TO_TEST = getUrl("user_project_field");
+    private static final String PAGE_TO_TEST = getAppUrl() + "/pages/secure/user_project_field.xhtml";
 
     @BeforeClass
     public static void setup() throws MalformedURLException {
-        setupContainer();
+        try {
+            AbstractWarTest.setupContainer();
+        } catch (RuntimeException e) {
+            fail("Error starting container");
+        }
     }
 
     @AfterClass

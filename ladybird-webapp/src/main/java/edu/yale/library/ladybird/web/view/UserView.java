@@ -144,9 +144,13 @@ public class UserView extends AbstractView implements Serializable {
     }
 
     private String getCurrentUserName() {
-        final String netid = FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
-                .get("netid").toString();
-        return netid;
+        try {
+            final String netid = FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+                    .get("netid").toString();
+            return netid;
+        } catch (Exception e) {
+            return ""; //TODO
+        }
     }
 }
 

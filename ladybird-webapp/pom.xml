@@ -38,6 +38,7 @@
         <ladybird-kernel.version>0.0.1-SNAPSHOT</ladybird-kernel.version>
         <ladybird-persistence.version>0.0.1-SNAPSHOT</ladybird-persistence.version>
         <ladybird-auth.version>0.0.1-SNAPSHOT</ladybird-auth.version>
+        <jsf-extensions-test-time.version>2.0</jsf-extensions-test-time.version>
     </properties>
 
     <dependencies>
@@ -147,6 +148,11 @@
             <artifactId>htmlunit</artifactId>
             <version>${htmlunit.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.sun.faces.extensions</groupId>
+            <artifactId>jsf-extensions-test-time</artifactId>
+            <version>${jsf-extensions-test-time.version}</version>
+        </dependency>
         <!-- Java EE -->
         <dependency>
             <groupId>javax</groupId>
@@ -169,6 +175,25 @@
             </resource>
         </resources>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>reserve-network-port</id>
+                        <goals>
+                            <goal>reserve-network-port</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <portNames>
+                                <portName>tomcat.http.port</portName>
+                            </portNames>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.cargo</groupId>
                 <artifactId>cargo-maven2-plugin</artifactId>
@@ -201,12 +226,12 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-                    <systemProperties>
+                    <systemPropertyVariables>
                         <property>
                             <name>derby.stream.error.file</name>
                             <value>target/derby.log</value>
                         </property>
-                    </systemProperties>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
             <plugin>
@@ -284,10 +309,23 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <argLine>-Dhost=localhost -Dport=${tomcat.http.port}</argLine>
                     <systemProperties>
                         <property>
                             <name>derby.stream.error.file</name>
                             <value>target/derby.log</value>
+                        </property>
+                        <property>
+                            <name>context.path</name>
+                            <value>/${project.artifactId}-${project.version}</value>
+                        </property>
+                        <property>
+                            <name>app.prefix</name>
+                            <value>/${project.artifactId}</value>
+                        </property>
+                        <property>
+                            <name>test.port</name>
+                            <value>${tomcat.http.port}</value>
                         </property>
                     </systemProperties>
                 </configuration>

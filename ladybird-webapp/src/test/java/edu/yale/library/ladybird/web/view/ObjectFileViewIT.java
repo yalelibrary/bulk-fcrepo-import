@@ -7,24 +7,24 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.slf4j.Logger;
-import static org.slf4j.LoggerFactory.getLogger;
 import java.net.MalformedURLException;
 
-/**
- * Tests html for user crud related page(s)
- */
+import static org.junit.Assert.fail;
+
 public class ObjectFileViewIT extends AbstractWarTest {
-    private final Logger logger = getLogger(this.getClass());
 
     /**
      * Page to test
      */
-    private static final String PAGE_TO_TEST = getUrl("object/object_file");
+    private static final String PAGE_TO_TEST = getAppUrl() + "/pages/secure/object/object_file.xhtml";
 
     @BeforeClass
     public static void setup() throws MalformedURLException {
-        setupContainer();
+        try {
+            AbstractWarTest.setupContainer();
+        } catch (RuntimeException e) {
+            fail("Error starting container");
+        }
     }
 
     @AfterClass

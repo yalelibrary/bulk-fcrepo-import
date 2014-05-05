@@ -20,27 +20,27 @@
                     <div>
                         <label>Username</label>
                         <div>
-                            <p:inputText value="#{userView.item.username}"/>
+                            <h:inputText id="username" name="username" value="#{userView.item.username}"/>
                         </div>
                     </div>
 
                     <div>
                         <label>Name</label>
                         <div>
-                            <p:inputText value="#{userView.item.name}"/>
+                            <h:inputText id="name" name="name" value="#{userView.item.name}"/>
                         </div>
                     </div>
 
                     <div>
                         <label>E-mail</label>
                         <div>
-                            <p:inputText value="#{userView.item.email}"/>
+                            <h:inputText id="email" name="email" value="#{userView.item.email}"/>
                         </div>
                     </div>
 
-                    <p:commandButton action="#{userView.save}"
+                    <h:commandButton id="submit_button"
+                                     action="#{userView.save}"
                                      styleClass="btn"
-                                     ajax="false"
                                      value="Submit"/>
 
                 </div>

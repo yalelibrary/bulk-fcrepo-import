@@ -1,46 +1,81 @@
 package edu.yale.library.ladybird.web.view;
 
-import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
+import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
+import com.sun.faces.htmlunit.HtmlUnitFacesTestCase;
 import edu.yale.library.ladybird.web.AbstractWarTest;
-import org.junit.AfterClass;
-import org.junit.Assert;
+import junit.framework.TestSuite;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
+import java.util.List;
 
-/**
- * Tests html for user crud related page(s)
- */
-public class UserViewIT extends AbstractWarTest {
-    private static final Logger logger = LoggerFactory.getLogger(UserViewIT.class);
+public class UserViewIT extends HtmlUnitFacesTestCase {
 
-    /**
-     * Page to test
-     */
-    private static final String PAGE_TO_TEST = getUrl("user_manager");
+    private static final String FORM = "UserForm";
+    private static final String PATH = "/pages/secure/user_manager_form.xhtml";
+
+    public UserViewIT(String name) {
+        super(name);
+    }
 
     @BeforeClass
     public static void setup() throws MalformedURLException {
-        setupContainer();
-    }
-
-    @AfterClass
-    public static void tearDown() {
-        //TODO
+        try {
+            AbstractWarTest.setupContainer();
+        } catch (RuntimeException e) {
+            fail("Error starting test container");
+        }
     }
 
     @Test
-    public void shouldContainString_LastUsed() throws Exception {
-        final WebClient webClient = new WebClient();
-        webClient.setJavaScriptEnabled(false);
-        final HtmlPage page = webClient.getPage(PAGE_TO_TEST);
+    public void testTestResult() throws Exception {
+        final String testUserNameStr = "alice0";
+        final String testEmailStr = "alice@yale.edu";
+        final String testNameStr = "alice";
+
+        setUp();
+        client.setJavaScriptEnabled(false);
+        HtmlPage page = getPage(PATH);
+
+        final HtmlTextInput userNameInputText = page.getFormByName(FORM).getInputByName(FORM + ":username");
+        userNameInputText.setValueAttribute(testUserNameStr);
+
+        final HtmlTextInput nameInputText = page.getFormByName(FORM).getInputByName(FORM + ":name");
+        nameInputText.setValueAttribute(testNameStr);
+
+        final HtmlTextInput userEmailInputText = page.getFormByName(FORM).getInputByName(FORM + ":email");
+        userEmailInputText.setValueAttribute(testEmailStr);
+
+        final List list = getAllElementsOfGivenClass(page, null, HtmlSubmitInput.class);
+        final HtmlSubmitInput button = (HtmlSubmitInput) list.get(0);
+        page = button.click();
+
         final String pageAsText = page.asText();
-        Assert.assertTrue(pageAsText.contains("No records found."));
-        Assert.assertTrue(pageAsText.contains("Last used"));
-        webClient.closeAllWindows();
+
+        assertTrue(pageAsText.contains(testEmailStr));
+
+        assertFalse(pageAsText.contains("Submit"));
+
+        HtmlElement htmlElement = page.getElementById(FORM + ":UserDatatable:0:email");
+        assertEquals("Element value mismatch", htmlElement.getTextContent(), testEmailStr);
+
+        HtmlElement htmlElementUserName = page.getElementById(FORM + ":UserDatatable:0:username");
+        assertEquals("Element value mismatch", htmlElementUserName.getTextContent(), testUserNameStr);
+
+        HtmlElement htmlElementName = page.getElementById(FORM + ":UserDatatable:0:name");
+        assertEquals("Element value mismatch", htmlElementName.getTextContent(), testNameStr);
     }
+
+    public void tearDown() {
+        super.tearDown();
+    }
+
+    public static junit.framework.Test suite() {
+        return (new TestSuite(UserViewIT.class));
+    }
+
 }
