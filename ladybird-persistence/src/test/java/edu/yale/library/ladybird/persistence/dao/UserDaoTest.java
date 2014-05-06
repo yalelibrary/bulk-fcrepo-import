@@ -26,7 +26,6 @@ public class UserDaoTest extends AbstractPersistenceTest {
     @Before
     public void init() {
         initDB();
-
     }
 
     @After

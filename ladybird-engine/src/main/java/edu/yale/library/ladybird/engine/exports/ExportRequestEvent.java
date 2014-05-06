@@ -1,6 +1,8 @@
 package edu.yale.library.ladybird.engine.exports;
 
-public class ExportRequestEvent {
+import edu.yale.library.ladybird.kernel.events.exports.ExportEvent;
+
+public class ExportRequestEvent extends ExportEvent {
 
     /**
      * Import Job identifier (aka imid) to run against

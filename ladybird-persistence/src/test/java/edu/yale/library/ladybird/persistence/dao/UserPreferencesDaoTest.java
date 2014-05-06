@@ -26,7 +26,6 @@ public class UserPreferencesDaoTest extends AbstractPersistenceTest {
     @Before
     public void init() {
         initDB();
-
     }
 
     @After

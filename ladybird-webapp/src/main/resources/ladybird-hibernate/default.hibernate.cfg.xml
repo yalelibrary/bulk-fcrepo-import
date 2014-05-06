@@ -24,5 +24,6 @@
         <mapping resource="ladybird-hbm/UserPreferences.hbm.xml"/>
         <mapping resource="ladybird-hbm/UserProject.hbm.xml"/>
         <mapping resource="ladybird-hbm/UserProjectField.hbm.xml"/>
+        <mapping resource="ladybird-hbm/UserEvent.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

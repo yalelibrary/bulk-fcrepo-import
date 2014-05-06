@@ -67,6 +67,7 @@
         <mockito-core.version>1.9.5</mockito-core.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-config.version>1.10</commons-config.version>
+        <guava.version>17.0</guava.version>
     </properties>
 
     <dependencyManagement>
@@ -232,6 +233,11 @@
                 <groupId>org.jboss.resteasy</groupId>
                 <artifactId>resteasy-guice</artifactId>
                 <version>${resteasy-guice.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

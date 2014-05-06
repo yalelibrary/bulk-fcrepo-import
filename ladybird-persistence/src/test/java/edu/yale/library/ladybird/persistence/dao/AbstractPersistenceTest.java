@@ -1,8 +1,9 @@
 package edu.yale.library.ladybird.persistence.dao;
 
 
-
 import edu.yale.library.ladybird.persistence.ServicesManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 
@@ -11,11 +12,12 @@ import java.sql.SQLException;
  */
 public class AbstractPersistenceTest {
 
+    private static final Logger logger = LoggerFactory.getLogger(AbstractPersistenceTest.class);
+
     private static final ServicesManager servicesManager = new ServicesManager();
     private static boolean containerStarted = false;
 
     public static void initDB() {
-
         if (containerStarted) {
             return;
         }
@@ -23,12 +25,10 @@ public class AbstractPersistenceTest {
             servicesManager.initDB();
             containerStarted = true;
         } catch (Exception e) {
-            e.printStackTrace();  //TODO
+            logger.error("Error init DB", e);
         }
-
     }
 
-    //TODO
     public static void stopDB() throws SQLException {
         if (!containerStarted) {
             return;
@@ -36,7 +36,7 @@ public class AbstractPersistenceTest {
         try {
             servicesManager.stopDB();
         } catch (SQLException e) {
-            e.printStackTrace();  //TODO
+            logger.error("Error stop DB", e);
         }
     }
 

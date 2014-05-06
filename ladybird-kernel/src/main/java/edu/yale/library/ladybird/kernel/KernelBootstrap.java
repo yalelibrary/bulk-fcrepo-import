@@ -1,24 +1,31 @@
 package edu.yale.library.ladybird.kernel;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import edu.yale.library.ladybird.kernel.cron.NotificationScheduler;
 import edu.yale.library.ladybird.kernel.events.AbstractNotificationJob;
+import edu.yale.library.ladybird.kernel.events.Event;
 import edu.yale.library.ladybird.persistence.HibernateUtil;
 import org.apache.commons.lang.time.DurationFormatUtils;
+
+import java.util.List;
 
 public class KernelBootstrap {
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(KernelBootstrap.class);
 
+    private static final String TIMESTAMP_FORMAT = "HH:mm:ss:SS";
+
     /** Time Hibernate Session Factory has been alive */
     private static long HIBERNATE_UPTIME = 0;
+
     /** Time embedded db has been alive */
     private static long DB_UPTIME = 0;
 
     private final ServicesManager servicesManager = new ServicesManager();
-
     private static Module jobModule;
+    private static EventBus eventBus;
 
     public void init() {
         logger.debug("Application Start up.");
@@ -33,6 +40,7 @@ public class KernelBootstrap {
                 DB_UPTIME = System.currentTimeMillis();
                 logger.debug("Started embedded DB");
             }
+
             HIBERNATE_UPTIME = HibernateUtil.getSessionFactory().getStatistics().getStartTime();
             logger.debug("Built Session Factory");
 
@@ -41,37 +49,39 @@ public class KernelBootstrap {
             kernelContext.setAbstractModule(new JobModule());
             initNotificationScheduler();
 
+            if (eventBus == null) {
+                eventBus = getEventBus();
+            }
         } catch (Throwable t) {
             logger.error("Error in context initialization", t);
         }
     }
 
+    /**
+     * Stop embedded db
+     * TODO ensure DB is running
+     */
     public void stop() {
         try {
-            //TODO ensure DB is running
             if (ApplicationProperties.CONFIG_STATE.DEFAULT_DB_CONFIGURED) {
                 logger.debug("Trying to stop embedded DB");
                 servicesManager.stopDB();
-                logger.debug("Closed embedded database. Time: " + getTime(DB_UPTIME));
+                logger.debug("Closed embedded database. Time: " + getElapsedTime(DB_UPTIME));
             }
             HibernateUtil.shutdown();
-            logger.debug("Closed Hibernate Session Factory. Time: " + getTime(HIBERNATE_UPTIME));
+            logger.debug("Closed Hibernate Session Factory. Time: " + getElapsedTime(HIBERNATE_UPTIME));
         } catch (Throwable t) {
             logger.error("Error in context shutdown", t);
         }
     }
 
-    private String getTime(final long startTime) {
-        return DurationFormatUtils.formatDuration(System.currentTimeMillis() - startTime, "HH:mm:ss:SS");
-    }
-
     /**
-     * Initializes a notifiation scheduler
+     * Initializes a notification scheduler
      * @throws Exception
      * @see #scheduleGenericJob(edu.yale.library.ladybird.kernel.events.AbstractNotificationJob, String, String)
      */
     public static void initNotificationScheduler() throws Exception {
-        Injector injector = Guice.createInjector(getJobModule());
+        final Injector injector = Guice.createInjector(getJobModule());
         NotificationScheduler notificationScheduler = injector.getInstance(NotificationScheduler.class);
         notificationScheduler.scheduleJob("notification", "trigger");
     }
@@ -100,4 +110,29 @@ public class KernelBootstrap {
         this.jobModule = abstractModule;
     }
 
+    /**
+     * Get the event bus and instantiate listeners
+     * @return
+     */
+    private static EventBus getEventBus() {
+        final Injector injector = Guice.createInjector(getJobModule()); //TODO
+
+        if (eventBus == null) {
+            logger.debug("Inst. EventBus");
+            eventBus = new EventBus();
+            final List<Class> globalListeners = injector.getInstance(List.class);
+            for (Class o: globalListeners) {
+                eventBus.register(injector.getInstance(o));
+            }
+        }
+        return eventBus;
+    }
+
+    public static void postEvent(final Event event) {
+        getEventBus().post(event);
+    }
+
+    public static String getElapsedTime(final long startTime) {
+        return DurationFormatUtils.formatDuration(System.currentTimeMillis() - startTime, TIMESTAMP_FORMAT);
+    }
 }

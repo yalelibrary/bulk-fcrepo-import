@@ -10,7 +10,7 @@ public class DaoInitializer {
     private static final Injector injector;
 
     static {
-        injector = Guice.createInjector(new DaoHibernateModule());
+        injector = Guice.createInjector(new TestDaoHibernateModule());
     }
 
     public static void injectFields(Object object) {

@@ -20,6 +20,8 @@ import edu.yale.library.ladybird.persistence.dao.UserDAO;
 import edu.yale.library.ladybird.persistence.dao.UserPreferencesDAO;
 import edu.yale.library.ladybird.persistence.dao.UserProjectDAO;
 import edu.yale.library.ladybird.persistence.dao.UserProjectFieldDAO;
+import edu.yale.library.ladybird.persistence.dao.UserEventDAO;
+
 
 import edu.yale.library.ladybird.persistence.dao.hibernate.CollectionHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportFileHibernateDAO;
@@ -35,6 +37,8 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.UserHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserPreferencesHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserProjectHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserProjectFieldHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.UserEventHibernateDAO;
+
 
 
 import edu.yale.library.ladybird.web.http.CollectionHttpService;
@@ -68,6 +72,7 @@ public class DaoHibernateModule extends AbstractModule {
         bind(ObjectFileDAO.class).to(ObjectFileHibernateDAO.class);
         bind(UserProjectDAO.class).to(UserProjectHibernateDAO.class);
         bind(UserProjectFieldDAO.class).to(UserProjectFieldHibernateDAO.class);
+        bind(UserEventDAO.class).to(UserEventHibernateDAO.class);
 
         bind(UserHttpService.class);
         bind(ImportSourcerHttpService.class);

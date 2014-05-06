@@ -16,8 +16,10 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ProjectHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserPreferencesHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.UserEventHibernateDAO;
 
-public class DaoHibernateModule extends AbstractModule {
+
+public class TestDaoHibernateModule extends AbstractModule {
     @Override
     protected void configure() {
         TypeLiteral<GenericDAO<User, Integer>> userDaoType
@@ -39,5 +41,6 @@ public class DaoHibernateModule extends AbstractModule {
         bind(FieldMarcMappingDAO.class).to(FieldMarcMappingHibernateDAO.class);
         bind(ObjectDAO.class).to(ObjectHibernateDAO.class);
         bind(ObjectFileDAO.class).to(ObjectFileHibernateDAO.class);
+        bind(UserEventDAO.class).to(UserEventHibernateDAO.class);
     }
 }

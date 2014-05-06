@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.engine.imports;
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
+import edu.yale.library.ladybird.engine.TestModule;
 import edu.yale.library.ladybird.engine.Util;
 import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
 import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
@@ -13,6 +14,7 @@ import edu.yale.library.ladybird.engine.oai.OaiProvider;
 import edu.yale.library.ladybird.entity.FieldMarcMapping;
 import edu.yale.library.ladybird.entity.ImportJob;
 import edu.yale.library.ladybird.entity.ImportJobExhead;
+import edu.yale.library.ladybird.kernel.KernelBootstrap;
 import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobExheadDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobExheadHibernateDAO;
@@ -81,6 +83,9 @@ public class MarcImportEngineIT extends AbstractDBTest {
     @Test
     public void execute() throws Exception {
         //start the engine
+
+        KernelBootstrap kernelBootstrap = new KernelBootstrap();
+        kernelBootstrap.setAbstractModule(new TestModule());
 
         setApplicationData(); //TODO tmp. Inst app. rules for test (since db state is cleaned)
 

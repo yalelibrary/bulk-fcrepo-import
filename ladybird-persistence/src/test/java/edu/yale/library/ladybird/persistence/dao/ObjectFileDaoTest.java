@@ -26,7 +26,6 @@ public class ObjectFileDaoTest extends AbstractPersistenceTest {
     @Before
     public void init() {
         initDB();
-
     }
 
     @After
