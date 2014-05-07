@@ -125,6 +125,35 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
         }
     }
 
-
-
+    @Override
+    public void delete(List<T> entities) {
+        Session s = null;
+        Transaction tx = null;
+        try {
+            s = getSession();
+            tx = s.beginTransaction();
+            for (T item : entities) {
+                s.delete(item);
+            }
+            s.flush();
+            tx.commit();
+        } catch (HibernateException t) {
+            logger.error("Exception tyring to persist item." + t.getMessage());
+            t.printStackTrace();
+            try {
+                if (tx != null) {
+                    tx.rollback();
+                }
+            } catch (Throwable rt) {
+                logger.error("Exception rolling back transaction", rt);
+                rt.printStackTrace();
+                throw rt;
+            }
+            throw t;
+        } finally {
+            if (s != null) {
+                s.close();
+            }
+        }
+    }
 }

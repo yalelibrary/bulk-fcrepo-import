@@ -10,5 +10,7 @@ public interface UserDAO extends GenericDAO<User, Integer> {
 
     List<User> findByUsername(String field);
 
+    String findByUserId(int userId);
+
 }
 

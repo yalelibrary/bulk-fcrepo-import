@@ -23,4 +23,11 @@ public class UserHibernateDAO extends GenericHibernateDAO<User, Integer> impleme
         return q.list();
     }
 
+    @Override
+    public String findByUserId(int field) {
+        final Query q = getSession().createQuery("from User where userId = :param");
+        q.setParameter("param", field);
+        final List<User> userList = q.list();
+        return userList.get(0).getUsername();
+    }
 }

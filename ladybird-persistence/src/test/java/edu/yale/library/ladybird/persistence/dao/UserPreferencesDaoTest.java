@@ -17,8 +17,6 @@ import static org.junit.Assert.fail;
 
 public class UserPreferencesDaoTest extends AbstractPersistenceTest {
 
-    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(UserPreferencesDaoTest.class);
-
     {
         DaoInitializer.injectFields(this);
     }
@@ -44,7 +42,6 @@ public class UserPreferencesDaoTest extends AbstractPersistenceTest {
         user.setUserId(1);
         try {
             dao.save(user);
-            logger.debug("Saved item.");
             list = dao.findAll();
         } catch (Throwable e) {
             fail("Error testing saving or finding item");

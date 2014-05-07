@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * Adds to a temporary list.
- * @see edu.yale.library.ladybird.kernel.events.EventChangeRecorderTest#shouldAttemptToPersistEvent()
+ * @see UserEventChangeRecorderTest#shouldAttemptToPersistEvent()
  */
 public class DummyEventDAO implements UserEventDAO {
 
@@ -30,6 +30,25 @@ public class DummyEventDAO implements UserEventDAO {
 
     @Override
     public List<UserEvent> find(final int rowNum, final int count) {
+        return null;
+    }
+
+    @Override
+    public List<UserEvent> findByUserId(String userId) {
+        return null;
+    }
+
+    @Override
+    public List<UserEvent> findByEventType(String eventType) {
+        return null;
+    }
+
+    @Override
+    public void delete(List<UserEvent> entities) {
+    }
+
+    @Override
+    public List<UserEvent> findEventsByUser(String eventType, String userId) {
         return null;
     }
 }

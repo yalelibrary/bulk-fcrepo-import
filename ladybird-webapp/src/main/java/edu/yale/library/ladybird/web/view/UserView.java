@@ -127,11 +127,19 @@ public class UserView extends AbstractView implements Serializable {
     }
 
     public String assignProjectAccess() {
-        return "assign_project_access.xhtml?faces-redirect=true&id=" + selectedItem.getUserId();
+        return getRedirectWithParam("assign_project_access.xhtml");
     }
 
     public String assignProjectFieldMetadataAccess() {
-        return "user_metadata_access.xhtml?faces-redirect=true&id=" + selectedItem.getUserId();
+        return getRedirectWithParam("user_metadata_access.xhtml");
+    }
+
+    public String seeUserActivity() {
+        return getRedirectWithParam("user_event.xhtml");
+    }
+
+    private String getRedirectWithParam(String page) {
+        return page + "?faces-redirect=true&id=" + selectedItem.getUserId();
     }
 
     private int getUserIdForUsername(final String username) {

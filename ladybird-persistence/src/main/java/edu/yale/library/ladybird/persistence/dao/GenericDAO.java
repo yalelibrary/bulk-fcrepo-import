@@ -5,7 +5,6 @@ import java.util.List;
 
 public interface GenericDAO<T, ID extends Serializable> {
 
-    /** Get only a number of rows */
     List<T> find(int rowNum, int count);
 
     List<T> findAll();
@@ -14,5 +13,5 @@ public interface GenericDAO<T, ID extends Serializable> {
 
     void saveOrUpdateList(List<T> itemList);
 
-
+    void delete(List<T> entities);
 }

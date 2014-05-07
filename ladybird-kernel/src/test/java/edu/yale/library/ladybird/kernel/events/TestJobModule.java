@@ -14,7 +14,7 @@ public class TestJobModule  implements Module {
         binder.bind(AbstractNotificationJob.class).to(NotificationJob.class);
         binder.bind(NotificationHandler.class).to(DummyEMailNotificationHandler.class);
 
-        binder.bind(EventChangeRecorder.class);
+        binder.bind(UserEventChangeRecorder.class);
         binder.bind(UserEventDAO.class).to(DummyEventDAO.class);
     }
 

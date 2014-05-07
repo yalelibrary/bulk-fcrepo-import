@@ -152,6 +152,10 @@
                             <name>derby.stream.error.file</name>
                             <value>target/derby.log</value>
                         </property>
+                        <property>
+                            <name>test.port</name>
+                            <value>8085</value>
+                        </property>
                     </systemProperties>
                 </configuration>
             </plugin>

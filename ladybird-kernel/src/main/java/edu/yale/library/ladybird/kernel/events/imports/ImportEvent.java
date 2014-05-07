@@ -2,13 +2,14 @@ package edu.yale.library.ladybird.kernel.events.imports;
 
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.kernel.events.Event;
+import edu.yale.library.ladybird.kernel.events.UserGeneratedEvent;
 
 import java.util.Date;
 
 /**
  * An import event. Classes may subcass this. Subject to modification.
  */
-public class ImportEvent implements Event {
+public class ImportEvent implements UserGeneratedEvent {
     /* User requesting action */
     private User user;
 
@@ -25,4 +26,13 @@ public class ImportEvent implements Event {
         return eventName;
     }
 
+    @Override
+    public String getPrincipal() {
+        return user.getUsername();
+    }
+
+    @Override
+    public String getValue() {
+        return null;
+    }
 }

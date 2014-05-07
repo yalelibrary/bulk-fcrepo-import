@@ -1,5 +1,8 @@
 package edu.yale.library.ladybird.auth;
 
+import edu.yale.library.ladybird.kernel.KernelBootstrap;
+import edu.yale.library.ladybird.kernel.events.Events;
+import edu.yale.library.ladybird.kernel.events.UserGeneratedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,8 +27,8 @@ import java.time.LocalTime;
 public class CasNetIdFilter implements Filter {
 
     private static final Logger logger = LoggerFactory.getLogger(CasNetIdFilter.class);
-    private static String netIdSessionIdentifer;
 
+    private String webXmlNetIdParam;
     private String adminPage;
 
     public CasNetIdFilter() {
@@ -34,7 +37,7 @@ public class CasNetIdFilter implements Filter {
 
     public void init(FilterConfig filterConfig) {
         adminPage = filterConfig.getInitParameter("admin_page");
-        netIdSessionIdentifer = filterConfig.getInitParameter("net_id_identifier");
+        webXmlNetIdParam = filterConfig.getInitParameter("net_id_identifier");
     }
 
     public void destroy() {
@@ -49,8 +52,8 @@ public class CasNetIdFilter implements Filter {
         String netIdSessionValue = "";
 
         //Check if netid is in session. Skip validation if so.
-        if (request.getSession().getAttribute(netIdSessionIdentifer) != null) {
-            netIdSessionValue = request.getSession().getAttribute(netIdSessionIdentifer).toString();
+        if (request.getSession().getAttribute(webXmlNetIdParam) != null) {
+            netIdSessionValue = request.getSession().getAttribute(webXmlNetIdParam).toString();
             chain.doFilter(req, res);
         }
 
@@ -71,15 +74,16 @@ public class CasNetIdFilter implements Filter {
             final String user = userAuthResponse.principal;
 
             if (user == null) {
-                throw new IOException("Error authorizing user.");
+                throw new IOException("Error authorizing user. User null.");
             }
-            request.getSession().setAttribute(netIdSessionIdentifer, user);
+            request.getSession().setAttribute(webXmlNetIdParam, user);
             request.getSession().setAttribute("netid-last-act-time", getCurrentTime());
+            postEvent(user);
         } catch (UnknownHostException e) {
             logger.error("Error communicating with CAS server or service.", e);
-            throw new UnknownHostException("Error contacting CAS server.");
+            throw new IOException(e);
         } catch (NullPointerException| IOException e) {
-            logger.error("Exception finding/validating CAS ticket.", e);
+            logger.error("Exception finding/validating/saving CAS ticket.", e);
             throw new IOException(e);
         }
         chain.doFilter(req, res);
@@ -135,9 +139,33 @@ public class CasNetIdFilter implements Filter {
         }
     }
 
-    private String getAdminPagePath(final HttpServletRequest request) {
-        return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath()
-                + adminPage;
+    private void postEvent(final String netid) {
+        KernelBootstrap.postEvent(new UserGeneratedEvent() {
+            @Override
+            public String getEventName() {
+                return Events.USER_LOGIN.toString();
+            }
+
+            @Override
+            public String getPrincipal() {
+                return netid.toString();
+            }
+
+            @Override
+            public String getValue() {
+                return "CAS";
+            }
+
+            @Override
+            public String toString() {
+                //return  Events.USER_LOGIN.toString() + " (for " + netid + ")";
+                return getEventName() + " (for " + getPrincipal() + ")";
+            }
+        });
+    }
+
+    private String getAdminPagePath(final HttpServletRequest req) {
+        return "http://" + req.getServerName() + ":" + req.getServerPort() + req.getContextPath() + adminPage;
     }
 
     private String getProp(final String property) throws IOException {

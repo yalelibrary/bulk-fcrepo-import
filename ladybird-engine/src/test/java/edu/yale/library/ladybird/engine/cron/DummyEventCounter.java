@@ -9,7 +9,6 @@ public class DummyEventCounter {
 
     @Subscribe
     public void recordEventChange(ExportEvent e) {
-        System.out.println("Incrementing count");
         count++;
     }
 
