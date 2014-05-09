@@ -58,7 +58,7 @@ public class AssignProjectFieldView extends AbstractView implements Serializable
         logger.debug("Saving project label={} with role={} for user={}", defaultProject.getLabel(),
                 projectRole.name(), userId);
         final UserProject userProject = new  UserProjectBuilder().
-                setProjectId(0).
+                setProjectId(0).//FIXME
                 setUserId(userId).
                 setRole(projectRole.name()).
                 setDate(new Date(System.currentTimeMillis())).

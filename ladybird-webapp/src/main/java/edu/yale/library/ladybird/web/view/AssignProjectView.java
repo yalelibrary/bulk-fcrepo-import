@@ -55,7 +55,7 @@ public class AssignProjectView extends AbstractView implements Serializable {
     }
 
     public String save() {
-        logger.debug("Saving project id={} with role={} for user={}",
+        logger.debug("Assigning project id={} with role={} for user={}",
                 defaultProject.getProjectId(), projectRole.name(), defaultUser.getUserId());
         final UserProject userProject = new UserProjectBuilder().
                 setProjectId(defaultProject.getProjectId()).
@@ -65,10 +65,10 @@ public class AssignProjectView extends AbstractView implements Serializable {
                 createUserProject();
         try {
             userProjectDAO.save(userProject);
-            return "ok";
+            return getRedirectWithParam("users_projects.xhtml", defaultProject.getProjectId());
         } catch (Exception e) {
             logger.error("Exception saving project role", e);
-            return "failed";
+            return getRedirect("/pages/form_submission_failed");
         }
     }
 
@@ -86,6 +86,14 @@ public class AssignProjectView extends AbstractView implements Serializable {
 
     public void setDefaultUser(User defaultUser) {
         this.defaultUser = defaultUser;
+    }
+
+    private String getRedirect(String page) {
+        return page + "?faces-redirect=true";
+    }
+
+    private String getRedirectWithParam(String page, int projectId) {
+        return page + "?faces-redirect=true&project_id=" + projectId;
     }
 
 }
