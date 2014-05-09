@@ -1,12 +1,14 @@
 package edu.yale.library.ladybird.persistence.dao;
 
-import edu.yale.library.ladybird.entity.ImportFile;
-import edu.yale.library.ladybird.entity.ImportFileBuilder;
+import edu.yale.library.ladybird.entity.Project;
+import edu.yale.library.ladybird.entity.ProjectBuilder;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.inject.Inject;
+
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
@@ -14,10 +16,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-
-public class ImportFileDaoTest extends AbstractPersistenceTest {
-
-    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(ImportFileDaoTest.class);
+public class ProjectDaoTest extends AbstractPersistenceTest {
 
     {
         TestDaoInitializer.injectFields(this);
@@ -34,11 +33,11 @@ public class ImportFileDaoTest extends AbstractPersistenceTest {
     }
 
     @Inject
-    private ImportFileDAO dao;
+    private ProjectDAO dao;
 
     @Test
     public void testSave() {
-        final ImportFile item = build();
+        final Project item = build();
         List list = null;
         try {
             dao.save(item);
@@ -50,13 +49,12 @@ public class ImportFileDaoTest extends AbstractPersistenceTest {
         }
 
         assertEquals("Item count incorrect", list.size(), 1);
-        final ImportFile importFile = (ImportFile) list.get(0);
-        assertEquals("Value mismatch", (long) importFile.getImportId(), 555);
+        final Project project = (Project) list.get(0);
+        assertEquals("Value mismatch", project.getLabel(), "Project X");
     }
 
-    private ImportFile build() {
-        final ImportFile item = new ImportFileBuilder()
-                .setImportId(555).setFileLocation("").createImportFile();
+    private Project build() {
+        final Project item = new ProjectBuilder().setLabel("Project X").createProject();
         final Date date = new Date(System.currentTimeMillis());
         item.setDate(date);
         return item;

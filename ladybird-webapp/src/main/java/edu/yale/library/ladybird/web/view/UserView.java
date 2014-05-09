@@ -46,7 +46,7 @@ public class UserView extends AbstractView implements Serializable {
         }
     }
 
-    public List getItemList() {
+    public List<User> getItemList() {
         List<User> user = dao.findAll();
         return user;
     }
@@ -124,10 +124,6 @@ public class UserView extends AbstractView implements Serializable {
 
     public void setSelectedItem(User selectedItem) {
         this.selectedItem = selectedItem;
-    }
-
-    public String assignProjectAccess() {
-        return getRedirectWithParam("assign_project_access.xhtml");
     }
 
     public String assignProjectFieldMetadataAccess() {

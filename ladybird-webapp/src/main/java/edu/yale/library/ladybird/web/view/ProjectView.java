@@ -92,7 +92,12 @@ public class ProjectView extends AbstractView {
     }
 
     public void selectElement() {
+        logger.debug("User watching session");
         saveInSession(selectedItem.getProjectId());
+    }
+
+    public String selectAllUsersInProject() {
+        return "users_projects.xhtml?faces-redirect=true&project_id=" + selectedItem.getProjectId();
     }
 
     private void saveInSession(final int projectId) {

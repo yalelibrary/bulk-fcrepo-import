@@ -7,22 +7,28 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../templates/template.xhtml">
     <ui:define name="content">
-        <h2>Users/Projects</h2>
 
-        <h3> List of all users with project access</h3>
-        <h:form id="UserProjectForm" enctype="multipart/form-data"
-                styleClass=""
-                style="">
+        <f:metadata/>
+
+        <h2>Users</h2>
+
+        <h3>
+            <h:outputText value="Users in project #{userProjectView.projectName}" rendered="#{not empty userProjectView.projectName}" />
+            <h:outputText value="Users in all projects" rendered="#{empty userProjectView.projectName}" />
+        </h3>
+
+        <h:form id="UserProjectForm" enctype="multipart/form-data">
             <br/>
 
-            <div style="">
-                <div class="" style="">
+            <div>
+                <div>
 
                     <!-- Data Table -->
 
-                    <p:dataTable id="UserProjectDatatable" value="#{userProjectView.itemList}"
-                                 var="item" paginator="true" rows="10"
-                                 tableStyle="" paginatorPosition="bottom"
+                    <p:dataTable id="UserProjectDatatable"
+                                 value="#{userProjectView.itemList}"
+                                 var="item"
+                                 paginator="true" rows="10" paginatorPosition="bottom"
                                  editable="false">
 
                         <p:column>
@@ -35,15 +41,15 @@
                         </p:column>
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="UserId"/>
+                                <h:outputText value="User"/>
                             </f:facet>
-                            <h:outputText value="#{item.userId}"/>
+                            <h:outputText value="#{userProjectView.getUserName(item.userId)}"/>
                         </p:column>
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="ProjectId"/>
+                                <h:outputText value="Project"/>
                             </f:facet>
-                            <h:outputText value="#{item.projectId}"/>
+                            <h:outputText value="#{userProjectView.getProjectName(item.projectId)}"/>
                         </p:column>
                         <p:column>
                             <f:facet name="header">

@@ -5,7 +5,7 @@ import com.google.inject.Injector;
 
 
 @SuppressWarnings("unchecked")
-public class DaoInitializer {
+public class TestDaoInitializer {
 
     private static final Injector injector;
 

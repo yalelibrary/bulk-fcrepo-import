@@ -24,6 +24,7 @@
         <mapping resource="test-hbm/Users.hbm.xml"/>
         <mapping resource="test-hbm/UserPreferences.hbm.xml"/>
         <mapping resource="test-hbm/UserEvent.hbm.xml"/>
+        <mapping resource="test-hbm/UserProject.hbm.xml"/>
 
     </session-factory>
 </hibernate-configuration>

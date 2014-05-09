@@ -3,8 +3,18 @@ package edu.yale.library.ladybird.persistence.dao.hibernate;
 
 import edu.yale.library.ladybird.entity.UserProject;
 import edu.yale.library.ladybird.persistence.dao.UserProjectDAO;
+import org.hibernate.Query;
+
+import java.util.List;
 
 public class UserProjectHibernateDAO extends GenericHibernateDAO<UserProject, Integer> implements UserProjectDAO {
 
+    @Override
+    public List<UserProject> findByProjectId(int projectId) {
+        final Query q = getSession().createQuery("from edu.yale.library.ladybird.entity.UserProject "
+                + "where projectId = :param");
+        q.setParameter("param", projectId);
+        return q.list();
+    }
 }
 

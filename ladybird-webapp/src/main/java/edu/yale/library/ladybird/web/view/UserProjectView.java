@@ -3,12 +3,15 @@ package edu.yale.library.ladybird.web.view;
 
 
 import edu.yale.library.ladybird.entity.UserProject;
+import edu.yale.library.ladybird.persistence.dao.UserDAO;
+import edu.yale.library.ladybird.persistence.dao.ProjectDAO;
 import edu.yale.library.ladybird.persistence.dao.UserProjectDAO;
 import org.slf4j.Logger;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import java.util.List;
@@ -22,22 +25,68 @@ public class UserProjectView extends AbstractView {
 
     private List<UserProject> itemList;
 
+    private int projectId = -1;
+
+    /* For page display */
+    private String projectName;
+
     @Inject
-    private UserProjectDAO entityDAO;
+    private UserProjectDAO userProjectDao;
+
+    @Inject
+    private ProjectDAO projectDAO;
+
+    @Inject
+    private UserDAO userDao;
 
     @PostConstruct
     public void init() {
         initFields();
-        dao = entityDAO;
+        dao = userProjectDao;
+        try {
+            projectId = Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext()
+                    .getRequestParameterMap().get("project_id"));
+            setProjectName(projectDAO.findByProjectId(projectId).getLabel());
+        } catch (RuntimeException e) {
+            logger.debug("No param or error retrieving param value(s) for page.", e.getMessage());
+        }
     }
 
     public List<UserProject> getItemList() {
-        return entityDAO.findAll();
+        if (projectId == -1) {
+            return userProjectDao.findAll();
+        } else {
+            final List<UserProject> list =  userProjectDao.findByProjectId(projectId);
+            return list;
+        }
     }
 
     public void setItemList(List<UserProject> itemList) {
         this.itemList = itemList;
     }
+
+    public int getProjectId() {
+        return projectId;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    //TODO converter
+    public String getUserName(final int userId) {
+        return userDao.findByUserId(userId);
+    }
+
+    //TODO converter
+    public String getProjectName(final int projectId) {
+        return projectDAO.findByProjectId(projectId).getLabel();
+    }
+
 }
 
 

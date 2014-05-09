@@ -2,12 +2,12 @@ package edu.yale.library.ladybird.web.view;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 
-import edu.yale.library.ladybird.entity.Project;
+import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.entity.ProjectRoles;
+import edu.yale.library.ladybird.entity.Project;
 import edu.yale.library.ladybird.entity.UserProject;
 import edu.yale.library.ladybird.entity.UserProjectBuilder;
 import edu.yale.library.ladybird.persistence.dao.UserProjectDAO;
@@ -23,16 +23,16 @@ import java.util.Date;
  */
 @SuppressWarnings("unchecked")
 @ManagedBean
-@SessionScoped
+@ViewScoped
 public class AssignProjectView extends AbstractView implements Serializable {
 
     private static final long serialVersionUID = 6223995917417414208L;
 
     private final Logger logger = LoggerFactory.getLogger(AssignProjectView.class);
 
-    private int userId;
     private ProjectRoles projectRole;
     private Project defaultProject = new Project();
+    private User defaultUser = new User();
 
     @Inject
     private UserProjectDAO userProjectDAO;
@@ -40,8 +40,6 @@ public class AssignProjectView extends AbstractView implements Serializable {
     @PostConstruct
     public void init() {
         initFields();
-        userId = Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext()
-                .getRequestParameterMap().get("id"));
     }
 
     public ProjectRoles[] getRoles() {
@@ -57,11 +55,11 @@ public class AssignProjectView extends AbstractView implements Serializable {
     }
 
     public String save() {
-        logger.debug("Saving project label={} with role={} for user={}", defaultProject.getLabel(),
-                projectRole.name(), userId);
-        final UserProject userProject = new  UserProjectBuilder().
-                setProjectId(0).
-                setUserId(userId).
+        logger.debug("Saving project id={} with role={} for user={}",
+                defaultProject.getProjectId(), projectRole.name(), defaultUser.getUserId());
+        final UserProject userProject = new UserProjectBuilder().
+                setProjectId(defaultProject.getProjectId()).
+                setUserId(defaultUser.getUserId()).
                 setRole(projectRole.name()).
                 setDate(new Date(System.currentTimeMillis())).
                 createUserProject();
@@ -81,4 +79,13 @@ public class AssignProjectView extends AbstractView implements Serializable {
     public void setDefaultProject(Project defaultProject) {
         this.defaultProject = defaultProject;
     }
+
+    public User getDefaultUser() {
+        return defaultUser;
+    }
+
+    public void setDefaultUser(User defaultUser) {
+        this.defaultUser = defaultUser;
+    }
+
 }

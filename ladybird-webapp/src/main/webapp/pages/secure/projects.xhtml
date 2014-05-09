@@ -22,6 +22,7 @@
 
                     <p:contextMenu for="ProjectDatatable">
                         <p:menuitem value="Watch" action="#{ProjectView.selectElement}"/>
+                        <p:menuitem value="See assigned users" action="#{ProjectView.selectAllUsersInProject}"/>
                     </p:contextMenu>
 
                     <!-- Data Table -->
@@ -44,7 +45,9 @@
                             <f:facet name="header">
                                 <h:outputText value="Date"/>
                             </f:facet>
-                            <h:outputText value="#{item.date}"/>
+                            <h:outputText value="#{item.date}">
+                                <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                            </h:outputText>
                         </p:column>
                         <p:column>
                             <f:facet name="header">

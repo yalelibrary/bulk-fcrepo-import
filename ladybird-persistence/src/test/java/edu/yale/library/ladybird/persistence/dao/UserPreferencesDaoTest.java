@@ -18,7 +18,7 @@ import static org.junit.Assert.fail;
 public class UserPreferencesDaoTest extends AbstractPersistenceTest {
 
     {
-        DaoInitializer.injectFields(this);
+        TestDaoInitializer.injectFields(this);
     }
 
     @Before

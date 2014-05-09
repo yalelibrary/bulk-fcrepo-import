@@ -19,7 +19,7 @@ public class ObjectDaoTest extends AbstractPersistenceTest {
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(ObjectDaoTest.class);
 
     {
-        DaoInitializer.injectFields(this);
+        TestDaoInitializer.injectFields(this);
     }
 
     @Before

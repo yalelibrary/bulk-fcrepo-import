@@ -8,71 +8,82 @@
 <ui:composition template="../../templates/template.xhtml">
 
     <ui:define name="content">
-
-        <f:metadata>
-        </f:metadata>
+        <f:metadata/>
 
         <h2>User Project Access</h2>
 
-        <h3>Activity</h3>
+        <h:form id="AssignUserProjectPermissionsForm" enctype="multipart/form-data"
+                rendered="#{not empty ProjectView.projectNames}">
 
-        <h:outputText
-                value="Last login activity at #{sessionScope['netid-last-act-time']} for #{sessionScope['netid']}"/>
-
-        <h3>Settings</h3>
-
-        <h:form id="AssignUserProjectPermissionsForm" enctype="multipart/form-data">
+            <h4>Set project access for user.</h4>
 
             <div>
+                <label class="control-label" for="usersSelectOneMenu">User </label>
 
                 <div>
-                    <label class="control-label" for="projectRoleSelectOneMenu">Roles </label>
-                    <h:outputText value=" No project yet. Role cannot be assigned."
-                                  rendered="#{empty ProjectView.projectNames}"/>
+                    <p:selectOneMenu id="usersSelectOneMenu"
+                                     value="#{assignProjectView.defaultUser.userId}"
+                                     rendered="#{not empty userView.itemList}">
 
-                    <div>
-                        <p:selectOneMenu id="projectRoleSelectOneMenu"
-                                         value="#{assignProjectView.projectRole}"
-                                         rendered="#{not empty ProjectView.projectNames}">
+                        <f:selectItems value="#{userView.itemList}"
+                                       var="select_user_role_var"
+                                       itemLabel="#{select_user_role_var.username}"
+                                       itemValue="#{select_user_role_var.userId}"/>
+                    </p:selectOneMenu>
+                    <h:message for="usersSelectOneMenu" style="color:red"/>
+                </div>
+            </div>
 
-                            <f:selectItems value="#{assignProjectView.roles}"
-                                           var="select_project_role_var"
-                                           itemLabel="#{select_project_role_var}"
-                                           itemValue="#{select_project_role_var}"/>
-                        </p:selectOneMenu>
-                        <h:message for="projectRoleSelectOneMenu" style="color:red"/>
+            <div>
+                <label class="control-label" for="projectRoleSelectOneMenu">Role </label>
 
-                    </div>
-                    <div>
-                        <label class="control-label" for="projectSelectOneMenu">Project </label>
-                        <h:outputText value=" No project yet."
-                                      rendered="#{empty ProjectView.projectNames}"/>
+                <div>
+                    <p:selectOneMenu id="projectRoleSelectOneMenu"
+                                     value="#{assignProjectView.projectRole}"
+                                     rendered="#{not empty ProjectView.projectNames}">
 
-                        <div>
-                            <p:selectOneMenu id="projectSelectOneMenu"
-                                             value="#{assignProjectView.defaultProject.label}"
-                                             rendered="#{not empty ProjectView.projectNames}">
-
-                                <f:selectItems value="#{ProjectView.projectNames}"
-                                               var="select_project_var"
-                                               itemLabel="#{select_project_var}"
-                                               itemValue="#{select_project_var}"/>
-                            </p:selectOneMenu>
-                            <h:message for="projectSelectOneMenu" style="color:red"/>
-                        </div>
-                    </div>
-                    <div>
-                        <!-- Submit Button -->
-                        <h:commandButton id="jump_link"
-                                         value="Submit"
-                                         style="background-color:#fff"
-                                         action="#{assignProjectView.save}"
-                                         ajax="true"
-                                         rendered="#{not empty ProjectView.projectNames}"/>
-                    </div>
+                        <f:selectItems value="#{assignProjectView.roles}"
+                                       var="select_project_role_var"
+                                       itemLabel="#{select_project_role_var}"
+                                       itemValue="#{select_project_role_var}"/>
+                    </p:selectOneMenu>
+                    <h:message for="projectRoleSelectOneMenu" style="color:red"/>
                 </div>
 
+
             </div>
+
+
+            <div>
+                <label class="control-label" for="projectSelectOneMenu">Project </label>
+
+                <div>
+                    <h:outputText value=" No project yet."
+                                  rendered="#{empty ProjectView.projectNames}"/>
+
+                    <p:selectOneMenu id="projectSelectOneMenu"
+                                     value="#{assignProjectView.defaultProject.projectId}"
+                                     rendered="#{not empty ProjectView.projectNames}">
+
+                        <f:selectItems value="#{ProjectView.itemList}"
+                                       var="select_project_var"
+                                       itemLabel="#{select_project_var.label}"
+                                       itemValue="#{select_project_var.projectId}"/>
+                    </p:selectOneMenu>
+                    <h:message for="projectSelectOneMenu" style="color:red"/>
+                </div>
+            </div>
+
+            <div>
+                <!-- Submit Button -->
+                <h:commandButton id="jump_link"
+                                 value="Submit"
+                                 action="#{assignProjectView.save()}"
+                                 style="background-color:#fff"
+                                 ajax="false"
+                                 rendered="#{not empty ProjectView.projectNames}"/>
+            </div>
+
         </h:form>
     </ui:define>
 </ui:composition>

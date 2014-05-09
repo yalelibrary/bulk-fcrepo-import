@@ -10,6 +10,8 @@
         <a href="/ladybird-webapp/pages/secure/user_manager_form.xhtml" class="list-group-item">Add Users</a>
         <a href="/ladybird-webapp/pages/secure/users_projects.xhtml"
            class="list-group-item">Users Projects Access</a>
+        <a href="/ladybird-webapp/pages/secure/assign_project_access.xhtml"
+           class="list-group-item">Assign Project Access</a>
         <a href="/ladybird-webapp/pages/secure/user_project_field.xhtml"
            class="list-group-item">Metadata Access Assignment</a>
     </ui:define>
@@ -21,7 +23,6 @@
                 <div>
 
                     <p:contextMenu for="UserDatatable">
-                        <p:menuitem value="Assign Project Access" action="#{userView.assignProjectAccess}"/>
                         <p:menuitem value="Assign Metadata Access" action="#{userView.assignProjectFieldMetadataAccess}"/>
                         <p:menuitem value="User Activity" action="#{userView.seeUserActivity}"/>
                     </p:contextMenu>

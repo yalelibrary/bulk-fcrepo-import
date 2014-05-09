@@ -1,7 +1,6 @@
 package edu.yale.library.ladybird.kernel.events.imports;
 
 import edu.yale.library.ladybird.entity.User;
-import edu.yale.library.ladybird.kernel.events.Event;
 import edu.yale.library.ladybird.kernel.events.UserGeneratedEvent;
 
 import java.util.Date;

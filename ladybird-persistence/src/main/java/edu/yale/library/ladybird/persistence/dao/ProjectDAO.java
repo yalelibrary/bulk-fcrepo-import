@@ -8,5 +8,7 @@ public interface ProjectDAO extends GenericDAO<Project, Integer> {
 
     List<Project> findByLabel(String label);
 
+    Project findByProjectId(int projectId);
+
 }
 

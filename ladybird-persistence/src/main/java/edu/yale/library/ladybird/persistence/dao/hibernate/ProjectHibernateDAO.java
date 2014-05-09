@@ -14,5 +14,11 @@ public class ProjectHibernateDAO extends GenericHibernateDAO<Project, Integer> i
         return q.list();
     }
 
+    @Override
+    public Project findByProjectId(int projectId) {
+        final Query q = getSession().createQuery("from Project where projectId = :param");
+        q.setParameter("param", projectId);
+        return (Project) q.list().get(0); //TODO
+    }
 }
 
