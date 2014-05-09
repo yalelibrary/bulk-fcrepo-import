@@ -39,13 +39,13 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.UserProjectHibernateD
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserProjectFieldHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserEventHibernateDAO;
 
-
-
 import edu.yale.library.ladybird.web.http.CollectionHttpService;
 import edu.yale.library.ladybird.web.http.FieldDefinitionHttpService;
 import edu.yale.library.ladybird.web.http.ImportSourcerHttpService;
 import edu.yale.library.ladybird.web.http.ProjectHttpService;
 import edu.yale.library.ladybird.web.http.UserHttpService;
+import edu.yale.library.ladybird.web.http.UserEventHttpService;
+
 
 public class DaoHibernateModule extends AbstractModule {
     @Override
@@ -75,6 +75,7 @@ public class DaoHibernateModule extends AbstractModule {
         bind(UserEventDAO.class).to(UserEventHibernateDAO.class);
 
         bind(UserHttpService.class);
+        bind(UserEventHttpService.class);
         bind(ImportSourcerHttpService.class);
         bind(ProjectHttpService.class);
         bind(CollectionHttpService.class);

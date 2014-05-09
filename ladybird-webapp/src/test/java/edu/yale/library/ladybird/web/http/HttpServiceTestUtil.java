@@ -2,7 +2,9 @@ package edu.yale.library.ladybird.web.http;
 
 
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
@@ -16,9 +18,8 @@ public class HttpServiceTestUtil {
     private static final int IDLE_TIMEOUT = 3;
     private static final String DEFAULT_TEST_PORT = getProp("test.port");
     private static final int SERVER_PORT = Integer.parseInt(DEFAULT_TEST_PORT);
-
-    private static final String appUrl = "http://" + getProp("host") + ":"
-            + SERVER_PORT + getProp("context.path") + "/rest/";
+    private static final String REST = "/rest/";
+    private static final String appUrl = buildAppRestUrl();
 
     public HttpServiceTestUtil() {
         setConnectionManagerProps(connectionManager);
@@ -37,8 +38,28 @@ public class HttpServiceTestUtil {
         return get;
     }
 
+    public HttpPost doPOST(final String param) {
+        final String url = appUrl + param + "/";
+        HttpPost post = new HttpPost(url);
+        return post;
+    }
+
+    public HttpDelete doDELETE(final String param) {
+        final String url = appUrl + param + "/";
+        HttpDelete delete = new HttpDelete(url);
+        return delete;
+    }
+
     private static String getProp(String s) {
         return System.getProperty(s);
+    }
+
+    public HttpClient getHttpClient() {
+        return httpClient;
+    }
+
+    private static String buildAppRestUrl() {
+        return "http://" + getProp("host") + ":" + SERVER_PORT + getProp("context.path") + REST;
     }
 }
 

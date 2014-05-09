@@ -1,27 +1,34 @@
-package edu.yale.library.ladybird.web.http;
+package edu.yale.library.ladybird.web.view;
 
-
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import edu.yale.library.ladybird.web.AbstractWarTest;
+import edu.yale.library.ladybird.web.http.HttpServiceTestUtil;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.tika.io.IOUtils;
+import org.apache.http.message.BasicNameValuePair;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-public class UsersHttpServiceIT extends AbstractWarTest {
+public class UserEventViewIT extends AbstractWarTest {
 
-    private final String HTTP_SERVICE = "users";
+    /**
+     * Page to test
+     * TODO read param from POST
+     */
+    private static final String PAGE_TO_TEST = getAppUrl() + "/pages/secure/user_event.xhtml?id=1";
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -42,11 +49,18 @@ public class UsersHttpServiceIT extends AbstractWarTest {
     }
 
     @Test
-    public void shouldGet() throws Exception {
-        final HttpResponse response0 = getHttpUser();
-        assertNotNull(response0);
-        assertEquals(IOUtils.toString(response0.getEntity().getContent()), 200,
-                response0.getStatusLine().getStatusCode());
+    public void shouldPopulateDatatable() throws Exception {
+        createHttpUser("users", getParamsForUserHttpService());
+
+        final WebClient webClient = new WebClient();
+        webClient.setJavaScriptEnabled(false);
+        webClient.closeAllWindows();
+
+        final HtmlPage page = webClient.getPage(PAGE_TO_TEST);
+        final String pageAsText = page.asXml();
+        assertTrue(pageAsText.contains("Event Type"));
+        final HtmlElement htmlElement = page.getElementById("UserEventForm:UserEventDatatable:0:event_type");
+        assertEquals("Value mismatch", htmlElement.getTextContent(), "user.create");
     }
 
     private void createHttpUser(final String service, final List<NameValuePair> urlParameters) throws Exception {
@@ -59,16 +73,17 @@ public class UsersHttpServiceIT extends AbstractWarTest {
         assert (response.getStatusLine().getStatusCode() == 200);
     }
 
-    private HttpResponse getHttpUser() throws Exception {
-        HttpServiceTestUtil httpServiceTestUtil = new HttpServiceTestUtil();
-        final HttpGet getMethod = httpServiceTestUtil.doGET(HTTP_SERVICE);
-        final HttpResponse response = httpServiceTestUtil.getHttpClient().execute(getMethod);
-        return response;
+    private List getParamsForUserHttpService() {
+        final List<NameValuePair> urlParams = new ArrayList<>();
+        urlParams.add(new BasicNameValuePair("username", "alice"));
+        urlParams.add(new BasicNameValuePair("name", "alice"));
+        urlParams.add(new BasicNameValuePair("email", "alice@yale.edu"));
+        return urlParams;
     }
 
     private HttpResponse execDelete(final String service) throws Exception {
         final HttpServiceTestUtil httpServiceTestUtil = new HttpServiceTestUtil();
-        final HttpDelete delete = httpServiceTestUtil.doDELETE(service);
+        HttpDelete delete = httpServiceTestUtil.doDELETE(service);
         final HttpResponse response = httpServiceTestUtil.getHttpClient().execute(delete);
         return response;
     }

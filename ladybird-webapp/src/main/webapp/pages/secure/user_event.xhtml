@@ -33,19 +33,19 @@
                             <f:facet name="header">
                                 <h:outputText value="UserId"/>
                             </f:facet>
-                            <h:outputText value="#{item.userId}"/>
+                            <h:outputText id="event_userid" value="#{item.userId}"/>
                         </p:column>
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Event Type"/>
                             </f:facet>
-                            <h:outputText value="#{item.eventType}"/>
+                            <h:outputText id="event_type" value="#{item.eventType}"/>
                         </p:column>
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Event Creation Time"/>
                             </f:facet>
-                            <h:outputText value="#{item.createdDate}">
+                            <h:outputText id="event_createddate" value="#{item.createdDate}">
                                 <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
                             </h:outputText>
                         </p:column>
@@ -53,7 +53,7 @@
                             <f:facet name="header">
                                 <h:outputText value="Start"/>
                             </f:facet>
-                            <h:outputText value="#{item.startDate}">
+                            <h:outputText id="event_startdate" value="#{item.startDate}">
                                 <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
                             </h:outputText>
                         </p:column>
@@ -61,7 +61,7 @@
                             <f:facet name="header">
                                 <h:outputText value="End"/>
                             </f:facet>
-                            <h:outputText value="#{item.endDate}">
+                            <h:outputText id="event_enddate" value="#{item.endDate}">
                                 <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
                             </h:outputText>
                         </p:column>
@@ -69,7 +69,7 @@
                             <f:facet name="header">
                                 <h:outputText value="Event Value"/>
                             </f:facet>
-                            <h:outputText value="#{item.value}"/>
+                            <h:outputText id="event_value" name="event_value" value="#{item.value}"/>
                         </p:column>
 
                     </p:dataTable>
