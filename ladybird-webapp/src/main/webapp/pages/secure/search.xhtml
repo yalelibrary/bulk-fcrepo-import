@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template.xhtml">
+
+    <ui:define name="content">
+        <h2>Search</h2>
+
+        <h:link value="Add a user/project before search"
+                outcome="user_manager_form" rendered="#{(empty userView.itemList) or (empty ProjectView.itemList)}" />
+
+        <h:form id="SearchForm" enctype="multipart/form-data" rendered="#{not empty userView.itemList}">
+
+            <div>
+
+                <div>
+                    <div>
+
+                        <div>
+                            <p:selectOneMenu id="projectSelectOneMenu"
+                                             value="#{userPreferencesView.defaultProject.label}"
+                                             rendered="#{not empty ProjectView.projectNames}">
+
+                                <f:selectItems value="#{ProjectView.projectNames}"
+                                               var="select_project_var"
+                                               itemLabel="#{select_project_var}"
+                                               itemValue="#{select_project_var}"/>
+                            </p:selectOneMenu>
+                            <h:message for="projectSelectOneMenu" style="color:red"/>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

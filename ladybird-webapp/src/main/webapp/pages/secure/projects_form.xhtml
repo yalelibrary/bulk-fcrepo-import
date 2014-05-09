@@ -9,9 +9,9 @@
     <ui:define name="content">
         <h2>Add Project</h2>
 
-        <h:link id="renderlink" value="Add a user before adding project" rendered="#{empty userView.itemList}" />
+        <h:link value="Add a user before adding project" outcome="user_manager_form" rendered="#{empty userView.itemList}" />
 
-        <h:form id="ProjectForm" enctype="multipart/form-data" rendered="#{not empty userView.itemList}">
+        <h:form id="ProjectForm" enctype="multipart/form-data">
             <br/>
 
             <div style="">
