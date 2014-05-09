@@ -7,8 +7,12 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../../templates/template.xhtml">
     <ui:define name="content">
-        <h2>Import/Export Cron Scheduler</h2>
-        <h:form id="UserForm" enctype="multipart/form-data">
+        <h2>Import Engine Scheduler</h2>
+
+        <h:link id="renderlink" value="Add a user before scheduling job." outcome="user_manager_form"
+                rendered="#{empty userView.itemList}"/>
+
+        <h:form id="UserForm" enctype="multipart/form-data" rendered="#{not empty userView.itemList}">
 
             <div>
                 <div>
@@ -20,7 +24,7 @@
                     <p:commandButton icon="ui-icon-plusthick"
                                      type="button"
                                      onclick="dlg.show();"
-                                     value="Update Item"
+                                     value="Add Directory"
                                      rendered="#{not empty userView.userEmailList}"/>
 
                     <!-- Modal pop up for + Button -->
@@ -34,9 +38,10 @@
                               widgetVar="dlg">
 
                         <div>
+                            Specify directories for import pick up and export drop off.
                             <span class="help-block">
                                 <p:messages id="messages_pf" showDetail="true" autoUpdate="true" closable="true"/>
-                        </span>
+                            </span>
                         </div>
 
                         <div>
@@ -56,40 +61,39 @@
                         </div>
 
                         <div>
-                            <label>Notification E-mail</label>
+                            <label>Notification E-mail (select from the list)</label>
 
                             <div>
-                                <label class="control-label" for="userSelectBox">Select user e-mail </label>
+                                <p:selectOneMenu id="userSelectBox"
+                                                 value="#{monitorView.monitorItem.notificationEmail}">
 
-                                <div>
-                                    <p:selectOneMenu id="userSelectBox"
-                                                     value="#{monitorView.monitorItem.notificationEmail}">
+                                    <f:selectItems value="#{userView.userEmailList}"
+                                                   var="select_user_var"
+                                                   itemLabel="#{select_user_var}"
+                                                   itemValue="#{select_user_var}"/>
 
-                                        <f:selectItems value="#{userView.userEmailList}"
-                                                       var="select_user_var"
-                                                       itemLabel="#{select_user_var}"
-                                                       itemValue="#{select_user_var}" />
-
-                                    </p:selectOneMenu>
-                                    <h:message for="userSelectBox" style="color:red" />
-
-                                </div>
+                                </p:selectOneMenu>
+                                <h:message for="userSelectBox" style="color:red"/>
                             </div>
-
                         </div>
 
 
-                        <!-- Submit Button -->
+                        <div>
+                            <!-- Submit Button -->
 
-                        <p:commandButton action="#{monitorView.save}"
-                                         styleClass="btn"
-                                         update="DirDatatable, messages_pf"
-                                         value="Submit"/>
+                            <p:commandButton action="#{monitorView.save}"
+                                             styleClass="btn"
+                                             update="DirDatatable, messages_pf"
+                                             value="Submit"/>
+                        </div>
 
                     </p:dialog>
 
                     <br/>
+
                     <br/>
+
+                    <h4> List of all import jobs</h4>
 
                     <!-- Data Table -->
 
