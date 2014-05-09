@@ -48,10 +48,10 @@ public class ProjectView extends AbstractView {
         try {
             setDefaults(item);
             dao.save(item);
-            return "ok";
+            return NavigationCase.OK.toString();
         } catch (Throwable e) {
             logger.error("Error saving item", e);
-            return "failed";
+            return NavigationCase.FAIL.toString();
         }
     }
     //TODO replace with DAO call

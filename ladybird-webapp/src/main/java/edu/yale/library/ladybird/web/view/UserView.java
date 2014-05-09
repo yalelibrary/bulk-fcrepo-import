@@ -83,10 +83,10 @@ public class UserView extends AbstractView implements Serializable {
         try {
             setDefaults(item);
             dao.save(item);
-            return "ok";
+            return NavigationCase.OK.toString();
         } catch (Exception e) {
             logger.error("Error saving item", e);
-            return "failed";
+            return NavigationCase.FAIL.toString();
         }
     }
 

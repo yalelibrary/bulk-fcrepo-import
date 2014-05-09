@@ -65,10 +65,10 @@ public class AssignProjectFieldView extends AbstractView implements Serializable
                 createUserProject();
         try {
             userProjectDAO.save(userProject);
-            return "ok";
+            return NavigationCase.OK.toString();
         } catch (Exception e) {
             logger.error("Exception saving project role", e);
-            return "failed";
+            return NavigationCase.FAIL.toString();
         }
     }
 
