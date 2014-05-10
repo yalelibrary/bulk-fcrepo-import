@@ -30,4 +30,19 @@ public class UserHibernateDAO extends GenericHibernateDAO<User, Integer> impleme
         final List<User> userList = q.list();
         return userList.get(0).getUsername();
     }
+
+    @Override
+    public List<String> getEmails() {
+        final Query q = getSession().createQuery("select u.email from User u");
+        final List<String> userList = q.list();
+        return userList;
+    }
+
+    @Override
+    public List<String> getUsernames() {
+        final Query q = getSession().createQuery("select u.username from User u");
+        final List<String> userList = q.list();
+        return userList;
+    }
+
 }

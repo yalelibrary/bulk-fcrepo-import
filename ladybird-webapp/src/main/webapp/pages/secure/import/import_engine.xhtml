@@ -9,7 +9,7 @@
     <ui:define name="content">
         <h2>Import Engine Scheduler</h2>
 
-        <h:link id="renderlink" value="Add a user before scheduling job." outcome="user_manager_form"
+        <h:link id="renderlink" value="Add a user before scheduling job." outcome="/pages/secure/user_manager_form"
                 rendered="#{empty userView.itemList}"/>
 
         <h:form id="UserForm" enctype="multipart/form-data" rendered="#{not empty userView.itemList}">

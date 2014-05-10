@@ -12,5 +12,9 @@ public interface UserDAO extends GenericDAO<User, Integer> {
 
     String findByUserId(int userId);
 
+    List<String> getEmails();
+
+    List<String> getUsernames();
+
 }
 

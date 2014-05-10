@@ -14,6 +14,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class UserView extends AbstractView implements Serializable {
     public void init() {
         initFields();
         dao = userDAO;
-        if (subItemList == null) { //FIXME
+        if (subItemList == null) {
             subItemList = new UserDataModel();
         }
     }
@@ -51,24 +52,24 @@ public class UserView extends AbstractView implements Serializable {
         return user;
     }
 
-    //TODO replace with DAO call
     public List getUsernameList() {
-        List<User> user = getItemList();
-        List<String> userNameList = new ArrayList<>();
-        for (User u : user) {
-            userNameList.add(u.getUsername());
+        try {
+            final List<String> list = userDAO.getUsernames();
+            return list;
+        } catch (RuntimeException e) {
+            logger.debug("Error finding user email list");
         }
-        return userNameList;
+        return Collections.emptyList();
     }
 
-    //TODO replace with DAO call
     public List getUserEmailList() {
-        List<User> user = getItemList();
-        List<String> list = new ArrayList<>();
-        for (User u : user) {
-            list.add(u.getEmail());
+        try {
+            final List<String> list = userDAO.getEmails();
+            return list;
+        } catch (RuntimeException e) {
+            logger.debug("Error finding user email list");
         }
-        return list;
+        return Collections.emptyList();
     }
 
     public User getItem() {
@@ -100,14 +101,8 @@ public class UserView extends AbstractView implements Serializable {
         item.setDate(date);
         item.setDateCreated(date);
         item.setDateEdited(date);
-        item.setDateEdited(date);
         item.setDateLastused(date);
         item.setCreatorId(getUserIdForUsername(getCurrentUserName()));
-    }
-
-    @Override
-    public String toString() {
-        return item.toString();
     }
 
     public LazyDataModel<User> getSubItemList() {
@@ -127,11 +122,11 @@ public class UserView extends AbstractView implements Serializable {
     }
 
     public String assignProjectFieldMetadataAccess() {
-        return getRedirectWithParam("user_metadata_access.xhtml");
+        return getRedirectWithParam(NavigationUtil.USER_METADATA_ACCESS_PAGE);
     }
 
     public String seeUserActivity() {
-        return getRedirectWithParam("user_event.xhtml");
+        return getRedirectWithParam(NavigationUtil.USER_EVENT_PAGE);
     }
 
     private String getRedirectWithParam(String page) {
@@ -140,21 +135,44 @@ public class UserView extends AbstractView implements Serializable {
 
     private int getUserIdForUsername(final String username) {
         final List<User> userList = userDAO.findByUsername(username);
-        if (userList.size() == 0) { //FIXME it's for the 1st user
+
+        //Note: for the 1st user in the system
+        if (userList.size() == 0) {
             logger.debug("Returning 1st user id, since user list={}", userList.toString());
             return 1;
         }
-        return userList.get(0).getUserId(); //TODO only one anyway
+
+        return userList.get(0).getUserId(); //TODO ensure unique user name
     }
 
+    //TODO returns empty string due to IT auth test
+    //TODO get current user from somewhere else
     private String getCurrentUserName() {
         try {
-            final String netid = FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
-                    .get("netid").toString();
-            return netid;
+            final String sessionNetIdParam = "netid";
+            final String username = FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+                    .get(sessionNetIdParam).toString();
+            return username;
         } catch (Exception e) {
-            return ""; //TODO
+            logger.debug("Cannot find current username");
+            return "";
         }
+    }
+
+    //TODO converter
+    //TODO returns empty string due to lack of http service param for creator
+    public String getUserName(final int userId) {
+        try {
+            return userDAO.findByUserId(userId);
+        } catch (Exception e) {
+            logger.debug("Cannot find user name for user id={}", userId);
+            return "";
+        }
+    }
+
+    @Override
+    public String toString() {
+        return item.toString();
     }
 }
 

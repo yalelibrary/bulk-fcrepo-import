@@ -65,7 +65,7 @@ public class AssignProjectView extends AbstractView implements Serializable {
                 createUserProject();
         try {
             userProjectDAO.save(userProject);
-            return getRedirectWithParam("users_projects.xhtml", defaultProject.getProjectId());
+            return getRedirectWithParam(NavigationUtil.USER_PROJECTS_PAGE, defaultProject.getProjectId());
         } catch (Exception e) {
             logger.error("Exception saving project role", e);
             return getRedirect("/pages/form_submission_failed");

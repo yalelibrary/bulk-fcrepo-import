@@ -13,7 +13,7 @@
         <a href="/ladybird-webapp/pages/secure/assign_project_access.xhtml"
            class="list-group-item">Assign Project Access</a>
         <a href="/ladybird-webapp/pages/secure/user_project_field.xhtml"
-           class="list-group-item">Metadata Access Assignment</a>
+           class="list-group-item">Metadata Access</a>
     </ui:define>
 
     <ui:define name="content">
@@ -55,22 +55,23 @@
                         <p:column id="col_username" headerText="Username">
                             <h:outputText id="username" value="#{item.username}"/>
                         </p:column>
+                        <p:column headerText="E-mail">
+                            <h:outputText id="email" name="email" value="#{item.email}"/>
+                        </p:column>
                         <p:column headerText="Created">
                             <h:outputText value="#{item.dateCreated}">
                                 <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
                             </h:outputText>
                         </p:column>
-                        <p:column headerText="Edited">
+                        <p:column headerText="Edited" rendered="false">
                             <h:outputText value=""/>
                         </p:column>
-                        <p:column headerText="Last used">
+                        <p:column headerText="Last used" rendered="false">
                             <h:outputText value=""/>
                         </p:column>
-                        <p:column headerText="Creator Id">
-                            <h:outputText value="#{item.creatorId}"/>
-                        </p:column>
-                        <p:column headerText="E-mail">
-                            <h:outputText id="email" name="email" value="#{item.email}"/>
+                        <p:column headerText="Creator">
+                            <!-- <h:outputText value="#{item.creatorId}"/> -->
+                            <h:outputText value="#{userView.getUserName(item.creatorId)}"/>
                         </p:column>
 
                     </p:dataTable>
