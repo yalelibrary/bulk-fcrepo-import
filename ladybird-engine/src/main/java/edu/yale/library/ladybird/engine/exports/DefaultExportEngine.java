@@ -1,5 +1,6 @@
 package edu.yale.library.ladybird.engine.exports;
 
+import edu.yale.library.ladybird.engine.cron.JobTracker;
 import edu.yale.library.ladybird.engine.imports.ImportEntity;
 import org.slf4j.Logger;
 
@@ -29,6 +30,7 @@ public class DefaultExportEngine extends AbstractExportEngine {
 
         final ExportWriter exportWriter = new ExportWriter();
         exportWriter.write(list, pathName);
+        JobTracker.steps++; //TODO
     }
 
 }

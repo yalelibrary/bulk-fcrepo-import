@@ -94,7 +94,7 @@
 
                     <br/>
 
-                    <h4> List of all import jobs</h4>
+                    <h4>List of all import jobs</h4>
 
                     <!-- Data Table -->
 
@@ -116,6 +116,16 @@
 
                         <p:column headerText="User">
                             <h:outputText value="#{monitorItem.notificationEmail}"/>
+                        </p:column>
+
+                        <p:column headerText="Progress">
+                            <h:outputText id="progressText" value="#{importProgressView.count} out of #{importProgressView.expectedCount}"/>
+
+                            <h:graphicImage id="flag" rendered="#{importProgressView.complete}"
+                                    library="img" name="check.png"/>
+
+                            <p:poll id="progressPoll" interval="5" listener="#{importProgressView.increment}"
+                                    update="progressText, flag" />
                         </p:column>
 
                     </p:dataTable>

@@ -70,6 +70,7 @@ public class DefaultImportJob implements Job, ImportJob {
                     setRowsProcessed(rowList.size()).createImportDoneEvent();
 
             logger.debug("Adding import event and notifying all registered users");
+            JobTracker.steps++; //TODO
 
             sendNotification(importEvent, Collections.singletonList(importRequestedEvent.getMonitor().getUser()));
 
