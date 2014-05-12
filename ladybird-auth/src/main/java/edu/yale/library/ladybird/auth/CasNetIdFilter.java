@@ -21,8 +21,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class CasNetIdFilter implements Filter {
 
@@ -158,7 +156,6 @@ public class CasNetIdFilter implements Filter {
 
             @Override
             public String toString() {
-                //return  Events.USER_LOGIN.toString() + " (for " + netid + ")";
                 return getEventName() + " (for " + getPrincipal() + ")";
             }
         });
@@ -172,11 +169,8 @@ public class CasNetIdFilter implements Filter {
         return Util.getProperty(property);
     }
 
-    public String getCurrentTime() {
-        final LocalDate date = LocalDate.now();
-        final LocalTime time = LocalTime.now();
-        return String.format("%s-%s-%s %s:%s",
-                date.getYear(), date.getMonthValue(), date.getDayOfMonth(), time.getHour(), time.getMinute());
+    public long getCurrentTime() {
+        return System.currentTimeMillis();
     }
 
     private class UserAuthResponse {

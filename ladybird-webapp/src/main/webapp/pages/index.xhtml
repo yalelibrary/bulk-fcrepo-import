@@ -12,8 +12,15 @@
 
             <p>LadyBird is a collection of services and utilities for digital asset management.</p>
 
-            <p><a class="btn btn-primary btn-lg" role="button"
-                  href="http://localhost:8080/ladybird-webapp/web/pages/secure/welcome.xhtml">Log in</a></p>
+            <h:outputLink value="http://localhost:8080/ladybird-webapp/web/pages/secure/welcome.xhtml"
+                          rendered="#{empty welcomeView.principal}"
+                          styleClass="btn btn-primary btn-lg btn-warning"> Login
+            </h:outputLink>
+
+            <h:outputLink value="http://localhost:8080/ladybird-webapp/web/pages/secure/welcome.xhtml"
+                          rendered="#{not empty welcomeView.principal}"
+                          styleClass="btn btn-primary btn-lg btn-success"> Proceed
+            </h:outputLink>
         </div>
     </ui:define>
 </ui:composition>

@@ -40,7 +40,7 @@ public class ImportFileViewIT extends AbstractWarTest {
         final HtmlPage page = webClient.getPage(PAGE_TO_TEST);
         final String pageAsText = page.asText();
         Assert.assertTrue(pageAsText.contains("No records found."));
-        Assert.assertTrue(pageAsText.contains("FileLocation"));
+        Assert.assertTrue(pageAsText.contains("File"));
         webClient.closeAllWindows();
     }
 }

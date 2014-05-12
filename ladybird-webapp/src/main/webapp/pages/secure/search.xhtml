@@ -10,8 +10,9 @@
     <ui:define name="content">
         <h2>Search</h2>
 
-        <h:link value="Add a user/project before search"
-                outcome="user_manager_form" rendered="#{(empty userView.itemList) or (empty ProjectView.itemList)}" />
+        <ui:insert>
+            <ui:include src="check_user_project.xhtml"/>
+        </ui:insert>
 
         <h:form id="SearchForm" enctype="multipart/form-data" rendered="#{not empty userView.itemList}">
 

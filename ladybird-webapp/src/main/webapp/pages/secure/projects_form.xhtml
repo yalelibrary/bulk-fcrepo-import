@@ -11,11 +11,11 @@
 
         <h:link value="Add a user before adding project" outcome="user_manager_form" rendered="#{empty userView.itemList}" />
 
-        <h:form id="ProjectForm" enctype="multipart/form-data">
+        <h:form id="ProjectForm" enctype="multipart/form-data" rendered="#{not empty userView.itemList}">
             <br/>
 
-            <div style="">
-                <div class="" style="">
+            <div>
+                <div>
 
                     <div>
                         <label>Project Label</label>

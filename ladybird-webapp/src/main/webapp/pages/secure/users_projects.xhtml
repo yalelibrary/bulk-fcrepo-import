@@ -6,16 +6,22 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../templates/template.xhtml">
+
+    <ui:define name="offcanvas">
+        <a href="/ladybird-webapp/pages/secure/projects_form.xhtml" class="list-group-item">Add Project</a>
+        <a href="/ladybird-webapp/pages/secure/users_projects.xhtml" class="list-group-item">Users Project Access</a>
+    </ui:define>
+
     <ui:define name="content">
 
         <f:metadata/>
 
-        <h2>Users</h2>
+        <h2>Project Authorization</h2>
 
-        <h3>
-            <h:outputText value="Users in project #{userProjectView.projectName}" rendered="#{not empty userProjectView.projectName}" />
-            <h:outputText value="Users in all projects" rendered="#{empty userProjectView.projectName}" />
-        </h3>
+        <h4>
+            <h:outputText value="Users and their roles in project: #{userProjectView.projectName}" rendered="#{not empty userProjectView.projectName}" />
+            <h:outputText value="Users and roles across all projects" rendered="#{empty userProjectView.projectName}" />
+        </h4>
 
         <h:form id="UserProjectForm" enctype="multipart/form-data">
             <br/>
@@ -33,14 +39,6 @@
 
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="Date"/>
-                            </f:facet>
-                            <h:outputText value="#{item.date}">
-                                <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
-                            </h:outputText>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
                                 <h:outputText value="User"/>
                             </f:facet>
                             <h:outputText value="#{userProjectView.getUserName(item.userId)}"/>
@@ -56,6 +54,14 @@
                                 <h:outputText value="Role"/>
                             </f:facet>
                             <h:outputText value="#{item.role}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Date"/>
+                            </f:facet>
+                            <h:outputText value="#{item.date}">
+                                <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                            </h:outputText>
                         </p:column>
                     </p:dataTable>
                 </div>

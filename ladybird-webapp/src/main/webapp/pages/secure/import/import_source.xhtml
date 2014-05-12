@@ -28,13 +28,17 @@
                     <p:dialog id="modalDialog" header="New Item" widgetVar="dlg"
                               modal="true" height="350" width="350" resizable="false">
                         <div class="control-group">
-                        <span class="help-block">
-                            <p:messages id="messages_pf" showDetail="true" autoUpdate="true" closable="true"/>
-                        </span>
+                            <span class="help-block">
+                                Specify OAI-PMH import source.
+                                <p:messages id="messages_pf" showDetail="true" autoUpdate="true" closable="true"/>
+                            </span>
                         </div>
+
+
 
                         <div>
                             <label>Provider URL</label>
+
                             <div>
                                 <p:inputText value="#{ImportSourceView.item.url}">
                                 </p:inputText>
@@ -52,7 +56,8 @@
 
 
                         <div>
-                            <label>Get Record Prefix</label>
+                            <label>GetRecord Verb Prefix</label>
+
                             <div>
                                 <p:inputText value="#{ImportSourceView.item.getPrefix}"/>
                             </div>

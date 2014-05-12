@@ -8,9 +8,7 @@
 <ui:composition template="../../../templates/template.xhtml">
     <ui:define name="content">
         <h2>Import File</h2>
-        <h:form id="ImportFileForm" enctype="multipart/form-data"
-                styleClass=""
-                style="">
+        <h:form id="ImportFileForm" enctype="multipart/form-data">
             <br/>
 
             <div style="">
@@ -37,7 +35,7 @@
                         </p:column>
                         <p:column width="70">
                             <f:facet name="header">
-                                <h:outputText value="FileLocation"/>
+                                <h:outputText value="File"/>
                             </f:facet>
                             <h:outputText value="#{item.fileLocation}"/>
                         </p:column>
@@ -49,7 +47,7 @@
                         </p:column>
                         <p:column width="70">
                             <f:facet name="header">
-                                <h:outputText value="UserId"/>
+                                <h:outputText value="User"/>
                             </f:facet>
                             <h:outputText value="#{item.userId}"/>
                         </p:column>

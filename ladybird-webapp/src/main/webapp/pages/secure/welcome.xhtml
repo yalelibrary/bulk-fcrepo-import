@@ -10,8 +10,11 @@
         <div class="jumbotron">
             <h2>Activity</h2>
 
-            <p>Last activity at #{sessionScope['netid-last-act-time']} for #{sessionScope['netid']}</p>
-
+            <p>Last login session activity
+                <h:outputText value="#{welcomeView.principalLastActTime}">
+                        <f:converter converterId="org.ocpsoft.PrettyTimeConverter"/>
+                </h:outputText>
+            </p>
         </div>
     </ui:define>
 </ui:composition>

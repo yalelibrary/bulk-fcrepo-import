@@ -10,7 +10,11 @@
     <ui:define name="content">
         <f:metadata/>
 
-        <h2>User Project Access</h2>
+        <h2>Assign Access</h2>
+
+        <ui:insert>
+            <ui:include src="check_user_project.xhtml"/>
+        </ui:insert>
 
         <h:form id="AssignUserProjectPermissionsForm" enctype="multipart/form-data"
                 rendered="#{not empty ProjectView.projectNames}">
@@ -49,8 +53,6 @@
                     </p:selectOneMenu>
                     <h:message for="projectRoleSelectOneMenu" style="color:red"/>
                 </div>
-
-
             </div>
 
 

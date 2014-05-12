@@ -68,6 +68,7 @@
         <commons-lang.version>2.6</commons-lang.version>
         <commons-config.version>1.10</commons-config.version>
         <guava.version>17.0</guava.version>
+        <prettytime.version>3.2.5.Final</prettytime.version>
     </properties>
 
     <dependencyManagement>
@@ -239,6 +240,16 @@
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.ocpsoft.prettytime</groupId>
+                <artifactId>prettytime</artifactId>
+                <version>${prettytime.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ocpsoft.prettytime</groupId>
+                <artifactId>prettytime-integration-jsf</artifactId>
+                <version>3.2.6-SNAPSHOT</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
@@ -283,6 +294,10 @@
             <name>PrimeFaces Maven Repository</name>
             <url>http://repository.primefaces.org</url>
             <layout>default</layout>
+        </repository>
+        <repository>
+            <id>sonatype-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
     </repositories>
 

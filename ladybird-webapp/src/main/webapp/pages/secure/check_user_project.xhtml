@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<body>
+
+<ui:composition>
+
+    <div>
+        <h:outputText value="Add users and projects before proceeding"
+                      rendered="#{(empty userView.itemList) or (empty ProjectView.itemList)}" styleClass="h4"/>
+    </div>
+
+    <div>
+        <span>
+            <h:outputLink value="/ladybird-webapp/web/pages/secure/user_manager_form.xhtml"
+                           rendered="#{empty userView.itemList}"
+                           styleClass="btn btn-primary btn-warning">
+                Add Users
+            </h:outputLink>
+        </span>
+        <span>
+            <h:outputLink value="/ladybird-webapp/web/pages/secure/projects_form.xhtml"
+                          rendered="#{empty ProjectView.itemList}"
+                          styleClass="btn btn-primary btn-warning">
+                Add Projects
+            </h:outputLink>
+        </span>
+    </div>
+
+</ui:composition>
+
+</body>
+</html>

@@ -12,7 +12,12 @@
 
         <h3>Activity</h3>
 
-        <h:outputText value="Last login activity at #{sessionScope['netid-last-act-time']} for #{sessionScope['netid']}" />
+        <p>Last login session activity
+            <h:outputText value="#{welcomeView.principalLastActTime}">
+                <f:converter converterId="org.ocpsoft.PrettyTimeConverter"/>
+            </h:outputText>
+            for #{welcomeView.principal}</p>
+
         <br/>
         <h:outputText value="Watching project #{sessionScope['projectId']}" rendered="#{not empty sessionScope['projectId']}" />
 

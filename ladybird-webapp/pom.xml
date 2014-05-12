@@ -172,6 +172,14 @@
             <artifactId>jsf-extensions-test-time</artifactId>
             <version>${jsf-extensions-test-time.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.ocpsoft.prettytime</groupId>
+            <artifactId>prettytime</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ocpsoft.prettytime</groupId>
+            <artifactId>prettytime-integration-jsf</artifactId>
+        </dependency>
         <!-- Java EE -->
         <dependency>
             <groupId>javax</groupId>
