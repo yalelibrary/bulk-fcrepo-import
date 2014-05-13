@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../../templates/template.xhtml">
+    <ui:define name="content">
+        <h2>Import Scheduler</h2>
+
+        <ui:insert>
+            <ui:include src="../check_user.xhtml"/>
+        </ui:insert>
+
+        <br/>
+
+
+        <h:form id="UserForm" enctype="multipart/form-data" rendered="#{not empty userView.itemList}">
+
+            <div>
+                <label>Import Directory</label>
+
+                <div>
+                    <p:inputText value="#{monitorView.monitorItem.dirPath}"/>
+                </div>
+            </div>
+
+            <div>
+                <label>Export Directory</label>
+
+                <div>
+                    <p:inputText value="#{monitorView.monitorItem.exportPath}"/>
+                </div>
+            </div>
+
+            <div>
+                <label>Notification E-mail (select from the list)</label>
+
+                <div>
+                    <p:selectOneMenu id="userSelectBox"
+                                     value="#{monitorView.monitorItem.notificationEmail}">
+
+                        <f:selectItems value="#{userView.userEmailList}"
+                                       var="select_user_var"
+                                       itemLabel="#{select_user_var}"
+                                       itemValue="#{select_user_var}"/>
+
+                    </p:selectOneMenu>
+                    <h:message for="userSelectBox" style="color:red"/>
+                </div>
+            </div>
+
+            <div>
+                <h:commandButton id="submit_link"
+                                 value="Submit"
+                                 action="#{monitorView.save}"
+                                 ajax="false"/>
+            </div>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

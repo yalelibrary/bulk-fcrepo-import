@@ -12,10 +12,18 @@
 
         <h2>Assign Access</h2>
 
-        <ui:insert>
-            <ui:include src="check_user_project.xhtml"/>
-        </ui:insert>
-
+        <div>
+            <span>
+                <ui:insert>
+                    <ui:include src="check_user.xhtml"/>
+                </ui:insert>
+            </span>
+            <span>
+                <ui:insert>
+                    <ui:include src="check_project.xhtml"/>
+                </ui:insert>
+            </span>
+        </div>
         <h:form id="AssignUserProjectPermissionsForm" enctype="multipart/form-data"
                 rendered="#{not empty ProjectView.projectNames}">
 

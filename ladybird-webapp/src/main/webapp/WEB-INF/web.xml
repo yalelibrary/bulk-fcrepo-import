@@ -117,6 +117,10 @@
         <param-name>resteasy.guice.stage</param-name>
         <param-value>PRODUCTION</param-value>
     </context-param>
+    <context-param>
+        <param-name>primefaces.UPLOADER</param-name>
+        <param-value>native</param-value>
+    </context-param>
 
     <listener>
         <listener-class>com.sun.faces.config.ConfigureListener</listener-class>

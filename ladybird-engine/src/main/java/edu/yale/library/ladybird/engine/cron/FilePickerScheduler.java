@@ -35,7 +35,6 @@ public class FilePickerScheduler {
         try {
             Scheduler scheduler = new StdSchedulerFactory().getScheduler();
             scheduler.start(); //N.B.
-            //schedule a job
             job = getJob(jobName, monitorItem);
             scheduler.scheduleJob(job, getRunOnceTrigger(cronExpression, triggerName, groupName));
         } catch (SchedulerException e) {

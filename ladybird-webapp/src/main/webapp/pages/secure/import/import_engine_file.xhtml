@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../../templates/template.xhtml">
+    <ui:define name="content">
+        <h2>Create import job</h2>
+
+        <br/>
+
+        <div>
+            <h:outputText styleClass="alert alert-info"
+                          value="Upload file and specify export directory and where notification should be sent"
+                          rendered="#{(not empty userView.itemList)
+                            and (not empty ImportSourceView.itemList) and (not empty ProjectView.itemList)}"/>
+
+            <h:outputText styleClass="alert alert-warning"
+                          value="Missing Configuration"
+                          rendered="#{(empty userView.itemList)
+                            and (empty ImportSourceView.itemList) and (empty ProjectView.itemList)}"/>
+        </div>
+
+        <br/>
+
+        <div>
+            <span>
+                <ui:insert>
+                    <ui:include src="../check_user.xhtml"/>
+                </ui:insert>
+            </span>
+                <span>
+                <ui:insert>
+                    <ui:include src="../check_project.xhtml"/>
+                </ui:insert>
+            </span>
+            <span>
+                <ui:insert>
+                    <ui:include src="../check_importsource.xhtml"/>
+                </ui:insert>
+            </span>
+        </div>
+
+        <br/>
+
+        <h:form id="UserForm" enctype="multipart/form-data" rendered="#{(not empty userView.itemList)
+            and (not empty ImportSourceView.itemList) and (not empty ProjectView.itemList)}">
+
+           <div>
+                <label>Excel File</label>
+
+                <div>
+                    <p:fileUpload id="upload"
+                                  label="Browse"
+                                  uploadLabel="Upload"
+                                  mode="advanced"
+                                  auto="true"
+                                  showButtons="false"
+                                  fileUploadListener="#{monitorView.handleFileUpload}"
+                                  required="true"
+                                  allowTypes="/(\.|\/)(xlsx)$/"
+                                  sizeLimit="1000000"
+                                  fileLimitMessage="Uploaded file cannot exceed 100KB." >
+                    </p:fileUpload>
+                    <h:message for="upload" style="color:red"/>
+                </div>
+            </div>
+
+            <div>
+                <label>Export Directory</label>
+
+                <div>
+                    <p:inputText value="#{monitorView.monitorItem.exportPath}"/>
+                </div>
+            </div>
+
+            <div>
+                <label>Notification E-mail (select from the list)</label>
+
+                <div>
+                    <p:selectOneMenu id="userSelectBox"
+                                     value="#{monitorView.monitorItem.notificationEmail}">
+
+                        <f:selectItems value="#{userView.userEmailList}"
+                                       var="select_user_var"
+                                       itemLabel="#{select_user_var}"
+                                       itemValue="#{select_user_var}"/>
+
+                    </p:selectOneMenu>
+                    <h:message for="userSelectBox" style="color:red"/>
+                </div>
+            </div>
+
+            <div>
+                <h:commandButton id="submit_link"
+                                 value="Submit"
+                                 action="#{monitorView.process}"
+                                 ajax="false"/>
+            </div>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

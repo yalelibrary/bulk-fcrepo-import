@@ -9,7 +9,7 @@
             <generator class="identity" />
         </id>
         <property name="dirPath" type="string">
-            <column name="dir" length="500" not-null="true" />
+            <column name="dir" length="500" />
         </property>
         <property name="exportPath" type="string">
             <column name="dir_export" length="500" not-null="true" />

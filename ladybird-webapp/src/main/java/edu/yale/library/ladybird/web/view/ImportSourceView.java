@@ -37,7 +37,7 @@ public class ImportSourceView extends AbstractView {
     /**
      * Saves and marks it as the active provider.
      */
-    public void save() {
+    public String save() {
 
         item.setActive(true);
         setDefaults(item);
@@ -54,9 +54,11 @@ public class ImportSourceView extends AbstractView {
 
         try {
             dao.saveOrUpdateList(list);
+            return "ok";
         } catch (Throwable e) {
             logger.error("Error saving item", e);
         }
+        return "failed";
     }
 
     @Deprecated

@@ -17,8 +17,7 @@ public class UserDataModel extends LazyDataModel<User> {
     private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(UserDataModel.class);
 
     @Override
-    public List<User> load(final int first, final int pageSize, final String sortField, final SortOrder sortOrder,
-                           final Map<String, String> filters) {
+    public List<User> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {
         final UserDAO userDAO = new UserHibernateDAO(); //TODO
         try {
             final List<User> list = userDAO.find(first, first + pageSize);

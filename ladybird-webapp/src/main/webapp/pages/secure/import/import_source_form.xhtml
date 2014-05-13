@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../../templates/template.xhtml">
+    <ui:define name="content">
+        <h2>Import Source</h2>
+        <h:form id="ImportSourceForm" enctype="multipart/form-data">
+
+            <div class="control-group">
+                <span class="help-block">
+                     Specify OAI-PMH import source.
+                     <p:messages id="messages_pf" showDetail="true" autoUpdate="true" closable="true"/>
+                 </span>
+            </div>
+
+            <div>
+                <label>Provider URL (e.g. http://columbus.library.yale.edu:8055/OAI_Orbis/src/OAIOrbisTool.jsp)</label>
+
+                <div>
+                    <p:inputText value="#{ImportSourceView.item.url}">
+                    </p:inputText>
+                </div>
+            </div>
+
+            <!--
+            <div>
+                <label>XML Type</label>
+                <div>
+                    <p:inputText value="#{ImportSourceView.item.xmlType}"/>
+                </div>
+            </div>
+            -->
+
+
+            <div>
+                <label>GetRecord Verb Prefix (e.g. oai:orbis.library.yale.edu:)</label>
+
+                <div>
+                    <p:inputText value="#{ImportSourceView.item.getPrefix}"/>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+
+            <h:commandButton value="Submit" styleClass="btn" action="#{ImportSourceView.save}">
+            </h:commandButton>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

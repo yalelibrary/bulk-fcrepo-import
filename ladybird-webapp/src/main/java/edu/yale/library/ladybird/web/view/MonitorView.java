@@ -1,6 +1,10 @@
 package edu.yale.library.ladybird.web.view;
 
 
+import edu.yale.library.ladybird.engine.cron.ImportEngineQueue;
+import edu.yale.library.ladybird.engine.imports.ImportRequestEvent;
+import edu.yale.library.ladybird.engine.imports.SpreadsheetFile;
+import edu.yale.library.ladybird.engine.imports.SpreadsheetFileBuilder;
 import edu.yale.library.ladybird.entity.Monitor;
 import edu.yale.library.ladybird.engine.cron.ExportScheduler;
 import edu.yale.library.ladybird.engine.cron.FilePickerScheduler;
@@ -8,13 +12,20 @@ import edu.yale.library.ladybird.engine.cron.ImportScheduler;
 import edu.yale.library.ladybird.engine.CronSchedulingException;
 import edu.yale.library.ladybird.persistence.dao.MonitorDAO;
 import org.hibernate.HibernateException;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 import org.slf4j.Logger;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -34,6 +45,9 @@ public class MonitorView extends AbstractView {
 
     private List<Monitor> itemList;
     private Monitor monitorItem = new Monitor();
+
+    private UploadedFile uploadedFile;
+    private String uploadedFileName;
 
     @Inject
     private MonitorDAO monitorDAO;
@@ -84,11 +98,11 @@ public class MonitorView extends AbstractView {
     }
 
     private String getExportCronSchedule() {
-        return "0/150 * * * * ?";
+        return "0/60 * * * * ?";
     }
 
     private String getImportCronSchedule() {
-        return "0/120 * * * * ?";
+        return "0/60 * * * * ?";
     }
 
     public List getItemList() {
@@ -107,6 +121,64 @@ public class MonitorView extends AbstractView {
     @Override
     public String toString() {
         return monitorItem.toString();
+    }
+
+    public void handleFileUpload(FileUploadEvent event) {
+        final Map sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+        this.uploadedFile = event.getFile();
+        this.uploadedFileName = uploadedFile.getFileName();
+        sessionMap.put("PrimeFacesUploadedFile", uploadedFile);
+        sessionMap.put("PrimeFacesUploadedFileName", uploadedFile.getFileName());
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("File uploaded, etc."));
+    }
+
+    public String process() {
+        logger.debug("Processing file={}", uploadedFileName);
+
+        try {
+            logger.debug("Saving import/export pair=" + monitorItem.toString());
+
+            int itemId = dao.save(monitorItem);
+
+            logger.debug("Scheduling import, export jobs");
+
+            monitorItem.setDirPath("local");
+
+            monitorItem.getUser().setEmail(monitorItem.getNotificationEmail());
+
+            //Duplicate of FilePickerJob.class
+
+            final SpreadsheetFile file = new SpreadsheetFileBuilder()
+                    .setFileName(uploadedFileName)
+                    .setAltName(uploadedFileName)
+                    .setFileStream(uploadedFile.getInputstream())
+                    .createSpreadsheetFile();
+
+            final ImportRequestEvent importEvent = new ImportRequestEvent(file, monitorItem);
+
+            logger.debug("Prepared event=" + importEvent.toString());
+
+            ImportEngineQueue.addJob(importEvent);
+
+            logger.debug("Enqueued event=" + importEvent.toString());
+
+            // Set off import cron:
+            ImportScheduler importScheduler = new ImportScheduler();
+            importScheduler.scheduleJob(IMPORT_JOB_ID, IMPORT_JOB_TRIGGER, getImportCronSchedule());
+
+            // Set off export cron:
+            ExportScheduler exportScheduler = new ExportScheduler();
+            exportScheduler.scheduleJob(EXPORT_JOB_ID, EXPORT_JOB_TRIGGER, getExportCronSchedule(), monitorItem);
+
+            return "ok";
+        } catch (CronSchedulingException e) {
+            logger.error("Error scheduling import/export job", e); //ignore exception
+        } catch (HibernateException h) {
+            logger.error("Error saving import/export pair", h); //ignore exception
+        } catch (IOException io) {
+            logger.error("IOException saving import/export pair", io);
+        }
+        return "failed";
     }
 
 }

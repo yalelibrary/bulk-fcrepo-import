@@ -6,12 +6,27 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../../templates/template.xhtml">
-    <ui:define name="content">
-        <h2>Import Engine Scheduler</h2>
 
-        <ui:insert>
-            <ui:include src="../check_user_project.xhtml"/>
-        </ui:insert>
+    <ui:define name="offcanvas">
+        <a href="/ladybird-webapp/pages/secure/import/import_engine_file.xhtml" class="list-group-item">Upload File</a>
+        <a href="/ladybird-webapp/pages/secure/import/import_engine_dir.xhtml" class="list-group-item">Add Directory</a>
+    </ui:define>
+
+    <ui:define name="content">
+        <h2>Import Scheduler</h2>
+
+        <div>
+            <span>
+                <ui:insert>
+                    <ui:include src="../check_user.xhtml"/>
+                </ui:insert>
+            </span>
+            <span>
+                <ui:insert>
+                     <ui:include src="../check_project.xhtml"/>
+                 </ui:insert>
+            </span>
+        </div>
 
         <h:form id="UserForm" enctype="multipart/form-data" rendered="#{not empty userView.itemList}">
 
@@ -20,81 +35,7 @@
 
                     <br/>
 
-                    <!--Add Button -->
-
-                    <p:commandButton icon="ui-icon-plusthick"
-                                     type="button"
-                                     onclick="dlg.show();"
-                                     value="Add Directory"
-                                     rendered="#{not empty userView.userEmailList}"/>
-
-                    <!-- Modal pop up for + Button -->
-
-                    <p:dialog id="modalDialog"
-                              header="New Item"
-                              height="350"
-                              modal="true"
-                              resizable="false"
-                              width="350"
-                              widgetVar="dlg">
-
-                        <div>
-                            Specify directories for import pick up and export drop off.
-                            <span class="help-block">
-                                <p:messages id="messages_pf" showDetail="true" autoUpdate="true" closable="true"/>
-                            </span>
-                        </div>
-
-                        <div>
-                            <label>Import Directory</label>
-
-                            <div>
-                                <p:inputText value="#{monitorView.monitorItem.dirPath}"/>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label>Export Directory</label>
-
-                            <div>
-                                <p:inputText value="#{monitorView.monitorItem.exportPath}"/>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label>Notification E-mail (select from the list)</label>
-
-                            <div>
-                                <p:selectOneMenu id="userSelectBox"
-                                                 value="#{monitorView.monitorItem.notificationEmail}">
-
-                                    <f:selectItems value="#{userView.userEmailList}"
-                                                   var="select_user_var"
-                                                   itemLabel="#{select_user_var}"
-                                                   itemValue="#{select_user_var}"/>
-
-                                </p:selectOneMenu>
-                                <h:message for="userSelectBox" style="color:red"/>
-                            </div>
-                        </div>
-
-
-                        <div>
-                            <!-- Submit Button -->
-
-                            <p:commandButton action="#{monitorView.save}"
-                                             styleClass="btn"
-                                             update="DirDatatable, messages_pf"
-                                             value="Submit"/>
-                        </div>
-
-                    </p:dialog>
-
-                    <br/>
-
-                    <br/>
-
-                    <h4>List of all import jobs</h4>
+                    <h4>All import jobs</h4>
 
                     <!-- Data Table -->
 
@@ -108,6 +49,7 @@
 
                         <p:column headerText="Import Directory">
                             <h:outputText value="#{monitorItem.dirPath}"/>
+                            <h:outputText value="local" rendered="#{empty monitorItem.dirPath}"/>
                         </p:column>
 
                         <p:column headerText="Export Directory">
@@ -119,7 +61,7 @@
                         </p:column>
 
                         <p:column headerText="Progress">
-                            <h:outputText id="progressText" value="#{importProgressView.count} out of #{importProgressView.expectedCount}"/>
+                            <h:outputText id="progressText" value="#{importProgressView.count} out of #{importProgressView.expectedCount} steps"/>
 
                             <h:graphicImage id="flag" rendered="#{importProgressView.complete}"
                                     library="img" name="check.png"/>

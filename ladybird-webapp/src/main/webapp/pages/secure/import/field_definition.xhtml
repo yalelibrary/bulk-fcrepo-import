@@ -16,51 +16,6 @@
             <div style="">
                 <div class="" style="">
 
-                    <!--Add Button -->
-
-                    <p:commandButton id="chartBtn" icon="ui-icon-plusthick"
-                                     value="New" type="button" style="color:#103480;"
-                                     onclick="dlg.show();"/>
-
-                    <br/>
-                    <br/>
-
-                    <!-- Modal pop up for + Button -->
-
-                    <p:dialog id="modalDialog" header="New" widgetVar="dlg"
-                              modal="true" height="350" width="350" resizable="false">
-                        <div class="control-group">
-                            <span class="help-block"> 
-                                <p:messages id="messages_pf" showDetail="true" autoUpdate="true" closable="true"/>
-                            </span>
-                        </div>
-
-
-                        <div>
-                            <label>Field Definition</label>
-                            <div>
-                                <p:inputText value="#{FieldDefinitionView.item.fdid}">
-                                </p:inputText>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label>Display Value</label>
-                            <div>
-                                <p:inputText value="#{FieldDefinitionView.item.display}">
-                                </p:inputText>
-                            </div>
-                        </div>
-
-
-                        <!-- Submit Button -->
-
-                        <p:commandButton update="FieldDefinitionDatatable, messages_pf"
-                                         value="Submit" styleClass="btn" action="#{FieldDefinitionView.save}">
-                        </p:commandButton>
-
-                    </p:dialog>
-
                     <!-- Data Table -->
 
                     <p:dataTable id="FieldDefinitionDatatable" value="#{FieldDefinitionView.itemList}"

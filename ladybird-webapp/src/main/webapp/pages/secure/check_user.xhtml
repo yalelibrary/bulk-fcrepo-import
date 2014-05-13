@@ -9,27 +9,11 @@
 
 <ui:composition>
 
-    <div>
-        <h:outputText value="Add users and projects before proceeding"
-                      rendered="#{(empty userView.itemList) or (empty ProjectView.itemList)}" styleClass="h4"/>
-    </div>
-
-    <div>
-        <span>
             <h:outputLink value="/ladybird-webapp/web/pages/secure/user_manager_form.xhtml"
                            rendered="#{empty userView.itemList}"
                            styleClass="btn btn-primary btn-warning">
                 Add Users
             </h:outputLink>
-        </span>
-        <span>
-            <h:outputLink value="/ladybird-webapp/web/pages/secure/projects_form.xhtml"
-                          rendered="#{empty ProjectView.itemList}"
-                          styleClass="btn btn-primary btn-warning">
-                Add Projects
-            </h:outputLink>
-        </span>
-    </div>
 
 </ui:composition>
 
