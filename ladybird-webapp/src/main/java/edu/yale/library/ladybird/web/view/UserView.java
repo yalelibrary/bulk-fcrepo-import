@@ -124,6 +124,10 @@ public class UserView extends AbstractView implements Serializable {
         return getRedirectWithParam(NavigationUtil.USER_METADATA_ACCESS_PAGE);
     }
 
+    public String seeSitePermissions() {
+        return getRedirectWithParam(NavigationUtil.ROLE_ASSIGN_SITE_PERMISSIONS);
+    }
+
     public String seeUserActivity() {
         return getRedirectWithParam(NavigationUtil.USER_EVENT_PAGE);
     }

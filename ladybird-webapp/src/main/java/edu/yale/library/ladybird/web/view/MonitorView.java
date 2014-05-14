@@ -23,7 +23,6 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.ArrayList;
 
 import static org.slf4j.LoggerFactory.getLogger;
 

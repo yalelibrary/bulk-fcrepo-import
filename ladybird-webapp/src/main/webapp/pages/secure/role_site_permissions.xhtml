@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template.xhtml">
+
+    <f:metadata></f:metadata>
+
+    <ui:define name="content">
+        <h2>Roles Site Permissions</h2>
+        <h:form id="RoleSitePermissions" enctype="multipart/form-data">
+            <h4> View permissions for role </h4>
+
+            <div>
+                <label>Permissions for Role  #{permsisionsView.role}</label>
+
+                <div>
+                    <ui:repeat var="p" value="#{permsisionsView.itemList}">
+                        <div>
+                            <div>
+                                <h:outputText value="#{p.permissions.name}"/>
+                                <h:selectBooleanCheckbox value="#{p.enabled}"/>
+                            </div>
+                        </div>
+                    </ui:repeat>
+                </div>
+
+            </div>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

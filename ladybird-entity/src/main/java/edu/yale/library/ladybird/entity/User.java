@@ -18,6 +18,7 @@ public class User implements java.io.Serializable {
     private int creatorId;
     private String name;
     private String email;
+    private String role; //TODO
 
     public User() {
     }
@@ -111,6 +112,14 @@ public class User implements java.io.Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     @Override

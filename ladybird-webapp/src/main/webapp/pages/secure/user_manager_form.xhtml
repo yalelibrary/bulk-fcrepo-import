@@ -38,6 +38,22 @@
                         </div>
                     </div>
 
+                    <div>
+                        <label>Role</label>
+                        <div>
+                            <p:selectOneMenu id="roleSelectBox"
+                                             value="#{userView.item.role}">
+
+                                <f:selectItems value="#{roleView.itemList}"
+                                               var="select_role_var"
+                                               itemLabel="#{select_role_var.name}"
+                                               itemValue="#{select_role_var.name}" />
+
+                            </p:selectOneMenu>
+                            <h:message for="roleSelectBox" style="color:red" />
+                        </div>
+                    </div>
+
                     <h:commandButton id="submit_button"
                                      action="#{userView.save}"
                                      styleClass="btn"

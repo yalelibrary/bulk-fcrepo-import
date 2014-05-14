@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template.xhtml">
+    <ui:define name="offcanvas">
+        <a href="/ladybird-webapp/pages/secure/user_manager_form.xhtml" class="list-group-item">Add Users</a>
+        <a href="/ladybird-webapp/pages/secure/users_projects.xhtml"
+           class="list-group-item">Project Authorization</a>
+        <a href="/ladybird-webapp/pages/secure/assign_project_access.xhtml"
+           class="list-group-item">Assign Project Access</a>
+    </ui:define>
+
+    <ui:define name="content">
+        <h2>Roles Permissions</h2>
+        <h:form id="AdminForm" enctype="multipart/form-data">
+            <h4> View Role Permissions </h4>
+
+            <div>
+                <label>All Roles</label>
+
+                <div>
+
+                    <p:contextMenu for="RoleDatatable">
+                         <p:menuitem value="View Permissions" action="#{roleView.seeRolePermissions}"/>
+                    </p:contextMenu>
+
+                    <p:dataTable id="RoleDatatable"
+                                 value="#{roleView.itemList}"
+                                 var="item"
+                                 paginator="false"
+                                 editable="false"
+                                 selection="#{roleView.selectedItem}"
+                                 selectionMode="single"
+                                 rowKey="#{roleView.itemList.indexOf(item)}">
+
+
+                        <p:column id="role_id" headerText="Role">
+                            <h:outputText id="roleName" value="#{item.name}"/>
+                        </p:column>
+
+                    </p:dataTable>
+
+                </div>
+            </div>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

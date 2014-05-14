@@ -1,5 +1,8 @@
 package edu.yale.library.ladybird.web.view;
 
+import edu.yale.library.ladybird.auth.Permissions;
+import edu.yale.library.ladybird.auth.PermissionsValue;
+import edu.yale.library.ladybird.auth.Roles;
 import edu.yale.library.ladybird.entity.Project;
 import edu.yale.library.ladybird.entity.ProjectBuilder;
 import edu.yale.library.ladybird.entity.User;
@@ -31,6 +34,9 @@ public class ProjectView extends AbstractView {
 
     @Inject
     private ProjectDAO entityDAO;
+
+    @Inject
+    private UserDAO userDao;
 
     @PostConstruct
     public void init() {
@@ -103,6 +109,42 @@ public class ProjectView extends AbstractView {
     private void saveInSession(final int projectId) {
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("projectId", projectId);
     }
+
+    /**
+       @see #getCurrentUser() Gets current user via session netid
+     * @see PermissionsValue change Permissions to map if feasible
+     * @return whether the action has permissions. false if action not found or permissions false.
+     */
+    public boolean checkAddProjectPermission() {
+
+        try {
+            //1. Get user
+            final User user = getCurrentUser();
+
+            // 2. Get permissions associated with this role
+            final Roles roles = Roles.fromString(user.getRole());
+
+            //3. Does the action have permissions
+            final List<PermissionsValue> permissionsList = roles.getPermissions();
+            for (final PermissionsValue p: permissionsList) {
+                if (p.getPermissions().equals(Permissions.PROJECT_ADD)) {
+                    return p.isEnabled();
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Error getting permissions", e);
+        }
+        return false;
+    }
+
+    //TODO replace with context user
+    public User getCurrentUser() {
+        final String netid = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("netid").toString();
+        final User user = userDao.findByUsername(netid).get(0);
+        return user;
+    }
+
+
 }
 
 

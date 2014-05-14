@@ -25,6 +25,7 @@
                     <p:contextMenu for="UserDatatable">
                         <p:menuitem value="Assign Metadata Access" action="#{userView.assignProjectFieldMetadataAccess}"/>
                         <p:menuitem value="User Activity" action="#{userView.seeUserActivity}"/>
+                        <p:menuitem value="See Site Permissions" action="#{userView.seeSitePermissions}"/>
                     </p:contextMenu>
 
                     <!-- Data Table -->
@@ -68,6 +69,9 @@
                         </p:column>
                         <p:column headerText="Last used" rendered="false">
                             <h:outputText value=""/>
+                        </p:column>
+                        <p:column headerText="Role">
+                            <h:outputText value="#{item.role}"/>
                         </p:column>
                         <p:column headerText="Creator">
                             <!-- <h:outputText value="#{item.creatorId}"/> -->
