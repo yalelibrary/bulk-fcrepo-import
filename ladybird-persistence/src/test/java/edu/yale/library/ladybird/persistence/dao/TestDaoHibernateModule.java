@@ -18,6 +18,10 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.UserHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserPreferencesHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserEventHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserProjectHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.RolesHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.PermissionsHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.RolesPermissionsHibernateDAO;
+
 
 
 public class TestDaoHibernateModule extends AbstractModule {
@@ -44,5 +48,8 @@ public class TestDaoHibernateModule extends AbstractModule {
         bind(ObjectFileDAO.class).to(ObjectFileHibernateDAO.class);
         bind(UserEventDAO.class).to(UserEventHibernateDAO.class);
         bind(UserProjectDAO.class).to(UserProjectHibernateDAO.class);
+        bind(RolesDAO.class).to(RolesHibernateDAO.class);
+        bind(PermissionsDAO.class).to(PermissionsHibernateDAO.class);
+        bind(RolesPermissionsDAO.class).to(RolesPermissionsHibernateDAO.class);
     }
 }

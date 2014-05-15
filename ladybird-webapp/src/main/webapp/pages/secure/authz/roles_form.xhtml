@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../../templates/template.xhtml">
+    <ui:define name="content">
+        <h2>Add Roles</h2>
+        <h:form id="RolesForm" enctype="multipart/form-data">
+            <br/>
+
+            <div>
+                <div>
+                    <div>
+                        <label>Role</label>
+                        <div>
+                            <h:inputText id="role" name="role" value="#{roleSiteView.item.roleName}"/>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label>Desc</label>
+                        <div>
+                            <h:inputText id="desc" name="desc" value="#{roleSiteView.item.roleDesc}"/>
+                        </div>
+                    </div>
+
+                    <h:commandButton id="submit_button"
+                                     action="#{roleSiteView.save}"
+                                     styleClass="btn"
+                                     value="Submit"/>
+
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

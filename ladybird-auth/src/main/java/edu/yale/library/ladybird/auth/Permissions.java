@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.auth;
 
 /**
- *
+ *  Initial permissions
  */
 public enum Permissions {
     USER_ADD("user.add"),

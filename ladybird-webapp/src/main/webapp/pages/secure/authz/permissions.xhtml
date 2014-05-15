@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../../templates/template.xhtml">
+
+    <ui:define name="offcanvas">
+        <a href="/ladybird-webapp/pages/secure/permissions_site_form.xhtml"
+           class="list-group-item">Add Permissions</a>
+    </ui:define>
+
+    <ui:define name="content">
+        <h2>Permissions</h2>
+        <h:form id="PermissionsForm" enctype="multipart/form-data">
+            <br/>
+
+            <div>
+                <div>
+
+                    <!-- Data Table -->
+
+                    <p:dataTable id="PermissionsDatatable" value="#{permissionsSiteView.itemList}"
+                                 var="item" paginator="true" rows="10"
+                                 tableStyle="" paginatorPosition="bottom"
+                                 editable="false">
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="PermissionsName"/>
+                            </f:facet>
+                            <h:outputText value="#{item.permissionsName}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="PermissionsDesc"/>
+                            </f:facet>
+                            <h:outputText value="#{item.permissionsDesc}"/>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

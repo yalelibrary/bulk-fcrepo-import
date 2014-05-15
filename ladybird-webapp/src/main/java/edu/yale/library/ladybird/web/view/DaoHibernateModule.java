@@ -24,6 +24,9 @@ import edu.yale.library.ladybird.persistence.dao.UserPreferencesDAO;
 import edu.yale.library.ladybird.persistence.dao.UserProjectDAO;
 import edu.yale.library.ladybird.persistence.dao.UserProjectFieldDAO;
 import edu.yale.library.ladybird.persistence.dao.UserEventDAO;
+import edu.yale.library.ladybird.persistence.dao.RolesDAO;
+import edu.yale.library.ladybird.persistence.dao.PermissionsDAO;
+import edu.yale.library.ladybird.persistence.dao.RolesPermissionsDAO;
 
 
 import edu.yale.library.ladybird.persistence.dao.hibernate.CollectionHibernateDAO;
@@ -41,6 +44,9 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.UserPreferencesHibern
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserProjectHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserProjectFieldHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserEventHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.RolesHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.PermissionsHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.RolesPermissionsHibernateDAO;
 
 import edu.yale.library.ladybird.web.http.CollectionHttpService;
 import edu.yale.library.ladybird.web.http.FieldDefinitionHttpService;
@@ -76,6 +82,10 @@ public class DaoHibernateModule extends AbstractModule {
         bind(UserProjectDAO.class).to(UserProjectHibernateDAO.class);
         bind(UserProjectFieldDAO.class).to(UserProjectFieldHibernateDAO.class);
         bind(UserEventDAO.class).to(UserEventHibernateDAO.class);
+        bind(RolesDAO.class).to(RolesHibernateDAO.class);
+        bind(PermissionsDAO.class).to(PermissionsHibernateDAO.class);
+        bind(RolesPermissionsDAO.class).to(RolesPermissionsHibernateDAO.class);
+
 
         bind(UserHttpService.class);
         bind(UserEventHttpService.class);

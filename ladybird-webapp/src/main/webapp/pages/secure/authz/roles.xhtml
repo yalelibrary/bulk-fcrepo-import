@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../../templates/template.xhtml">
+
+    <ui:define name="offcanvas">
+         <a href="/ladybird-webapp/pages/secure/roles_site_form.xhtml"
+           class="list-group-item">Add Role</a>
+    </ui:define>
+
+    <ui:define name="content">
+        <h2>Roles</h2>
+        <h:form id="RolesForm" enctype="multipart/form-data">
+            <br/>
+
+            <div>
+                <div>
+                   <!-- Data Table -->
+
+                    <p:dataTable id="RolesDatatable" value="#{roleSiteView.itemList}"
+                                 var="item" paginator="true" rows="10"
+                                 tableStyle="" paginatorPosition="bottom"
+                                 editable="false">
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="RoleName"/>
+                            </f:facet>
+                            <h:outputText value="#{item.roleName}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="RoleDesc"/>
+                            </f:facet>
+                            <h:outputText value="#{item.roleDesc}"/>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

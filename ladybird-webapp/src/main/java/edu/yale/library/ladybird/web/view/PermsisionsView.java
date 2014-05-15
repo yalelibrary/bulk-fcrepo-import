@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- *
+ * Helper for default/intial roles and permissions
  */
 
 @ManagedBean

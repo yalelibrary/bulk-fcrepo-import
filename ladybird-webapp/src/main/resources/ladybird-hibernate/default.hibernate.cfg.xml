@@ -25,5 +25,8 @@
         <mapping resource="ladybird-hbm/UserProject.hbm.xml"/>
         <mapping resource="ladybird-hbm/UserProjectField.hbm.xml"/>
         <mapping resource="ladybird-hbm/UserEvent.hbm.xml"/>
+        <mapping resource="ladybird-hbm/Roles.hbm.xml"/>
+        <mapping resource="ladybird-hbm/RolesPermissions.hbm.xml"/>
+        <mapping resource="ladybird-hbm/Permissions.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

@@ -65,10 +65,49 @@
         </navigation-case>
     </navigation-rule>
     <navigation-rule>
-        <from-view-id>/pages/secure/role_change_permissions.xhtml</from-view-id>
+        <from-view-id>/pages/secure/authz/role_change_permissions.xhtml/secure/role_change_permissions.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>ok</from-outcome>
-            <to-view-id>/pages/secure/roles_permissions_form.xhtml</to-view-id>
+            <to-view-id>/pages/secure/authz/initial_roles_permissions_form.xhtml/secure/roles_permissions_form.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>failed</from-outcome>
+            <to-view-id>/pages/form_submission_failed.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/pages/secure/authz/roles_form.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>ok</from-outcome>
+            <to-view-id>/pages/secure/authz/roles.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>failed</from-outcome>
+            <to-view-id>/pages/form_submission_failed.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/pages/secure/authz/permissions_form.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>ok</from-outcome>
+            <to-view-id>/pages/secure/authz/permissions.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>failed</from-outcome>
+            <to-view-id>/pages/form_submission_failed.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/pages/secure/authz/roles_permissions_change.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>ok</from-outcome>
+            <to-view-id>/pages/secure/authz/roles_permissions.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>

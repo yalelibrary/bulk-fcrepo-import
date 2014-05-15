@@ -5,28 +5,19 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
-<ui:composition template="../../templates/template.xhtml">
-    <ui:define name="offcanvas">
-        <a href="/ladybird-webapp/pages/secure/user_manager_form.xhtml" class="list-group-item">Add Users</a>
-        <a href="/ladybird-webapp/pages/secure/users_projects.xhtml"
-           class="list-group-item">Project Authorization</a>
-        <a href="/ladybird-webapp/pages/secure/assign_project_access.xhtml"
-           class="list-group-item">Assign Project Access</a>
-    </ui:define>
+<ui:composition template="../../../templates/template.xhtml">
 
     <ui:define name="content">
-        <h2>Roles Permissions</h2>
+        <h2>Permissions</h2>
         <h:form id="AdminForm" enctype="multipart/form-data">
-            <h4> View Role Permissions </h4>
+            <h4> View Initial (i.e. original system default) Roles and Associated Permissions </h4>
 
             <div>
-                <label>All Roles</label>
 
                 <div>
 
                     <p:contextMenu for="RoleDatatable">
-                         <p:menuitem value="View Permissions" action="#{roleView.seeRolePermissions}"/>
-                         <p:menuitem value="Change Permissions" action="#{roleView.changeRolePermissions}"/>
+                         <p:menuitem value="View Default Permissions" action="#{roleView.seeRolePermissions}"/>
                     </p:contextMenu>
 
                     <p:dataTable id="RoleDatatable"
