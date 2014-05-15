@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import java.io.Serializable;
@@ -17,21 +18,22 @@ import java.util.List;
  */
 
 @ManagedBean
-@ViewScoped
-public class PermsisionsView implements Serializable {
+@SessionScoped
+public class ChangePermissionsView implements Serializable {
 
-    private Logger logger = LoggerFactory.getLogger(PermsisionsView.class);
+    private Logger logger = LoggerFactory.getLogger(ChangePermissionsView.class);
 
     private String role = "";
     private List<PermissionsValue> itemList;
 
+    public ChangePermissionsView() {
+    }
+
     @PostConstruct
     public void init() {
         try {
-            role = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("role");
-
-            logger.debug("Getting permissiosn for role={}", role);
-
+            role = getRoleFromRequest();
+            logger.debug("Getting permissions for role={}", role);
             itemList = getPermissionsValueForRole(role);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -61,11 +63,33 @@ public class PermsisionsView implements Serializable {
     }
 
     public List<PermissionsValue> getItemList() {
+        role = getRoleFromRequest();
+        logger.debug("Getting permissions for role={}", role);
+
+        itemList = getPermissionsValueForRole(role);
+        logger.debug("Getting item list={}", itemList);
+
         return itemList;
     }
 
     public void setItemList(List<PermissionsValue> itemList) {
         this.itemList = itemList;
+    }
+
+    public String save() {
+        final String role = getRoleFromRequest();
+        logger.debug("Role is={}", role);
+        logger.debug("saving list={}", itemList.toString());
+
+        final Roles roles = Roles.fromString(role);
+        roles.setPermissions(itemList);
+        logger.debug("Updated permissions list in session");
+
+        return NavigationCase.OK.toString();
+    }
+
+    private String getRoleFromRequest() {
+        return FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("role");
     }
 
 }

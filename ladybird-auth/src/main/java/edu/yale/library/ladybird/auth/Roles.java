@@ -9,7 +9,15 @@ import java.util.List;
 public enum Roles {
 
     ADMIN("admin") {
+
+        boolean setPermissions = false;
+
+        @Override
         public List<PermissionsValue> getPermissions() {
+
+            if (setPermissions) {
+                return this.permissions;
+            }
             List<PermissionsValue> permissions = new ArrayList<>();
             permissions.add(getValue(Permissions.USER_ADD, true));
             permissions.add(getValue(Permissions.USER_LIST, true));
@@ -17,9 +25,24 @@ public enum Roles {
             permissions.add(getValue(Permissions.PROJECT_ADD, true));
             return permissions;
         }
+
+        @Override
+        public void setPermissions(List<PermissionsValue> list) {
+            permissions = list;
+            setPermissions = true;
+        }
     },
     VISITOR("visitor") {
+
+        boolean setPermissions = false;
+
+        @Override
         public List<PermissionsValue> getPermissions() {
+
+            if (setPermissions) {
+                return this.permissions;
+            }
+
             List<PermissionsValue> permissions = new ArrayList<>();
             permissions.add(getValue(Permissions.USER_ADD, false));
             permissions.add(getValue(Permissions.USER_LIST, true));
@@ -27,9 +50,23 @@ public enum Roles {
             permissions.add(getValue(Permissions.PROJECT_ADD, false));
             return permissions;
         }
+
+        @Override
+        public void setPermissions(List<PermissionsValue> list) {
+            permissions = list;
+            setPermissions = true;
+        }
     },
     PROJECT_ADMIN("projectadmin") {
+
+        boolean setPermissions = false;
+
         public List<PermissionsValue> getPermissions() {
+
+            if (setPermissions) {
+                return this.permissions;
+            }
+
             List<PermissionsValue> permissions = new ArrayList<>();
             permissions.add(getValue(Permissions.USER_ADD, true));
             permissions.add(getValue(Permissions.USER_LIST, true));
@@ -37,9 +74,23 @@ public enum Roles {
             permissions.add(getValue(Permissions.PROJECT_ADD, false));
             return permissions;
         }
+
+        @Override
+        public void setPermissions(List<PermissionsValue> list) {
+            permissions = list;
+            setPermissions = true;
+        }
     },
     PROJECT_USER("projectuser") {
+
+        boolean setPermissions = false;
+
         public List<PermissionsValue> getPermissions() {
+
+            if (setPermissions) {
+                return this.permissions;
+            }
+
             List<PermissionsValue> permissions = new ArrayList<>();
             permissions.add(getValue(Permissions.USER_ADD, false));
             permissions.add(getValue(Permissions.USER_LIST, true));
@@ -47,6 +98,12 @@ public enum Roles {
             permissions.add(getValue(Permissions.PROJECT_ADD, false));
             permissions.add(getValue(Permissions.PROJECT_DELETE, false));
             return permissions;
+        }
+
+        @Override
+        public void setPermissions(List<PermissionsValue> list) {
+            permissions = list;
+            setPermissions = true;
         }
     },
     NONE("none") {
@@ -63,7 +120,7 @@ public enum Roles {
 
     private String name = "";
 
-    private List<PermissionsValue> permissions;
+    protected List<PermissionsValue> permissions;
 
     public String getName() {
         return name;

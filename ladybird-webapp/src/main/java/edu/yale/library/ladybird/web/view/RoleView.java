@@ -48,6 +48,11 @@ public class RoleView implements Serializable {
         this.selectedItem = selectedItem;
     }
 
+    public String changeRolePermissions() {
+        logger.debug("Redirecting to={}", getRedirectWithParam(NavigationUtil.ROLE_ASSIGN_SITE_PERMISSIONS));
+        return getRedirectWithParam(NavigationUtil.ROLE_CHANGE_PERMISSIONS);
+    }
+
     public String seeRolePermissions() {
         logger.debug("Redirecting to={}", getRedirectWithParam(NavigationUtil.ROLE_ASSIGN_SITE_PERMISSIONS));
         return getRedirectWithParam(NavigationUtil.ROLE_ASSIGN_SITE_PERMISSIONS);
