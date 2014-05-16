@@ -72,7 +72,7 @@ public class DefaultExportJob implements Job, ExportJob {
     }
 
     private String tmpFile(final String folder) {
-        return folder + System.getProperty("file.separator") + "export-results.xlsx"; //todo
+        return folder + System.getProperty("file.separator") + "export-results-" + System.currentTimeMillis() +".xlsx"; //todo
     }
 
 

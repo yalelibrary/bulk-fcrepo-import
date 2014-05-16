@@ -17,5 +17,8 @@
         <property name="notificationEmail" type="string">
             <column name="notification_email" length="15" not-null="true" />
         </property>
+        <property name="date" type="timestamp">
+            <column name="date" length="19" not-null="true" />
+        </property>
     </class>
 </hibernate-mapping>

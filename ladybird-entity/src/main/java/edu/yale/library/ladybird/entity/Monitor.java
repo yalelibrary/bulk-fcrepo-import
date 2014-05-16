@@ -1,6 +1,8 @@
 package edu.yale.library.ladybird.entity;
 
 
+import java.util.Date;
+
 /**
  * Represents input-output folder pair and user.
  */
@@ -10,6 +12,8 @@ public class Monitor implements java.io.Serializable {
     private String dirPath;
     private String exportPath;
     private User user = new UserBuilder().createUser();
+    private Date date = new Date();
+
     @Deprecated
     private String notificationEmail; //todo remove
 
@@ -81,6 +85,14 @@ public class Monitor implements java.io.Serializable {
 
     public void setNotificationEmail(String notificationEmail) {
         this.notificationEmail = notificationEmail;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     @Override

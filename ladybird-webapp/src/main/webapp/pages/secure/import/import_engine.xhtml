@@ -69,6 +69,10 @@
                             <h:outputText value="#{monitorItem.notificationEmail}"/>
                         </p:column>
 
+                        <p:column headerText="Time Scheduled">
+                            <h:outputText value="#{monitorItem.date}"/>
+                        </p:column>
+
                         <p:column headerText="Progress">
                             <h:outputText id="progressText" value="#{importProgressView.count} out of #{importProgressView.expectedCount} steps"/>
 

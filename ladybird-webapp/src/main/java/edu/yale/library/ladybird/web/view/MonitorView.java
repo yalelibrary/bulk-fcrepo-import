@@ -22,6 +22,7 @@ import javax.faces.bean.ManagedBean;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -46,6 +47,9 @@ public class MonitorView extends AbstractView {
     private UploadedFile uploadedFile;
     private String uploadedFileName;
     private InputStream uploadedFileStream;
+
+    private boolean importCronScheduled = false;
+    private boolean exportCronScheduled = false;
 
     @Inject
     private MonitorDAO monitorDAO;
@@ -74,6 +78,8 @@ public class MonitorView extends AbstractView {
             int itemId = dao.save(monitorItem);
 
             monitorItem.setDirPath("local");
+
+            monitorItem.setDate(new Date());
 
             monitorItem.getUser().setEmail(monitorItem.getNotificationEmail());
 
@@ -129,10 +135,16 @@ public class MonitorView extends AbstractView {
 
     private void scheduleImportExport(final Monitor monitorItem) {
         // Set off import cron:
-        importScheduler.scheduleJob(IMPORT_JOB_ID, IMPORT_JOB_TRIGGER, getImportCronSchedule());
+        if (!importCronScheduled) {
+            importScheduler.scheduleJob(IMPORT_JOB_ID, IMPORT_JOB_TRIGGER, getImportCronSchedule());
+            importCronScheduled = true;
+        }
 
         // Set off export cron:
-        exportScheduler.scheduleJob(EXPORT_JOB_ID, EXPORT_JOB_TRIGGER, getExportCronSchedule(), monitorItem);
+        if (!exportCronScheduled) {
+            exportScheduler.scheduleJob(EXPORT_JOB_ID, EXPORT_JOB_TRIGGER, getExportCronSchedule(), monitorItem);
+            exportCronScheduled = true;
+        }
     }
 
     private String getFilePickupCronString() {
