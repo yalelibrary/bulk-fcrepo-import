@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../../templates/template.xhtml">
+    <ui:define name="content">
+        <h2>Cron Scheduling</h2>
+        <h:form id="CronScheduleForm" enctype="multipart/form-data">
+
+            <div class="control-group">
+                <span class="help-block">
+                     Specify schedule of various jobs.
+                     <p:messages id="messages_pf" showDetail="true" autoUpdate="true" closable="true"/>
+                 </span>
+            </div>
+
+            <div>
+                <label>Import Cron</label>
+
+                <div>
+                    <p:inputText value="#{cronSchedulerView.cronBean.importCronExpression}"/>
+                </div>
+            </div>
+
+            <div>
+                <label>Export Cron</label>
+
+                <div>
+                    <p:inputText value="#{cronSchedulerView.cronBean.exportCronExpression}"/>
+                </div>
+            </div>
+
+            <div>
+                <label>File Picker Cron</label>
+
+                <div>
+                    <p:inputText value="#{cronSchedulerView.cronBean.filePickerCronExpression}"/>
+
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <h:commandButton value="Submit" styleClass="btn" action="#{cronSchedulerView.save}"/>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

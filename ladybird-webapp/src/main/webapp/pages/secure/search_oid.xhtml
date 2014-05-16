@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template.xhtml">
+
+    <ui:define name="offcanvas">
+        <a href="/ladybird-webapp/pages/secure/search_oid.xhtml" class="list-group-item">Search OID</a>
+        <a href="/ladybird-webapp/pages/404.xhtml" class="list-group-item">Browse Project</a>
+    </ui:define>
+
+    <ui:define name="content">
+        <h2>Custom Search</h2>
+
+        <h:form id="SearchForm" enctype="multipart/form-data">
+
+            <div>
+
+                <div>
+                    <div>
+
+                        <div>
+                            <label>OID</label>
+                            <div>
+                                <h:inputText id="oid" name="oid" value="#{searchView.oid}"/>
+                            </div>
+                        </div>
+
+                        <h:commandButton id="submit_button"
+                                         action="#{searchView.search}"
+                                         styleClass="btn"
+                                         value="Submit"/>
+
+                    </div>
+                </div>
+
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

@@ -16,6 +16,15 @@
         <h2>Import Scheduler</h2>
 
         <div>
+            <h:outputText styleClass="alert alert-warning"
+                          value="Missing Configuration"
+                          rendered="#{(empty userView.itemList)
+                            and (empty ImportSourceView.itemList) and (empty ProjectView.itemList)}"/>
+        </div>
+
+        <br/>
+
+        <div>
             <span>
                 <ui:insert>
                     <ui:include src="../check_user.xhtml"/>

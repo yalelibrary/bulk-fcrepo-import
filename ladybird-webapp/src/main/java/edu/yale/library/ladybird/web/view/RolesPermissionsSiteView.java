@@ -133,9 +133,9 @@ public class RolesPermissionsSiteView extends AbstractView {
 
             if (id == null) {
                 rolesPermissionsDAO.save(rolesPermissions);
-            } else {
+            } //else {
                 //TODO update
-            }
+            //}
             return NavigationCase.OK.toString();
         } catch (Exception e) {
             logger.error("Error updating or saving roles permissions pair", e);

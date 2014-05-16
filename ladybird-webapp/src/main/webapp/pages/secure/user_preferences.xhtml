@@ -10,19 +10,7 @@
     <ui:define name="content">
         <h2>User Preferences</h2>
 
-        <h3>Activity</h3>
-
-        <p>Last login session activity
-            <h:outputText value="#{welcomeView.principalLastActTime}">
-                <f:converter converterId="org.ocpsoft.PrettyTimeConverter"/>
-            </h:outputText>
-            for #{welcomeView.principal}</p>
-
-        <br/>
         <h:outputText value="Watching project #{sessionScope['projectId']}" rendered="#{not empty sessionScope['projectId']}" />
-
-
-        <h3> Preferences</h3>
 
         <h:form id="UserPreferencesForm" enctype="multipart/form-data">
 

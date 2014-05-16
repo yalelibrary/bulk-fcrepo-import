@@ -7,37 +7,25 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../templates/template.xhtml">
 
+    <ui:define name="offcanvas">
+        <a href="/ladybird-webapp/pages/secure/search_oid.xhtml" class="list-group-item">Custom Search</a>
+        <a href="/ladybird-webapp/pages/404.xhtml" class="list-group-item">Browse Project</a>
+    </ui:define>
+
     <ui:define name="content">
         <h2>Search</h2>
 
-        <ui:insert>
-            <ui:include src="check_user.xhtml"/>
-        </ui:insert>
+        <h:form id="SearchForm" enctype="multipart/form-data">
+            <h:inputText id="oid" name="oid" value="#{searchView.oid}" styleClass="form-control"/>
 
-        <h:form id="SearchForm" enctype="multipart/form-data" rendered="#{not empty userView.itemList}">
+            <br/>
 
-            <div>
+            <h:commandButton id="submit_button"
+                             action="#{searchView.search}"
+                             styleClass="btn"
+                             value="Search"/>
 
-                <div>
-                    <div>
 
-                        <div>
-                            <p:selectOneMenu id="projectSelectOneMenu"
-                                             value="#{userPreferencesView.defaultProject.label}"
-                                             rendered="#{not empty ProjectView.projectNames}">
-
-                                <f:selectItems value="#{ProjectView.projectNames}"
-                                               var="select_project_var"
-                                               itemLabel="#{select_project_var}"
-                                               itemValue="#{select_project_var}"/>
-                            </p:selectOneMenu>
-                            <h:message for="projectSelectOneMenu" style="color:red"/>
-
-                        </div>
-                    </div>
-                </div>
-
-            </div>
         </h:form>
     </ui:define>
 </ui:composition>
