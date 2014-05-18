@@ -18,21 +18,21 @@
 
                     <!-- Data Table -->
 
-                    <p:dataTable id="UserDatatable"
+                    <p:dataTable id="CronViewDatatable"
                                  editable="false"
                                  paginator="true"
                                  paginatorPosition="bottom"
                                  rows="10"
                                  value="#{cronView.jobs}"
-                                 var="monitorItem">
+                                 var="jobitem">
 
                         <p:column headerText="Job Name">
-                            <h:outputText value="#{monitorItem.key.name}"/>
+                            <h:outputText value="#{jobitem.key.name}"/>
                         </p:column>
                         <p:column headerText="Group">
-                            <h:outputText value="#{monitorItem.key.group}"/>
+                            <h:outputText value="#{jobitem.key.group}"/>
                         </p:column>
-                        <p:column headerText="Schedule" rendered="false">
+                        <p:column headerText="Schedule">
                             <h:outputText value="N/A"/>
                         </p:column>
                     </p:dataTable>

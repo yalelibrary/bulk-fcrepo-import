@@ -15,12 +15,14 @@
             <h:outputText styleClass="alert alert-info"
                           value="Upload file and specify export directory and where notification should be sent"
                           rendered="#{(not empty userView.itemList)
-                            and (not empty ImportSourceView.itemList) and (not empty ProjectView.itemList)}"/>
+                            and (not empty ImportSourceView.itemList) and (not empty ProjectView.itemList)
+                            and (cronSchedulerView.cronScheduled)}"/>
 
             <h:outputText styleClass="alert alert-warning"
                           value="Missing Configuration"
                           rendered="#{(empty userView.itemList)
-                            and (empty ImportSourceView.itemList) and (empty ProjectView.itemList)}"/>
+                            and (empty ImportSourceView.itemList) and (empty ProjectView.itemList)
+                            and (not cronSchedulerView.cronScheduled)}"/>
         </div>
 
         <br/>
@@ -39,6 +41,11 @@
             <span>
                 <ui:insert>
                     <ui:include src="../check_importsource.xhtml"/>
+                </ui:insert>
+            </span>
+              <span>
+                <ui:insert>
+                    <ui:include src="../check_cron_schedule.xhtml"/>
                 </ui:insert>
             </span>
         </div>

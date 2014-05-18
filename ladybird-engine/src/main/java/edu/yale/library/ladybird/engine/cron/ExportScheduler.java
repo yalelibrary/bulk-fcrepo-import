@@ -22,18 +22,17 @@ public class ExportScheduler {
      * Schedules an export cron job. To be called from kernel at start up.
      *
      * @param jobName
-     * @param triggerName
      * @param cronExpression
      * @throws Exception
      */
-    public void scheduleJob(final String jobName, final String triggerName, String cronExpression, Monitor monitorItem) {
+    public void scheduleJob(final String jobName, String cronExpression) {
         logger.debug("Scheduling export job");
 
         JobDetail job;
         try {
             Scheduler scheduler = new StdSchedulerFactory().getScheduler();
             scheduler.start();
-            job = getJob(jobName, ExportJobFactory.getInstance().getClass(), monitorItem);
+            job = getJob(jobName, ExportJobFactory.getInstance().getClass());
             final Trigger trigger = TriggerBuilder
                     .newTrigger()
                     .withIdentity("EXJ-TRIGER", "EXJ")
@@ -77,10 +76,18 @@ public class ExportScheduler {
 
 
     @SuppressWarnings("unchecked")
+    @Deprecated
     protected JobDetail getJob(String jobName, Class klass, Monitor monitorItem) {
         JobDetail job = JobBuilder.newJob(klass)
                 .withIdentity(jobName, "EXJ").build();
         job.getJobDataMap().put("event", monitorItem); //used by DefaultExportJob
+        return job;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected JobDetail getJob(String jobName, Class klass) {
+        JobDetail job = JobBuilder.newJob(klass)
+                .withIdentity(jobName, "EXJ").build();
         return job;
     }
 }

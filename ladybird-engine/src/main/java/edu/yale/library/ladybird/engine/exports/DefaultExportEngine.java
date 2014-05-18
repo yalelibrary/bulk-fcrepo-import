@@ -2,6 +2,7 @@ package edu.yale.library.ladybird.engine.exports;
 
 import edu.yale.library.ladybird.engine.cron.JobTracker;
 import edu.yale.library.ladybird.engine.imports.ImportEntity;
+import edu.yale.library.ladybird.engine.imports.ImportJobCtx;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -12,16 +13,15 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class DefaultExportEngine extends AbstractExportEngine {
     private final Logger logger = getLogger(this.getClass());
 
-    @Override
-    public List<ImportEntity.Row> doRead() {
-        logger.debug("Reading rows from import table(s)");
+     @Override
+    public ImportJobCtx doRead() {
 
         final ExportReader reader = new ExportReader();
-        final List<ImportEntity.Row> list = reader.readRowsFromImportTables();
+        final ImportJobCtx importJobCtx = reader.readRowsFromImportTables();
 
-        logger.debug("Read list size={}", list.size());
+        logger.debug("Read list size={}", importJobCtx.getImportJobList().size());
 
-        return list;
+        return importJobCtx;
     }
 
     @Override

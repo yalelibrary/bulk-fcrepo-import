@@ -112,7 +112,9 @@ public class ImportEngineIT extends AbstractDBTest {
         final ExportEngine exportEngine = new DefaultExportEngine();
 
         logger.debug("Export engine reading import tables");
-        final List<ImportEntity.Row> listExportRows = exportEngine.read();
+        final ImportJobCtx importJobCtx = exportEngine.read();
+
+        final List<ImportEntity.Row> listExportRows = importJobCtx.getImportJobList();
 
         assert (listExportRows != null);
         logger.debug("Size={}", listExportRows.size());

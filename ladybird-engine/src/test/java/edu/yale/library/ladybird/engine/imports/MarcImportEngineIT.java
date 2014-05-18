@@ -136,11 +136,16 @@ public class MarcImportEngineIT extends AbstractDBTest {
         final ExportEngine exportEngine = new DefaultExportEngine();
 
         logger.debug("Export engine reading import tables");
-        final List<ImportEntity.Row> listExportRows = exportEngine.read();
+
+        final ImportJobCtx importJobCtx = exportEngine.read();
+
+        final List<ImportEntity.Row> listExportRows = importJobCtx.getImportJobList();
 
         assert (listExportRows != null);
+
         logger.debug("Size={}", listExportRows.size());
-        //logger.debug(listExportRows.toString());
+
+
         for (ImportEntity.Row importRow: listExportRows) {
             //logger.debug("Col size={}", importRow.getColumns().size());
             List<ImportEntity.Column> col = importRow.getColumns();

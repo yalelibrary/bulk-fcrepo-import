@@ -22,6 +22,7 @@ public class CronView {
 
     private final Logger logger = getLogger(this.getClass());
 
+    /** list of Quartz jobs */
     private List<JobDetail> jobs = new ArrayList();
 
     @PostConstruct

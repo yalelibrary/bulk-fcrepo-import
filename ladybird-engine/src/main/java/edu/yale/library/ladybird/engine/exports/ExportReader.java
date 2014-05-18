@@ -2,6 +2,7 @@ package edu.yale.library.ladybird.engine.exports;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import edu.yale.library.ladybird.engine.imports.ImportJobCtx;
 import edu.yale.library.ladybird.engine.model.FieldConstantRules;
 import edu.yale.library.ladybird.engine.oai.Marc21Field;
 import edu.yale.library.ladybird.engine.model.FieldConstant;
@@ -39,7 +40,7 @@ public class ExportReader {
      * Main method. Reads import tables (import job contents and import source) to construct data.
      * @return list of ImportEntity.Row
      */
-    public List<Row> readRowsFromImportTables() {
+    public ImportJobCtx readRowsFromImportTables() {
 
         //Get the job from the queue
         final ExportRequestEvent exportRequestEvent = ExportEngineQueue.getJob();
@@ -107,7 +108,11 @@ public class ExportReader {
             }
             resultRowList.add(rowToWrite);
         }
-        return resultRowList;
+        ImportJobCtx importJobCtx = new ImportJobCtx();
+        importJobCtx.setImportJobList(resultRowList);
+        importJobCtx.setMonitor(exportRequestEvent.getMonitor());
+        //return resultRowList;
+        return importJobCtx;
     }
 
     /**

@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.engine.cron;
 
 
+import edu.yale.library.ladybird.engine.imports.ImportJobCtx;
 import edu.yale.library.ladybird.entity.Monitor;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
@@ -40,25 +41,26 @@ public class DefaultExportJob implements Job, ExportJob {
 
         try {
             final long startTime = System.currentTimeMillis();
-            final List<ImportEntity.Row>  list = exportEngine.read();
+            final ImportJobCtx importJobCtx = exportEngine.read();
 
-            logger.debug("Read rows from import tables, list size={}", list.size());
+            logger.debug("Read rows from import tables, list size={}", importJobCtx.getImportJobList().size());
 
-            final Monitor monitorItem = (Monitor) ctx.getJobDetail().getJobDataMap().get("event");
+            //final Monitor monitorItem = (Monitor) ctx.getJobDetail().getJobDataMap().get("event");
 
-            assert (monitorItem != null);
+            //assert (monitorItem != null);
 
-            exportEngine.write(list, tmpFile(monitorItem.getExportPath()));
+            exportEngine.write(importJobCtx.getImportJobList(), tmpFile(importJobCtx.getMonitor().getExportPath()));
 
             logger.debug("Finished writing content rows to spreadsheet.");
             logger.debug("[end] Completed export job in={}", DurationFormatUtils.formatDuration(System.currentTimeMillis() - startTime, "HH:mm:ss:SS"));
 
             /* Add params as desired */
-            final Event exportEvent = new ExportCompleteEventBuilder().setRowsProcessed(list.size()).createExportCompleteEvent();
+            final Event exportEvent = new ExportCompleteEventBuilder()
+                    .setRowsProcessed(importJobCtx.getImportJobList().size()).createExportCompleteEvent();
 
             logger.debug("Adding export event; notifying user registered for this event instance.");
 
-            sendNotification(exportEvent, Collections.singletonList(monitorItem.getUser())); //todo
+            sendNotification(exportEvent, Collections.singletonList(importJobCtx.getMonitor().getUser())); //todo
 
             logger.debug("Added export event to notification queue.");
         } catch (IOException e) {
@@ -74,6 +76,5 @@ public class DefaultExportJob implements Job, ExportJob {
     private String tmpFile(final String folder) {
         return folder + System.getProperty("file.separator") + "export-results-" + System.currentTimeMillis() +".xlsx"; //todo
     }
-
 
 }

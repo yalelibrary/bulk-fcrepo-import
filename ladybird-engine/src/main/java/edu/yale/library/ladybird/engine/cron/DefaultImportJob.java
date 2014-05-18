@@ -77,7 +77,7 @@ public class DefaultImportJob implements Job, ImportJob {
             logger.debug("Added import event to notification queue");
 
             /* Add request for export */  //Note: This needs to be re-visited per logic requirement
-            final ExportRequestEvent exportEvent = new ExportRequestEvent(imid);
+            final ExportRequestEvent exportEvent = new ExportRequestEvent(imid, importRequestedEvent.getMonitor());
             ExportEngineQueue.addJob(exportEvent);
 
             logger.debug("Added event=" + exportEvent.toString());

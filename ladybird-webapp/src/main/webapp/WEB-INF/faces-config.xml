@@ -127,6 +127,11 @@
     <navigation-rule>
         <from-view-id>/pages/secure/import/cron_schedule_form.xhtml</from-view-id>
         <navigation-case>
+            <from-outcome>ok</from-outcome>
+            <to-view-id>/pages/form_submission_ok.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
             <from-outcome>failed</from-outcome>
             <to-view-id>/pages/form_submission_failed.xhtml</to-view-id>
             <redirect/>

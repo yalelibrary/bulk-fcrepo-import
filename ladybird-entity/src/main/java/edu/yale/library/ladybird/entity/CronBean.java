@@ -34,4 +34,13 @@ public class CronBean {
     public void setFilePickerCronExpression(String filePickerCronExpression) {
         this.filePickerCronExpression = filePickerCronExpression;
     }
+
+    @Override
+    public String toString() {
+        return "CronBean{"
+                + "importCronExpression='" + importCronExpression + '\''
+                + ", exportCronExpression='" + exportCronExpression + '\''
+                + ", filePickerCronExpression='" + filePickerCronExpression + '\''
+                + '}';
+    }
 }
