@@ -4,7 +4,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 
 import edu.yale.library.ladybird.engine.ProgressEventChangeRecorder;
-import edu.yale.library.ladybird.engine.cron.FilePickerScheduler;
 import edu.yale.library.ladybird.engine.cron.ImportScheduler;
 import edu.yale.library.ladybird.engine.cron.ExportScheduler;
 import edu.yale.library.ladybird.entity.User;
@@ -95,7 +94,6 @@ public class DaoHibernateModule extends AbstractModule {
         bind(CollectionHttpService.class);
         bind(FieldDefinitionHttpService.class);
 
-        bind(FilePickerScheduler.class);
         bind(ImportScheduler.class);
         bind(ExportScheduler.class);
         bind(ProgressEventChangeRecorder.class);

@@ -23,7 +23,7 @@ public class ExportEngineQueue {
 
     public static ExportRequestEvent getJob() {
         ExportRequestEvent event = jobQueue.poll();
-        logger.debug("Polling queue job={}",event.toString());
+        logger.debug("Polling queue job={}", event.toString());
         return event;
     }
 

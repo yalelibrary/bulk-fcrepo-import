@@ -8,13 +8,9 @@ import edu.yale.library.ladybird.kernel.events.exports.ExportEvent;
  */
 public class ExportProgressEvent extends ExportEvent {
 
-    Event completedEvent;
+    private Event completedEvent;
 
-    Integer jobId; //or choose the abvoe field for right abstraction
-
-    public ExportProgressEvent(Event completedEvent) {
-        this.completedEvent = completedEvent;
-    }
+    private Integer jobId; //or choose the above field for right abstraction
 
     public ExportProgressEvent(Event completedEvent, Integer jobId) {
         this.completedEvent = completedEvent;
@@ -31,9 +27,9 @@ public class ExportProgressEvent extends ExportEvent {
 
     @Override
     public String toString() {
-        return "ExportProgressEvent{" +
-                "completedEvent=" + completedEvent +
-                ", jobId=" + jobId +
-                '}';
+        return "ExportProgressEvent{"
+                + "completedEvent=" + completedEvent
+                + ", jobId=" + jobId
+                + '}';
     }
 }
