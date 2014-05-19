@@ -1,49 +1,49 @@
 package edu.yale.library.ladybird.web.view;
 
-import edu.yale.library.ladybird.engine.cron.JobTracker;
+import edu.yale.library.ladybird.engine.ProgressEventChangeRecorder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.inject.Inject;
 import java.io.Serializable;
 
 @ManagedBean
 @SessionScoped
-public class ImportProgressView implements Serializable {
+public class ImportProgressView extends AbstractView implements Serializable {
 
     private Logger logger = LoggerFactory.getLogger(ImportProgressView.class);
 
-    public final int expectedCount = 2;
+    @Inject
+    ProgressEventChangeRecorder progressEventChangeRecorder;
 
+    private int STEPS_TO_COMPLETE;
     private int count = 0;
 
-    boolean complete = false;
+    @Deprecated
+    private boolean complete = false;
 
-    public int getCount() {
-        return count;
+    @PostConstruct
+    public void init() {
+        initFields();
+        STEPS_TO_COMPLETE = progressEventChangeRecorder.getExpectedTotalSteps();
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public int count(int jobId) {
+        return progressEventChangeRecorder.getSteps(jobId);
     }
 
-    public void increment() {
-        count = JobTracker.getSteps();
-        if (count == expectedCount) {
+    public void progress(int jobId) {
+        logger.debug("Getting progress for jobId={}", jobId);
+        count = progressEventChangeRecorder.getSteps(jobId);
+        if (count == STEPS_TO_COMPLETE) {
             complete = true;
         }
     }
 
-    public boolean isComplete() {
-        return complete;
-    }
-
-    public void setComplete(boolean complete) {
-        this.complete = complete;
-    }
-
-    public int getExpectedCount() {
-        return expectedCount;
+    public int getSTEPS_TO_COMPLETE() {
+        return STEPS_TO_COMPLETE;
     }
 }

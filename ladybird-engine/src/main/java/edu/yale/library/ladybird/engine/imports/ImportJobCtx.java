@@ -1,6 +1,5 @@
 package edu.yale.library.ladybird.engine.imports;
 
-import edu.yale.library.ladybird.entity.ImportJob;
 import edu.yale.library.ladybird.entity.Monitor;
 
 import java.util.List;
@@ -24,5 +23,13 @@ public class ImportJobCtx {
 
     public void setImportJobList(final List<ImportEntity.Row> importJobList) {
         this.importJobList = importJobList;
+    }
+
+    @Override
+    public String toString() {
+        return "ImportJobCtx{"
+                + "importJobList size=" + importJobList.size()
+                + ", monitor=" + monitor
+                + '}';
     }
 }

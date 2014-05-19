@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.engine.cron;
 
 
+import edu.yale.library.ladybird.engine.ExportBus;
 import edu.yale.library.ladybird.engine.imports.ImportJobCtx;
 import edu.yale.library.ladybird.entity.Monitor;
 import edu.yale.library.ladybird.entity.User;
@@ -44,10 +45,7 @@ public class DefaultExportJob implements Job, ExportJob {
             final ImportJobCtx importJobCtx = exportEngine.read();
 
             logger.debug("Read rows from import tables, list size={}", importJobCtx.getImportJobList().size());
-
-            //final Monitor monitorItem = (Monitor) ctx.getJobDetail().getJobDataMap().get("event");
-
-            //assert (monitorItem != null);
+            logger.debug("ImportJobCtx={}", importJobCtx.toString());
 
             exportEngine.write(importJobCtx.getImportJobList(), tmpFile(importJobCtx.getMonitor().getExportPath()));
 
@@ -57,6 +55,9 @@ public class DefaultExportJob implements Job, ExportJob {
             /* Add params as desired */
             final Event exportEvent = new ExportCompleteEventBuilder()
                     .setRowsProcessed(importJobCtx.getImportJobList().size()).createExportCompleteEvent();
+
+            //Post progress
+            ExportBus.postEvent(new ExportProgressEvent(exportEvent, importJobCtx.getMonitor().getId())); //TODO consolidate
 
             logger.debug("Adding export event; notifying user registered for this event instance.");
 

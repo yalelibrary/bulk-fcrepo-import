@@ -11,6 +11,9 @@ public class ExportRequestEvent extends ExportEvent {
     private int importId;
     private Monitor monitor = new Monitor();
 
+    public ExportRequestEvent() {
+    }
+
     public ExportRequestEvent(int importId) {
         this.importId = importId;
     }

@@ -3,6 +3,7 @@ package edu.yale.library.ladybird.web.view;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 
+import edu.yale.library.ladybird.engine.ProgressEventChangeRecorder;
 import edu.yale.library.ladybird.engine.cron.FilePickerScheduler;
 import edu.yale.library.ladybird.engine.cron.ImportScheduler;
 import edu.yale.library.ladybird.engine.cron.ExportScheduler;
@@ -97,5 +98,6 @@ public class DaoHibernateModule extends AbstractModule {
         bind(FilePickerScheduler.class);
         bind(ImportScheduler.class);
         bind(ExportScheduler.class);
+        bind(ProgressEventChangeRecorder.class);
     }
 }

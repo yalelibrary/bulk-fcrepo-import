@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.engine.cron;
 
 
+import edu.yale.library.ladybird.engine.ExportBus;
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
 import edu.yale.library.ladybird.entity.ImportSource;
 import edu.yale.library.ladybird.entity.User;
@@ -15,6 +16,7 @@ import edu.yale.library.ladybird.engine.DefaultFieldDataValidator;
 import edu.yale.library.ladybird.engine.imports.ImportReaderValidationException;
 import edu.yale.library.ladybird.engine.imports.ImportEngineException;
 import edu.yale.library.ladybird.engine.imports.ReadMode;
+import edu.yale.library.ladybird.kernel.KernelBootstrap;
 import edu.yale.library.ladybird.kernel.events.Event;
 import edu.yale.library.ladybird.kernel.events.NotificationEventQueue;
 import edu.yale.library.ladybird.persistence.dao.ImportSourceDAO;
@@ -70,7 +72,9 @@ public class DefaultImportJob implements Job, ImportJob {
                     setRowsProcessed(rowList.size()).createImportDoneEvent();
 
             logger.debug("Adding import event and notifying all registered users");
-            JobTracker.steps++; //TODO
+
+            //Post progress
+            ExportBus.postEvent(new ExportProgressEvent(importEvent, importRequestedEvent.getMonitor().getId())); //TODO consolidate
 
             sendNotification(importEvent, Collections.singletonList(importRequestedEvent.getMonitor().getUser()));
 
@@ -80,7 +84,7 @@ public class DefaultImportJob implements Job, ImportJob {
             final ExportRequestEvent exportEvent = new ExportRequestEvent(imid, importRequestedEvent.getMonitor());
             ExportEngineQueue.addJob(exportEvent);
 
-            logger.debug("Added event=" + exportEvent.toString());
+            logger.debug("Added event to ExportEngineQueue=" + exportEvent.toString());
         } catch (ImportReaderValidationException e) {
             logger.error("validation exception", e);
             throw new ImportEngineException(e);

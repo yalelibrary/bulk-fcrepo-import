@@ -1,5 +1,6 @@
 package edu.yale.library.ladybird;
 
+import edu.yale.library.ladybird.engine.ExportBus;
 import edu.yale.library.ladybird.engine.model.FieldConstant;
 import edu.yale.library.ladybird.engine.model.FieldDefinitionValue;
 import edu.yale.library.ladybird.kernel.KernelBootstrap;
@@ -21,6 +22,8 @@ public class AppContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         kernelBootstrap.init();
+        ExportBus exportBus = new ExportBus(); //TODO
+        exportBus.init();
         try {
             setTextFieldDefsMap();
         } catch (IOException e) {

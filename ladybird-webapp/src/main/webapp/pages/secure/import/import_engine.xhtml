@@ -73,13 +73,10 @@
                         </p:column>
 
                         <p:column headerText="Progress">
-                            <h:outputText id="progressText" value="#{importProgressView.count} out of #{importProgressView.expectedCount} steps"/>
+                            <h:outputText id="progressOutputText" value="#{importProgressView.count(monitorItem.id)} out of #{importProgressView.STEPS_TO_COMPLETE} steps"/>
 
-                            <h:graphicImage id="flag" rendered="#{importProgressView.complete}"
-                                    library="img" name="check.png"/>
-
-                            <p:poll id="progressPoll" interval="5" listener="#{importProgressView.increment}"
-                                    update="progressText, flag" />
+                            <p:poll id="progressPoll" interval="5" listener="#{importProgressView.progress(monitorItem.id)}"
+                                    update="progressOutputText" />
                         </p:column>
 
                     </p:dataTable>
