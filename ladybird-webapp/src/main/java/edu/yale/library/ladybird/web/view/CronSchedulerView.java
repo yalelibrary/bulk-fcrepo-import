@@ -11,9 +11,7 @@ import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.inject.Inject;
 
-/**
- * TODO
- */
+
 @ManagedBean
 @ApplicationScoped
 public class CronSchedulerView extends AbstractView {
@@ -24,7 +22,6 @@ public class CronSchedulerView extends AbstractView {
     public boolean cronScheduled = false;
 
     private static final String IMPORT_JOB_ID = "import_job";
-    private static final String IMPORT_JOB_TRIGGER = "trigger";
     private static final String EXPORT_JOB_ID = "export_job";
 
     @Inject
@@ -39,9 +36,13 @@ public class CronSchedulerView extends AbstractView {
     }
 
     public String save() {
-        logger.debug("Executing cron scheduling with bean={}", cronBean.toString());
-        scheduleImportExport();
-        return NavigationCase.OK.toString();
+        try {
+            scheduleImportExport();
+            return NavigationCase.OK.toString();
+        } catch (Exception e) {
+            logger.error("Error scheduling", e);
+            return NavigationCase.FAIL.toString();
+        }
     }
 
     public CronBean getCronBean() {
@@ -52,12 +53,15 @@ public class CronSchedulerView extends AbstractView {
         this.cronBean = cronBean;
     }
 
-    private void scheduleImportExport() {
-        if (!cronScheduled) {
-            importScheduler.scheduleJob(IMPORT_JOB_ID, IMPORT_JOB_TRIGGER, getCronBean().getFilePickerCronExpression());
-            exportScheduler.scheduleJob(EXPORT_JOB_ID, getCronBean().getExportCronExpression());
-
-            cronScheduled = true;
+    private void scheduleImportExport() throws Exception {
+        try {
+            if (!cronScheduled) {
+                importScheduler.scheduleJob(IMPORT_JOB_ID, getCronBean().getImportCronExpression());
+                exportScheduler.scheduleJob(EXPORT_JOB_ID, getCronBean().getExportCronExpression());
+                cronScheduled = true;
+            }
+        } catch (Exception e) {
+           throw e;
         }
     }
 

@@ -21,14 +21,13 @@ public class ImportScheduler {
     private final Logger logger = getLogger(this.getClass());
 
     /**
-     * Schedules an import cron job. To be called from kernel at start up.
+     * Schedules an import cron job.
      *
      * @param jobName
-     * @param triggerName
      * @param cronExpression
      * @throws Exception
      */
-    public void scheduleJob(final String jobName, final String triggerName, final String cronExpression) {
+    public void scheduleJob(final String jobName, final String cronExpression) {
         logger.debug("Scheduling import job");
 
         JobDetail job;
