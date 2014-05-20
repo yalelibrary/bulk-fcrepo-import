@@ -59,7 +59,6 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
         try {
             s = getSession();
             tx = s.beginTransaction();
-            //logger.debug("Saving item: " + item.toString());
             id = (Integer) s.save(item);
             s.flush();
             tx.commit();
@@ -99,12 +98,10 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
             tx = s.beginTransaction();
 
             for (T item: itemList) {
-                logger.debug("Saving item: " + item.toString());
                 s.saveOrUpdate(item);
                 s.flush();
             }
             tx.commit();
-            logger.debug("Saved item list");
         } catch (HibernateException t) {
             logger.error("Exception tyring to persist item." + t.getMessage());
             t.printStackTrace();

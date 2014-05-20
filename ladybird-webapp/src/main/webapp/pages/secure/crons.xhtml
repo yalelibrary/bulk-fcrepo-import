@@ -7,7 +7,7 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../templates/template.xhtml">
     <ui:define name="content">
-        <h2>System Crons</h2>
+        <h2>Crons</h2>
         <h:form id="UserForm" enctype="multipart/form-data">
 
             <div>
@@ -15,6 +15,10 @@
 
                     <br/>
                     <br/>
+
+                    <p:contextMenu for="CronViewDatatable">
+                        <p:menuitem value="Unschedule" action="#{cronView.unscheduleJob}"/>
+                    </p:contextMenu>
 
                     <!-- Data Table -->
 
@@ -24,7 +28,10 @@
                                  paginatorPosition="bottom"
                                  rows="10"
                                  value="#{cronView.jobs}"
-                                 var="jobitem">
+                                 var="jobitem"
+                                 selection="#{cronView.selectedItem}"
+                                 selectionMode="single"
+                                 rowKey="#{jobitem.key.name}">
 
                         <p:column headerText="Job Name">
                             <h:outputText value="#{jobitem.key.name}"/>

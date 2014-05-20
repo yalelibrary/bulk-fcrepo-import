@@ -8,6 +8,8 @@ import edu.yale.library.ladybird.engine.cron.ImportScheduler;
 import edu.yale.library.ladybird.engine.cron.ExportScheduler;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.entity.Project;
+import edu.yale.library.ladybird.kernel.cron.DefaultJobsManager;
+import edu.yale.library.ladybird.kernel.cron.JobsManager;
 import edu.yale.library.ladybird.persistence.dao.GenericDAO;
 import edu.yale.library.ladybird.persistence.dao.CollectionDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportFileDAO;
@@ -97,5 +99,7 @@ public class DaoHibernateModule extends AbstractModule {
         bind(ImportScheduler.class);
         bind(ExportScheduler.class);
         bind(ProgressEventChangeRecorder.class);
+
+        bind(JobsManager.class).to(DefaultJobsManager.class);
     }
 }

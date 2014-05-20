@@ -36,7 +36,6 @@ public class ImportProgressView extends AbstractView implements Serializable {
     }
 
     public void progress(int jobId) {
-        logger.debug("Getting progress for jobId={}", jobId);
         count = progressEventChangeRecorder.getSteps(jobId);
         if (count == STEPS_TO_COMPLETE) {
             complete = true;

@@ -3,13 +3,14 @@ package edu.yale.library.ladybird.engine.cron;
 import edu.yale.library.ladybird.entity.Monitor;
 import edu.yale.library.ladybird.kernel.cron.DefaultJobsManager;
 import edu.yale.library.ladybird.engine.CronSchedulingException;
+import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
 import org.quartz.CronScheduleBuilder;
-import org.quartz.SchedulerException;
-import org.quartz.Scheduler;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
-import org.quartz.JobBuilder;
+import org.quartz.TriggerKey;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 
@@ -18,24 +19,26 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ExportScheduler {
     private final Logger logger = getLogger(this.getClass());
 
+    public static final String DEFAULT_GROUP = "EXJ";
+    public static final String DEFAULT_EXPORT_JOB_ID = "export_job";
+
     /**
      * Schedules an export cron job. To be called from kernel at start up.
      *
-     * @param jobName
      * @param cronExpression
      * @throws Exception
      */
-    public void scheduleJob(final String jobName, String cronExpression) {
+    public void scheduleJob(String cronExpression) {
         logger.debug("Scheduling export job");
 
         JobDetail job;
         try {
             Scheduler scheduler = new StdSchedulerFactory().getScheduler();
             scheduler.start();
-            job = getJob(jobName, ExportJobFactory.getInstance().getClass());
+            job = getJob(DEFAULT_EXPORT_JOB_ID, ExportJobFactory.getInstance().getClass());
             final Trigger trigger = TriggerBuilder
                     .newTrigger()
-                    .withIdentity("EXJ-TRIGER", "EXJ")
+                    .withIdentity("EXJ-TRIGER", DEFAULT_GROUP)
                     .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
                     .build();
             doScheduleJob(job, trigger);
@@ -47,14 +50,13 @@ public class ExportScheduler {
         defaultJobsManager.addJob(job);
     }
 
-
     @Deprecated
-    public void scheduleJob(final String jobName, final Monitor monitorItem, final Trigger trigger) {
+    public void scheduleJob(final Monitor monitorItem, final Trigger trigger) {
         logger.debug("Scheduling export job");
 
         JobDetail job;
         try {
-            job = getJob(jobName, ExportJobFactory.getInstance().getClass(), monitorItem);
+            job = getJob(DEFAULT_EXPORT_JOB_ID, ExportJobFactory.getInstance().getClass(), monitorItem);
             doScheduleJob(job, trigger);
         } catch (SchedulerException e) {
             throw new CronSchedulingException(e);
@@ -74,6 +76,21 @@ public class ExportScheduler {
         }
     }
 
+    public void cancel() {
+        doCancel();
+    }
+
+    private void doCancel() {
+        try {
+            final Scheduler scheduler = new StdSchedulerFactory().getScheduler();
+            final Trigger existingTrigger = scheduler.getTrigger(new TriggerKey("EXJ-TRIGER", DEFAULT_GROUP));
+            logger.debug("Unscheduling jobs for trigger={}", existingTrigger.getKey());
+            scheduler.unscheduleJob(existingTrigger.getKey());
+        } catch (SchedulerException e) {
+            logger.error("Error unscheduling job", e);
+            throw new CronSchedulingException(e);
+        }
+    }
 
     @SuppressWarnings("unchecked")
     @Deprecated

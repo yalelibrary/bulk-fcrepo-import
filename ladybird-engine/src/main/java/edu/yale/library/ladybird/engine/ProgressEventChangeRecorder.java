@@ -39,11 +39,11 @@ public class ProgressEventChangeRecorder {
     }
 
     public int getSteps(int jobId) {
-        int progress = 0;
+        int progress;
         try {
             progress = progressMap.get(jobId);
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            progress = 0;
         }
         return progress;
     }

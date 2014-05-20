@@ -57,7 +57,7 @@ public class ImportExportSchedulerTest {
         try {
             ImportJobFactory.setInstance(new DummyImportEngineJob());
             final ImportScheduler importScheduler = new ImportScheduler();
-            importScheduler.scheduleJob("test", getSimpleTrigger());
+            importScheduler.scheduleJob(getSimpleTrigger());
             Thread.sleep(3000); //TODO
         } catch (Exception e) {
             fail("Exception= " + e);
@@ -77,7 +77,7 @@ public class ImportExportSchedulerTest {
             final ExportScheduler exportScheduler = new ExportScheduler();
             final Monitor monitorUnit = new Monitor();
             monitorUnit.setUser(null);
-            exportScheduler.scheduleJob("test", monitorUnit, getSimpleTrigger());
+            exportScheduler.scheduleJob(monitorUnit, getSimpleTrigger());
             Thread.sleep(3000); //TODO
         } catch (Exception e) {
             fail("Exception= " + e);
