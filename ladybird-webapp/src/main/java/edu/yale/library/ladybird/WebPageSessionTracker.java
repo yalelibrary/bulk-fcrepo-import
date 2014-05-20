@@ -55,27 +55,30 @@ public class WebPageSessionTracker implements Filter {
         if (netid.toString().isEmpty()) {
             logger.error("Null netid when trying to record user activity");
         } else {
-            KernelBootstrap.postEvent(new UserGeneratedEvent() {
-                @Override
-                public String getEventName() {
-                    return Events.USER_VISIT.toString();
-                }
 
-                @Override
-                public String getPrincipal() {
-                    return netid.toString();
-                }
+            if (httpRequest.getHeader("X-Requested-With") == null) { //ignore ajax
+                KernelBootstrap.postEvent(new UserGeneratedEvent() {
+                    @Override
+                    public String getEventName() {
+                        return Events.USER_VISIT.toString();
+                    }
 
-                @Override
-                public String getValue() {
-                    return httpRequest.getPathInfo();
-                }
+                    @Override
+                    public String getPrincipal() {
+                        return netid.toString();
+                    }
 
-                @Override
-                public String toString() {
-                    return getEventName() + " for " + getPrincipal() + " for page " + getValue();
-                }
-            });
+                    @Override
+                    public String getValue() {
+                        return httpRequest.getPathInfo();
+                    }
+
+                    @Override
+                    public String toString() {
+                        return getEventName() + " for " + getPrincipal() + " for page " + getValue();
+                    }
+                });
+            }
         }
         filterChain.doFilter(request, servletResponse);
     }

@@ -7,36 +7,31 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../../templates/template.xhtml">
 
-    <ui:define name="offcanvas">
-        <a href="/ladybird-webapp/pages/secure/import/import_engine_file.xhtml" class="list-group-item">Upload File</a>
-    </ui:define>
-
     <ui:define name="content">
         <h2>Import Scheduler</h2>
-
-        <div>
-            <h:outputText styleClass="alert alert-warning"
-                          value="Missing Configuration"
-                          rendered="#{(empty userView.itemList)
-                            and (empty ImportSourceView.itemList) and (empty ProjectView.itemList)}"/>
-        </div>
 
         <br/>
 
         <div>
             <span>
-                <ui:insert>
-                    <ui:include src="../check_user.xhtml"/>
-                </ui:insert>
+                <h:outputText styleClass="alert alert-warning"
+                              value="No import jobs exist yet."
+                              rendered="#{empty monitorView.itemList}"/>
             </span>
             <span>
-                <ui:insert>
-                     <ui:include src="../check_project.xhtml"/>
-                 </ui:insert>
+
+                <h:outputLink value="/ladybird-webapp/web/pages/secure/import/import_engine_file.xhtml"
+                              rendered="#{empty monitorView.itemList}"
+                              styleClass="btn btn-primary btn-warning">
+                Add Import
+            </h:outputLink>
             </span>
         </div>
 
-        <h:form id="UserForm" enctype="multipart/form-data" rendered="#{not empty userView.itemList}">
+        <br/>
+
+
+        <h:form id="SchedulerForm" enctype="multipart/form-data" rendered="#{not empty monitorView.itemList}">
 
             <div>
                 <div>
@@ -73,10 +68,12 @@
                         </p:column>
 
                         <p:column headerText="Progress">
-                            <h:outputText id="progressOutputText" value="#{importProgressView.count(monitorItem.id)} out of #{importProgressView.STEPS_TO_COMPLETE} steps"/>
+                            <h:outputText id="progressOutputText"
+                                          value="#{importProgressView.count(monitorItem.id)} out of #{importProgressView.STEPS_TO_COMPLETE} steps"/>
 
-                            <p:poll id="progressPoll" interval="5" listener="#{importProgressView.progress(monitorItem.id)}"
-                                    update="progressOutputText" />
+                            <p:poll id="progressPoll" interval="5"
+                                    listener="#{importProgressView.progress(monitorItem.id)}"
+                                    update="progressOutputText"/>
                         </p:column>
 
                     </p:dataTable>
