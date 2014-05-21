@@ -3,7 +3,7 @@ package edu.yale.library.ladybird.entity;
 import java.util.Date;
 
 /**
- * AuthorityControl
+ * AuthorityControl represents acid
  */
 public class AuthorityControl implements java.io.Serializable {
 
@@ -82,7 +82,15 @@ public class AuthorityControl implements java.io.Serializable {
         this.userId = userId;
     }
 
-
+    @Override
+    public String toString() {
+        return "AuthorityControl{"
+                + "acid=" + acid
+                + ", date=" + date
+                + ", fdid=" + fdid
+                + ", value='" + value + '\''
+                + ", code='" + code + '\''
+                + ", userId=" + userId
+                + '}';
+    }
 }
-
-

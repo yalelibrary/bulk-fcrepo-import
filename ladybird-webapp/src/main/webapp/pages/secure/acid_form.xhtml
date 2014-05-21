@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template.xhtml">
+    <ui:define name="content">
+        <h2>Add ACID value</h2>
+
+        <br/>
+
+        <h:link value="Add a user before adding creating value." outcome="user_manager_form"
+                rendered="#{(empty userView.itemList) and (ProjectView.checkAddProjectPermission())}" />
+
+        <h:outputText value="Your role does not have permissions to add a project." styleClass="alert alert-danger"
+                      rendered="#{not ProjectView.checkAddProjectPermission()}"/>
+
+        <h:form id="AcidCreateForm" enctype="multipart/form-data" rendered="#{(not empty userView.itemList) and (ProjectView.checkAddProjectPermission())}">
+            <br/>
+
+            <div>
+                <div>
+
+                    <div>
+                        <label>Fdid</label>
+                        <div>
+                            <p:inputText value="#{authorityControlView.item.fdid}"/>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label>Value</label>
+                        <div>
+                            <p:inputText value="#{authorityControlView.item.value}"/>
+                        </div>
+                    </div>
+
+                    <!-- TODO remove since the current user is the creator
+                    <div>
+                        <label>User</label>
+
+                        <div>
+                            <label class="control-label" for="userSelectBox">Select user</label>
+
+                            <div>
+                                <p:selectOneMenu id="userSelectBox"
+                                                 value="#{authorityControlView.item.userId}">
+
+                                    <f:selectItems value="#{userView.itemList}"
+                                                   var="select_user_var"
+                                                   itemLabel="#{select_user_var.username}"
+                                                   itemValue="#{select_user_var.userId}" />
+
+                                </p:selectOneMenu>
+                                <h:message for="userSelectBox" style="color:red" />
+
+                            </div>
+                        </div>
+
+                    </div>
+                    -->
+
+                    <!-- Submit Button -->
+
+                    <p:commandButton value="Submit" ajax="false" styleClass="btn" action="#{authorityControlView.save}"/>
+
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

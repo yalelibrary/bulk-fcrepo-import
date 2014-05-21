@@ -28,6 +28,7 @@
         <mapping resource="test-hbm/Roles.hbm.xml"/>
         <mapping resource="test-hbm/RolesPermissions.hbm.xml"/>
         <mapping resource="test-hbm/Permissions.hbm.xml"/>
+        <mapping resource="test-hbm/AuthorityControl.hbm.xml"/>
 
     </session-factory>
 </hibernate-configuration>
