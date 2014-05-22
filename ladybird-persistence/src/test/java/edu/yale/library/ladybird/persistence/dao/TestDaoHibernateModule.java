@@ -22,6 +22,8 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.RolesHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.PermissionsHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.RolesPermissionsHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.AuthorityControlHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.AuthorityControlVersionHibernateDAO;
+
 
 
 
@@ -53,5 +55,6 @@ public class TestDaoHibernateModule extends AbstractModule {
         bind(PermissionsDAO.class).to(PermissionsHibernateDAO.class);
         bind(RolesPermissionsDAO.class).to(RolesPermissionsHibernateDAO.class);
         bind(AuthorityControlDAO.class).to(AuthorityControlHibernateDAO.class);
+        bind(AuthorityControlVersionDAO.class).to(AuthorityControlVersionHibernateDAO.class);
     }
 }

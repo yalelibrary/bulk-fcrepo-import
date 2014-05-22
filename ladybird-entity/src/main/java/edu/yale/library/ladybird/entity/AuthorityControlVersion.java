@@ -16,7 +16,10 @@ public class AuthorityControlVersion implements java.io.Serializable {
     private Date date;
     private int fdid;
     private String value;
+
+    @Deprecated
     private String code;
+
     private int userId;
     private String action;
 
@@ -79,10 +82,14 @@ public class AuthorityControlVersion implements java.io.Serializable {
         this.value = value;
     }
 
+    /** @deprecated use case unknown */
+    @Deprecated
     public String getCode() {
         return this.code;
     }
 
+    /** @deprecated use case unknown */
+    @Deprecated
     public void setCode(String code) {
         this.code = code;
     }

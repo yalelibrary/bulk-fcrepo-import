@@ -30,9 +30,11 @@ import edu.yale.library.ladybird.persistence.dao.RolesDAO;
 import edu.yale.library.ladybird.persistence.dao.PermissionsDAO;
 import edu.yale.library.ladybird.persistence.dao.RolesPermissionsDAO;
 import edu.yale.library.ladybird.persistence.dao.AuthorityControlDAO;
+import edu.yale.library.ladybird.persistence.dao.AuthorityControlVersionDAO;
 
 
 import edu.yale.library.ladybird.persistence.dao.hibernate.AuthorityControlHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.AuthorityControlVersionHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.CollectionHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportFileHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceHibernateDAO;
@@ -90,7 +92,7 @@ public class DaoHibernateModule extends AbstractModule {
         bind(PermissionsDAO.class).to(PermissionsHibernateDAO.class);
         bind(RolesPermissionsDAO.class).to(RolesPermissionsHibernateDAO.class);
         bind(AuthorityControlDAO.class).to(AuthorityControlHibernateDAO.class);
-
+        bind(AuthorityControlVersionDAO.class).to(AuthorityControlVersionHibernateDAO.class);
 
         bind(UserHttpService.class);
         bind(UserEventHttpService.class);

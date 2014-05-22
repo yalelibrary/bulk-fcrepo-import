@@ -29,5 +29,6 @@
         <mapping resource="ladybird-hbm/RolesPermissions.hbm.xml"/>
         <mapping resource="ladybird-hbm/Permissions.hbm.xml"/>
         <mapping resource="ladybird-hbm/AuthorityControl.hbm.xml"/>
+        <mapping resource="ladybird-hbm/AuthorityControlVersion.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>
