@@ -5,6 +5,9 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * General utility class. Subject to removal
+ */
 public class Util {
 
     private static final Logger logger = LoggerFactory.getLogger(Util.class);

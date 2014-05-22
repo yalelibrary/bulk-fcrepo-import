@@ -1,6 +1,9 @@
 package edu.yale.library.ladybird.auth;
 
 
+/**
+ * Stored to use values, and possibly other attributes (hence not a map).
+ */
 public class PermissionsValue {
 
     private Permissions permissions;

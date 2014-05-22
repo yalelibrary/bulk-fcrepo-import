@@ -69,6 +69,8 @@
         <commons-config.version>1.10</commons-config.version>
         <guava.version>17.0</guava.version>
         <prettytime.version>3.2.5.Final</prettytime.version>
+        <maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
+        <prettytime-integration-jsf.version>3.2.6-SNAPSHOT</prettytime-integration-jsf.version>
     </properties>
 
     <dependencyManagement>
@@ -248,7 +250,7 @@
             <dependency>
                 <groupId>org.ocpsoft.prettytime</groupId>
                 <artifactId>prettytime-integration-jsf</artifactId>
-                <version>3.2.6-SNAPSHOT</version>
+                <version>${prettytime-integration-jsf.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -334,6 +336,14 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <configuration>
+                    <failOnError>false</failOnError>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -22,6 +22,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 
+/**
+ * Filter puts a principal in session
+ */
 public class CasNetIdFilter implements Filter {
 
     private static final Logger logger = LoggerFactory.getLogger(CasNetIdFilter.class);
