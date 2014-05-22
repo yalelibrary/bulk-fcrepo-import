@@ -37,10 +37,10 @@
         <property name="export" type="int">
             <column name="export" />
         </property>
-        <property name="locked" type="int">
-            <column name="locked" />
+        <property name="locked" type="boolean">
+            <column name="locked" length="1" />
         </property>
-        <property name="required" type="string">
+        <property name="required" type="boolean">
             <column name="required" length="1" />
         </property>
         <property name="style" type="string">

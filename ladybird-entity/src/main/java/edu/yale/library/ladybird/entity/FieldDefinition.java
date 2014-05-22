@@ -19,8 +19,8 @@ public class FieldDefinition implements java.io.Serializable {
     private int display;
     private int technical;
     private int export;
-    private int locked;
-    private String required;
+    private boolean locked;
+    private boolean required;
     private String style;
 
     public FieldDefinition() {
@@ -115,23 +115,19 @@ public class FieldDefinition implements java.io.Serializable {
         return this.export;
     }
 
-    public void setExport(int export) {
-        this.export = export;
+    public boolean isLocked() {
+        return locked;
     }
 
-    public int getLocked() {
-        return this.locked;
-    }
-
-    public void setLocked(int locked) {
+    public void setLocked(boolean locked) {
         this.locked = locked;
     }
 
-    public String getRequired() {
-        return this.required;
+    public boolean isRequired() {
+        return required;
     }
 
-    public void setRequired(String required) {
+    public void setRequired(boolean required) {
         this.required = required;
     }
 
@@ -141,6 +137,10 @@ public class FieldDefinition implements java.io.Serializable {
 
     public void setStyle(String style) {
         this.style = style;
+    }
+
+    public void setExport(int export) {
+        this.export = export;
     }
 
     @Override

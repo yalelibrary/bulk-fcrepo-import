@@ -31,13 +31,15 @@ public class FieldDefinitionView extends AbstractView {
         initFields();
         dao = entityDAO;
     }
-    public void save() {
+
+    public String save() {
         try {
-            logger.debug("Saving item", item);
             setDefaults(item);
             dao.save(item);
+            return NavigationCase.OK.toString();
         } catch (Throwable e) {
             logger.error("Error saving item", e);
+            return NavigationCase.FAIL.toString();
         }
     }
 
@@ -56,7 +58,9 @@ public class FieldDefinitionView extends AbstractView {
         return item;
     }
 
-
+    public void setItem(FieldDefinition item) {
+        this.item = item;
+    }
 }
 
 

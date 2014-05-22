@@ -6,15 +6,18 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../../templates/template.xhtml">
+
+    <ui:define name="offcanvas">
+        <a href="/ladybird-webapp/pages/secure/import/fdid_form.xhtml" class="list-group-item">Add Field Defintion</a>
+    </ui:define>
+
     <ui:define name="content">
-        <h2>Field Definition</h2>
-        <h:form id="FieldDefinitionForm" enctype="multipart/form-data"
-                styleClass=""
-                style="">
+        <h4>Field Definitions</h4>
+        <h:form id="FieldDefinitionForm" enctype="multipart/form-data">
             <br/>
 
-            <div style="">
-                <div class="" style="">
+            <div>
+                <div>
 
                     <!-- Data Table -->
 
@@ -23,89 +26,91 @@
                                  tableStyle="" paginatorPosition="bottom"
                                  editable="false">
 
-                        <p:column >
+                        <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Fdid"/>
                             </f:facet>
                             <h:outputText value="#{item.fdid}"/>
                         </p:column>
-                        <p:column >
-                            <f:facet name="header">
-                                <h:outputText value="Date"/>
-                            </f:facet>
-                            <h:outputText value="#{item.date}"/>
-                        </p:column>
-                        <p:column >
-                            <f:facet name="header">
-                                <h:outputText value="Type"/>
-                            </f:facet>
-                            <h:outputText value="#{item.type}"/>
-                        </p:column>
-                        <p:column >
+                        <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Acid"/>
                             </f:facet>
                             <h:outputText value="#{item.acid}"/>
                         </p:column>
-                        <p:column >
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Type"/>
+                            </f:facet>
+                            <h:outputText value="#{item.type}"/>
+                        </p:column>
+                        <p:column rendered="false">
                             <f:facet name="header">
                                 <h:outputText value="Faid"/>
                             </f:facet>
                             <h:outputText value="#{item.faid}"/>
                         </p:column>
-                        <p:column >
+                        <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Handle"/>
                             </f:facet>
                             <h:outputText value="#{item.handle}"/>
                         </p:column>
-                        <p:column >
+                        <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Tooltip"/>
                             </f:facet>
                             <h:outputText value="#{item.tooltip}"/>
                         </p:column>
-                        <p:column >
+                        <p:column rendered="false">
                             <f:facet name="header">
                                 <h:outputText value="Multivalue"/>
                             </f:facet>
                             <h:outputText value="#{item.multivalue}"/>
                         </p:column>
-                        <p:column >
+                        <p:column rendered="false">
                             <f:facet name="header">
                                 <h:outputText value="Display"/>
                             </f:facet>
                             <h:outputText value="#{item.display}"/>
                         </p:column>
-                        <p:column >
+                        <p:column rendered="false">
                             <f:facet name="header">
                                 <h:outputText value="Technical"/>
                             </f:facet>
                             <h:outputText value="#{item.technical}"/>
                         </p:column>
-                        <p:column >
+                        <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Export"/>
                             </f:facet>
                             <h:outputText value="#{item.export}"/>
                         </p:column>
-                        <p:column >
+                        <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Locked"/>
                             </f:facet>
-                            <h:outputText value="#{item.locked}"/>
+                            <h:selectBooleanCheckbox value="#{item.locked}"/>
                         </p:column>
-                        <p:column >
+                        <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Required"/>
                             </f:facet>
-                            <h:outputText value="#{item.required}"/>
+                            <h:selectBooleanCheckbox value="#{item.required}"/>
                         </p:column>
-                        <p:column >
+                        <p:column rendered="false">
                             <f:facet name="header">
                                 <h:outputText value="Style"/>
                             </f:facet>
                             <h:outputText value="#{item.style}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Date Created"/>
+                            </f:facet>
+                            <h:outputText value="#{item.date}">
+                                <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                            </h:outputText>
                         </p:column>
 
                     </p:dataTable>

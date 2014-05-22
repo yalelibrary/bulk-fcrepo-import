@@ -7,7 +7,7 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../templates/template.xhtml">
     <ui:define name="content">
-        <h2>Add ACID value</h2>
+        <h4>Add ACID value</h4>
 
         <br/>
 
@@ -25,9 +25,26 @@
 
                     <div>
                         <label>Fdid</label>
+                        <!--
                         <div>
                             <p:inputText value="#{authorityControlView.item.fdid}"/>
                         </div>
+                        -->
+
+                        <div>
+                            <p:selectOneMenu id="fdidSelectBox"
+                                             value="#{authorityControlView.item.fdid}">
+
+                                <f:selectItems value="#{FieldDefinitionView.itemList}"
+                                               var="select_user_var"
+                                               itemLabel="#{select_user_var.fdid}"
+                                               itemValue="#{select_user_var.fdid}" />
+
+                            </p:selectOneMenu>
+                            <h:message for="fdidSelectBox" style="color:red" />
+
+                        </div>
+
                     </div>
 
                     <div>
@@ -36,31 +53,6 @@
                             <p:inputText value="#{authorityControlView.item.value}"/>
                         </div>
                     </div>
-
-                    <!-- TODO remove since the current user is the creator
-                    <div>
-                        <label>User</label>
-
-                        <div>
-                            <label class="control-label" for="userSelectBox">Select user</label>
-
-                            <div>
-                                <p:selectOneMenu id="userSelectBox"
-                                                 value="#{authorityControlView.item.userId}">
-
-                                    <f:selectItems value="#{userView.itemList}"
-                                                   var="select_user_var"
-                                                   itemLabel="#{select_user_var.username}"
-                                                   itemValue="#{select_user_var.userId}" />
-
-                                </p:selectOneMenu>
-                                <h:message for="userSelectBox" style="color:red" />
-
-                            </div>
-                        </div>
-
-                    </div>
-                    -->
 
                     <!-- Submit Button -->
 

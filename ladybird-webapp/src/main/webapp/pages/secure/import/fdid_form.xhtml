@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../../templates/template.xhtml">
+    <ui:define name="content">
+        <h4>Add fdid</h4>
+        <h:form id="FieldDefinitionForm" enctype="multipart/form-data">
+
+            <div class="control-group">
+                <span class="help-block">
+                    Add fdid.
+                     <p:messages id="messages_pf" showDetail="true" autoUpdate="true" closable="true"/>
+                 </span>
+            </div>
+
+            <div>
+                <label>Fdid</label>
+
+                <div>
+                    <p:inputText value="#{FieldDefinitionView.item.fdid}"/>
+                </div>
+            </div>
+
+            <div>
+                <label>Acid</label>
+
+                <div>
+                    <p:inputText value="#{FieldDefinitionView.item.acid}"/>
+                </div>
+            </div>
+
+            <div>
+                <label>Handle</label>
+
+                <div>
+                    <p:inputText value="#{FieldDefinitionView.item.handle}"/>
+                </div>
+            </div>
+
+            <div>
+                <label>Tooltip</label>
+
+                <div>
+                    <p:inputText value="#{FieldDefinitionView.item.tooltip}"/>
+                </div>
+            </div>
+
+            <div>
+                <label>Locked</label>
+
+                <div>
+                    <h:selectBooleanCheckbox value="#{FieldDefinitionView.item.locked}"/>
+
+                </div>
+            </div>
+
+            <div>
+                <label>Required</label>
+
+                <div>
+                    <h:selectBooleanCheckbox value="#{FieldDefinitionView.item.required}"/>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <h:commandButton value="Submit" styleClass="btn" action="#{FieldDefinitionView.save()}"/>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+
