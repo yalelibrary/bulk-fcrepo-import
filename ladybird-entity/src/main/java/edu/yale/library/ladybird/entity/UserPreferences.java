@@ -24,6 +24,13 @@ public class UserPreferences implements java.io.Serializable {
         this.projectId = projectId;
     }
 
+    @Override
+    public String toString() {
+        return "UserPreferences{"
+                + "userId=" + userId
+                + ", projectId=" + projectId
+                + '}';
+    }
 }
 
 

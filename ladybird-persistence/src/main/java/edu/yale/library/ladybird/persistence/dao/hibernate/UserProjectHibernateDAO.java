@@ -16,5 +16,13 @@ public class UserProjectHibernateDAO extends GenericHibernateDAO<UserProject, In
         q.setParameter("param", projectId);
         return q.list();
     }
+
+    @Override
+    public List<UserProject> findByUserId(int userId) {
+        final Query q = getSession().createQuery("from edu.yale.library.ladybird.entity.UserProject "
+                + "where userId = :param");
+        q.setParameter("param", userId);
+        return q.list();
+    }
 }
 

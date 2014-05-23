@@ -8,7 +8,6 @@
 <ui:composition template="../../templates/template.xhtml">
     <ui:define name="offcanvas">
         <a href="/ladybird-webapp/pages/secure/projects_form.xhtml" class="list-group-item">Add Project</a>
-        <a href="/ladybird-webapp/pages/secure/collections.xhtml" class="list-group-item">Collections</a>
         <a href="/ladybird-webapp/pages/secure/assign_project_access.xhtml"
            class="list-group-item">Assign Project Access</a>
     </ui:define>
@@ -31,8 +30,7 @@
                 <div class="" style="">
 
                     <p:contextMenu for="ProjectDatatable">
-                        <p:menuitem value="Watch" action="#{ProjectView.selectElement}"/>
-                        <p:menuitem value="See assigned users" action="#{ProjectView.selectAllUsersInProject}"/>
+                        <p:menuitem value="Find assigned users" action="#{ProjectView.selectAllUsersInProject}"/>
                     </p:contextMenu>
 
                     <!-- Data Table -->

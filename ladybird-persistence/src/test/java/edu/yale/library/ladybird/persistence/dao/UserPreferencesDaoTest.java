@@ -37,18 +37,25 @@ public class UserPreferencesDaoTest extends AbstractPersistenceTest {
     @Test
     public void testSave() {
         List<UserPreferences> list = new ArrayList<>();
+        List<UserPreferences> list2 = new ArrayList<>();
+
         final UserPreferences user = new UserPreferences();
         user.setProjectId(5);
         user.setUserId(1);
         try {
             dao.save(user);
             list = dao.findAll();
+            list2 = dao.findByUserId(1);
         } catch (Throwable e) {
+            e.printStackTrace();
             fail("Error testing saving or finding item");
         }
         assertEquals("Item count incorrect", list.size(), 1);
         assertEquals("Project value mismatch", (int) list.get(0).getProjectId(), 5);
         assertEquals("User value mismatch", (int) list.get(0).getUserId(), 1);
+
+        list2 = dao.findByUserId(1);
+        assertEquals("Project value mismatch", (int) list2.get(0).getProjectId(), 5);
     }
 
 }

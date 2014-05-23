@@ -8,18 +8,21 @@
 <ui:composition template="../../templates/template.xhtml">
 
     <ui:define name="content">
-        <h2>User Preferences</h2>
+        <h2>Preferences</h2>
 
-        <h:outputText value="Watching project #{sessionScope['projectId']}" rendered="#{not empty sessionScope['projectId']}" />
+        <h:outputText styleClass="alert-warning" value=" No project yet. " rendered="#{empty ProjectView.projectNames}" />
 
-        <h:form id="UserPreferencesForm" enctype="multipart/form-data">
+        <h:outputText styleClass="alert-warning" value=" No project assignment for you yet. "
+                      rendered="#{userPreferencesView.noAssignments()}" />
+
+        <h:form id="UserPreferencesForm" enctype="multipart/form-data" rendered="#{not userPreferencesView.noAssignments()}">
 
             <div>
 
                 <div>
                         <div>
                             <label class="control-label" for="projectSelectOneMenu">Default project </label>
-                            <h:outputText value=" No project yet. " rendered="#{empty ProjectView.projectNames}" />
+
 
                             <div>
                                 <p:selectOneMenu id="projectSelectOneMenu" value="#{userPreferencesView.defaultProject.label}" rendered="#{not empty ProjectView.projectNames}">
@@ -32,11 +35,11 @@
                                 <h:message for="projectSelectOneMenu" style="color:red" />
 
                                 <br/>
+
                                 <!-- Submit Button -->
 
-
                                 <h:commandButton id="jump_link" value="Submit"
-                                                 style="background-color:#fff" action="#{userPreferencesView.updatePreferences}"
+                                                 action="#{userPreferencesView.updatePreferences}"
                                                  ajax="false"
                                                  rendered="#{not empty ProjectView.projectNames}"/>
                             </div>

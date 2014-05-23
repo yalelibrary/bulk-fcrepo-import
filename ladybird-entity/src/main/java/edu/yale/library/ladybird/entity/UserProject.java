@@ -2,8 +2,10 @@ package edu.yale.library.ladybird.entity;
 
 import java.util.Date;
 
+/**
+ * Indicates user's role in a project
+ */
 public class UserProject implements java.io.Serializable {
-
 
     private Integer id;
     private Date date;

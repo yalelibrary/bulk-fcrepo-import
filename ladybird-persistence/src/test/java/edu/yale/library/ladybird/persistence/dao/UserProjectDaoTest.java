@@ -37,6 +37,7 @@ public class UserProjectDaoTest extends AbstractPersistenceTest {
     public void testSave() {
         List projectAList = null;
         List projectBList = null;
+        List projectByUserList = null;
 
         final String defaultProjectRole = "reader";
 
@@ -63,6 +64,8 @@ public class UserProjectDaoTest extends AbstractPersistenceTest {
 
             projectBList = dao.findByProjectId(otherProjectId);
 
+            projectByUserList = dao.findByUserId(2);
+
         } catch (Throwable e) {
             e.printStackTrace();
             fail("Error testing saving or finding item");
@@ -83,6 +86,9 @@ public class UserProjectDaoTest extends AbstractPersistenceTest {
         final UserProject otherDbEntry2 = (UserProject) projectBList.get(0);
         assertEquals("Value mismatch", otherDbEntry2.getProjectId(), other.getProjectId());
         assertEquals("Value mismatch", otherDbEntry2.getUserId(), other.getUserId());
+
+        UserProject userProject = (UserProject) projectByUserList.get(0);
+        assertEquals("Value mismatch", userProject.getProjectId(), otherProjectId);
     }
 
     private UserProject buildUserProject(final int userId, final int projectId, final String role) {

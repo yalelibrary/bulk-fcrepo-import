@@ -97,8 +97,8 @@ public class ProjectView extends AbstractView {
         this.selectedItem = selectedItem;
     }
 
+    @Deprecated
     public void selectElement() {
-        logger.debug("User watching session");
         saveInSession(selectedItem.getProjectId());
     }
 
@@ -106,6 +106,7 @@ public class ProjectView extends AbstractView {
         return "users_projects.xhtml?faces-redirect=true&project_id=" + selectedItem.getProjectId();
     }
 
+    @Deprecated
     private void saveInSession(final int projectId) {
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("projectId", projectId);
     }
