@@ -11,13 +11,13 @@
 
         <br/>
 
-        <h:link value="Add a user before adding creating value." outcome="user_manager_form"
-                rendered="#{(empty userView.itemList) and (ProjectView.checkAddProjectPermission())}" />
+        <h:outputText value="Your role does not have permissions to add an acid."
+                      styleClass="alert alert-danger"
+                      rendered="#{not authorityControlView.checkAddAcidPermission()}"/>
 
-        <h:outputText value="Your role does not have permissions to add a project." styleClass="alert alert-danger"
-                      rendered="#{not ProjectView.checkAddProjectPermission()}"/>
+        <h:form id="AcidCreateForm" enctype="multipart/form-data"
+                rendered="#{(not empty userView.itemList) and (authorityControlView.checkAddAcidPermission())}">
 
-        <h:form id="AcidCreateForm" enctype="multipart/form-data" rendered="#{(not empty userView.itemList) and (ProjectView.checkAddProjectPermission())}">
             <br/>
 
             <div>

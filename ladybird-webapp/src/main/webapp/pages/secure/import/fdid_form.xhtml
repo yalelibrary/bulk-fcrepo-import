@@ -8,14 +8,13 @@
 <ui:composition template="../../../templates/template.xhtml">
     <ui:define name="content">
         <h4>Add fdid</h4>
-        <h:form id="FieldDefinitionForm" enctype="multipart/form-data">
 
-            <div class="control-group">
-                <span class="help-block">
-                    Add fdid.
-                     <p:messages id="messages_pf" showDetail="true" autoUpdate="true" closable="true"/>
-                 </span>
-            </div>
+        <h:outputText value="Your role does not have permissions to add an fdid."
+                      styleClass="alert alert-danger"
+                      rendered="#{not FieldDefinitionView.checkAddFdidPermission()}"/>
+
+
+        <h:form id="FieldDefinitionForm" enctype="multipart/form-data" rendered="#{FieldDefinitionView.checkAddFdidPermission()}">
 
             <div>
                 <label>Fdid</label>
