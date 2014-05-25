@@ -45,6 +45,9 @@ public class UserPreferencesView extends AbstractView {
     @Inject
     private UserProjectDAO userProjectDAO;
 
+    @Inject
+    private AuthUtil authUtil;
+
     @PostConstruct
     public void init() {
         initFields();
@@ -57,7 +60,7 @@ public class UserPreferencesView extends AbstractView {
      */
     public String updatePreferences() {
         try {
-            userPreferences = new UserPreferences(getUserId(getNetid()),getProjectId(defaultProject));
+            userPreferences = new UserPreferences(authUtil.getCurrentUserId(),getProjectId(defaultProject));
             dao.saveOrUpdateList(Collections.singletonList(userPreferences));
             return NavigationCase.OK.toString();
         } catch (Exception e) {
@@ -77,27 +80,6 @@ public class UserPreferencesView extends AbstractView {
         return projectList.get(0).getProjectId(); //TODO only one
     }
 
-    private String getNetid() {
-        return FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("netid").toString();
-    }
-
-    /**
-     * Match net id to user id. Subject to removal.
-     * @param netid
-     * @return
-     */
-    private int getUserId(final String netid) {
-        try {
-            final List<User> userList = userDAO.findByUsername(netid);
-
-            if (userList.isEmpty()) {
-                throw new NoSuchElementException("User not found with netid= " +  netid);
-            }
-            return userList.get(0).getUserId(); //TODO only one
-        } catch (Exception e) {
-            throw e;
-        }
-    }
 
     public Project getDefaultProject() {
         return defaultProject;
@@ -111,7 +93,7 @@ public class UserPreferencesView extends AbstractView {
         Project project = null;
 
         try {
-            final int userId = getUserId(getNetid());
+            final int userId = authUtil.getCurrentUserId();
 
             final List<UserPreferences> userPreferencesList = entityDAO.findByUserId(userId);
 
@@ -132,7 +114,7 @@ public class UserPreferencesView extends AbstractView {
     public boolean noAssignments() {
         List<UserProject> userProjectList = new ArrayList<>();
         try {
-            userProjectList = userProjectDAO.findByUserId(getUserId(getNetid()));
+            userProjectList = userProjectDAO.findByUserId(authUtil.getCurrentUserId());
         } catch (Exception e) {
             logger.error(e.getMessage());
         }

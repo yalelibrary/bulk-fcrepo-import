@@ -106,5 +106,7 @@ public class DaoHibernateModule extends AbstractModule {
         bind(ProgressEventChangeRecorder.class);
 
         bind(JobsManager.class).to(DefaultJobsManager.class);
+
+        bind(AuthUtil.class);
     }
 }

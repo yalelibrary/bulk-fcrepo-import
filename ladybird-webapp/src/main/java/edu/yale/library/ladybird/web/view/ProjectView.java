@@ -38,6 +38,9 @@ public class ProjectView extends AbstractView {
     @Inject
     private UserDAO userDao;
 
+    @Inject
+    private AuthUtil authUtil;
+
     @PostConstruct
     public void init() {
         initFields();
@@ -112,7 +115,6 @@ public class ProjectView extends AbstractView {
     }
 
     /**
-       @see #getCurrentUser() Gets current user via session netid
      * @see PermissionsValue change Permissions to map if feasible
      * @return whether the action has permissions. false if action not found or permissions false.
      */
@@ -120,7 +122,7 @@ public class ProjectView extends AbstractView {
 
         try {
             //1. Get user
-            final User user = getCurrentUser();
+            final User user = authUtil.getCurrentUser();
 
             // 2. Get permissions associated with this role
             final Roles roles = Roles.fromString(user.getRole());
@@ -137,14 +139,6 @@ public class ProjectView extends AbstractView {
         }
         return false;
     }
-
-    //TODO replace with context user
-    public User getCurrentUser() {
-        final String netid = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("netid").toString();
-        final User user = userDao.findByUsername(netid).get(0);
-        return user;
-    }
-
 
 }
 
