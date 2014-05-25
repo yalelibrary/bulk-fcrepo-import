@@ -8,6 +8,11 @@ public class UserPreferences implements java.io.Serializable {
     public UserPreferences() {
     }
 
+    public UserPreferences(final Integer userId, final Integer projectId) {
+        this.userId = userId;
+        this.projectId = projectId;
+    }
+
     public Integer getUserId() {
         return this.userId;
     }

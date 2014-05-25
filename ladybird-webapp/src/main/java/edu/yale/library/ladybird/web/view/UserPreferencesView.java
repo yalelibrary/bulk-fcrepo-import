@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -50,15 +51,13 @@ public class UserPreferencesView extends AbstractView {
         dao = entityDAO;
     }
 
-    //TODO test
+    /**
+     * Create or update default project
+     * @return NavigationCase result
+     */
     public String updatePreferences() {
-        userPreferences = new UserPreferences(); //TODO
-        userPreferences.setProjectId(getProjectId(defaultProject));
-        userPreferences.setUserId(getUserId(getNetid()));
-
         try {
-            //logger.debug("Default project={}", defaultProject.toString());
-            //logger.debug("Saving entity={}", userPreferences.toString());
+            userPreferences = new UserPreferences(getUserId(getNetid()),getProjectId(defaultProject));
             dao.saveOrUpdateList(Collections.singletonList(userPreferences));
             return NavigationCase.OK.toString();
         } catch (Exception e) {
@@ -75,7 +74,11 @@ public class UserPreferencesView extends AbstractView {
      */
     private int getProjectId(final Project defaultProject) {
         final List<Project> projectList = projectDAO.findByLabel(defaultProject.getLabel());
-        return projectList.get(0).getProjectId(); //TODO only one item anyway
+        return projectList.get(0).getProjectId(); //TODO only one
+    }
+
+    private String getNetid() {
+        return FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("netid").toString();
     }
 
     /**
@@ -84,37 +87,48 @@ public class UserPreferencesView extends AbstractView {
      * @return
      */
     private int getUserId(final String netid) {
-        final List<User> userList = userDAO.findByUsername(netid);
-        return userList.get(0).getUserId(); //TODO only one item anyway
-    }
+        try {
+            final List<User> userList = userDAO.findByUsername(netid);
 
-    private String getNetid() {
-        return FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("netid").toString();
+            if (userList.isEmpty()) {
+                throw new NoSuchElementException("User not found with netid= " +  netid);
+            }
+            return userList.get(0).getUserId(); //TODO only one
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     public Project getDefaultProject() {
         return defaultProject;
     }
 
-    //TODO test
+    /**
+     * Get default project for current user.
+     * @return project label or null
+     */
     public Project getDefaultProjectForCurrentUser() {
         Project project = null;
 
         try {
-            final List<UserPreferences> userPreferencesList = entityDAO.findByUserId(getUserId(getNetid()));
-            UserPreferences userPreferences1 = userPreferencesList.get(0);
-            int projectId = userPreferences1.getProjectId();
+            final int userId = getUserId(getNetid());
+
+            final List<UserPreferences> userPreferencesList = entityDAO.findByUserId(userId);
+
+            if (userPreferencesList.isEmpty()) {
+                logger.debug("No default project for current user.");
+                return null; //TODO
+            }
+
+            final UserPreferences userPreferences = userPreferencesList.get(0); //TODO only one
+            int projectId = userPreferences.getProjectId();
             project = projectDAO.findByProjectId(projectId);
         } catch (final Exception e) {
-            //TODO ignore first user not in the system
-            if (userDAO.findAll().size() != 0) {
-                logger.error("Error finding default project for current user", e);
-            }
+            logger.error("Error finding default user", e.getMessage());
         }
         return project;
     }
 
-    //TODO move to userprojectview
     public boolean noAssignments() {
         List<UserProject> userProjectList = new ArrayList<>();
         try {
@@ -128,7 +142,4 @@ public class UserPreferencesView extends AbstractView {
     public void setDefaultProject(Project defaultProject) {
         this.defaultProject = defaultProject;
     }
-
 }
-
-

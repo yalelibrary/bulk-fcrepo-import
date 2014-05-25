@@ -8,19 +8,23 @@
 <ui:composition template="../../templates/template.xhtml">
     <ui:define name="content">
         <div class="jumbotron">
-            <h3>Activity</h3>
+            <h4>Activity</h4>
 
             Last login session activity
-                <h:outputText value="#{welcomeView.principalLastActTime}">
-                        <f:converter converterId="org.ocpsoft.PrettyTimeConverter"/>
-                </h:outputText>
+            <h:outputText value="#{welcomeView.principalLastActTime}">
+                <f:converter converterId="org.ocpsoft.PrettyTimeConverter"/>
+            </h:outputText>
 
 
-            <h3>Project</h3>
+            <h4>Project</h4>
 
-            <h:outputText value="User not assigned to any project" styleClass="alert alert-warning"
-                        rendered="#{userPreferencesView.defaultProjectForCurrentUser eq null}"/>
-                <h:outputText value="#{userPreferencesView.defaultProjectForCurrentUser.label}"/>
+            <h:outputText value="No project assignments yet" styleClass="alert alert-warning"
+                          rendered="#{userPreferencesView.noAssignments()}"/>
+
+            <h:outputText value="No default project yet" styleClass="alert alert-warning"
+                          rendered="#{userPreferencesView.defaultProjectForCurrentUser eq null}"/>
+
+            <h:outputText value="#{userPreferencesView.defaultProjectForCurrentUser.label}"/>
 
         </div>
     </ui:define>
