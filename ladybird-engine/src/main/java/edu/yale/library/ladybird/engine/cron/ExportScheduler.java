@@ -19,8 +19,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ExportScheduler {
     private final Logger logger = getLogger(this.getClass());
 
-    public static final String DEFAULT_GROUP = "EXJ";
-    public static final String DEFAULT_EXPORT_JOB_ID = "export_job";
+    private static final String DEFAULT_GROUP = "EXJ";
+    private static final String DEFAULT_EXPORT_JOB_ID = "export_job";
 
     /**
      * Schedules an export cron job. To be called from kernel at start up.
@@ -106,5 +106,18 @@ public class ExportScheduler {
         JobDetail job = JobBuilder.newJob(klass)
                 .withIdentity(jobName, "EXJ").build();
         return job;
+    }
+
+    /** used for unscheduling */
+    public static String getExportJobIdentifier() {
+        return ExportScheduler.DEFAULT_GROUP + "."  + ExportScheduler.DEFAULT_EXPORT_JOB_ID;
+    }
+
+    public static String getDefaultGroup() {
+        return DEFAULT_GROUP;
+    }
+
+    public static String getDefaultExportJobId() {
+        return DEFAULT_EXPORT_JOB_ID;
     }
 }

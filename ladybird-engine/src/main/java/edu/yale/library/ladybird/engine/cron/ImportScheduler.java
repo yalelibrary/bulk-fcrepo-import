@@ -21,8 +21,8 @@ public class ImportScheduler {
 
     private final Logger logger = getLogger(this.getClass());
 
-    public static final String DEFAULT_GROUP = "IMJ";
-    public static final String DEFAULT_IMPORT_JOB_ID = "import_job";
+    private static final String DEFAULT_GROUP = "IMJ";
+    private static final String DEFAULT_IMPORT_JOB_ID = "import_job";
 
 
     /**
@@ -98,6 +98,15 @@ public class ImportScheduler {
         JobDetail job = JobBuilder.newJob(klass)
                 .withIdentity(jobName, "IMJ").build();
         return job;
+    }
+
+    /** currently being used for unscheduling */
+    public static String getImportJobIdentifier() {
+        return ImportScheduler.DEFAULT_GROUP + "."  + ImportScheduler.DEFAULT_IMPORT_JOB_ID;
+    }
+
+    public static String getDefaultGroup() {
+        return DEFAULT_GROUP;
     }
 
 }

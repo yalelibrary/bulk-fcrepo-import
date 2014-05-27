@@ -16,6 +16,7 @@ import javax.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -66,31 +67,23 @@ public class CronView extends AbstractView {
         final String jobIdentifier = selectedItem.getKey().toString();
         boolean jobRemoved = false;
         logger.debug("Unscheduling job={}", jobIdentifier);
-        if (jobIdentifier.equals(getImportJobIdentifier())) {
+        if (jobIdentifier.equals(ImportScheduler.getImportJobIdentifier())) {
             importJobScheduler.cancel();
             jobRemoved = removeJob(jobIdentifier);
-        } else if (jobIdentifier.equals(getExportJobIdentifier())) {
+        } else if (jobIdentifier.equals(ExportScheduler.getExportJobIdentifier())) {
             exportScheduler.cancel();
             jobRemoved = removeJob(jobIdentifier);
         }
         return jobRemoved ? NavigationCase.OK.toString() : NavigationCase.FAIL.toString();
     }
 
-    private String getImportJobIdentifier() {
-        return ImportScheduler.DEFAULT_GROUP + "."  + ImportScheduler.DEFAULT_IMPORT_JOB_ID;
-    }
-
-    private String getExportJobIdentifier() {
-        return ExportScheduler.DEFAULT_GROUP + "."  + ExportScheduler.DEFAULT_EXPORT_JOB_ID;
-    }
-
-    //TODO
     private boolean removeJob(final String jobIdentifier) {
-        final List<JobDetail> readonlyJobs = new ArrayList(jobs);
-        for (int i = 0; i < readonlyJobs.size(); i++) {
-            if (readonlyJobs.get(i).getKey().toString().equals(jobIdentifier)) {
-                jobs.remove(i);
-                logger.debug("Job removed={}", readonlyJobs.get(i).toString());
+        final ListIterator<JobDetail> iterator = jobs.listIterator();
+        while (iterator.hasNext()) {
+            JobDetail j = iterator.next();
+            if (j.getKey().toString().equals(jobIdentifier)) {
+                logger.debug("Job removed={}", jobIdentifier);
+                iterator.remove();
                 return true;
             }
         }

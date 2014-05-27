@@ -56,8 +56,11 @@ public class CronSchedulerView extends AbstractView {
 
     private void scheduleImportExport() throws Exception {
         try {
-            if (!isCronScheduled()) {
+            if (!isImportCronScheduled()) {
                 importScheduler.scheduleJob(getCronBean().getImportCronExpression());
+            }
+
+            if (!isExportCronScheduled()) {
                 exportScheduler.scheduleJob(getCronBean().getExportCronExpression());
             }
         } catch (Exception e) {
@@ -68,10 +71,26 @@ public class CronSchedulerView extends AbstractView {
     //TODO robust mechanism to ensure that an import/export pair exists
     public boolean isCronScheduled() {
         final List<JobDetail> jobs = jobsManager.getJobs();
-        if (!jobs.toString().contains(ImportScheduler.DEFAULT_GROUP) && !jobs.toString().contains(ExportScheduler.DEFAULT_EXPORT_JOB_ID)) {
-            //logger.debug("Job dtails={}", jobs);
+        if (!jobs.toString().contains(ImportScheduler.getDefaultGroup()) || !jobs.toString().contains(ExportScheduler.getDefaultExportJobId())) {
             return false;
+        }
+        return true;
+    }
 
+    //TODO robust mechanism to ensure that an import/export pair exists
+    public boolean isImportCronScheduled() {
+        final List<JobDetail> jobs = jobsManager.getJobs();
+        if (!jobs.toString().contains(ImportScheduler.getDefaultGroup())) {
+            return false;
+        }
+        return true;
+    }
+
+    //TODO robust mechanism to ensure that an import/export pair exists
+    public boolean isExportCronScheduled() {
+        final List<JobDetail> jobs = jobsManager.getJobs();
+        if (!jobs.toString().contains(ExportScheduler.getDefaultExportJobId())) {
+            return false;
         }
         return true;
     }

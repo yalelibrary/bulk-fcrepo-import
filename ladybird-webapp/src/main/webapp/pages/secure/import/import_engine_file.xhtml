@@ -21,8 +21,8 @@
             <h:outputText styleClass="alert alert-warning"
                           value="Missing Configuration"
                           rendered="#{(empty userView.itemList)
-                            and (empty ImportSourceView.itemList) and (empty ProjectView.itemList)
-                            and (not cronSchedulerView.cronScheduled)}"/>
+                            or (empty ImportSourceView.itemList) or (empty ProjectView.itemList)
+                            or (not cronSchedulerView.cronScheduled)}"/>
         </div>
 
         <br/>
@@ -53,7 +53,7 @@
         <br/>
 
         <h:form id="UserForm" enctype="multipart/form-data" rendered="#{(not empty userView.itemList)
-            and (not empty ImportSourceView.itemList) and (not empty ProjectView.itemList)}">
+            and (not empty ImportSourceView.itemList) and (not empty ProjectView.itemList) and (cronSchedulerView.cronScheduled)}">
 
            <div>
                 <label>Excel File</label>

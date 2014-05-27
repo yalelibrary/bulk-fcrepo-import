@@ -7,7 +7,7 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../../templates/template.xhtml">
     <ui:define name="content">
-        <h2>Cron Scheduling</h2>
+        <h3>Cron Scheduling</h3>
         <h:form id="CronScheduleForm" enctype="multipart/form-data">
 
             <div class="control-group">
@@ -21,7 +21,10 @@
                 <label>Import Cron</label>
 
                 <div>
-                    <p:inputText value="#{cronSchedulerView.cronBean.importCronExpression}"/>
+                    <p:inputText value="#{cronSchedulerView.cronBean.importCronExpression}"
+                                 rendered="#{not cronSchedulerView.importCronScheduled}"/>
+                    <h:outputLabel value="Entry already exists. Unschedule first."
+                                   rendered="#{cronSchedulerView.importCronScheduled}"/>
                 </div>
             </div>
 
@@ -29,12 +32,16 @@
                 <label>Export Cron</label>
 
                 <div>
-                    <p:inputText value="#{cronSchedulerView.cronBean.exportCronExpression}"/>
+                    <p:inputText value="#{cronSchedulerView.cronBean.exportCronExpression}"
+                                 rendered="#{not cronSchedulerView.exportCronScheduled}"/>
+                    <h:outputLabel value="Entry already exists. Unschedule first."
+                                   rendered="#{cronSchedulerView.exportCronScheduled}"/>
                 </div>
             </div>
 
             <!-- Submit Button -->
-            <h:commandButton value="Submit" styleClass="btn" action="#{cronSchedulerView.save}"/>
+            <h:commandButton value="Submit" styleClass="btn" action="#{cronSchedulerView.save}"
+                             rendered="#{not cronSchedulerView.cronScheduled}"/>
 
         </h:form>
     </ui:define>

@@ -8,7 +8,7 @@
 <ui:composition template="../../../templates/template.xhtml">
 
     <ui:define name="content">
-        <h2>Import Scheduler</h2>
+        <h3>Import Scheduler</h3>
 
         <br/>
 
@@ -21,9 +21,8 @@
             <span>
 
                 <h:outputLink value="/ladybird-webapp/web/pages/secure/import/import_engine_file.xhtml"
-                              rendered="#{empty monitorView.itemList}"
-                              styleClass="btn btn-primary btn-warning">
-                Add Import
+                              styleClass="btn btn-primary btn-primary">
+                Add Import Job
             </h:outputLink>
             </span>
         </div>
@@ -64,7 +63,9 @@
                         </p:column>
 
                         <p:column headerText="Time Scheduled">
-                            <h:outputText value="#{monitorItem.date}"/>
+                            <h:outputText value="#{monitorItem.date}">
+                                <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                            </h:outputText>
                         </p:column>
 
                         <p:column headerText="Progress">
