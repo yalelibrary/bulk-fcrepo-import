@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../../templates/template.xhtml">
+    <ui:define name="content">
+        <h2>UserExportField</h2>
+        <h:form id="UserExportFieldForm" enctype="multipart/form-data">
+            <br/>
+
+            <div>
+                <div>
+
+                    <!-- Data Table -->
+
+                    <p:dataTable id="UserExportFieldDatatable" value="#{userExportFieldView.itemList}"
+                                 var="item" paginator="false"
+                                 editable="false">
+
+                        <!--
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="UserId"/>
+                            </f:facet>
+                            <h:outputText value="#{item.userId}"/>
+                        </p:column>
+                        -->
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Fdid"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fdid}"/>
+                        </p:column>
+
+                        <p:column width="80" rendered="false">
+                            <f:facet name="header">
+                                <h:outputText value="Remove?"/>
+                            </f:facet>
+                            <p:commandButton icon="ui-icon-close" title="remove from db"
+                                             actionListener="#{userExportFieldView.remove(item)}"
+                                             update="UserExportFieldDatatable"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

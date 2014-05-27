@@ -30,6 +30,6 @@
         <mapping resource="test-hbm/Permissions.hbm.xml"/>
         <mapping resource="test-hbm/AuthorityControl.hbm.xml"/>
         <mapping resource="test-hbm/AuthorityControlVersion.hbm.xml"/>
-
+        <mapping resource="test-hbm/UserExportField.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

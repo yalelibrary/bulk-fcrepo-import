@@ -1,9 +1,6 @@
 package edu.yale.library.ladybird.web.view;
 
-import edu.yale.library.ladybird.entity.Project;
-import edu.yale.library.ladybird.entity.ProjectRoles;
-import edu.yale.library.ladybird.entity.UserProject;
-import edu.yale.library.ladybird.entity.UserProjectBuilder;
+import edu.yale.library.ladybird.entity.*;
 import edu.yale.library.ladybird.persistence.dao.UserProjectDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +26,11 @@ public class AssignProjectFieldView extends AbstractView implements Serializable
     private final Logger logger = LoggerFactory.getLogger(AssignProjectFieldView.class);
 
     private int userId;
+
     private ProjectRoles projectRole;
+
+    private FieldDefinition fieldDefintion;
+
     private Project defaultProject = new Project();
 
     @Inject
@@ -78,5 +79,13 @@ public class AssignProjectFieldView extends AbstractView implements Serializable
 
     public void setDefaultProject(Project defaultProject) {
         this.defaultProject = defaultProject;
+    }
+
+    public FieldDefinition getFieldDefintion() {
+        return fieldDefintion;
+    }
+
+    public void setFieldDefintion(FieldDefinition fieldDefintion) {
+        this.fieldDefintion = fieldDefintion;
     }
 }

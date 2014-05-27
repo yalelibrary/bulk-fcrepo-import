@@ -8,9 +8,7 @@
 <ui:composition template="../../templates/template.xhtml">
     <ui:define name="content">
         <h2>Metadata Access Assignment</h2>
-        <h:form id="UserProjectFieldForm" enctype="multipart/form-data"
-                styleClass=""
-                style="">
+        <h:form id="UserProjectFieldForm" enctype="multipart/form-data">
 
             <h4> User Project Field Metadata Role Assignment</h4>
             <br/>
@@ -22,6 +20,7 @@
                         <h:outputText value=" No project yet. Metadata Roles cannot be assigned."
                                       rendered="#{empty ProjectView.projectNames}"/>
 
+                        <!-- project role -->
                         <div>
                             <p:selectOneMenu id="projectRoleSelectOneMenu"
                                              value="#{assignProjectView.projectRole}"
@@ -35,23 +34,35 @@
                             <h:message for="projectRoleSelectOneMenu" style="color:red"/>
 
                         </div>
+
+                        <!-- field role -->
+
                         <div>
-                            <label class="control-label" for="fdidValue">Field</label>
+                            <label class="control-label" for="fieldSelectOneMenu">Field</label>
                             <h:outputText value=" No project yet."
                                           rendered="#{empty FieldDefinitionView.itemList}"/>
 
                             <div>
-                               <h:outputText id="fdidValue" value="Cataloger" />
+                                <p:selectOneMenu id="fieldSelectOneMenu"
+                                                 value="#{assignProjectFieldView.fieldDefintion}"
+                                                 rendered="#{not empty ProjectView.projectNames}">
+
+                                    <f:selectItems value="#{FieldDefinitionView.itemList}"
+                                                   var="select_field_var"
+                                                   itemLabel="#{select_field_var.fdid}"
+                                                   itemValue="#{select_field_var}"/>
+                                </p:selectOneMenu>
+                                <h:message for="fieldSelectOneMenu" style="color:red"/>
                             </div>
+
                         </div>
+
                         <div>
                             <!-- Submit Button -->
                             <h:commandButton id="jump_link"
                                              value="Submit Metadata Access"
-                                             style="background-color:#fff"
                                              action="#{assignProjectFieldView.save}"
-                                             ajax="true"
-                                             rendered="#{not empty ProjectView.projectNames}"/>
+                                             ajax="true" />
                         </div>
 
                 </div>
