@@ -2,7 +2,6 @@ package edu.yale.library.ladybird.web.view;
 
 
 import edu.yale.library.ladybird.entity.Project;
-import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.entity.UserPreferences;
 import edu.yale.library.ladybird.entity.UserProject;
 import edu.yale.library.ladybird.persistence.dao.ProjectDAO;
@@ -14,13 +13,11 @@ import org.slf4j.Logger;
 import javax.faces.bean.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -60,7 +57,7 @@ public class UserPreferencesView extends AbstractView {
      */
     public String updatePreferences() {
         try {
-            userPreferences = new UserPreferences(authUtil.getCurrentUserId(),getProjectId(defaultProject));
+            userPreferences = new UserPreferences(authUtil.getCurrentUserId(), getProjectId(defaultProject));
             dao.saveOrUpdateList(Collections.singletonList(userPreferences));
             return NavigationCase.OK.toString();
         } catch (Exception e) {

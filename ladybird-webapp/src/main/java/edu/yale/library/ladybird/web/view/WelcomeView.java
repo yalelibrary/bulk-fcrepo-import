@@ -13,18 +13,9 @@ import java.util.Date;
 @ManagedBean
 public class WelcomeView {
 
-    public static final String webXmlPrincipalId = "netid";
     public static final String webXmlPrincipalLoginIdentifier = "netid-last-act-time";
 
     private Logger logger = LoggerFactory.getLogger(WelcomeView.class);
-
-    public String getPrincipal() {
-        try {
-            return getSessionAttribute(webXmlPrincipalId).toString();
-        } catch (NullPointerException e) {
-            return "";
-        }
-    }
 
     public Date getPrincipalLastActTime() {
         try {

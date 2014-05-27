@@ -66,7 +66,7 @@ public class AuthUtil extends AbstractView {
      * @return User
      * @throws NoSuchElementException if no such user name exist
      */
-    public User getCurrentUser(){
+    public User getCurrentUser() {
         final String netid = getNetid();
 
         final List<User> list = userDAO.findByUsername(netid);

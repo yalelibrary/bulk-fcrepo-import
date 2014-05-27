@@ -94,7 +94,7 @@ public class SearchView extends AbstractView {
         });
     }
 
-    private String getCurrentUser() {
+     private String getCurrentUser() {
         return FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("netid").toString();
     }
 }

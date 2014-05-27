@@ -2,7 +2,6 @@ package edu.yale.library.ladybird.persistence.dao.hibernate;
 
 
 import edu.yale.library.ladybird.entity.UserPreferences;
-import edu.yale.library.ladybird.entity.UserProject;
 import edu.yale.library.ladybird.persistence.dao.UserPreferencesDAO;
 import org.hibernate.Query;
 
