@@ -16,4 +16,12 @@ public class AbstractView<T> {
     public void initFields() {
         DaoInitializer.injectFields(this);
     }
+
+    public String ok() {
+        return NavigationCase.OK.toString();
+    }
+
+    public String fail() {
+        return NavigationCase.FAIL.toString();
+    }
 }

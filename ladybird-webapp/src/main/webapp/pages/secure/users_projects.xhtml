@@ -72,6 +72,7 @@
                             <h:commandButton value="Metadata Perm. " action="#{assignProjectFieldView.assign}">
                                 <f:param name="userId" value="#{item.userId}" />
                                 <f:param name="projectId" value="#{param['project_id']}" />
+                                <f:param name="dataTableProjectId" value="#{item.projectId}" />
                             </h:commandButton>
                         </p:column>
 

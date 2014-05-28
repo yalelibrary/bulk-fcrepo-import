@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template.xhtml">
+    <ui:define name="content">
+        <h4>Copy Metadata Access</h4>
+        <h:form id="UserProjectFieldForm" enctype="multipart/form-data">
+
+            <br/>
+
+            <div>
+
+                <div>
+
+                    <!-- source user -->
+                    <div>
+
+                        <label class="control-label" for="userSelectOneMenu">Assignee </label>
+
+                        <div>
+
+                            <p:selectOneMenu id="userSelectOneMenu"
+                                             value="#{copyPermissionsView.sourceUser}">
+
+                                <f:selectItems value="#{userView.itemList}"
+                                               var="select_user_var"
+                                               itemLabel="#{select_user_var.username}"
+                                               itemValue="#{select_user_var.userId}"/>
+                            </p:selectOneMenu>
+                            <h:message for="userSelectOneMenu" style="color:red"/>
+
+                        </div>
+                    </div>
+
+
+                    <!-- dest user -->
+                    <div>
+
+                        <label class="control-label" for="userDestSelectOneMenu">User </label>
+
+                        <div>
+
+                            <p:selectOneMenu id="userDestSelectOneMenu"
+                                             value="#{copyPermissionsView.destUser}">
+
+                                <f:selectItems value="#{userView.itemList}"
+                                               var="select_user_dest_var"
+                                               itemLabel="#{select_user_dest_var.username}"
+                                               itemValue="#{select_user_dest_var.userId}"/>
+                            </p:selectOneMenu>
+                            <h:message for="userSelectOneMenu" style="color:red"/>
+
+                        </div>
+                    </div>
+
+
+                    <!-- project -->
+                    <div>
+
+                        <label class="control-label" for="projectSelectOneMenu">Project </label>
+
+                        <div>
+                            <p:selectOneMenu id="projectSelectOneMenu"
+                                             value="#{copyPermissionsView.project}">
+
+                                <f:selectItems value="#{ProjectView.itemList}"
+                                               var="select_project_var"
+                                               itemLabel="#{select_project_var.label}"
+                                               itemValue="#{select_project_var.projectId}"/>
+                            </p:selectOneMenu>
+                            <h:message for="projectSelectOneMenu" style="color:red"/>
+                        </div>
+
+                    </div>
+
+
+                    <div>
+                        <!-- Submit Button -->
+                        <h:commandButton id="jump_link"
+                                         value="Submit Metadata Access"
+                                         action="#{copyPermissionsView.copy}">
+                        </h:commandButton>
+
+                    </div>
+
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

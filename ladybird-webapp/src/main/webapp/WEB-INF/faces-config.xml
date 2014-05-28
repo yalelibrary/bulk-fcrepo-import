@@ -140,5 +140,13 @@
             <redirect/>
         </navigation-case>
     </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/pages/secure/copy_metadata_access.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>ok</from-outcome>
+            <to-view-id>/pages/secure/user_project_field.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+    </navigation-rule>
 
 </faces-config>

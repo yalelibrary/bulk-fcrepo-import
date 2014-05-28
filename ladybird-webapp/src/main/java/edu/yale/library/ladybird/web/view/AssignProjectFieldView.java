@@ -60,6 +60,7 @@ public class AssignProjectFieldView extends AbstractView implements Serializable
     }
 
     //TODO use a converter (for fdid)
+    //TODO update if the value already exists
     public String save() {
 
         //int userId = getParam("user_id");
@@ -96,8 +97,15 @@ public class AssignProjectFieldView extends AbstractView implements Serializable
     public String assign() {
         final Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         int userId = Integer.parseInt(params.get("userId"));
-        int projectId = Integer.parseInt(params.get("projectId"));
 
+        //Reads either the originating get request parameter or datatable id:
+        // TODO The latter case is to make page work where there's not project_id=n in the url.
+        int projectId;
+        if (params.get("projectId") != null && !params.get("projectId").isEmpty()) {
+            projectId = Integer.parseInt(params.get("projectId"));
+        } else {
+            projectId = Integer.parseInt(params.get("dataTableProjectId"));
+        }
         return getRedirectWithParam(NavigationUtil.USER_METADATA_ACCESS_PAGE, userId, projectId);
     }
 
