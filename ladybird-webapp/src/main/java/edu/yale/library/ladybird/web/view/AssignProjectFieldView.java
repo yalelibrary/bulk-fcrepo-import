@@ -1,18 +1,20 @@
 package edu.yale.library.ladybird.web.view;
 
-import edu.yale.library.ladybird.entity.*;
+import edu.yale.library.ladybird.entity.ProjectRoles;
+import edu.yale.library.ladybird.entity.UserProjectField;
+import edu.yale.library.ladybird.entity.UserProjectFieldBuilder;
 import edu.yale.library.ladybird.persistence.dao.UserProjectFieldDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 
 /**
  *
@@ -26,13 +28,16 @@ public class AssignProjectFieldView extends AbstractView implements Serializable
 
     private final Logger logger = LoggerFactory.getLogger(AssignProjectFieldView.class);
 
-    private User user;
-
+    //TODO distinguish between project role and field role?
     private ProjectRoles projectRole;
 
-    private FieldDefinition fieldDefintion;
+    //private FieldDefinition fieldDefintion = new FieldDefinition(); //assigned as String
 
-    private Project project = new Project();
+    private int fieldDefintion;
+
+    //private Project project = new Project(); //passed
+
+    //private User user; //passed
 
     @Inject
     private UserProjectFieldDAO userProjectFieldDAO;
@@ -40,8 +45,6 @@ public class AssignProjectFieldView extends AbstractView implements Serializable
     @PostConstruct
     public void init() {
         initFields();
-        //logger.debug("user_id={}", FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("user_id"));
-        //logger.debug("Project_id={}", FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("project_id"));
     }
 
     public ProjectRoles[] getRoles() {
@@ -56,22 +59,29 @@ public class AssignProjectFieldView extends AbstractView implements Serializable
         this.projectRole = projectRole;
     }
 
+    //TODO use a converter (for fdid)
     public String save() {
 
-        //logger.debug("user_id={}", FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("user_id"));
-        //logger.debug("Project_id={}", FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("project_id"));
+        //int userId = getParam("user_id");
+       // int projectId = getParam("project_id");
 
-        logger.debug("Saving project field label={} with role={} for user={}", project.getLabel(),
-                projectRole.name(), user.getUsername());
-        final UserProjectField userProject = new  UserProjectFieldBuilder().
-                setProjectId(project.getProjectId()).
-                setUserId(user.getUserId()).
-                setFdid(fieldDefintion.getFdid()).
+        final Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        int userId = Integer.parseInt(params.get("userId"));
+        int projectId = Integer.parseInt(params.get("projectId"));
+
+        logger.debug("Saving project id={} with field={} with role={} for user={}", projectId, fieldDefintion,
+                projectRole.name(), userId);
+
+        final UserProjectField userProjectField = new UserProjectFieldBuilder().
+                setProjectId(projectId).
+                setUserId(userId).
+                setFdid(fieldDefintion).
                 setRole(projectRole.name()).
                 setDate(new Date()).
                 createUserProjectField();
         try {
-            userProjectFieldDAO.save(userProject);
+            logger.debug("Saving entity={}", userProjectField);
+            userProjectFieldDAO.save(userProjectField);
             return NavigationCase.OK.toString();
         } catch (Exception e) {
             logger.error("Exception saving project role", e);
@@ -79,7 +89,15 @@ public class AssignProjectFieldView extends AbstractView implements Serializable
         }
     }
 
-    public String assign(int userId, int projectId) {
+    /**
+     * Redirects
+     * @return page to redirect to
+     */
+    public String assign() {
+        final Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        int userId = Integer.parseInt(params.get("userId"));
+        int projectId = Integer.parseInt(params.get("projectId"));
+
         return getRedirectWithParam(NavigationUtil.USER_METADATA_ACCESS_PAGE, userId, projectId);
     }
 
@@ -87,27 +105,15 @@ public class AssignProjectFieldView extends AbstractView implements Serializable
         return page + "?faces-redirect=true&user_id=" + userId + "&project_id=" + projectId;
     }
 
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
-    }
-
-    public FieldDefinition getFieldDefintion() {
+    public int getFieldDefintion() {
         return fieldDefintion;
     }
 
-    public void setFieldDefintion(FieldDefinition fieldDefintion) {
+    public void setFieldDefintion(int fieldDefintion) {
         this.fieldDefintion = fieldDefintion;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    private int getParam(String s) {
+        return Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(s));
     }
 }

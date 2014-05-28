@@ -29,10 +29,6 @@
             <div>
                 <div>
 
-                    <p:contextMenu for="UserProjectDatatable">
-                        <p:menuitem value="Metadata Access Assignment" action="#{assignProjectFieldView.assign(userId, projectId)}"/>
-                    </p:contextMenu>
-
 
                     <!-- Data Table -->
 
@@ -73,7 +69,10 @@
                             <f:facet name="header">
                                 <h:outputText value="Assign Access"/>
                             </f:facet>
-                            <h:commandButton value="Assign Metadata Access" action="#{assignProjectFieldView.assign(item.userId, item.projectId)}"/>
+                            <h:commandButton value="Metadata Perm. " action="#{assignProjectFieldView.assign}">
+                                <f:param name="userId" value="#{item.userId}" />
+                                <f:param name="projectId" value="#{param['project_id']}" />
+                            </h:commandButton>
                         </p:column>
 
 

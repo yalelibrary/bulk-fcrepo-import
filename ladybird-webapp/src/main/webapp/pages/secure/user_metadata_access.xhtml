@@ -15,46 +15,12 @@
             <div>
 
                 <div>
-                    <label class="control-label" for="userSelectOneMenu">User</label>
-
-                    <!-- user -->
-                    <div>
-                        <p:selectOneMenu id="userSelectOneMenu"
-                                         value="#{assignProjectFieldView.user}">
-
-                            <f:selectItems value="#{userView.itemList}"
-                                           var="select_user_var"
-                                           itemLabel="#{select_user_var.username}"
-                                           itemValue="#{select_user_var}"/>
-                        </p:selectOneMenu>
-                        <h:message for="userSelectOneMenu" style="color:red"/>
-                    </div>
-
-
-                    <!-- project -->
-                    <div>
-
-                        <label class="control-label" for="projectSelectOneMenu">Project </label>
-
-                        <div>
-                            <p:selectOneMenu id="projectSelectOneMenu"
-                                             value="#{assignProjectFieldView.project}">
-
-                                <f:selectItems value="#{ProjectView.itemList}"
-                                               var="select_project_var"
-                                               itemLabel="#{select_project_var.label}"
-                                               itemValue="#{select_project_var}"/>
-                            </p:selectOneMenu>
-                            <h:message for="projectSelectOneMenu" style="color:red"/>
-                        </div>
-
-                    </div>
-
 
                     <!-- project role -->
+
                     <div>
 
-                        <label class="control-label" for="projectRoleSelectOneMenu">Roles </label>
+                        <label class="control-label" for="projectRoleSelectOneMenu">Roles</label>
 
                         <div>
 
@@ -88,7 +54,7 @@
                                 <f:selectItems value="#{FieldDefinitionView.itemList}"
                                                var="select_field_var"
                                                itemLabel="#{select_field_var.fdid}"
-                                               itemValue="#{select_field_var}"/>
+                                               itemValue="#{select_field_var.fdid}"/>
                             </p:selectOneMenu>
                             <h:message for="fieldSelectOneMenu" style="color:red"/>
                         </div>
@@ -99,8 +65,11 @@
                         <!-- Submit Button -->
                         <h:commandButton id="jump_link"
                                          value="Submit Metadata Access"
-                                         action="#{assignProjectFieldView.save}"
-                                         ajax="true"/>
+                                         action="#{assignProjectFieldView.save}">
+                            <f:param name="userId" value="#{param['user_id']}" />
+                            <f:param name="projectId" value="#{param['project_id']}" />
+                        </h:commandButton>
+
                     </div>
 
                 </div>

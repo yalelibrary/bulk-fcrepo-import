@@ -56,7 +56,7 @@ public class UserProjectView extends AbstractView {
         if (projectId == -1) {
             return userProjectDao.findAll();
         } else {
-            final List<UserProject> list =  userProjectDao.findByProjectId(projectId);
+            final List<UserProject> list = userProjectDao.findByProjectId(projectId);
             return list;
         }
     }
