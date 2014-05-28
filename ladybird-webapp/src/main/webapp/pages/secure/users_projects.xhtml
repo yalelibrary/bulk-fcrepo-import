@@ -16,7 +16,7 @@
 
         <f:metadata/>
 
-        <h2>Project Authorization</h2>
+        <h3>Project Authorization</h3>
 
         <h4>
             <h:outputText value="Users and their roles in project: #{userProjectView.projectName}" rendered="#{not empty userProjectView.projectName}" />
@@ -28,6 +28,11 @@
 
             <div>
                 <div>
+
+                    <p:contextMenu for="UserProjectDatatable">
+                        <p:menuitem value="Metadata Access Assignment" action="#{assignProjectFieldView.assign(userId, projectId)}"/>
+                    </p:contextMenu>
+
 
                     <!-- Data Table -->
 
@@ -63,7 +68,16 @@
                                 <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
                             </h:outputText>
                         </p:column>
-                    </p:dataTable>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Assign Access"/>
+                            </f:facet>
+                            <h:commandButton value="Assign Metadata Access" action="#{assignProjectFieldView.assign(item.userId, item.projectId)}"/>
+                        </p:column>
+
+
+                </p:dataTable>
                 </div>
             </div>
         </h:form>
