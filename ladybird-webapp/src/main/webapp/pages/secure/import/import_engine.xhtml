@@ -8,23 +8,30 @@
 <ui:composition template="../../../templates/template.xhtml">
 
     <ui:define name="content">
-        <h3>Import Scheduler</h3>
+        <h4>Import Scheduler</h4>
 
         <br/>
 
         <div>
-            <span>
-                <h:outputText styleClass="alert alert-warning"
-                              value="No import jobs exist yet."
-                              rendered="#{empty monitorView.itemList}"/>
-            </span>
+
             <span>
 
                 <h:outputLink value="/ladybird-webapp/web/pages/secure/import/import_engine_file.xhtml"
                               styleClass="btn btn-primary btn-primary">
-                Add Import Job
-            </h:outputLink>
+                    Add Import Job
+                </h:outputLink>
             </span>
+
+        </div>
+        <br/>
+
+        <div>
+
+              <span>
+                <h:outputText styleClass="alert alert-warning"
+                              value="No import jobs exist yet."
+                              rendered="#{empty monitorView.itemList}"/>
+              </span>
         </div>
 
         <br/>
