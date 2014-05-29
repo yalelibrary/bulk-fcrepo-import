@@ -69,11 +69,16 @@
                             <f:facet name="header">
                                 <h:outputText value="Assign Access"/>
                             </f:facet>
-                            <h:commandButton value="Metadata Perm. " action="#{assignProjectFieldView.assign}">
+                            <h:commandLink value="Add" action="#{assignProjectFieldView.assign}">
                                 <f:param name="userId" value="#{item.userId}" />
                                 <f:param name="projectId" value="#{param['project_id']}" />
                                 <f:param name="dataTableProjectId" value="#{item.projectId}" />
-                            </h:commandButton>
+                            </h:commandLink>
+                            <h:commandLink value="Edit" action="#{assignProjectFieldView.redirectEdit}">
+                                <f:param name="userId" value="#{item.userId}" />
+                                <f:param name="projectId" value="#{param['project_id']}" />
+                                <f:param name="dataTableProjectId" value="#{item.projectId}" />
+                            </h:commandLink>
                         </p:column>
 
 

@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template.xhtml">
+    <ui:define name="content">
+        <f:metadata/>
+        <h4>Metadata Access Assignment</h4>
+        <h:form id="UserProjectFieldForm" enctype="multipart/form-data">
+
+            <br/>
+
+            <div>
+
+                Edit metadata access assignment
+
+                <br/>
+
+                <div>
+
+
+                    <ui:repeat id="UserProjectFieldDatatable" value="#{editProjectFieldView.itemList}"
+                               var="item">
+
+                        <div>
+
+                        <span>
+                            Fdid: <h:outputText value="#{item.fdid}"/>
+                        </span>
+
+                        <span>
+                            Role:
+                            <p:selectOneMenu id="projectRoleSelectOneMenu"
+                                             value="#{item.role}">
+
+
+                                <f:selectItems value="#{assignProjectFieldView.roles}"
+                                               var="select_project_role_var"
+                                               itemLabel="#{select_project_role_var}"
+                                               itemValue="#{select_project_role_var}"/>
+                            </p:selectOneMenu>
+
+                        </span>
+
+                        </div>
+
+
+                    </ui:repeat>
+
+                    <div>
+                        <!-- Submit Button -->
+                        <h:commandButton id="jump_link"
+                                         value="Submit Metadata Access"
+                                         action="#{editProjectFieldView.edit}">
+                        </h:commandButton>
+
+                    </div>
+
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+
