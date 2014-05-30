@@ -24,9 +24,10 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.RolesPermissionsHiber
 import edu.yale.library.ladybird.persistence.dao.hibernate.AuthorityControlHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.AuthorityControlVersionHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserExportFieldHibernateDAO;
-
-
-
+import edu.yale.library.ladybird.persistence.dao.hibernate.AccessconditionObjectHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.AccessconditionProjectHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.AccessconditionTargetHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.AccessconditionTypeHibernateDAO;
 
 public class TestDaoHibernateModule extends AbstractModule {
     @Override
@@ -58,5 +59,9 @@ public class TestDaoHibernateModule extends AbstractModule {
         bind(AuthorityControlDAO.class).to(AuthorityControlHibernateDAO.class);
         bind(AuthorityControlVersionDAO.class).to(AuthorityControlVersionHibernateDAO.class);
         bind(UserExportFieldDAO.class).to(UserExportFieldHibernateDAO.class);
+        bind(AccessconditionTypeDAO.class).to(AccessconditionTypeHibernateDAO.class);
+        bind(AccessconditionTargetDAO.class).to(AccessconditionTargetHibernateDAO.class);
+        bind(AccessconditionProjectDAO.class).to(AccessconditionProjectHibernateDAO.class);
+        bind(AccessconditionObjectDAO.class).to(AccessconditionObjectHibernateDAO.class);
     }
 }

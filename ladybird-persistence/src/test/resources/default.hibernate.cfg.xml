@@ -31,5 +31,9 @@
         <mapping resource="test-hbm/AuthorityControl.hbm.xml"/>
         <mapping resource="test-hbm/AuthorityControlVersion.hbm.xml"/>
         <mapping resource="test-hbm/UserExportField.hbm.xml"/>
+        <mapping resource="test-hbm/AccessconditionObject.hbm.xml"/>
+        <mapping resource="test-hbm/AccessconditionProject.hbm.xml"/>
+        <mapping resource="test-hbm/AccessconditionTarget.hbm.xml"/>
+        <mapping resource="test-hbm/AccessconditionType.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

@@ -31,5 +31,9 @@
         <mapping resource="ladybird-hbm/AuthorityControl.hbm.xml"/>
         <mapping resource="ladybird-hbm/AuthorityControlVersion.hbm.xml"/>
         <mapping resource="ladybird-hbm/UserExportField.hbm.xml"/>
+        <mapping resource="ladybird-hbm/AccessconditionObject.hbm.xml"/>
+        <mapping resource="ladybird-hbm/AccessconditionProject.hbm.xml"/>
+        <mapping resource="ladybird-hbm/AccessconditionTarget.hbm.xml"/>
+        <mapping resource="ladybird-hbm/AccessconditionType.hbm.xml"/>        
     </session-factory>
 </hibernate-configuration>
