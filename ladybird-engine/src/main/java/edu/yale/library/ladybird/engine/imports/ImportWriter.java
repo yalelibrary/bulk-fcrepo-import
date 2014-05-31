@@ -53,6 +53,8 @@ public class ImportWriter {
     private final Date JOB_EXEC_DATE = new Date(System.currentTimeMillis()); //TODO
     private OaiProvider oaiProvider; //TODO
 
+    private MediaFunctionProcessor mediaFunctionProcessor = new MediaFunctionProcessor();
+
     /**
      * Full cycle import writing
      *
@@ -146,9 +148,12 @@ public class ImportWriter {
         //Save to import_source_data:
         persistMarcData(bibIdMarcValues, importId);
 
+        //Process F3
         if (importEntityValue.fieldConstantsInExhead(FunctionConstants.F3)) {
-            final int columnWithImageField = importEntityValue.getFunctionPosition(FunctionConstants.F3);
-            logger.debug("Column with image field={}", columnWithImageField);
+            final int f3ColumnNum = importEntityValue.getFunctionPosition(FunctionConstants.F3);
+            logger.debug("Column with F3={}", f3ColumnNum);
+            mediaFunctionProcessor.process(rowList, f3ColumnNum);
+            logger.debug("Done media processing");
         }
 
         //Get oids
@@ -156,10 +161,6 @@ public class ImportWriter {
             final int columnWithF1Field = importEntityValue.getFunctionPosition(FunctionConstants.F1);
             logger.debug("Column with F1={}", columnWithF1Field);
         }
-
-        //Process Media stuff
-        MediaFunctionProcessor mediaFunctionProcessor = new MediaFunctionProcessor();
-        mediaFunctionProcessor.process(rowList);
 
         //Save all columns to import_job_contents:
         for (int i = 0; i < rowList.size(); i++) {

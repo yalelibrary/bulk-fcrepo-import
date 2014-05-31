@@ -1,31 +1,36 @@
 package edu.yale.library.ladybird.engine.file;
 
+import edu.yale.library.ladybird.kernel.ApplicationProperties;
+import org.im4java.core.ConvertCmd;
+import org.im4java.core.IM4JavaException;
+import org.im4java.core.IMOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 
-/**
- * Processes files using ImageMagick or markes files for ImageMagick processing
- */
 public class ImageMagickProcessor implements ImageProcessor {
 
     private Logger logger = LoggerFactory.getLogger(ImageMagickProcessor.class);
 
+    private static final String IMJ_CMD_PATH = ApplicationProperties.CONFIG_STATE.IMAGE_MAGICK_PATH; //TODO from DB?
 
-    @Override
-     public void resizeImage(final String fileName, final String outputFileName, final int width, final int height) {
-        logger.debug("Resizing image file={}", fileName);
-        throw new UnsupportedOperationException("Not implemented");
-    }
+    public void toFormat(final String src, final String dest) {
+        //logger.debug("ImageMagick command path={}", IMJ_CMD_PATH);
+        logger.debug("Converting file={}", src);
 
-    /**
-     * This will be replaced with a call to the actual service.
-     * @param fileName
-     */
-    @Override
-    public void converToJp2(final String fileName) {
-        logger.debug("Conveting to jp2={}", fileName);
-        throw new UnsupportedOperationException("Not implemented");
+        try {
+            final ConvertCmd cmd = new ConvertCmd();
+            cmd.setSearchPath(IMJ_CMD_PATH);
+
+            final IMOperation op = new IMOperation();
+            op.addImage(src);
+            op.addImage(dest);
+
+            cmd.run(op);
+        } catch (IOException | InterruptedException | IM4JavaException e) {
+            throw new ImageProcessingException(e);
+        }
     }
 
 }

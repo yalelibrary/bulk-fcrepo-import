@@ -20,6 +20,8 @@ public class ApplicationProperties {
     private static final String EMAIL_PORT_IDENTIFIER = "mail_port";
     private static final String HOST_NAME_IDENTIFIER = "mail_host";
     private static final String ADMIN_EMAIL_IDENTIFIER = "mail_admin";
+    private static final String IMAGE_MAGICK_PATH_ID = "image_magick_path";
+    private static final String IMAGE_ROOT_PATH_ID = "image_root_path";
 
     public static boolean runWithIncompleteDBConfig() {
         return ApplicationProperties.RUN_WITH_INCOMPLETE_CONFIG;
@@ -46,6 +48,8 @@ public class ApplicationProperties {
         public static final String EMAIL_ADMIN = getAdminEmail();
         public static final int EMAIL_PORT = getEmailPort();
         public static final String EMAIL_HOST = getEmailHost();
+        public static final String IMAGE_MAGICK_PATH = getImageMagickCommandPath();
+        public static final String IMAGE_ROOT_PATH = getImageRootPath();
 
         /**
          * Ignores exception if prop not set and just returns false.
@@ -60,10 +64,6 @@ public class ApplicationProperties {
             }
         }
 
-        /**
-         * Returns admin e-mail
-         * @return Admin e-mail
-         */
         private static String getAdminEmail() {
             return readProperty(ADMIN_EMAIL_IDENTIFIER);
         }
@@ -76,6 +76,13 @@ public class ApplicationProperties {
             return readProperty(HOST_NAME_IDENTIFIER);
         }
 
+        private static String getImageMagickCommandPath() {
+            return readProperty(IMAGE_MAGICK_PATH_ID);
+        }
+
+        private static String getImageRootPath() {
+            return readProperty(IMAGE_ROOT_PATH_ID);
+        }
 
         private static String readProperty(String s) {
             return cfg.getString(s);
