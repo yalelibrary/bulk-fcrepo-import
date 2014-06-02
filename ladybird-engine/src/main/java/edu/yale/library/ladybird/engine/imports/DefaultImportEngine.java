@@ -26,8 +26,12 @@ public class DefaultImportEngine extends AbstractImportEngine {
         logger.debug("Initiating write");
 
         ImportWriter importWriter = new ImportWriter();
+
         //TODO obtain file,dir,user //?
+
         importWriter.setOaiProvider(oaiProvider);  //TODO
+        importWriter.setMediaFunctionProcessor(mediaFunctionProcessor); //TODO
+
         ImportEntityValue importEntityValue = new ImportEntityValue(list);
         return importWriter.write(importEntityValue,
                 new ImportJobContextBuilder().userId(USER_ID).file("").dir("").build());

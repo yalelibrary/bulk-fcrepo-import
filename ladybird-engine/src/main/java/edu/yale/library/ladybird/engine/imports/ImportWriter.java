@@ -51,9 +51,10 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ImportWriter {
     private final Logger logger = getLogger(this.getClass());
     private final Date JOB_EXEC_DATE = new Date(System.currentTimeMillis()); //TODO
+
     private OaiProvider oaiProvider; //TODO
 
-    private MediaFunctionProcessor mediaFunctionProcessor = new MediaFunctionProcessor();
+    private MediaFunctionProcessor mediaFunctionProcessor; //TODO
 
     /**
      * Full cycle import writing
@@ -316,6 +317,13 @@ public class ImportWriter {
      */
     public void setOaiProvider(final OaiProvider oaiProvider) {
         this.oaiProvider = oaiProvider;
+    }
+
+    /**
+     * Sets Media Function Processor. Subject to removal
+     */
+    public void setMediaFunctionProcessor(final MediaFunctionProcessor mediaFunctionProcessor) {
+        this.mediaFunctionProcessor = mediaFunctionProcessor;
     }
 
 }

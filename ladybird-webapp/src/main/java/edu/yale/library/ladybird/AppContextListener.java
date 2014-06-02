@@ -35,6 +35,14 @@ public class AppContextListener implements ServletContextListener {
         } catch (IOException e) {
             logger.error("Error in fdid init", e); //ignore
         }
+
+        //Load properties file
+        try {
+            SettingsInitializer settingsInitializer = new SettingsInitializer();
+            settingsInitializer.loadAndStore();
+        } catch (Exception e) {
+            logger.error("Error in setting seettings", e); //ignore
+        }
     }
 
 }

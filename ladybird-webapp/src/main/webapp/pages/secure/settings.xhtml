@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template_yul.xhtml">
+    <ui:define name="content">
+        <h4>Application Settings</h4>
+
+        <h:form id="Settings" enctype="multipart/form-data">
+
+           <p:growl id="msgs" showDetail="true" sticky="false"/>
+
+            <!-- Data Table -->
+
+            <p:dataTable id="SettingsDatatable"
+                         editable="true"
+                         paginator="false"
+                         value="#{settingsView.itemList}"
+                         var="item"
+                         editMode="cell">
+
+                <p:ajax event="cellEdit" listener="#{settingsView.onCellEdit}" update=":Settings:msgs" />
+
+                <p:column id="col_name" headerText="Property">
+                    <h:outputText id="name" value="#{item.property}"/>
+                </p:column>
+                <p:column id="col_username" headerText="Value">
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{item.value}"/></f:facet>
+                        <f:facet name="input"><p:inputText id="modelInput" value="#{item.value}"/></f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+            </p:dataTable>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>

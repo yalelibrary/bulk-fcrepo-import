@@ -1,20 +1,23 @@
 package edu.yale.library.ladybird.engine.imports;
 
 import edu.yale.library.ladybird.engine.file.ImageMagickProcessor;
-import edu.yale.library.ladybird.kernel.ApplicationProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.yale.library.ladybird.engine.imports.ImportEntity.Row;
 import edu.yale.library.ladybird.engine.imports.ImportEntity.Column;
 
+import java.io.File;
 import java.util.List;
 
 public class MediaFunctionProcessor {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    /** Path where images are read and written to. */
-    private static String imageRootPath = ApplicationProperties.CONFIG_STATE.IMAGE_ROOT_PATH; //TODO db
+    /** root path */
+    private String rootPath = "";
+
+    /** relateive path */
+    private String path = "";
 
     @SuppressWarnings("unchecked")
     public void process(final List<ImportEntity.Row> rowList, final int MEDIA_COLUMN) {
@@ -31,7 +34,7 @@ public class MediaFunctionProcessor {
         final ImageMagickProcessor imgMagick = new ImageMagickProcessor();
         try {
             final String inputFilePath = getPath(fileName);
-            final String outputFilePath = asFormat(getPath(fileName), fromExt.toString(), toExt.toString());
+            final String outputFilePath = asFormat(getOutPath(fileName), fromExt.toString(), toExt.toString());
             imgMagick.toFormat(inputFilePath, outputFilePath);
             logger.debug("Converted image to={}", outputFilePath);
         } catch (Exception e) {
@@ -39,12 +42,22 @@ public class MediaFunctionProcessor {
         }
     }
 
-    private static String getPath(final String fileName) {
-        return imageRootPath + System.getProperty("file.separator") + fileName;
+    private String getPath(final String fileName) {
+        logger.debug("Get path value={}", rootPath + File.separator + path + File.separator + fileName);
+        return rootPath + File.separator + path + File.separator + fileName;
+    }
+
+    private String getOutPath(final String fileName) {
+        logger.debug("Get Out path value={}", rootPath + File.separator + path + File.separator + "exports" + File.separator + fileName);
+        return rootPath + File.separator + path + File.separator + "exports" + File.separator + fileName;
     }
 
     private static String asFormat(final String fileName, final String from, final String ext) {
         return fileName.replace(from, ext);
+    }
+
+    private String getRootPath() {
+        return rootPath;
     }
 
     private enum MediaFormat {
@@ -62,5 +75,22 @@ public class MediaFunctionProcessor {
         public String toString() {
             return name;
         }
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setRootPath(String rootPath) {
+        this.rootPath = rootPath;
+    }
+
+    public MediaFunctionProcessor(String rootPath, String path) {
+        this.rootPath = rootPath;
+        this.path = path;
     }
 }

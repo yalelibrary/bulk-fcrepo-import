@@ -16,6 +16,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -73,7 +74,7 @@ public class DefaultExportJob implements Job, ExportJob {
     }
 
     private String tmpFile(final String folder) {
-        return folder + System.getProperty("file.separator") + "export-results-" + System.currentTimeMillis() + ".xlsx"; //todo
+        return folder + File.separator + "export-results-" + System.currentTimeMillis() + ".xlsx"; //todo
     }
 
 }

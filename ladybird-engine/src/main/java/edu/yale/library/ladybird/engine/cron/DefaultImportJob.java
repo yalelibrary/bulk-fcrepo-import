@@ -2,10 +2,7 @@ package edu.yale.library.ladybird.engine.cron;
 
 
 import edu.yale.library.ladybird.engine.ExportBus;
-import edu.yale.library.ladybird.engine.oai.OaiProvider;
-import edu.yale.library.ladybird.entity.ImportSource;
-import edu.yale.library.ladybird.entity.User;
-import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
+
 import edu.yale.library.ladybird.engine.imports.ImportEngine;
 import edu.yale.library.ladybird.engine.imports.ImportRequestEvent;
 import edu.yale.library.ladybird.engine.imports.SpreadsheetFile;
@@ -16,10 +13,20 @@ import edu.yale.library.ladybird.engine.DefaultFieldDataValidator;
 import edu.yale.library.ladybird.engine.imports.ImportReaderValidationException;
 import edu.yale.library.ladybird.engine.imports.ImportEngineException;
 import edu.yale.library.ladybird.engine.imports.ReadMode;
+import edu.yale.library.ladybird.engine.imports.MediaFunctionProcessor;
+
+import edu.yale.library.ladybird.engine.oai.OaiProvider;
+import edu.yale.library.ladybird.entity.ImportSource;
+import edu.yale.library.ladybird.entity.Settings;
+import edu.yale.library.ladybird.entity.User;
+import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
+import edu.yale.library.ladybird.kernel.ApplicationProperties;
 import edu.yale.library.ladybird.kernel.events.Event;
 import edu.yale.library.ladybird.kernel.events.NotificationEventQueue;
 import edu.yale.library.ladybird.persistence.dao.ImportSourceDAO;
+import edu.yale.library.ladybird.persistence.dao.SettingsDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.SettingsHibernateDAO;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -59,6 +66,11 @@ public class DefaultImportJob implements Job, ImportJob {
             final OaiProvider provider = getCtxOaiProvider();
             importEngine.setOaiProvider(provider);
             logger.debug("Set OAI Provider={}", provider);
+
+            //TODO provide
+            //passes relative path for each import job. This is provided by the user on each run. The root path is set application wide.
+            final MediaFunctionProcessor mediaFunctionProcessor = getCtxMediaFunctionProcessor(importRequestedEvent.getMonitor().getExportPath());
+            importEngine.setMediaFunctionProcessor(mediaFunctionProcessor);
 
             logger.debug("Writing to import table(s)");
 
@@ -109,12 +121,23 @@ public class DefaultImportJob implements Job, ImportJob {
 
         for (ImportSource importSource: importSourceList) {
             if (importSource.isActive()) {
-                return  new OaiProvider("id",
-                        importSource.getUrl(),
-                        importSource.getGetPrefix());
+                return  new OaiProvider("id", importSource.getUrl(), importSource.getGetPrefix());
             }
         }
         return null;
+    }
+
+    /** Returns a MediaFunctionProcessor if db state is found */
+    private MediaFunctionProcessor getCtxMediaFunctionProcessor(final String path) {
+        SettingsDAO settingsDAO = new SettingsHibernateDAO();
+        final Settings settings = settingsDAO.findByProperty(ApplicationProperties.IMPORT_ROOT_PATH_ID);
+
+        if (settings == null) {
+            logger.debug("No db configured property={}", ApplicationProperties.IMPORT_ROOT_PATH_ID);
+            return new MediaFunctionProcessor(ApplicationProperties.CONFIG_STATE.IMPORT_ROOT_PATH, path);
+        }
+        final String rootPath = settings.getValue();
+        return new MediaFunctionProcessor(rootPath, path);
     }
 
 }

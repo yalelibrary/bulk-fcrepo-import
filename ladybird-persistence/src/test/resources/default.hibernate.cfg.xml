@@ -35,5 +35,6 @@
         <mapping resource="test-hbm/AccessconditionProject.hbm.xml"/>
         <mapping resource="test-hbm/AccessconditionTarget.hbm.xml"/>
         <mapping resource="test-hbm/AccessconditionType.hbm.xml"/>
+        <mapping resource="test-hbm/Settings.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>
