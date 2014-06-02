@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+    <h:outputStylesheet library="boostrap" name="css/bootstrap.css"/>
+    <title><ui:insert name="title" /></title>
+    <f:facet name="first">
+        <ui:insert name="meta" />
+    </f:facet>
+</h:head>
+<h:body>
+
+   <div>
+       <!-- TODO make navbar configurable -->
+       <div class="row">
+           <div class="col-xs-12 col-md-10"><img src="http://lbdev.library.yale.edu/imgs/ladybird_header1_small.png"></img></div>
+           <div class="col-xs-6 col-md-2"><img src="http://lbdev.library.yale.edu/imgs/ladybird_header_right1_small.png"></img></div>
+       </div>
+
+        <div>
+            <div>
+                <p:menubar>
+                    <p:submenu label="Scheduler" >
+                        <p:submenu label="New" >
+                            <p:menuitem value="Project" url="/pages/secure/projects.xhtml" />
+                            <p:menuitem value="Import Scheduler" url="/pages/secure/import/import_engine.xhtml" />
+                        </p:submenu>
+                        <p:menuitem value="Schedule cron" url="/pages/secure/import/cron_schedule_form.xhtml" />
+                        <p:menuitem value="Field marc mappings" url="/pages/secure/import/field_marc_mapping.xhtml" />
+                        <p:menuitem value="OAI-PMH source" url="/pages/secure/import/import_source.xhtml" />
+                        <p:menuitem value="Crons running" url="/pages/secure/crons.xhtml" />
+
+                    </p:submenu>
+
+                    <p:submenu label="Stats">
+                        <p:menuitem value="Session History" url="/pages/secure/user_event.xhtml?id=1"/>
+                    </p:submenu>
+
+
+                    <p:submenu label="User Management">
+                        <p:menuitem value="View Users" url="/pages/secure/user_manager.xhtml"/>
+                        <p:menuitem value="Add User" url="/pages/secure/user_manager_form.xhtml"/>
+                        <p:menuitem value="Project Authorization" url="/pages/secure/users_projects.xhtml"/>
+                        <p:menuitem value="Assign Project Access" url="/pages/secure/assign_project_access.xhtml"/>
+                    </p:submenu>
+
+
+                    <p:submenu label="Metadata Management">
+                        <p:menuitem value="Field Definitions" url="import/field_definition.xhtml"/>
+                        <p:menuitem value="Authority Control" url="/pages/secure/acid.xhtml"/>
+                        <p:menuitem value="Metadata Access" url="/pages/secure/user_project_field.xhtml"/>
+                        <p:menuitem value="Copy Metadata access" url="/pages/secure/copy_metadata_access.xhtml"/>
+                        <p:menuitem value="User Export Fields" url="/pages/secure/import/user_export_form.xhtml"/>
+                        <p:menuitem value="Project Access Conditions" url="/pages/secure/access_condition_project.xhtml"/>
+                    </p:submenu>
+
+
+                    <p:submenu label="Authorization" >
+                        <p:menuitem value="Add Role" url="/pages/secure/authz/roles_form.xhtml" />
+                        <p:menuitem value="View Roles" url="/pages/secure/authz/roles.xhtml" />
+                        <p:menuitem value="Add Permission" url="/pages/secure/authz/permissions_form.xhtml" />
+                        <p:menuitem value="View Permissions" url="/pages/secure/authz/permissions.xhtml" />
+                        <p:menuitem value="Change Role Permissions" url="/pages/secure/authz/roles_permissions_change.xhtml" />
+                        <p:menuitem value="View Role Permissions" url="/pages/secure/authz/roles_permissions.xhtml" />
+                        <p:menuitem value="View Default Roles" url="/pages/secure/authz/initial_roles.xhtm" />
+                    </p:submenu>
+
+                    <f:facet name="options">
+                        <p:inputText style="margin-right:10px" placeholder="Search"/>
+                        <p:commandButton type="button" value="logout" icon="ui-icon-extlink" />
+                    </f:facet>
+                </p:menubar>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container" style="margin-left:15px">
+        <!-- TODO -->
+        <br/>
+
+        <div class="row row-offcanvas row-offcanvas-right">
+
+            <div class="col-xs-12 col-sm-9">
+                <div class="row">
+                    <ui:insert name="content" />
+                </div><!--/row-->
+            </div><!--/span-->
+
+            <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+                <div class="list-group">
+                    <ui:insert name="offcanvas" />
+                </div>
+            </div>
+
+        </div><!--/row-->
+    </div> <!--main -->
+
+
+    <footer class="bs-footer" role="contentinfo">
+        <div class="container">
+            <!-- TODO-->
+            <br/><br/>
+            <p >Copyright © <a href="http://www.yale.edu">Yale University 2014</a></p>
+        </div>
+    </footer>
+
+    <ui:debug />
+</h:body>
+</html>
