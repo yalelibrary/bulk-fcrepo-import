@@ -18,11 +18,10 @@
 
         <h4>Project Authorization</h4>
 
-        <h4>
-            <h:outputText value="Users and their roles in project: #{userProjectView.projectName}" rendered="#{not empty userProjectView.projectName}" />
-            <h:outputText value="Users and roles across all projects" rendered="#{empty userProjectView.projectName}" />
-        </h4>
+        <h:outputText value="Users and their roles in project: #{userProjectView.projectName}" rendered="#{not empty userProjectView.projectName}" />
+        <h:outputText value="Users and roles across all projects" rendered="#{empty userProjectView.projectName}" />
 
+        <!-- FORM -->
         <h:form id="UserProjectForm" enctype="multipart/form-data">
             <br/>
 
@@ -67,22 +66,26 @@
 
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="Assign Access"/>
+                                <h:outputText value="Assign Metadata Access"/>
                             </f:facet>
+                            <span>
                             <h:commandLink value="Add" action="#{assignProjectFieldView.assign}">
                                 <f:param name="userId" value="#{item.userId}" />
                                 <f:param name="projectId" value="#{param['project_id']}" />
                                 <f:param name="dataTableProjectId" value="#{item.projectId}" />
                             </h:commandLink>
+                            </span>
+                            <span>
                             <h:commandLink value="Edit" action="#{assignProjectFieldView.redirectEdit}">
                                 <f:param name="userId" value="#{item.userId}" />
                                 <f:param name="projectId" value="#{param['project_id']}" />
                                 <f:param name="dataTableProjectId" value="#{item.projectId}" />
                             </h:commandLink>
+                            </span>
                         </p:column>
 
-
                 </p:dataTable>
+
                 </div>
             </div>
         </h:form>
