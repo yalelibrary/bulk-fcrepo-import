@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../../templates/template_yul.xhtml">
+    <ui:define name="content">
+
+        <h:form id="ObjectImportFileForm" enctype="multipart/form-data">
+            <br/>
+
+            <div>
+                <div>
+
+                    <!-- Data Grid -->
+                    <p:dataGrid var="item" value="#{ObjectFileView.itemList}" columns="3"
+                                rows="12" paginator="true" id="ObjectFileDatagrid"
+>
+
+                        <f:facet name="header">
+                            Objects
+                        </f:facet>
+
+                        <p:panel header="#{item.oid}" style="text-align:center">
+                            <h:panelGrid columns="1" style="width:100%">
+                                <p:graphicImage name="#{imageBean.image}"/>
+                                <h:outputText value="#{item.fileName}" />
+                            </h:panelGrid>
+                        </p:panel>
+
+                    </p:dataGrid>
+
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

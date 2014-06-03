@@ -47,14 +47,12 @@ public class SettingsView extends AbstractView {
     }
 
     public void onCellEdit(CellEditEvent event) {
-        logger.debug("Cell edit");
         Object oldValue = event.getOldValue();
         Object newValue = event.getNewValue();
 
         try {
             if (newValue != null && !newValue.equals(oldValue)) {
-                logger.debug("Old value={}, new value={} row index={}", oldValue, newValue, event.getRowIndex());
-
+                //logger.debug("Old value={}, new value={} row index={}", oldValue, newValue, event.getRowIndex());
 
                 Settings settings = settingsDAO.findById(event.getRowIndex()); //TODO check if table row id matches db row Id
                 settings.setValue((String) newValue);

@@ -130,7 +130,24 @@ public class ObjectFile implements java.io.Serializable {
         this.status = status;
     }
 
-
+    @Override
+    public String toString() {
+        return "ObjectFile{"
+                + "dataId=" + dataId
+                + ", date=" + date
+                + ", userId=" + userId
+                + ", oid=" + oid
+                + ", fileLabel='" + fileLabel + '\''
+                + ", fileName='" + fileName + '\''
+                + ", filePath='" + filePath + '\''
+                + ", fileExt='" + fileExt + '\''
+                + ", fileSize=" + fileSize
+                + ", md5='" + md5 + '\''
+                + ", sha256='" + sha256 + '\''
+                + ", hydraPublishId=" + hydraPublishId
+                + ", status='" + status + '\''
+                + '}';
+    }
 }
 
 

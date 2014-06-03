@@ -7,46 +7,50 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../../templates/template_yul.xhtml">
     <ui:define name="content">
-        <h2>Object File</h2>
-        <h:form id="ObjectFileForm" enctype="multipart/form-data"
-                styleClass=""
-                style="">
+
+        <h:form id="ObjectFileForm" enctype="multipart/form-data">
             <br/>
 
-            <div style="">
-                <div class="" style="">
+            <div>
+                <div>
 
                     <!-- Data Table -->
 
                     <p:dataTable id="ObjectFileDatatable" value="#{ObjectFileView.itemList}"
                                  var="item" paginator="true" rows="10"
-                                 tableStyle="" paginatorPosition="bottom"
+                                 paginatorPosition="bottom"
                                  editable="false">
 
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Date"/>
                             </f:facet>
-                            <h:outputText value="#{item.date}"/>
+                            <h:outputText value="#{item.date}">
+                                <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                            </h:outputText>
                         </p:column>
+                        <!--
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="User"/>
                             </f:facet>
                             <h:outputText value="#{item.userId}"/>
                         </p:column>
+                        -->
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Oid"/>
                             </f:facet>
                             <h:outputText value="#{item.oid}"/>
                         </p:column>
+                        <!--
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Label"/>
                             </f:facet>
                             <h:outputText value="#{item.fileLabel}"/>
                         </p:column>
+                        -->
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Name"/>
@@ -55,7 +59,7 @@
                         </p:column>
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="Path"/>
+                                <h:outputText value="Full path on filesystem..."/>
                             </f:facet>
                             <h:outputText value="#{item.filePath}"/>
                         </p:column>
@@ -65,6 +69,7 @@
                             </f:facet>
                             <h:outputText value="#{item.fileExt}"/>
                         </p:column>
+                        <!--
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Size"/>
@@ -83,9 +88,10 @@
                             </f:facet>
                             <h:outputText value="#{item.sha256}"/>
                         </p:column>
+                        -->
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="HydraPublishId"/>
+                                <h:outputText value="Hydra Id"/>
                             </f:facet>
                             <h:outputText value="#{item.hydraPublishId}"/>
                         </p:column>

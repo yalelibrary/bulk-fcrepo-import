@@ -134,4 +134,9 @@
         <listener-class>edu.yale.library.ladybird.AppContextListener</listener-class>
     </listener>
 
+    <mime-mapping>
+        <extension>jpg</extension>
+        <mime-type>image/jpeg</mime-type>
+    </mime-mapping>
+
 </web-app>

@@ -149,18 +149,26 @@ public class ImportWriter {
         //Save to import_source_data:
         persistMarcData(bibIdMarcValues, importId);
 
-        //Process F3
-        if (importEntityValue.fieldConstantsInExhead(FunctionConstants.F3)) {
+        //Process F1
+        if (importEntityValue.fieldConstantsInExhead(FunctionConstants.F1)) {
+            final int columnWithF1Field = importEntityValue.getFunctionPosition(FunctionConstants.F1);
+            logger.debug("(flag) Column with F1={}", columnWithF1Field);
+        }
+
+        //Process F3 without F1 (to keep tests working)
+        if (importEntityValue.fieldConstantsInExhead(FunctionConstants.F3) && !importEntityValue.fieldConstantsInExhead(FunctionConstants.F1)) {
             final int f3ColumnNum = importEntityValue.getFunctionPosition(FunctionConstants.F3);
             logger.debug("Column with F3={}", f3ColumnNum);
             mediaFunctionProcessor.process(rowList, f3ColumnNum);
             logger.debug("Done media processing");
         }
 
-        //Get oids
-        if (importEntityValue.fieldConstantsInExhead(FunctionConstants.F1)) {
-            final int columnWithF1Field = importEntityValue.getFunctionPosition(FunctionConstants.F1);
-            logger.debug("Column with F1={}", columnWithF1Field);
+        //Process F3 with F1
+        if (importEntityValue.fieldConstantsInExhead(FunctionConstants.F3) && importEntityValue.fieldConstantsInExhead(FunctionConstants.F1)) {
+            final int f3ColumnNum = importEntityValue.getFunctionPosition(FunctionConstants.F3);
+            final int f1columnNum = importEntityValue.getFunctionPosition(FunctionConstants.F1);
+            mediaFunctionProcessor.process(importId, rowList, f3ColumnNum, f1columnNum);
+            logger.debug("Done media processing");
         }
 
         //Save all columns to import_job_contents:

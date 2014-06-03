@@ -78,10 +78,14 @@ public final class ImportReader {
                     }
                     logger.debug("Unknown exhead value= {}", unknownFunction.getMessage());
                     valueMap.add(FunctionConstants.UNK);
+                } catch (Exception e) {
+                    logger.error("Unknown error iterating header row", e);
                 }
             }
             //add header row:
             sheetRows.add(headerSheetRow);
+
+            logger.debug("Done iterating sheet exhead");
 
             //iterate body: //FIXME Check empty columnns.
             int cellCount = 0;
@@ -102,7 +106,10 @@ public final class ImportReader {
         } catch (IOException e) {
             logger.error("Error reading", e);
             throw e;
+        } catch (Exception ge) {
+            logger.error("General exception reading", ge); //ignore
         }
+        logger.debug("Done processing sheet");
         return sheetRows;
     }
 
@@ -159,6 +166,7 @@ public final class ImportReader {
         logger.debug("Reading sheet={}", file.getFileName());
         final XSSFWorkbook workbook = new XSSFWorkbook(file.getFileStream());
         final XSSFSheet sheet = workbook.getSheetAt(sheetNumber);
+        logger.debug("Reading sheet done");
         return sheet;
     }
 }
