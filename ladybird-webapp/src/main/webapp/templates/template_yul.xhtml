@@ -24,60 +24,36 @@
             <div>
                 <p:menubar>
                     <p:submenu label="Dashboard" >
-                        <p:menuitem value="Schedule Import" url="/pages/secure/import/import_engine.xhtml" />
+                        <p:menuitem value="Schedule Import" url="/pages/secure/import/import_engine_file.xhtml" />
                         <p:menuitem value="Project" url="/pages/secure/projects.xhtml" />
                         <p:menuitem value="Schedule cron" url="/pages/secure/import/cron_schedule_form.xhtml" />
                         <p:menuitem value="Field marc mappings" url="/pages/secure/import/field_marc_mapping.xhtml" />
                         <p:menuitem value="OAI-PMH source" url="/pages/secure/import/import_source.xhtml" />
                         <p:menuitem value="Crons running" url="/pages/secure/crons.xhtml" />
                         <p:menuitem value="Session History" url="/pages/secure/user_event.xhtml?id=1"/>
-                    </p:submenu>
-
-                    <!-- TODO -->
-                    <p:submenu label="New Object" >
-                        <p:menuitem value="Schedule Import" url="/pages/secure/import/import_engine.xhtml" />
-                    </p:submenu>
-
-                    <!-- TODO -->
-                    <p:submenu label="Search" >
-                        <p:menuitem value="Schedule Import" url="/pages/secure/import/import_engine.xhtml" />
-                    </p:submenu>
-
-                    <!-- TODO -->
-                    <p:submenu label="Authority Control" >
-                        <p:menuitem value="Schedule Import" url="/pages/secure/import/import_engine.xhtml" />
-                    </p:submenu>
-
-                    <!-- TODO -->
-                    <p:submenu label="Hydra" >
-                        <p:menuitem value="Schedule Import" url="/pages/secure/import/import_engine.xhtml" />
-                    </p:submenu>
-
-                    <!-- TODO -->
-                    <p:submenu label="Project Settings" >
-                        <p:menuitem value="Schedule Import" url="/pages/secure/import/import_engine.xhtml" />
-                    </p:submenu>
-
-
-                    <p:submenu label="User Management">
+                        <p:menuitem value="User Export Fields" url="/pages/secure/import/user_export_form.xhtml"/>
                         <p:menuitem value="View Users" url="/pages/secure/user_manager.xhtml"/>
                         <p:menuitem value="Add User" url="/pages/secure/user_manager_form.xhtml"/>
-                        <p:menuitem value="Project Authorization" url="/pages/secure/users_projects.xhtml"/>
-                        <p:menuitem value="Assign Project Access" url="/pages/secure/assign_project_access.xhtml"/>
                     </p:submenu>
 
+                    <p:submenu label="Search">
+                        <p:menuitem value="Search" url="/pages/secure/search.xhtml" />
+                    </p:submenu>
 
-                    <p:submenu label="Metadata Management">
-                        <p:menuitem value="Field Definitions" url="/pages/secure/import/field_definition.xhtml"/>
+                    <p:submenu label="Authority Control">
                         <p:menuitem value="Authority Control" url="/pages/secure/acid.xhtml"/>
+                    </p:submenu>
+
+                    <p:submenu label="Project Settings">
+                        <p:menuitem value="Project Authorization" url="/pages/secure/users_projects.xhtml"/>
+                        <p:menuitem value="Assign Project Access" url="/pages/secure/assign_project_access.xhtml"/>
+                        <p:menuitem value="Field Definitions" url="/pages/secure/import/field_definition.xhtml"/>
                         <p:menuitem value="Metadata Authorization" url="/pages/secure/user_project_field.xhtml"/>
                         <p:menuitem value="Copy Metadata Access" url="/pages/secure/copy_metadata_access.xhtml"/>
-                        <p:menuitem value="User Export Fields" url="/pages/secure/import/user_export_form.xhtml"/>
                         <p:menuitem value="Project Access Conditions" url="/pages/secure/access_condition_project.xhtml"/>
                     </p:submenu>
 
-
-                    <p:submenu label="Authorization" >
+                    <p:submenu label="Authorization">
                         <p:menuitem value="Add Role" url="/pages/secure/authz/roles_form.xhtml" />
                         <p:menuitem value="View Roles" url="/pages/secure/authz/roles.xhtml" />
                         <p:menuitem value="Add Permission" url="/pages/secure/authz/permissions_form.xhtml" />
@@ -87,11 +63,15 @@
                         <p:menuitem value="View Default Roles" url="/pages/secure/authz/initial_roles.xhtm" />
                     </p:submenu>
 
-                    <p:submenu label="Settings" >
+                    <p:submenu label="Stats">
+                        <p:menuitem value="Import" url="/pages/secure/import/import_engine.xhtml" /> <!-- rename to stats_import -->
+                    </p:submenu>
+
+
+                    <p:submenu label="Settings">
                         <p:menuitem value="User Preferences" url="/pages/secure/user_preferences.xhtml" />
                         <p:menuitem value="Application Settings" url="/pages/secure/settings.xhtml" />
                     </p:submenu>
-
 
                     <f:facet name="options">
                         <p:inputText style="margin-right:10px" placeholder="Search"/>

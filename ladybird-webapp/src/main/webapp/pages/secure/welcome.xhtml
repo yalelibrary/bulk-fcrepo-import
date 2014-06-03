@@ -7,7 +7,7 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../templates/template_yul.xhtml">
     <ui:define name="content">
-        <div class="jumbotron">
+        <div>
             <h4>Activity</h4>
 
             Last login session activity
@@ -18,11 +18,15 @@
 
             <h4>Project</h4>
 
-            <h:outputText value="No project assignments yet" styleClass="alert alert-warning"
+            <span>
+            <h:outputText value="No project assignments yet."
                           rendered="#{userPreferencesView.noAssignments()}"/>
+            </span>
 
-            <h:outputText value="No default project yet" styleClass="alert alert-warning"
+            <span>
+            <h:outputText value="No default project yet."
                           rendered="#{userPreferencesView.defaultProjectForCurrentUser eq null}"/>
+            </span>
 
             <h:outputText value="#{userPreferencesView.defaultProjectForCurrentUser.label}"/>
 
