@@ -42,6 +42,14 @@
         <servlet-name>resteasy-servlet</servlet-name>
         <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>images</servlet-name>
+        <servlet-class>edu.yale.library.ladybird.ImageServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>images</servlet-name>
+        <url-pattern>/images/*</url-pattern>
+    </servlet-mapping>
 
     <filter>
         <filter-name>AuthFilter</filter-name>
@@ -133,10 +141,5 @@
     <listener>
         <listener-class>edu.yale.library.ladybird.AppContextListener</listener-class>
     </listener>
-
-    <mime-mapping>
-        <extension>jpg</extension>
-        <mime-type>image/jpeg</mime-type>
-    </mime-mapping>
 
 </web-app>
