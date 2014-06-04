@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../../templates/template_yul.xhtml">
+    <ui:define name="content">
+        <h:form id="ObjectMetadataForm" enctype="multipart/form-data">
+
+            <div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <h:graphicImage value="/images/#{objectMetadataView.image}" height="300" width="300"/>
+                        #{objectMetadataView.objectFile.fileName}
+                    </div>
+                    <div class="col-md-8"> Object ID <h4> #{param['oid']} </h4>
+
+                        <p> Created <h:outputText value="#{objectMetadataView.objectFile.date}">
+                                            <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                                    </h:outputText>
+                        </p>
+                        <p> Created By #{userView.getUserName(objectMetadataView.objectFile.userId)} </p>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h4>Item Description</h4>
+
+                <!--TODO this will be replaced with a data structure. -->
+                Field 69 <h:outputText value="#{objectMetadataView.getValueByOidAndFdid(objectMetadataView.objectFile.oid,69)}"/>
+
+                <h4>Access</h4>
+                <h4>Image Source</h4>
+                <h4>Administrative</h4>
+                <h4>Metadata</h4>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

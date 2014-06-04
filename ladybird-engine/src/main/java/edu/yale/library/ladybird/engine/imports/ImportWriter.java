@@ -59,9 +59,9 @@ public class ImportWriter {
     /**
      * Full cycle import writing
      *
-     * @param importEntityValue
-     * @param ctx
-     * @return
+     * @param importEntityValue Abstraction on top of List<ImportEntity.Row>
+     * @param ctx Job Context
+     * @return Import Id
      */
     public int write(final ImportEntityValue importEntityValue, final ImportJobContext ctx) {
         final int importId = writeImportJob(ctx);
@@ -74,7 +74,7 @@ public class ImportWriter {
     }
 
     /**
-     * Write header
+     * Write header ('ex head')
      *
      * @param importId
      * @param list
@@ -89,7 +89,7 @@ public class ImportWriter {
             ImportJobExhead entry = new ImportJobExheadBuilder().setImportId(importId).setCol(col).
                     setDate(JOB_EXEC_DATE).setValue(column.field.getName()).createImportJobExhead();
             dao.save(entry);
-            logger.debug("Saved Exhead entry={}" + entry.toString());
+            logger.debug("Saved Exhead entry={}", entry.toString());
             col++;
         }
     }

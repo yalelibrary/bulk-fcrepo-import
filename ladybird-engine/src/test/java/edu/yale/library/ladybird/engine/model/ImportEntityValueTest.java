@@ -2,6 +2,7 @@ package edu.yale.library.ladybird.engine.model;
 
 import edu.yale.library.ladybird.engine.imports.ImportEntity;
 import edu.yale.library.ladybird.engine.imports.ImportEntityValue;
+import edu.yale.library.ladybird.entity.FieldDefinition;
 import org.junit.Test;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import edu.yale.library.ladybird.engine.imports.ImportEntity.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -69,6 +71,16 @@ public class ImportEntityValueTest {
         final List<FieldConstant> fieldConstants = importEntityValue.getAllFieldConstants();
         assertTrue(fieldConstants.size() == 1);
         assertTrue(fieldConstants.get(0).equals(FunctionConstants.F1));
+    }
+
+    @Test
+    public void shouldFetchFunctionConstantAndFdid() { //i.e. all FieldConstants
+        final ImportEntityValue importEntityValue = getTestMultipleRowImportEntityValue();
+        final List<FieldConstant> fieldConstants = importEntityValue.getAllFieldConstants();
+        assertTrue(fieldConstants.size() == 2);
+        assertTrue(fieldConstants.get(0).equals(FunctionConstants.F1));
+        FieldDefinition fieldDefinition = (FieldDefinition) fieldConstants.get(1);
+        assertEquals("Value mismatch", fieldDefinition.getFdid(), 69);
     }
 
     @Test
@@ -136,6 +148,28 @@ public class ImportEntityValueTest {
 
         final List<ImportEntity.Column> columnList2 = new ArrayList<>();
         columnList2.add(getTestColumn(FunctionConstants.F1, "333993"));
+        final Row row2 = getTestRow(columnList2);
+
+        final List<Row> importRows = new ArrayList<>();
+        importRows.add(row);
+        importRows.add(row2);
+
+        final ImportEntityValue importEntityValue = new ImportEntityValue(importRows);
+        return importEntityValue;
+    }
+
+    private ImportEntityValue getTestMultipleRowImportEntityValue() {
+        final List<ImportEntity.Column> columnList1 = new ArrayList<>();
+
+        columnList1.add(getTestColumn(FunctionConstants.F1, ""));
+        columnList1.add(new ImportEntity().new Column<>(new FieldDefinitionValue(69, ""), ""));
+
+        final Row row = getTestRow(columnList1);
+
+        final List<ImportEntity.Column> columnList2 = new ArrayList<>();
+        columnList2.add(getTestColumn(FunctionConstants.F1, "333993"));
+        columnList2.add(new ImportEntity().new Column<>(new FieldDefinitionValue(69, ""), "name"));
+
         final Row row2 = getTestRow(columnList2);
 
         final List<Row> importRows = new ArrayList<>();

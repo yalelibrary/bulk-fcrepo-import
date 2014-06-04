@@ -75,7 +75,17 @@ public class ObjectAcid implements java.io.Serializable {
         this.fdid = fdid;
     }
 
-
+    @Override
+    public String toString() {
+        return "ObjectAcid{"
+                + "dataId=" + dataId
+                + ", date=" + date
+                + ", userId=" + userId
+                + ", objectId=" + objectId
+                + ", value=" + value
+                + ", fdid=" + fdid
+                + '}';
+    }
 }
 
 

@@ -38,7 +38,7 @@ public class ExportReader {
 
     /**
      * Main method. Reads import tables (import job contents and import source) to construct data.
-     * @return list of ImportEntity.Row
+     * @return ImportJobCtx
      */
     public ImportJobCtx readRowsFromImportTables() {
 

@@ -3,6 +3,7 @@ package edu.yale.library.ladybird.engine.cron;
 
 import edu.yale.library.ladybird.engine.ExportBus;
 import edu.yale.library.ladybird.engine.imports.ImportJobCtx;
+import edu.yale.library.ladybird.engine.imports.ObjectWriter;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportCompleteEventBuilder;
@@ -43,13 +44,24 @@ public class DefaultExportJob implements Job, ExportJob {
             final long startTime = System.currentTimeMillis();
             final ImportJobCtx importJobCtx = exportEngine.read();
 
-            logger.debug("Read rows from import tables, list size={}", importJobCtx.getImportJobList().size());
-            logger.debug("ImportJobCtx={}", importJobCtx.toString());
+            logger.debug("Read rows from export engine, list size={}, import job context={}",
+                    importJobCtx.getImportJobList().size(), importJobCtx.toString());
+
+
+            //1. Write to spreadsheet
+            logger.debug("Writing content rows to spreadsheet. . .");
 
             exportEngine.write(importJobCtx.getImportJobList(), tmpFile(importJobCtx.getMonitor().getExportPath()));
 
-            logger.debug("Finished writing content rows to spreadsheet.");
             logger.debug("[end] Completed export job in={}", DurationFormatUtils.formatDuration(System.currentTimeMillis() - startTime, "HH:mm:ss:SS"));
+
+
+            //2. Write to object metadata tables
+            logger.debug("Writing contents to object metadata tables. . .");
+            ObjectWriter objectWriter = new ObjectWriter(); //TODO
+            objectWriter.write(importJobCtx);
+
+            logger.debug("[end] Wrote to object metadata tables");
 
             /* Add params as desired */
             final Event exportEvent = new ExportCompleteEventBuilder()

@@ -21,6 +21,8 @@
         <mapping resource="test-hbm/Project.hbm.xml"/>
         <mapping resource="test-hbm/Object.hbm.xml"/>
         <mapping resource="test-hbm/ObjectFile.hbm.xml"/>
+        <mapping resource="test-hbm/ObjectAcid.hbm.xml"/>
+        <mapping resource="test-hbm/ObjectString.hbm.xml"/>
         <mapping resource="test-hbm/Users.hbm.xml"/>
         <mapping resource="test-hbm/UserPreferences.hbm.xml"/>
         <mapping resource="test-hbm/UserEvent.hbm.xml"/>

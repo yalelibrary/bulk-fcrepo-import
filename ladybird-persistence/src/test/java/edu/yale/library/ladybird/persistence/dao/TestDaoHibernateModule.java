@@ -29,6 +29,8 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.AccessconditionProjec
 import edu.yale.library.ladybird.persistence.dao.hibernate.AccessconditionTargetHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.AccessconditionTypeHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.SettingsHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectAcidHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectStringHibernateDAO;
 
 
 public class TestDaoHibernateModule extends AbstractModule {
@@ -66,5 +68,7 @@ public class TestDaoHibernateModule extends AbstractModule {
         bind(AccessconditionProjectDAO.class).to(AccessconditionProjectHibernateDAO.class);
         bind(AccessconditionObjectDAO.class).to(AccessconditionObjectHibernateDAO.class);
         bind(SettingsDAO.class).to(SettingsHibernateDAO.class);
+        bind(ObjectAcidDAO.class).to(ObjectAcidHibernateDAO.class);
+        bind(ObjectStringDAO.class).to(ObjectStringHibernateDAO.class);
     }
 }

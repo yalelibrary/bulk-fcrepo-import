@@ -75,7 +75,17 @@ public class ObjectString implements java.io.Serializable {
         this.fdid = fdid;
     }
 
-
+    @Override
+    public String toString() {
+        return "ObjectString{"
+                + "dataId=" + dataId
+                + ", date=" + date
+                + ", userId=" + userId
+                + ", oid=" + oid
+                + ", value='" + value + '\''
+                + ", fdid=" + fdid
+                + '}';
+    }
 }
 
 

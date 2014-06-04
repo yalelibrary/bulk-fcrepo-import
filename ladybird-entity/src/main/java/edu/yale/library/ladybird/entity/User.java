@@ -128,10 +128,6 @@ public class User implements java.io.Serializable {
                 + "userId=" + userId
                 + ", date=" + date
                 + ", username='" + username + '\''
-                + ", password='" + password + '\''
-                + ", dateCreated=" + dateCreated
-                + ", dateEdited=" + dateEdited
-                + ", dateLastused=" + dateLastused
                 + ", creatorId=" + creatorId
                 + ", name='" + name + '\''
                 + ", email='" + email + '\''

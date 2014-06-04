@@ -6,7 +6,9 @@ import edu.yale.library.ladybird.engine.imports.ImportRequestEvent;
 import edu.yale.library.ladybird.engine.imports.SpreadsheetFile;
 import edu.yale.library.ladybird.engine.imports.SpreadsheetFileBuilder;
 import edu.yale.library.ladybird.entity.Monitor;
+import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.persistence.dao.MonitorDAO;
+import edu.yale.library.ladybird.persistence.dao.UserDAO;
 import org.hibernate.HibernateException;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
@@ -39,6 +41,9 @@ public class MonitorView extends AbstractView {
     @Inject
     private MonitorDAO monitorDAO;
 
+    @Inject
+    private UserDAO userDAO;
+
     @PostConstruct
     public void init() {
         initFields();
@@ -55,7 +60,16 @@ public class MonitorView extends AbstractView {
 
             monitorItem.setDirPath("local");
             monitorItem.setDate(new Date());
-            monitorItem.getUser().setEmail(monitorItem.getNotificationEmail());
+
+            try {
+                List<User> userList = userDAO.findByEmail(monitorItem.getNotificationEmail()); //TODO should be only 1
+                monitorItem.setUser(userList.get(0));
+            } catch (Exception e) {
+                logger.error("Error mapping user");
+                fail();
+            }
+
+            //monitorItem.getUser().setEmail(monitorItem.getNotificationEmail());
 
             final SpreadsheetFile file = new SpreadsheetFileBuilder()
                     .setFileName(getSessionParam("uploadedFileName").toString())

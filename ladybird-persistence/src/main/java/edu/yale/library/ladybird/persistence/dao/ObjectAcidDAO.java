@@ -4,5 +4,6 @@ import edu.yale.library.ladybird.entity.ObjectAcid;
 
 public interface ObjectAcidDAO extends GenericDAO<ObjectAcid, Integer> {
 
+    ObjectAcid findByOidAndFdid(int oid, int field);
 }
 

@@ -15,17 +15,15 @@
                 <div>
 
                     <!-- Data Grid -->
-                    <p:dataGrid var="item" value="#{ObjectFileView.itemList}" columns="3"
-                                rows="12" paginator="true" id="ObjectFileDatagrid"
+                    <p:dataGrid var="item" value="#{ObjectFileView.itemList}" columns="5"
+                                rows="6" paginator="true" id="ObjectFileDatagrid" paginatorPostion="bottom"
 >
 
-                        <f:facet name="header">
-                            Objects
-                        </f:facet>
-
-                        <p:panel header="#{item.oid}" style="text-align:center">
+                      <p:panel header="#{item.oid}" style="text-align:center">
                             <h:panelGrid columns="1" style="width:100%">
                                 <h:graphicImage value="/images/#{item.filePath}" height="151" width="170"/>
+                                <h:outputText value="#{item.fileName}"/>
+                                <h:link outcome="object_metadata?oid=#{item.oid}" value="View"/>
                             </h:panelGrid>
                         </p:panel>
 

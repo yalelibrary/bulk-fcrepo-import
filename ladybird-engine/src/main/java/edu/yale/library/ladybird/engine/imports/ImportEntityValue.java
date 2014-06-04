@@ -3,6 +3,7 @@ package edu.yale.library.ladybird.engine.imports;
 import edu.yale.library.ladybird.engine.model.FieldConstant;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +24,16 @@ public class ImportEntityValue {
 
     public ImportEntityValue(List<Row> rowList) {
         this.rowList = rowList;
+    }
+
+    //TODO remove
+    public void print() {
+        for (ImportEntity.Row r: rowList) {
+            List<Column> columns = r.getColumns();
+            for (ImportEntity.Column c: columns) {
+                System.out.print(c.toString() + "<->");
+            }
+        }
     }
 
     @Deprecated
@@ -100,12 +111,32 @@ public class ImportEntityValue {
     /**
      * Get all indexed by oids column values for a specific FieldConstant. Assumes only one occurrence.
      * @param fieldConstant
-     * @return
+     * @return Map<Column c1, Colun c2> where c1 = oid column, c2 = field column
      */
     public Map<Column,  Column> getColumnValuesWithOIds(final FieldConstant fieldConstant) {
         Map<Column, Column> rowIdMap = new HashMap<>();
         int order = getFunctionPosition(FunctionConstants.F1);
         for (int i = 0; i < rowList.size(); i++) {
+            Column o = rowList.get(i).getColumns().get(order);
+            for (Column c: rowList.get(i).getColumns()) {
+                if (c.getField().getName().equals(fieldConstant.getName())) {
+                    rowIdMap.put(o, c);
+                }
+            }
+        }
+        return rowIdMap;
+    }
+
+    //FIXME ..merge or test
+    /**
+     * Get all (Except Exhead) indexed by oids column values for a specific FieldConstant. Assumes only one occurrence.
+     * @param fieldConstant
+     * @return Map<Column c1, Colun c2> where c1 = oid column, c2 = field column
+     */
+    public Map<Column,  Column> getContentColumnValuesWithOIds(final FieldConstant fieldConstant) {
+        Map<Column, Column> rowIdMap = new HashMap<>();
+        int order = getFunctionPosition(FunctionConstants.F1);
+        for (int i = 1; i < rowList.size(); i++) {
             Column o = rowList.get(i).getColumns().get(order);
             for (Column c: rowList.get(i).getColumns()) {
                 if (c.getField().getName().equals(fieldConstant.getName())) {
@@ -130,6 +161,11 @@ public class ImportEntityValue {
      * @return
      */
     public List<FieldConstant> getAllFieldConstants() {
+
+        if (rowList.isEmpty()) {
+            return Collections.EMPTY_LIST;
+        }
+
         final Row exHeadRow = rowList.get(HEADER_ROW);
         final List<FieldConstant> fieldConstantsList = new ArrayList<>();
 

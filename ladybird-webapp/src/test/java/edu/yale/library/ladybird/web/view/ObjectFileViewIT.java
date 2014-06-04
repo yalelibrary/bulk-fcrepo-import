@@ -38,7 +38,7 @@ public class ObjectFileViewIT extends AbstractWarTest {
         webClient.setJavaScriptEnabled(false);
         final HtmlPage page = webClient.getPage(PAGE_TO_TEST);
         final String pageAsText = page.asText();
-        Assert.assertTrue(pageAsText.contains("File"));
+        Assert.assertTrue(pageAsText.contains("Name"));
         Assert.assertTrue(pageAsText.contains("No records found."));
         webClient.closeAllWindows();
     }

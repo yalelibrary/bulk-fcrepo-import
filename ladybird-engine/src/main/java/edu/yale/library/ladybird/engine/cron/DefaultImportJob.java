@@ -76,11 +76,9 @@ public class DefaultImportJob implements Job, ImportJob {
 
             final int imid = importEngine.write(rowList);
 
-            logger.debug("[end] Completed import job in {}", DurationFormatUtils.formatDuration(System.currentTimeMillis() - startTime, "HH:mm:ss:SS"));
+            logger.debug("[end] Completed import (writing) job in {}", DurationFormatUtils.formatDuration(System.currentTimeMillis() - startTime, "HH:mm:ss:SS"));
 
-            /* Add params as desired */
-            final Event importEvent = new ImportCompleteEventBuilder().
-                    setRowsProcessed(rowList.size()).createImportDoneEvent();
+            final Event importEvent = new ImportCompleteEventBuilder().setRowsProcessed(rowList.size()).createImportDoneEvent();
 
             logger.debug("Adding import event and notifying all registered users");
 

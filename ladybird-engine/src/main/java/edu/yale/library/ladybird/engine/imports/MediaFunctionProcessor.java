@@ -115,11 +115,11 @@ public class MediaFunctionProcessor {
             logger.error("Error or warning converting image", e); //ignore errors and warnings
         }
 
-        //TODO exception order
+        //FIXME exception order (if error occurs, object file is still writtten)
 
         //2. prepare object file and persist
         ObjectFile objectFile = new ObjectFileBuilder().setDate(new Date()).setFilePath(outputFilePath).setFileExt(MediaFormat.JPEG.toString())
-                .setOid(oid).setUserId(1).setFileLabel(fileName).setFileName(fileName.replace(fromExt.toString(), toExt.toString())).createObjectFile(); //todo userid
+                .setOid(oid).setUserId(1).setFileLabel(fileName).setFileName(fileName.replace(fromExt.toString(), toExt.toString())).createObjectFile(); //FIXME userid
 
         logger.debug("Saving entity={}", objectFile);
 
