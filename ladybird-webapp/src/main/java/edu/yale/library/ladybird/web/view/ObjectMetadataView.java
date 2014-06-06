@@ -1,7 +1,9 @@
 package edu.yale.library.ladybird.web.view;
 
 
-//import edu.yale.library.ladybird.entity.*;
+import edu.yale.library.ladybird.engine.model.FieldConstant;
+import edu.yale.library.ladybird.engine.model.FieldDefinitionValue;
+import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.ObjectAcid;
 import edu.yale.library.ladybird.entity.ObjectFile;
@@ -20,6 +22,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import static org.slf4j.LoggerFactory.getLogger;
 
 @ManagedBean
@@ -27,6 +33,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 @SuppressWarnings("unchecked")
 public class ObjectMetadataView extends AbstractView {
     private final Logger logger = getLogger(this.getClass());
+
+    /** fdid value map*/
+    private Map<Integer, String> map;
 
     /** Path to image */
     private String image;
@@ -65,15 +74,39 @@ public class ObjectMetadataView extends AbstractView {
         dao = objectDAO;
         //logger.debug("Init ObjectMedataView");
         try {
-            String oidStr = Faces.getRequestParameter("oid");
-            //logger.debug("Request oid={}", oidStr);
+            final String oidStr = Faces.getRequestParameter("oid");
+            final int oid = Integer.parseInt(oidStr);
 
-            objectFile = objectFileDAO.findByOid(Integer.parseInt(oidStr));
-            //logger.debug("Object File={}", objectFile);
+            objectFile = objectFileDAO.findByOid(oid);
 
+            map = populateFieldMap(oid); //map contains fdid values
         } catch (Exception e) {
-            logger.error("Error finding ObjectFile entity");
+            logger.error("Error={}", e);
         }
+    }
+
+    private Map populateFieldMap(int oid) {
+        final Map<Integer, String> map = new HashMap<>();
+
+        final Map<String, FieldConstant> fdidMap = FieldDefinitionValue.getFieldDefMap(); //note no db value, and assuming it's been loaded
+
+        //logger.debug("Fdid Map size={}", fdidMap.size());
+
+        Set<String> keySet = fdidMap.keySet();
+
+        try {
+            for (String k: keySet) {
+                if (!FunctionConstants.isFunction(k)) {
+                    int fdid = fdidAsInt(k);
+                    logger.debug("Putting key string={} or fdid={}", k, fdid);
+                    map.put(fdid, getValueByOidAndFdid(oid, fdid)); //e.g. (63, "value");
+                }
+            }
+        } catch (NumberFormatException e) {
+            logger.error("Error={}", e.getMessage());
+            logger.debug("Map was={}", fdidMap.toString());
+        }
+        return map;
     }
 
     //TODO this should be replaced with List<FieldDefintionValue>
@@ -98,6 +131,23 @@ public class ObjectMetadataView extends AbstractView {
         return "N/A";
     }
 
+    /**
+     * converter helper
+     * @param s string e.g. from Host, note{fdid=68}
+     * @return integer value
+     *
+     * @see edu.yale.library.ladybird.engine.model.FieldConstantRules#convertStringToFieldConstant(String)
+     * for similiar functionality
+     * @see edu.yale.library.ladybird.engine.imports.ObjectWriter#fdidAsInt(String) for duplicate
+     */
+    private Integer fdidAsInt(String s) {
+        try {
+            return Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            String[] parsedString = s.split("fdid=");
+            return Integer.parseInt(parsedString[1].replace("}", ""));
+        }
+    }
 
     //Getters and setters -------------------------------------------------------------------
     /** converts request parameter to file path */
@@ -139,6 +189,14 @@ public class ObjectMetadataView extends AbstractView {
 
     public void setObjectAcid(ObjectAcid objectAcid) {
         this.objectAcid = objectAcid;
+    }
+
+    public Map getMap() {
+        return map;
+    }
+
+    public void setMap(Map map) {
+        this.map = map;
     }
 }
 

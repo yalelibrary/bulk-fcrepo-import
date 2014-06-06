@@ -27,15 +27,18 @@
             </div>
 
             <div>
-                <h4>Item Description</h4>
+                <h4>Metadata</h4>
 
-                <!--TODO this will be replaced with a data structure. -->
-                Field 69 <h:outputText value="#{objectMetadataView.getValueByOidAndFdid(objectMetadataView.objectFile.oid,69)}"/>
+                <ui:repeat value="#{objectMetadataView.map.entrySet().toArray()}" var="entry">
+                    Field #{entry.key} = #{entry.value} <br/>
+                </ui:repeat>
 
+                <!--
                 <h4>Access</h4>
                 <h4>Image Source</h4>
                 <h4>Administrative</h4>
                 <h4>Metadata</h4>
+                -->
             </div>
         </h:form>
     </ui:define>

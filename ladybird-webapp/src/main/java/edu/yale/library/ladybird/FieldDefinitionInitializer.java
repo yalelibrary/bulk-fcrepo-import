@@ -21,7 +21,7 @@ public class FieldDefinitionInitializer {
     private final Logger logger = LoggerFactory.getLogger(FieldDefinitionInitializer.class);
 
     /** Contains test fdids corresponding to test excel file (instead of via db) */
-    private static final String FDID_TEST_PROPS_FILE = "/fdids.test.tiny.properties";
+    private static final String FDID_TEST_PROPS_FILE = "/fdids.test.properties";
 
     /** Contains fdids meant to be loaded into db for init */
     private static final String FDID_INITIAL_PROPS_FILE = "/fdids.initial.properties";
@@ -43,7 +43,7 @@ public class FieldDefinitionInitializer {
                     properties.getProperty(fdidInt)));
         }
 
-        logger.debug("initial fdid map={}", fdidsMap.toString());
+        //logger.debug("initial fdid map={}", fdidsMap.toString());
 
         final FieldDefinitionValue fieldDefinitionValue = new FieldDefinitionValue();
         fieldDefinitionValue.setFieldDefMap(fdidsMap);

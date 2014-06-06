@@ -48,9 +48,11 @@ public class ExportReader {
 
         final ImportJobContentsDAO importJobContentsDAO = new ImportJobContentsHibernateDAO();
 
-        final int expectedNumRowsToWrite = importJobContentsDAO.getNumRowsPerImportJob(importId);
+        int expectedNumRowsToWrite = importJobContentsDAO.getNumRowsPerImportJob(importId); //gets contents count not exhead
+        expectedNumRowsToWrite = expectedNumRowsToWrite + 1; //to accomodate for row num. starting from 0
 
-        logger.debug("Num. import job content entries={} for jobId={}", expectedNumRowsToWrite, importId);
+        logger.debug("Import job contents num rows={}", expectedNumRowsToWrite);
+        logger.trace("Import job contents total rows={}", importJobContentsDAO.getNumEntriesPerImportJob(importId));
 
         Map<Integer, Multimap<Marc21Field, Map<String, String>>> bibIdDataFieldTypeMap = null;
 
@@ -73,8 +75,10 @@ public class ExportReader {
             //logger.debug("Adding header={}", fConst.toString());
             exheadRow.getColumns().add(importEntity.new Column(fConst, fConst.getName()));
         }
-        resultRowList.add(exheadRow);
+
         logger.debug("Header row col size={}", exheadRow.getColumns().size());
+
+        resultRowList.add(exheadRow); //N.B. exhead row is added
 
         //Get import job contents rows of columns. These will be merged with the oai data:
         final List<Row> regularRows = getImportJobContents(importId);
@@ -158,7 +162,11 @@ public class ExportReader {
         logger.debug("ImportJobExheads content={}", importJobExheads.toString());
 
         final ImportJobContentsDAO importJobContentsDAO = new ImportJobContentsHibernateDAO();
-        final int numRowsPerImportJob = importJobContentsDAO.getNumRowsPerImportJob(importId);
+        int numRowsPerImportJob = importJobContentsDAO.getNumRowsPerImportJob(importId);
+        numRowsPerImportJob = numRowsPerImportJob + 1;
+
+        logger.trace("Import job contents total rows={}", importJobContentsDAO.getNumEntriesPerImportJob(importId));
+        logger.debug("Import job contents num rows={}", numRowsPerImportJob);
 
         for (int i = 0; i < numRowsPerImportJob; i++) {
             final List<ImportJobContents> rowJobContentsList = importJobContentsDAO.findByRow(i);

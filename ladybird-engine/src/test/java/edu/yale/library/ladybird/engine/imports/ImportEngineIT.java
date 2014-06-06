@@ -118,7 +118,7 @@ public class ImportEngineIT extends AbstractDBTest {
 
         assert (listExportRows != null);
         logger.debug("Size={}", listExportRows.size());
-        assertEquals("Export rows don't equal import expected rows", listExportRows.size(), 77);
+        assertEquals("Export rows don't equal import expected rows", listExportRows.size(), 78);
 
         //write this spreadsheet
         exportEngine.write(listExportRows, XLS_FILE_TO_WRITE);
@@ -127,7 +127,7 @@ public class ImportEngineIT extends AbstractDBTest {
         logger.debug("Reading the new test spreadsheet created by ExportEngine with ImportEngine");
         final List<ImportEntity.Row> rowsReadBack = importEngine.read(getExportSpreadsheeet(), ReadMode.FULL,
                 new DefaultFieldDataValidator());
-        assertEquals("Rows size mismatch", rowsReadBack.size(), 77);
+        assertEquals("Rows size mismatch", rowsReadBack.size(), 78);
     }
 
     /**
