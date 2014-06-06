@@ -116,7 +116,7 @@ public class ImportJobExhead implements java.io.Serializable {
     public String toString() {
         return "ImportJobExhead{"
                 + "col=" + col
-                + ", date=" + date
+                //+ ", date=" + date
                 + ", importId=" + importId
                 + ", value='" + value + '\''
                 + '}';

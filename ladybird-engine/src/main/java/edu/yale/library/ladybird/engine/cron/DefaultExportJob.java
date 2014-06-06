@@ -55,11 +55,10 @@ public class DefaultExportJob implements Job, ExportJob {
 
             logger.debug("[end] Completed export job in={}", DurationFormatUtils.formatDuration(System.currentTimeMillis() - startTime, "HH:mm:ss:SS"));
 
-
             //2. Write to object metadata tables
-            logger.debug("Writing contents to object metadata tables. . .");
+            logger.debug("Writing contents to object metadata tables. Row size={}", importJobCtx.getImportJobList().size());
             ObjectWriter objectWriter = new ObjectWriter(); //TODO
-            //objectWriter.write(importJobCtx);
+            objectWriter.write(importJobCtx);
             //logger.debug("[end] Wrote to object metadata tables");
 
             /* Add params as desired */

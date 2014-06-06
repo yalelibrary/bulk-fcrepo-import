@@ -63,18 +63,14 @@ public class MediaFunctionProcessor {
                 Integer oid = Integer.parseInt(o.getValue());
                 ImportFile importFile = new ImportFileBuilder().setImportId(importId).setFileLocation(c.getValue()).setDate(new Date()).setOid(oid).createImportFile();
 
-                logger.debug("Saving entity={}", importFile.toString());
-
                 importFileDAO.save(importFile);
 
-                logger.debug("Saved.");
+                logger.debug("Saved entity={}", importFile.toString());
 
                 //2. convert image
                 convertImage(c.getValue(), MediaFormat.TIFF, MediaFormat.JPEG, oid);
-
-
             } catch (Exception e) {
-                logger.debug("Error persisting entity", e); //ignore persistence error
+                logger.debug("Error/warning persisting entity", e); //ignore persistence error
             }
         }
     }

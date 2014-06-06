@@ -89,7 +89,7 @@ public class ImportWriter {
             ImportJobExhead entry = new ImportJobExheadBuilder().setImportId(importId).setCol(col).
                     setDate(JOB_EXEC_DATE).setValue(column.field.getName()).createImportJobExhead();
             dao.save(entry);
-            logger.debug("Saved Exhead entry={}", entry.toString());
+            logger.debug("Saved={}", entry.toString());
             col++;
         }
     }
@@ -160,7 +160,7 @@ public class ImportWriter {
             final int f3ColumnNum = importEntityValue.getFunctionPosition(FunctionConstants.F3);
             logger.debug("Column with F3={}", f3ColumnNum);
             mediaFunctionProcessor.process(rowList, f3ColumnNum);
-            logger.debug("Done media processing");
+            logger.debug("Done media processing.");
         }
 
         //Process F3 with F1
@@ -168,7 +168,7 @@ public class ImportWriter {
             final int f3ColumnNum = importEntityValue.getFunctionPosition(FunctionConstants.F3);
             final int f1columnNum = importEntityValue.getFunctionPosition(FunctionConstants.F1);
             mediaFunctionProcessor.process(importId, rowList, f3ColumnNum, f1columnNum);
-            logger.debug("Done media processing");
+            logger.debug("Done media processing.");
         }
 
         //Save all columns to import_job_contents:

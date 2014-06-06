@@ -79,20 +79,22 @@ public class FieldConstantRules {
      * //TODO move
      */
     public static FieldConstant convertStringToFieldConstant(final String value) {
-        final Map<String, FieldConstant> map =  FieldDefinitionValue.getFieldDefMap();
+        final Map<String, FieldConstant> map;
         //logger.debug(map.toString());
         final FieldConstant val;
         try {
+            map = FieldDefinitionValue.getFieldDefMap();
             val = map.get(value);
-            //logger.debug("Found val={}", val.toString());
-            return val;
+            if (val != null) {
+                return val;
+            }
         } catch (Exception e) {
-            logger.warn("Error converting to FieldConstant(FieldDefinition) value={}", value);
+            logger.debug("Error converting to FieldConstant(FieldDefinition) value={}", value);
         }
 
         //See if it's a function constant
         try {
-            final FunctionConstants f  = FunctionConstants.valueOf(value);
+            final FunctionConstants f = FunctionConstants.valueOf(value);
             return f;
         } catch (Exception e) {
             logger.warn("Error converting to FieldConstant(FunctionConstant) value={}", value);

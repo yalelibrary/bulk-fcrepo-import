@@ -126,10 +126,10 @@ public class User implements java.io.Serializable {
     public String toString() {
         return "User{"
                 + "userId=" + userId
-                + ", date=" + date
+                //+ ", date=" + date
                 + ", username='" + username + '\''
-                + ", creatorId=" + creatorId
-                + ", name='" + name + '\''
+                //+ ", creatorId=" + creatorId
+                //+ ", name='" + name + '\''
                 + ", email='" + email + '\''
                 + '}';
     }

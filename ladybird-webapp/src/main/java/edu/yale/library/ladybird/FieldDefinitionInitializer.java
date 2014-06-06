@@ -21,7 +21,7 @@ public class FieldDefinitionInitializer {
     private final Logger logger = LoggerFactory.getLogger(FieldDefinitionInitializer.class);
 
     /** Contains test fdids corresponding to test excel file (instead of via db) */
-    private static final String FDID_TEST_PROPS_FILE = "/fdids.test.properties";
+    private static final String FDID_TEST_PROPS_FILE = "/fdids.test.tiny.properties";
 
     /** Contains fdids meant to be loaded into db for init */
     private static final String FDID_INITIAL_PROPS_FILE = "/fdids.initial.properties";
@@ -31,7 +31,7 @@ public class FieldDefinitionInitializer {
      * @throws java.io.IOException
      */
     public void setTextFieldDefsMap() throws IOException {
-        logger.debug("Init map with fdid from file={} . . .", FDID_TEST_PROPS_FILE);
+        logger.debug("Init map with fdid from file={}", FDID_TEST_PROPS_FILE);
 
         Map<String, FieldConstant> fdidsMap = new HashMap<>();
 
@@ -42,6 +42,9 @@ public class FieldDefinitionInitializer {
             fdidsMap.put(properties.getProperty(fdidInt), getFdidValue(Integer.parseInt(fdidInt),
                     properties.getProperty(fdidInt)));
         }
+
+        logger.debug("initial fdid map={}", fdidsMap.toString());
+
         final FieldDefinitionValue fieldDefinitionValue = new FieldDefinitionValue();
         fieldDefinitionValue.setFieldDefMap(fdidsMap);
     }
@@ -50,7 +53,7 @@ public class FieldDefinitionInitializer {
      * Initializes fdids. This concept needs to be re-visited.
      */
     public void setInitialFieldDefinitionDb() throws IOException {
-        logger.debug("Init db with fdid from file={} . . .", FDID_INITIAL_PROPS_FILE);
+        logger.debug("Init db with fdid from file={}", FDID_INITIAL_PROPS_FILE);
 
         FieldDefinitionDAO fieldDefinitionDAO = new FieldDefinitionHibernateDAO();
 

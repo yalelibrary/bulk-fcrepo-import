@@ -109,6 +109,7 @@ public class ExportReader {
             resultRowList.add(rowToWrite);
         }
         ImportJobCtx importJobCtx = new ImportJobCtx();
+        logger.debug("ImportJobCtx row size={}", resultRowList.size());
         importJobCtx.setImportJobList(resultRowList);
         importJobCtx.setMonitor(exportRequestEvent.getMonitor());
         //return resultRowList;

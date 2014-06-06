@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.engine.imports;
 
 import edu.yale.library.ladybird.engine.model.FieldConstant;
 import edu.yale.library.ladybird.engine.model.FieldDefinitionValue;
-import edu.yale.library.ladybird.engine.model.UnknownFunctionException;
+import edu.yale.library.ladybird.engine.model.UnknownFieldConstantException;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -68,7 +68,7 @@ public final class ImportReader {
                     final ImportEntity.Column<String> column = new ImportEntity()
                             .new Column<>(f, String.valueOf(cellValue(cell)));
                     headerSheetRow.getColumns().add(column);
-                } catch (UnknownFunctionException unknownFunction) {
+                } catch (UnknownFieldConstantException unknownFunction) {
                     if (this.readMode == ReadMode.HALT) {
                        logger.error("Unknown field column in header= {}", unknownFunction.getMessage());
                        final ImportReaderValidationException importReaderValidationException =
@@ -77,7 +77,7 @@ public final class ImportReader {
                         throw importReaderValidationException;
                     }
                     logger.debug("Unknown exhead value= {}", unknownFunction.getMessage());
-                    valueMap.add(FunctionConstants.UNK);
+                    valueMap.add(FunctionConstants.UNK); //TODO shouldn't be used to represent both unknown func and fdid
                 } catch (Exception e) {
                     logger.error("Unknown error iterating header row", e);
                 }
@@ -118,11 +118,12 @@ public final class ImportReader {
      *
      * @param cellValue spreadsheet cell value
      * @return a FieldConstant
-     * @throws UnknownFunctionException
+     * @throws edu.yale.library.ladybird.engine.model.UnknownFieldConstantException
      * @see FunctionConstants
      */
-    public static FieldConstant getFieldConstant(final String cellValue) throws UnknownFunctionException {
+    public static FieldConstant getFieldConstant(final String cellValue) throws UnknownFieldConstantException {
         //e.g. Note{fdid=80}
+        //See if it's a fdid or it's a function constant
         if (FieldDefinitionValue.getFieldDefMap().containsKey(cellValue.trim())) {
             return FieldDefinitionValue.getFieldDefMap().get(cellValue.trim());
         }
@@ -132,7 +133,7 @@ public final class ImportReader {
             final FieldConstant fieldConst = FunctionConstants.valueOf(normCellString.toUpperCase());
             return fieldConst;
         } catch (IllegalArgumentException e) {
-            throw new UnknownFunctionException("Specified cell=" + cellValue + " not a recognized function or fdid.");
+            throw new UnknownFieldConstantException("Specified cell=" + cellValue + " not a recognized function or fdid.");
         }
     }
 

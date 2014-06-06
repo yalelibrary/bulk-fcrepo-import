@@ -5,19 +5,19 @@ package edu.yale.library.ladybird.engine.model;
  *
  * @see edu.yale.library.ladybird.engine.imports.ImportReaderValidationException
  */
-public class UnknownFunctionException extends Exception {
-    public UnknownFunctionException() {
+public class UnknownFieldConstantException extends Exception {
+    public UnknownFieldConstantException() {
     }
 
-    public UnknownFunctionException(String message) {
+    public UnknownFieldConstantException(String message) {
         super(message);
     }
 
-    public UnknownFunctionException(String message, Throwable cause) {
+    public UnknownFieldConstantException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public UnknownFunctionException(Throwable cause) {
+    public UnknownFieldConstantException(Throwable cause) {
         super(cause);
     }
 

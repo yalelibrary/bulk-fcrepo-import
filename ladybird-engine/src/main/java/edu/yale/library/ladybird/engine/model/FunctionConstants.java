@@ -71,5 +71,12 @@ public enum FunctionConstants implements FieldConstant {
         this.title = title;
     }
 
-
+    public static boolean isFunction(String s) {
+        try {
+            final FieldConstant fieldConst = FunctionConstants.valueOf(s.toUpperCase());
+        } catch (Exception e) {
+           return false;
+        }
+        return true;
+    }
 }

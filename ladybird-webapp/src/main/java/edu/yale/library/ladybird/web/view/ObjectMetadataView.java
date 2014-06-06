@@ -63,13 +63,13 @@ public class ObjectMetadataView extends AbstractView {
     public void init() {
         initFields();
         dao = objectDAO;
-        logger.debug("Init ObjectMedataView");
+        //logger.debug("Init ObjectMedataView");
         try {
             String oidStr = Faces.getRequestParameter("oid");
-            logger.debug("Request oid={}", oidStr);
+            //logger.debug("Request oid={}", oidStr);
 
             objectFile = objectFileDAO.findByOid(Integer.parseInt(oidStr));
-            logger.debug("Object File={}", objectFile);
+            //logger.debug("Object File={}", objectFile);
 
         } catch (Exception e) {
             logger.error("Error finding ObjectFile entity");
@@ -81,14 +81,15 @@ public class ObjectMetadataView extends AbstractView {
         try {
             //1. Find acid value for this oid (assuming that's what's needed here)
             logger.debug("Finding ObjectAcid by oid={} and fdid={}", oid, fdid);
+
             final ObjectAcid objectAcid = objectAcidDAO.findByOidAndFdid(oid, fdid);
-            logger.debug("Found entry={}", objectAcid.toString());
+            //logger.debug("Found entry={}", objectAcid.toString());
             int acid = objectAcid.getValue();
 
             //2. Get acid value
-            logger.debug("Find AuthorityControl by acid={}", acid);
+            //logger.debug("Find AuthorityControl by acid={}", acid);
             final AuthorityControl authorityControl = authorityControlDAO.findByAcid(acid);
-            logger.debug("Found entry={}", authorityControl.toString());
+            //logger.debug("Found entry={}", authorityControl.toString());
             return authorityControl.getValue();
 
         } catch (Exception e) {

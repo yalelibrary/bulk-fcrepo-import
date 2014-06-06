@@ -45,6 +45,20 @@ public class ExportReaderTest {
     }
 
     @Test
+    public void shouldConvertFunctionStringToFieldConst() {
+        final FieldConstant f = FieldConstantRules.convertStringToFieldConstant("F1");
+        assert (f != null);
+        assertEquals("Value mismatch", f.getName(), "F1");
+
+        try {
+            final FunctionConstants f1  = FunctionConstants.valueOf("F1");
+            assertEquals("Value mismatch", f1.getName(), "F1");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     public void shouldEqualMarc21Mapping() {
         final FieldConstant f = new FieldDefinitionValue(70, "70");
         final Marc21Field marc21Field = FieldConstantRules.getFieldConstantToMarc21Mapping(f);

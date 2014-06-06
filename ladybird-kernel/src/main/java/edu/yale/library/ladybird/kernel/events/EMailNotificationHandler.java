@@ -22,11 +22,10 @@ public class EMailNotificationHandler implements NotificationHandler {
             email.setMsg(event.toString()); //TODO
             email.addTo(user.getEmail());
 
-            logger.debug("Sending e-mail notification to user email={}", user.getEmail());
+            logger.debug("Sending e-mail notification to user email={} with subject={}", user.getEmail(), event.getEventName());
 
             email.send();
 
-            logger.debug("Sent e-mail notification to user email={}", user.getEmail());
         } catch (EmailException e) {
             logger.error("Exception sending notification");
             e.printStackTrace(); //TODO

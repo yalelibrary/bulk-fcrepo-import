@@ -18,7 +18,7 @@ public class UserEventChangeRecorder {
 
     @Subscribe
     public void recordEvent(UserGeneratedEvent event) {
-        logger.debug("Received event={}", event.toString());
+        logger.trace("Received event={}", event.toString());
         try {
             saveEvent(event);
         } catch (Exception e) {

@@ -18,7 +18,7 @@ public class EventChangeRecorder {
 
     @Subscribe
     public void recordEventChange(Event e) {
-        logger.debug("Received event={}", e.toString());
+        logger.trace("Received event={}", e.toString());
         try {
             saveEvent(e);
         } catch (Exception e1) {
@@ -33,8 +33,8 @@ public class EventChangeRecorder {
         userEvent.setUserId("0"); //TODO
         userEvent.setValue("TEST"); //TODO
 
-        logger.debug("Saving event={}", event.toString());
+        logger.trace("Saving event={}", event.toString());
         userEventDAO.save(userEvent);
-        logger.debug("Saved event={}.", event.toString());
+        logger.trace("Saved event={}.", event.toString());
     }
 }

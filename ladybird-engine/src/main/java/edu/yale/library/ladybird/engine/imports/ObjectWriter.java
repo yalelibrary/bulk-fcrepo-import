@@ -34,6 +34,7 @@ public class ObjectWriter {
 
     final ObjectDAO objectDAO = new ObjectHibernateDAO();
     final ObjectStringDAO objectStringDAO = new ObjectStringHibernateDAO();
+
     final ObjectAcidDAO objectAcidDAO = new ObjectAcidHibernateDAO();
     final AuthorityControlDAO authorityControlDAO = new AuthorityControlHibernateDAO();
 
@@ -42,31 +43,29 @@ public class ObjectWriter {
      * Populates object metadata tables
      *
      * @param importJobCtx context
-     * @see edu.yale.library.ladybird.engine.cron.DefaultExportJob#execute(org.quartz.JobExecutionContext)  for where it's being called
+     * @see edu.yale.library.ladybird.engine.cron.DefaultExportJob#execute(org.quartz.JobExecutionContext) for call
      *
-     * TODO pass ImportEntity ?
+     * TODO pass ImportEntity directly
      */
     public void write(ImportJobCtx importJobCtx) {
-        logger.debug("Writing object metadata");
+
         try {
             List<ImportEntity.Row> importRows = importJobCtx.getImportJobList();
-            logger.debug("Import Row size={}", importRows.size());
-
-            logger.debug("Import Rows={}", importRows.toString());
+            ImportEntityValue importEntityValue = new ImportEntityValue(importRows);
 
             final int userId = getUserId(importJobCtx);
 
-            ImportEntityValue importEntityValue = new ImportEntityValue(importRows);
+            logger.debug("Writing object metadata. Import Row size={}, UserId{}", importRows.size(), userId);
 
             //Go through each column (F1.. fdid=220), and persist object data (i.e. it processes vertically):
 
-            List<FieldConstant> fieldConstants = importEntityValue.getAllFieldConstants();
+            final List<FieldConstant> fieldConstants = importEntityValue.getAllFieldConstants();
 
             logger.debug("Field constants for this sheet are={}", fieldConstants.toString());
 
             for (FieldConstant f : fieldConstants) {
 
-                if (f.equals(FunctionConstants.F1)) { //and other functions too?
+                if (FunctionConstants.isFunction(f.getName())) { //skip functions. functions have no metadata
                     continue;
                 }
 
@@ -74,72 +73,68 @@ public class ObjectWriter {
 
                 Map<ImportEntity.Column, ImportEntity.Column> columnMap = importEntityValue.getContentColumnValuesWithOIds(f);
 
-                logger.debug("Column value is={}", columnMap.toString());
+                logger.debug("All column values for this field are={}", columnMap.toString());
 
-                //TODO in reality (e.g. FieldDefinion.69) but there's no such abstraction for FieldDefintion, only for FunctionConstant
+                Set<ImportEntity.Column> keys = columnMap.keySet();
 
-                Set<ImportEntity.Column> keySet = columnMap.keySet();
+                logger.debug("Column map key set size={}", keys.size());
 
-                logger.debug("Map key set size={}", keySet.size());
-
-                for (ImportEntity.Column c : keySet) {
-
-                    logger.debug("Evaluating Column={}", c.toString());
+                for (ImportEntity.Column c : keys) {
 
                     String oid = (String) c.getValue();
+                    ImportEntity.Column fdidForOid = columnMap.get(c);
 
-                    ImportEntity.Column fdidValueForOid = columnMap.get(c);
+                    logger.debug("Processing (key oid) Oid={}, Field Name={}, Field Value={}", oid,
+                            fdidForOid.getField().getName(), fdidForOid.getValue());
 
-                    logger.debug("Oid={}, Field Name={}, Field Value={}", oid, fdidValueForOid.getField().getName(), fdidValueForOid.getValue());
+                    //Save object metadata:
 
+                    if (true) { //FIXME (currently processing each fdid is an acid value)
 
-                    //TODO (currently assuming each fdid is an acid value)
-                    if (true) {
-
-                        final ObjectAcid objectAcid = new ObjectAcid();
-                        objectAcid.setFdid(fdidAsInt(f.getName()));
-
-                        if (oid != null || oid != "") {
-                            objectAcid.setObjectId(Integer.parseInt(oid));
-                        } else {
-                            logger.error("Oid value null or less than 1");
-                        }
-
-                        //persist acid:
+                        //1.persist acid:
                         final AuthorityControl authorityControl = new AuthorityControl();
                         authorityControl.setFdid(fdidAsInt(f.getName()));
                         authorityControl.setUserId(userId);
                         authorityControl.setDate(new Date());
-                        authorityControl.setValue((String) fdidValueForOid.getValue());
+                        authorityControl.setValue((String) fdidForOid.getValue());
                         int acid = authorityControlDAO.save(authorityControl);
+                        logger.debug("Saved entity={}", authorityControl.toString());
 
-                        //persist object acid
+                        //2. persist object acid
+                        final ObjectAcid objectAcid = new ObjectAcid();
+                        objectAcid.setFdid(fdidAsInt(f.getName()));
+                        if (oid != null) { //TODO
+                            objectAcid.setObjectId(Integer.parseInt(oid));
+                        }
+
                         objectAcid.setValue(acid); //TODO acid PK
                         objectAcid.setUserId(userId);
                         objectAcid.setDate(new Date());
-                        //logger.debug("Saving entity={}", objectAcid.toString());
                         objectAcidDAO.save(objectAcid);
+                        logger.debug("Saved entity={}", objectAcid.toString());
                     }
                 }
             }
         } catch (Exception e) {
             logger.error("Error writing to object metadata tables={}", e);
         }
-        logger.debug("Done.");
     }
 
     /**
      * converter helper
-     * FiXME this depends on the the fdids are loaded (currently through fdid.test.propeties at boot)
+     * FiXME this depends on the the fdids are loaded (currently through a file fdid.test.propeties at webapp start up)
      * @param s string e.g. from Host, note{fdid=68}
      * @return integer value
+     *
+     * @see edu.yale.library.ladybird.engine.model.FieldConstantRules#convertStringToFieldConstant(String)
+     * for similiar functionality
      */
     private Integer fdidAsInt(String s) {
         try {
             return Integer.parseInt(s);
         } catch (NumberFormatException e) {
             String[] parsedString = s.split("fdid=");
-            return Integer.parseInt(parsedString[1].replace("}",""));
+            return Integer.parseInt(parsedString[1].replace("}", ""));
         }
     }
 
@@ -154,13 +149,5 @@ public class ObjectWriter {
         final int userId = user.getUserId();
         return userId;
     }
-    private void printMap(Map<ImportEntity.Column, ImportEntity.Column> columnMap) {
-        Set<ImportEntity.Column> keySet = columnMap.keySet();
 
-        for(ImportEntity.Column key: keySet) {
-            String keyString = key.getField().getName();
-            String valueString = columnMap.get(key).getValue().toString();
-            logger.debug("key={} value={}", keyString, valueString);
-        }
-    }
 }

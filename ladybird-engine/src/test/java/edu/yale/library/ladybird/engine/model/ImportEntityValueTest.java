@@ -5,13 +5,15 @@ import edu.yale.library.ladybird.engine.imports.ImportEntityValue;
 import edu.yale.library.ladybird.entity.FieldDefinition;
 import org.junit.Test;
 
-import java.util.*;
-
-
 import edu.yale.library.ladybird.engine.imports.ImportEntity.Column;
 import edu.yale.library.ladybird.engine.imports.ImportEntity.Row;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -19,8 +21,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class ImportEntityValueTest {
-
-    Logger logger = LoggerFactory.getLogger(ImportEntityValueTest.class);
 
     @Test
     public void getColumnValues() {
@@ -84,7 +84,7 @@ public class ImportEntityValueTest {
         final ImportEntityValue importEntityValue = getTestMultipleRowImportEntityValue();
         FieldDefinitionValue fdValue = new FieldDefinitionValue(69, "tt");
 
-        final Map<Column,Column> map = importEntityValue.getContentColumnValuesWithOIds(fdValue);
+        final Map<Column, Column> map = importEntityValue.getContentColumnValuesWithOIds(fdValue);
         //logger.debug(map.toString());
 
         Set<Column> keySet = map.keySet();
@@ -97,8 +97,8 @@ public class ImportEntityValueTest {
 
             Column v = map.get(c);
 
-            assertEquals(v.getField().getName(),"");
-            assertEquals(v.getValue(),"name");
+            assertEquals(v.getField().getName(), "");
+            assertEquals(v.getValue(), "name");
         }
     }
 
