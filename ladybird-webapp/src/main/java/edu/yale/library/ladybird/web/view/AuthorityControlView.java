@@ -9,11 +9,10 @@ import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.persistence.dao.AuthorityControlDAO;
 import org.slf4j.Logger;
 
-import javax.faces.bean.ManagedBean;
 import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

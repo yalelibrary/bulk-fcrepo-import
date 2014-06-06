@@ -1,4 +1,4 @@
-package edu.yale.library.ladybird;
+package edu.yale.library.ladybird.engine;
 
 import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.persistence.dao.FieldDefinitionDAO;
@@ -17,7 +17,7 @@ public class FieldDefinitionInitializer {
     private final Logger logger = LoggerFactory.getLogger(FieldDefinitionInitializer.class);
 
     /** Contains fdids meant to be loaded into db for init */
-    private static final String FDID_INITIAL_PROPS_FILE = "/fdids.initial.properties";
+    private static final String FDID_INITIAL_PROPS_FILE = "/fdids.test.properties";
 
     /**
      * Initializes fdids. This concept needs to be re-visited.
@@ -41,6 +41,8 @@ public class FieldDefinitionInitializer {
     }
 
     private FieldDefinition getFdid(final int fdid, final String s) {
-        return new FieldDefinition(fdid, s);
+        FieldDefinition fieldDefinition = new  FieldDefinition(fdid, s);
+        //fieldDefinition.setLocked(false);
+        return fieldDefinition;
     }
 }

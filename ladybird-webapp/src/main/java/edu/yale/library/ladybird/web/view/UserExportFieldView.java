@@ -6,11 +6,10 @@ import edu.yale.library.ladybird.entity.UserExportField;
 import edu.yale.library.ladybird.persistence.dao.UserExportFieldDAO;
 import org.slf4j.Logger;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.List;
 

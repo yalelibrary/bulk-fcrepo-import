@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.engine.imports;
 
-import edu.yale.library.ladybird.engine.model.FieldConstant;
+import edu.yale.library.ladybird.entity.FieldConstant;
 
 import java.util.ArrayList;
 import java.util.List;

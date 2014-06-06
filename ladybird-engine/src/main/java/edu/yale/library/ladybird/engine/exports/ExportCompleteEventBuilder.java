@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.engine.exports;
 
-import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.engine.imports.SpreadsheetFile;
+import edu.yale.library.ladybird.entity.User;
 
 public class ExportCompleteEventBuilder {
     private User user;

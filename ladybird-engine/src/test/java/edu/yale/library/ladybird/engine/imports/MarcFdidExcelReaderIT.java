@@ -15,8 +15,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import static org.junit.Assert.fail;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 
 public class MarcFdidExcelReaderIT extends AbstractDBTest {

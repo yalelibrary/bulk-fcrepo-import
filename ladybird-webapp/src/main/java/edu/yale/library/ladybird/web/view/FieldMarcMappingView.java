@@ -2,15 +2,13 @@ package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.entity.FieldMarcMapping;
 import edu.yale.library.ladybird.entity.FieldMarcMappingBuilder;
-
 import edu.yale.library.ladybird.persistence.dao.FieldMarcMappingDAO;
 import org.slf4j.Logger;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-
 import java.util.Date;
 import java.util.List;
 

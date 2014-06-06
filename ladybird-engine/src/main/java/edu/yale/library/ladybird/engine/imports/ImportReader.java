@@ -1,10 +1,9 @@
 package edu.yale.library.ladybird.engine.imports;
 
-import edu.yale.library.ladybird.engine.model.FieldConstant;
-import edu.yale.library.ladybird.engine.model.FieldDefinitionValue;
-import edu.yale.library.ladybird.engine.model.UnknownFieldConstantException;
+import edu.yale.library.ladybird.entity.FieldConstant;
+import edu.yale.library.ladybird.engine.model.FieldConstantRules;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
-
+import edu.yale.library.ladybird.engine.model.UnknownFieldConstantException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -23,7 +22,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public final class ImportReader {
 
-    private final Logger logger = getLogger(this.getClass());
+    private static final Logger logger = getLogger(ImportReader.class);
 
     private final SpreadsheetFile file;
     private final int sheetNumber; //assumes one sheet
@@ -122,11 +121,13 @@ public final class ImportReader {
      * @see FunctionConstants
      */
     public static FieldConstant getFieldConstant(final String cellValue) throws UnknownFieldConstantException {
-        //e.g. Note{fdid=80}
-        //See if it's a fdid or it's a function constant
-        if (FieldDefinitionValue.getFieldDefMap().containsKey(cellValue.trim())) {
-            return FieldDefinitionValue.getFieldDefMap().get(cellValue.trim());
+
+        FieldConstant f = FieldConstantRules.convertStringToFieldConstant(cellValue);
+        if (f != null) {
+            return f;
         }
+
+        //try converting it to function constant (redundantly) FIXME
 
         try {
             final String normCellString = cellValue.replace("{", "").replace("}", "");
@@ -136,6 +137,7 @@ public final class ImportReader {
             throw new UnknownFieldConstantException("Specified cell=" + cellValue + " not a recognized function or fdid.");
         }
     }
+
 
     /**
      * TODO change return type

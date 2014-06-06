@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.engine.imports;
 
 import com.google.common.collect.Multimap;
-import edu.yale.library.ladybird.engine.model.FieldConstant;
+import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.engine.model.FieldConstantRules;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.engine.oai.Marc21Field;
@@ -11,14 +11,12 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
-
-import java.util.List;
-import java.util.Map;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Properties;
 import java.util.Iterator;
-
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

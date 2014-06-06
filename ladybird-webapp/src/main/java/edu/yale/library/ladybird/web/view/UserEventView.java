@@ -1,10 +1,6 @@
 package edu.yale.library.ladybird.web.view;
 
 
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.inject.Inject;
-
 import edu.yale.library.ladybird.entity.UserEvent;
 import edu.yale.library.ladybird.persistence.dao.UserDAO;
 import edu.yale.library.ladybird.persistence.dao.UserEventDAO;
@@ -13,6 +9,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.List;
 

@@ -1,20 +1,18 @@
 package edu.yale.library.ladybird.web.view;
 
+import edu.yale.library.ladybird.entity.Project;
+import edu.yale.library.ladybird.entity.ProjectRoles;
+import edu.yale.library.ladybird.entity.User;
+import edu.yale.library.ladybird.entity.UserProject;
+import edu.yale.library.ladybird.entity.UserProjectBuilder;
+import edu.yale.library.ladybird.persistence.dao.UserProjectDAO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
-
-import edu.yale.library.ladybird.entity.User;
-import edu.yale.library.ladybird.entity.ProjectRoles;
-import edu.yale.library.ladybird.entity.Project;
-import edu.yale.library.ladybird.entity.UserProject;
-import edu.yale.library.ladybird.entity.UserProjectBuilder;
-import edu.yale.library.ladybird.persistence.dao.UserProjectDAO;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.Serializable;
 import java.util.Date;
 

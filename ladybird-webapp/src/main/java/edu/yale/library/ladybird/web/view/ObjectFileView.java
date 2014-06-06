@@ -6,11 +6,10 @@ import edu.yale.library.ladybird.entity.ObjectFile;
 import edu.yale.library.ladybird.persistence.dao.ObjectFileDAO;
 import org.slf4j.Logger;
 
-import javax.faces.bean.ManagedBean;
 import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.List;
 

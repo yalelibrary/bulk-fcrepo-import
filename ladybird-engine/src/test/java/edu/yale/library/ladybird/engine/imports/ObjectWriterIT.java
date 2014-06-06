@@ -2,9 +2,9 @@ package edu.yale.library.ladybird.engine.imports;
 
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
-import edu.yale.library.ladybird.engine.model.FieldDefinitionValue;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.AuthorityControl;
+import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.Monitor;
 import edu.yale.library.ladybird.entity.ObjectAcid;
 import edu.yale.library.ladybird.entity.User;
@@ -64,7 +64,7 @@ public class ObjectWriterIT extends AbstractDBTest {
         ImportEntity.Column oidExHeadColumn = new ImportEntity().new Column(FunctionConstants.F1, "");
         exHeadColumns.add(oidExHeadColumn);
 
-        FieldDefinitionValue fieldDefinition = new FieldDefinitionValue(69, "69");
+        FieldDefinition fieldDefinition = new FieldDefinition(69, "69");
         ImportEntity.Column fieldExHeadColumn = new ImportEntity().new Column<>(fieldDefinition, "");
 
         exHeadColumns.add(fieldExHeadColumn);
@@ -81,7 +81,7 @@ public class ObjectWriterIT extends AbstractDBTest {
         ImportEntity.Column oidContentColumn = new ImportEntity().new Column(FunctionConstants.F1, "777");
         contentColumns.add(oidContentColumn);
 
-        FieldDefinitionValue fieldDefinitionContent = new FieldDefinitionValue(69, "69");
+        FieldDefinition fieldDefinitionContent = new FieldDefinition(69, "69");
         ImportEntity.Column fieldContentColumn = new ImportEntity().new Column<>(fieldDefinitionContent, "Name of the rose");
         contentColumns.add(fieldContentColumn);
 

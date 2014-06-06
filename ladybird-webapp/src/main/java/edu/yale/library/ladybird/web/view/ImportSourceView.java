@@ -3,7 +3,6 @@ package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.entity.ImportSource;
 import edu.yale.library.ladybird.entity.ImportSourceBuilder;
-
 import edu.yale.library.ladybird.persistence.dao.ImportSourceDAO;
 import org.slf4j.Logger;
 
@@ -11,7 +10,6 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.inject.Inject;
-
 import java.util.Date;
 import java.util.List;
 

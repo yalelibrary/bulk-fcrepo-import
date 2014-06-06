@@ -1,19 +1,25 @@
 package edu.yale.library.ladybird.engine.imports;
 
+import edu.yale.library.ladybird.engine.AbstractDBTest;
 import edu.yale.library.ladybird.engine.DefaultFieldDataValidator;
+import edu.yale.library.ladybird.engine.FieldDefinitionInitializer;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
+import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
 
 
 /**
  *
  */
-public class DefaultImportReaderTest {
+public class DefaultImportReaderTest extends AbstractDBTest {
 
     private static class TestFileConstants {
         static final String TEST_XLS_FILE = "excel/4654-pt1-READY-FOR-INGEST-A.xlsx";
@@ -25,6 +31,16 @@ public class DefaultImportReaderTest {
 
     @Test
     public void execute() throws Exception {
+
+        try {
+            FieldDefinitionInitializer fieldDefinitionInitializer = new FieldDefinitionInitializer();
+            fieldDefinitionInitializer.setInitialFieldDefinitionDb();
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail("Failed");
+        }
+
+
         AbstractImportEngine abstractImportProcessor = new DefaultImportEngine();
         List<ImportEntity.Row> rows = abstractImportProcessor.read(getTestSpreadsheeet(), ReadMode.FULL,
                 new DefaultFieldDataValidator());
@@ -41,6 +57,16 @@ public class DefaultImportReaderTest {
                 .createSpreadsheetFile();
 
         return file;
+    }
+
+    @Before
+    public void init() {
+        super.init();
+    }
+
+    @After
+    public void stopDB() throws SQLException {
+        super.stop();
     }
 
 }

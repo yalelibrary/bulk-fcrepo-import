@@ -29,17 +29,20 @@ public class FieldDefinitionDaoTest extends AbstractPersistenceTest {
     }
 
     @Test
-    public void testSave() {
+    public void shouldSave() {
         final FieldDefinition item = new FieldDefinition();
         item.setFdid(555);
         item.setAcid(777);
         item.setDate(new Date());
-        item.setLocked(true);
-        item.setRequired(false);
+        //item.setLocked(true);
+        //item.setRequired(false);
         List list = null;
+        FieldDefinition dbItemByFdid = null;
+
         try {
             dao.save(item);
             list = dao.findAll();
+            dbItemByFdid = dao.findByFdid(555);
 
         } catch (Throwable e) {
             e.printStackTrace();
@@ -50,8 +53,10 @@ public class FieldDefinitionDaoTest extends AbstractPersistenceTest {
         final FieldDefinition dbItem = (FieldDefinition) list.get(0);
         assertEquals("Value mismatch", (long) dbItem.getFdid(), 555);
         assertEquals("Value mismatch", dbItem.getAcid(), 777);
-        assertEquals("Value mismatch", dbItem.isLocked(), true);
-        assertEquals("Value mismatch", dbItem.isRequired(), false);
+        //assertEquals("Value mismatch", dbItem.isLocked(), true);
+        //assertEquals("Value mismatch", dbItem.isRequired(), false);
+
+        assertEquals("Value mismatch", dbItemByFdid.getAcid(), 777);
     }
 
 }

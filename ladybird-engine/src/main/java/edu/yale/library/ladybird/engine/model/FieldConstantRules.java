@@ -2,17 +2,16 @@ package edu.yale.library.ladybird.engine.model;
 
 import edu.yale.library.ladybird.engine.imports.ImportEntity;
 import edu.yale.library.ladybird.engine.oai.Marc21Field;
+import edu.yale.library.ladybird.entity.FieldConstant;
+import edu.yale.library.ladybird.entity.FieldDefinition;
+import edu.yale.library.ladybird.persistence.dao.FieldDefinitionDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.FieldDefinitionHibernateDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-/**
- *
- */
 public class FieldConstantRules {
 
     private static final Logger logger = LoggerFactory.getLogger(FieldConstantRules.class);
@@ -46,22 +45,18 @@ public class FieldConstantRules {
     }
 
     /**
-     * Gets all FieldConstants (fdids etc) pertaining to the application
+     * Gets all FieldConstants (function constants, fdids etc) pertaining to the application
      * @return list of field constants
-     * TODO move
      */
     public static List<FieldConstant> getApplicationFieldConstants() {
 
         final List<FieldConstant> globalFunctionConstants = new ArrayList<>();
 
-        //add fdids
-        final Map<String, FieldConstant> fdidMap = FieldDefinitionValue.getFieldDefMap();
-        final Set<String> keySet = fdidMap.keySet();
+        //add fdids via db
+        FieldDefinitionDAO fieldDefinitionDAO = new FieldDefinitionHibernateDAO();
+        List<FieldDefinition> fieldDefinitions = fieldDefinitionDAO.findAll();
 
-        for (final String s: keySet) {
-            final FieldConstant f = fdidMap.get(s);
-            globalFunctionConstants.add(f);
-        }
+        globalFunctionConstants.addAll(fieldDefinitions);
 
         //add F1, F104 etc
         final FunctionConstants[] functionConstants = FunctionConstants.values();
@@ -76,23 +71,24 @@ public class FieldConstantRules {
      * Converts string to a FieldConstant (fdid or a FunctionConstants)
      * @param value
      * @return
-     * //TODO move
      */
     public static FieldConstant convertStringToFieldConstant(final String value) {
-        final Map<String, FieldConstant> map;
-        //logger.debug(map.toString());
-        final FieldConstant val;
+
         try {
-            map = FieldDefinitionValue.getFieldDefMap();
-            val = map.get(value);
-            if (val != null) {
-                return val;
+            int fdidInt = fdidAsInt(value);
+
+            FieldDefinitionDAO fieldDefinitionDAO = new FieldDefinitionHibernateDAO();
+            FieldDefinition fieldDefinition = fieldDefinitionDAO.findByFdid(fdidInt);
+
+            if (fieldDefinition != null) {
+                return fieldDefinition;
+
             }
         } catch (Exception e) {
-            logger.debug("Error converting to FieldConstant(FieldDefinition) value={}", value);
+            logger.error("Could not convert, seeing if it's a function constant");
         }
 
-        //See if it's a function constant
+        //Otherwise, see if it's a function constant
         try {
             final FunctionConstants f = FunctionConstants.valueOf(value);
             return f;
@@ -101,6 +97,25 @@ public class FieldConstantRules {
         }
 
         return null;
+    }
+
+    /**
+     * converter helper
+     * TODO this depends on the the fdids are loaded (currently through a file fdid.test.propeties at webapp start up)
+     * @param s string e.g. from Host, note{fdid=68}
+     * @return integer value
+     *
+     * @see edu.yale.library.ladybird.engine.model.FieldConstantRules#convertStringToFieldConstant(String)
+     * for similiar functionality
+     */
+    private static Integer fdidAsInt(String s) {
+        logger.debug("Converting={}", s);
+        try {
+            return Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            String[] parsedString = s.split("fdid=");
+            return Integer.parseInt(parsedString[1].replace("}", ""));
+        }
     }
 
     /**
@@ -115,6 +130,4 @@ public class FieldConstantRules {
         }
         return Marc21Field.UNK;
     }
-
-
 }

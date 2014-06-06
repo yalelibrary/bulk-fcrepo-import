@@ -1,6 +1,8 @@
 package edu.yale.library.ladybird.engine.imports;
 
 import edu.yale.library.ladybird.engine.file.ImageMagickProcessor;
+import edu.yale.library.ladybird.engine.imports.ImportEntity.Column;
+import edu.yale.library.ladybird.engine.imports.ImportEntity.Row;
 import edu.yale.library.ladybird.entity.ImportFile;
 import edu.yale.library.ladybird.entity.ImportFileBuilder;
 import edu.yale.library.ladybird.entity.ObjectFile;
@@ -11,9 +13,6 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ImportFileHibernateDA
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectFileHibernateDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import edu.yale.library.ladybird.engine.imports.ImportEntity.Row;
-import edu.yale.library.ladybird.engine.imports.ImportEntity.Column;
 
 import java.io.File;
 import java.util.Date;

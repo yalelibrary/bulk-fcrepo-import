@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * FieldDefinition
  */
-public class FieldDefinition implements java.io.Serializable {
+public class FieldDefinition implements java.io.Serializable, FieldConstant {
 
     private int fdid;
     private Date date;
@@ -19,8 +19,8 @@ public class FieldDefinition implements java.io.Serializable {
     private int display;
     private int technical;
     private int export;
-    private boolean locked;
-    private boolean required;
+    //private boolean locked;
+    //private boolean required;
     private String style;
 
     public FieldDefinition() {
@@ -115,22 +115,6 @@ public class FieldDefinition implements java.io.Serializable {
         return this.export;
     }
 
-    public boolean isLocked() {
-        return locked;
-    }
-
-    public void setLocked(boolean locked) {
-        this.locked = locked;
-    }
-
-    public boolean isRequired() {
-        return required;
-    }
-
-    public void setRequired(boolean required) {
-        this.required = required;
-    }
-
     public String getStyle() {
         return this.style;
     }
@@ -163,6 +147,25 @@ public class FieldDefinition implements java.io.Serializable {
                 + '}';
     }
 
+    @Override
+    public String getName() {
+        return "fdid=" + fdid;
+    }
+
+    @Override
+    public void setName(final String s) {
+        throw new UnsupportedOperationException("Cannot set this value for FieldDefintion");
+    }
+
+    @Override
+    public String getTitle() {
+        return handle;
+    }
+
+    @Override
+    public void setTitle(final String s) {
+        throw new UnsupportedOperationException("Cannot set this value for FieldDefintion");
+    }
 }
 
 

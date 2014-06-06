@@ -4,5 +4,7 @@ import edu.yale.library.ladybird.entity.FieldDefinition;
 
 public interface FieldDefinitionDAO extends GenericDAO<FieldDefinition, Integer> {
 
+    FieldDefinition findByFdid(int fdid);
+
 }
 

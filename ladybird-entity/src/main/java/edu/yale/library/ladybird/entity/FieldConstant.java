@@ -1,4 +1,4 @@
-package edu.yale.library.ladybird.engine.model;
+package edu.yale.library.ladybird.entity;
 
 public interface FieldConstant {
     String getName();

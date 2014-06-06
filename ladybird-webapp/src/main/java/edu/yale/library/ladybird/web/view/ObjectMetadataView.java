@@ -1,19 +1,17 @@
 package edu.yale.library.ladybird.web.view;
 
 
-import edu.yale.library.ladybird.engine.model.FieldConstant;
-import edu.yale.library.ladybird.engine.model.FieldDefinitionValue;
-import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.AuthorityControl;
+import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.ObjectAcid;
 import edu.yale.library.ladybird.entity.ObjectFile;
 import edu.yale.library.ladybird.entity.ObjectString;
 import edu.yale.library.ladybird.persistence.dao.AuthorityControlDAO;
+import edu.yale.library.ladybird.persistence.dao.FieldDefinitionDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectAcidDAO;
+import edu.yale.library.ladybird.persistence.dao.ObjectDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectFileDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectStringDAO;
-import edu.yale.library.ladybird.persistence.dao.ObjectDAO;
-
 import org.omnifaces.util.Faces;
 import org.slf4j.Logger;
 
@@ -21,10 +19,9 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
-
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -67,6 +64,9 @@ public class ObjectMetadataView extends AbstractView {
     @Inject
     private AuthorityControlDAO authorityControlDAO;
 
+    @Inject
+    private FieldDefinitionDAO fieldDefinitionDAO;
+
 
     @PostConstruct
     public void init() {
@@ -85,31 +85,24 @@ public class ObjectMetadataView extends AbstractView {
         }
     }
 
+    /** Loads field definitions from dao */
     private Map populateFieldMap(int oid) {
         final Map<Integer, String> map = new HashMap<>();
 
-        final Map<String, FieldConstant> fdidMap = FieldDefinitionValue.getFieldDefMap(); //note no db value, and assuming it's been loaded
-
-        //logger.debug("Fdid Map size={}", fdidMap.size());
-
-        Set<String> keySet = fdidMap.keySet();
-
         try {
-            for (String k: keySet) {
-                if (!FunctionConstants.isFunction(k)) {
-                    int fdid = fdidAsInt(k);
-                    logger.debug("Putting key string={} or fdid={}", k, fdid);
-                    map.put(fdid, getValueByOidAndFdid(oid, fdid)); //e.g. (63, "value");
-                }
+            List<FieldDefinition> list = fieldDefinitionDAO.findAll();
+
+            for (FieldDefinition f : list) {
+                map.put(f.getFdid(), getValueByOidAndFdid(oid, f.getFdid()));
             }
-        } catch (NumberFormatException e) {
-            logger.error("Error={}", e.getMessage());
-            logger.debug("Map was={}", fdidMap.toString());
+        } catch (Exception e) {
+            logger.debug("Error loading fdid={}", e);
         }
+
         return map;
     }
 
-    //TODO this should be replaced with List<FieldDefintionValue>
+
     public String getValueByOidAndFdid(int oid, int fdid) {
         try {
             //1. Find acid value for this oid (assuming that's what's needed here)

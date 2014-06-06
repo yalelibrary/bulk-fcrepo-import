@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.engine;
 
 
-import edu.yale.library.ladybird.engine.model.FieldConstant;
+import edu.yale.library.ladybird.entity.FieldConstant;
 
 public class DefaultFieldDataValidator implements FieldDataValidator {
     /**

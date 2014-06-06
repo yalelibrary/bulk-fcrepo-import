@@ -37,12 +37,6 @@
         <property name="export" type="int">
             <column name="export" />
         </property>
-        <property name="locked" type="int">
-            <column name="locked" />
-        </property>
-        <property name="required" type="string">
-            <column name="required" length="1" />
-        </property>
         <property name="style" type="string">
             <column name="style" length="10" />
         </property>

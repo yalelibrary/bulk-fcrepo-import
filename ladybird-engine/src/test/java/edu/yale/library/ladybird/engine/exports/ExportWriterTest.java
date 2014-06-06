@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.engine.exports;
 
 import edu.yale.library.ladybird.engine.imports.ImportEntity;
-import edu.yale.library.ladybird.engine.model.FieldConstant;
+import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import org.junit.Test;
 

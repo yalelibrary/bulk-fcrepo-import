@@ -1,11 +1,11 @@
 package edu.yale.library.ladybird.engine.oai;
 
 
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
-import javax.xml.bind.annotation.XmlAttribute;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "subfieldType", namespace = "http://www.loc.gov/MARC21/slim", propOrder = { "value" })

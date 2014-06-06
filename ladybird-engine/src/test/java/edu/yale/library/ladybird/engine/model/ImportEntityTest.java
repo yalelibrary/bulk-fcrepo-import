@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.engine.model;
 
 import edu.yale.library.ladybird.engine.imports.ImportEntity;
+import edu.yale.library.ladybird.entity.FieldConstant;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

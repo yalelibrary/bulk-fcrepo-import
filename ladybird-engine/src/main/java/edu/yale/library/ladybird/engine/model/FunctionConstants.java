@@ -1,9 +1,10 @@
 package edu.yale.library.ladybird.engine.model;
 
+import edu.yale.library.ladybird.entity.FieldConstant;
+
 /**
  * LB processing function constants.
  *
- * @see FieldDefinitionValue
  */
 public enum FunctionConstants implements FieldConstant {
     /**

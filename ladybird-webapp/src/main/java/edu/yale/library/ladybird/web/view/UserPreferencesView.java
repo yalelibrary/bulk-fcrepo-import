@@ -10,11 +10,10 @@ import edu.yale.library.ladybird.persistence.dao.UserPreferencesDAO;
 import edu.yale.library.ladybird.persistence.dao.UserProjectDAO;
 import org.slf4j.Logger;
 
-import javax.faces.bean.ManagedBean;
 import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

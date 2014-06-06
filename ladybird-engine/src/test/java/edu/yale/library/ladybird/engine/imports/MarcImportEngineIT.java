@@ -1,16 +1,17 @@
 package edu.yale.library.ladybird.engine.imports;
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
+import edu.yale.library.ladybird.engine.DefaultFieldDataValidator;
+import edu.yale.library.ladybird.engine.FieldDefinitionInitializer;
 import edu.yale.library.ladybird.engine.TestModule;
 import edu.yale.library.ladybird.engine.Util;
 import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
 import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
-import edu.yale.library.ladybird.engine.DefaultFieldDataValidator;
-import edu.yale.library.ladybird.engine.model.FieldConstant;
-import edu.yale.library.ladybird.engine.model.FieldDefinitionValue;
+import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
+import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.FieldMarcMapping;
 import edu.yale.library.ladybird.entity.ImportJob;
 import edu.yale.library.ladybird.entity.ImportJobExhead;
@@ -19,6 +20,7 @@ import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobExheadDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobExheadHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobHibernateDAO;
+import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +35,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -97,13 +98,13 @@ public class MarcImportEngineIT extends AbstractDBTest {
         /* 2. read the F104 or F105 spreadsheet */
         final ImportEngine importEngine = new DefaultImportEngine();
 
-        logger.debug("Reading test spreadsheet rows");
+        //logger.debug("Reading test spreadsheet rows");
         final List<ImportEntity.Row> rows = importEngine.read(getImportSpreadsheeet(), ReadMode.FULL,
                 new DefaultFieldDataValidator());
-        logger.debug("Read oai-marc spreadseet rows");
+        //logger.debug("Read oai-marc spreadseet rows");
 
         assertEquals("Rows size mismatch", rows.size(), ExportFileConstants.ROW_COUNT);
-        assertEquals("Columns size mismatch", rows.get(0).getColumns().size(), ExportFileConstants.COL_COUNT);
+        assertEquals("Columns size mismatch", rows.get(0).getColumns().size(), 3);
 
         //kick off import writer
         //note: oai reading and writing is done at this time
@@ -119,14 +120,13 @@ public class MarcImportEngineIT extends AbstractDBTest {
         final ExportRequestEvent exportEvent = new ExportRequestEvent(imid);
         ExportEngineQueue.addJob(exportEvent);
 
-        logger.debug("Added event=" + exportEvent.toString());
+        //logger.debug("Added event=" + exportEvent.toString());
 
         //Now read back:
 
         //The job itself:
         final ImportJobDAO importJobHibernateDAO = new ImportJobHibernateDAO();
         final List<ImportJob> importJobList = importJobHibernateDAO.findAll();
-        //assertEquals("Import job count mismatch", importJobList.size(), 2); //FIXME purge DB before test
 
         //Headers (aka exhead):
         final ImportJobExheadDAO importJobExheadDAO = new ImportJobExheadHibernateDAO();
@@ -135,16 +135,13 @@ public class MarcImportEngineIT extends AbstractDBTest {
         /* Test Export */
         final ExportEngine exportEngine = new DefaultExportEngine();
 
-        logger.debug("Export engine reading import tables");
+        //logger.debug("Export engine reading import tables");
 
         final ImportJobCtx importJobCtx = exportEngine.read();
 
         final List<ImportEntity.Row> listExportRows = importJobCtx.getImportJobList();
 
         assert (listExportRows != null);
-
-        logger.debug("Size={}", listExportRows.size());
-
 
         for (ImportEntity.Row importRow: listExportRows) {
             //logger.debug("Col size={}", importRow.getColumns().size());
@@ -162,18 +159,12 @@ public class MarcImportEngineIT extends AbstractDBTest {
      * Sets business logic data
      */
     private void setApplicationData() {
-        initFieldDefMap(); //set default fdids
-    }
-
-    /**
-     * Init fdids
-     */
-    private void initFieldDefMap() {
         try {
-            new FieldDefinitionValue().setFieldDefMap(getTextFieldDefsMap());
-        } catch (IOException | NullPointerException e) {
-            logger.error("Test fdids could not be loaded", e);
-            fail();
+            FieldDefinitionInitializer fieldDefinitionInitializer = new FieldDefinitionInitializer();
+            fieldDefinitionInitializer.setInitialFieldDefinitionDb();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Assert.fail("Failed");
         }
     }
 
@@ -204,8 +195,8 @@ public class MarcImportEngineIT extends AbstractDBTest {
     }
 
     //TODO remove
-    private FieldDefinitionValue getFdid(final int fdid, final String s) {
-        return new FieldDefinitionValue(fdid, s);
+    private FieldDefinition getFdid(final int fdid, final String s) {
+        return new FieldDefinition(fdid, s);
     }
 
     /**

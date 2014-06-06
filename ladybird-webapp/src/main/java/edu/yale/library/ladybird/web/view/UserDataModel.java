@@ -1,7 +1,6 @@
 package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.entity.User;
-
 import edu.yale.library.ladybird.persistence.dao.UserDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserHibernateDAO;
 import org.primefaces.model.LazyDataModel;

@@ -1,20 +1,19 @@
 package edu.yale.library.ladybird.engine.imports;
 
-import edu.yale.library.ladybird.engine.model.FieldConstant;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.NoSuchElementException;
-
 import edu.yale.library.ladybird.engine.imports.ImportEntity.Column;
 import edu.yale.library.ladybird.engine.imports.ImportEntity.Row;
+import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.engine.model.FieldOccurrence;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * ImportEntityValue represents values and provides helper methods.

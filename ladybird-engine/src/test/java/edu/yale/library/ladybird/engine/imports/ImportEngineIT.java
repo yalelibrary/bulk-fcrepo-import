@@ -1,14 +1,15 @@
 package edu.yale.library.ladybird.engine.imports;
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
+import edu.yale.library.ladybird.engine.DefaultFieldDataValidator;
+import edu.yale.library.ladybird.engine.FieldDefinitionInitializer;
 import edu.yale.library.ladybird.engine.TestModule;
 import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
 import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
-import edu.yale.library.ladybird.engine.DefaultFieldDataValidator;
-import edu.yale.library.ladybird.engine.model.FieldConstant;
-import edu.yale.library.ladybird.engine.model.FieldDefinitionValue;
+import edu.yale.library.ladybird.entity.FieldConstant;
+import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.ImportJob;
 import edu.yale.library.ladybird.entity.ImportJobContents;
 import edu.yale.library.ladybird.entity.ImportJobExhead;
@@ -19,6 +20,7 @@ import edu.yale.library.ladybird.persistence.dao.ImportJobExheadDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobContentsHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobExheadHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobHibernateDAO;
+import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +37,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 
 /**
@@ -159,22 +160,17 @@ public class ImportEngineIT extends AbstractDBTest {
      * Sets business logic data
      */
     private void setApplicationData() {
-        initFieldDefMap(); //set default fdids
-    }
-
-    /**
-     * Inits fdids
-     */
-    private void initFieldDefMap() {
+        //initFieldDefMap(); //set default fdids
         try {
-            new FieldDefinitionValue().setFieldDefMap(getTextFieldDefsMap());
-        } catch (IOException | NullPointerException e) {
-            logger.error("Test fdids could not be loaded", e);
-            fail();
+            FieldDefinitionInitializer fieldDefinitionInitializer = new FieldDefinitionInitializer();
+            fieldDefinitionInitializer.setInitialFieldDefinitionDb();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Assert.fail("Failed");
         }
     }
 
-    /**
+     /**
      * Helps in initing fdids via a tex tfile
      *
      * @return
@@ -201,8 +197,8 @@ public class ImportEngineIT extends AbstractDBTest {
     }
 
     //TODO remove
-    private FieldDefinitionValue getFdid(int fdid, String s) {
-        return new FieldDefinitionValue(fdid, s);
+    private FieldDefinition getFdid(int fdid, String s) {
+        return new FieldDefinition(fdid, s);
     }
 
     /**

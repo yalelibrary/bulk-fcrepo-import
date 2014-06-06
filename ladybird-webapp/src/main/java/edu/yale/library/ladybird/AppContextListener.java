@@ -30,7 +30,6 @@ public class AppContextListener implements ServletContextListener {
         // TODO revisit concept/logic for init fdid for spreadsheet and db
         try {
             FieldDefinitionInitializer fieldDefinitionInitializer = new FieldDefinitionInitializer();
-            fieldDefinitionInitializer.setTextFieldDefsMap();
             fieldDefinitionInitializer.setInitialFieldDefinitionDb();
         } catch (IOException e) {
             logger.error("Error in fdid init", e); //ignore
