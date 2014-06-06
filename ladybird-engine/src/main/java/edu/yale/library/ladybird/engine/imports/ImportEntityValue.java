@@ -13,27 +13,22 @@ import edu.yale.library.ladybird.engine.imports.ImportEntity.Column;
 import edu.yale.library.ladybird.engine.imports.ImportEntity.Row;
 import edu.yale.library.ladybird.engine.model.FieldOccurrence;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * ImportEntityValue represents values and provides helper methods.
  */
 public class ImportEntityValue {
+
+    private Logger logger = LoggerFactory.getLogger(ImportEntityValue.class);
+
     private List<ImportEntity.Row> rowList;
     private static int HEADER_ROW = 0;
     private static int CONTENT_ROW = 1;
 
     public ImportEntityValue(List<Row> rowList) {
         this.rowList = rowList;
-    }
-
-    //TODO remove
-    public void print() {
-        for (ImportEntity.Row r: rowList) {
-            List<Column> columns = r.getColumns();
-            for (ImportEntity.Column c: columns) {
-                System.out.print(c.toString() + "<->");
-            }
-        }
     }
 
     @Deprecated
@@ -127,19 +122,20 @@ public class ImportEntityValue {
         return rowIdMap;
     }
 
-    //FIXME ..merge or test
     /**
      * Get all (Except Exhead) indexed by oids column values for a specific FieldConstant. Assumes only one occurrence.
      * @param fieldConstant
      * @return Map<Column c1, Colun c2> where c1 = oid column, c2 = field column
      */
-    public Map<Column,  Column> getContentColumnValuesWithOIds(final FieldConstant fieldConstant) {
+    public Map<Column, Column> getContentColumnValuesWithOIds(final FieldConstant fieldConstant) {
         Map<Column, Column> rowIdMap = new HashMap<>();
         int order = getFunctionPosition(FunctionConstants.F1);
         for (int i = 1; i < rowList.size(); i++) {
             Column o = rowList.get(i).getColumns().get(order);
             for (Column c: rowList.get(i).getColumns()) {
                 if (c.getField().getName().equals(fieldConstant.getName())) {
+                    logger.debug("Found match={} with value={}", c.getField().getName(), fieldConstant.getName());
+                    logger.debug("Values c1={} c2={}", o, c);
                     rowIdMap.put(o, c);
                 }
             }

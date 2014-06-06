@@ -5,11 +5,7 @@ import edu.yale.library.ladybird.engine.imports.ImportEntityValue;
 import edu.yale.library.ladybird.entity.FieldDefinition;
 import org.junit.Test;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Collections;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 
 import edu.yale.library.ladybird.engine.imports.ImportEntity.Column;
@@ -81,6 +77,29 @@ public class ImportEntityValueTest {
         assertTrue(fieldConstants.get(0).equals(FunctionConstants.F1));
         FieldDefinition fieldDefinition = (FieldDefinition) fieldConstants.get(1);
         assertEquals("Value mismatch", fieldDefinition.getFdid(), 69);
+    }
+
+    @Test
+    public void shouldFetchContentRowsFieldConstants() {
+        final ImportEntityValue importEntityValue = getTestMultipleRowImportEntityValue();
+        FieldDefinitionValue fdValue = new FieldDefinitionValue(69, "tt");
+
+        final Map<Column,Column> map = importEntityValue.getContentColumnValuesWithOIds(fdValue);
+        //logger.debug(map.toString());
+
+        Set<Column> keySet = map.keySet();
+
+        // Column{field=F1, value=333993}=Column{field=FieldDefinition{fdid=69, acid=0, handle=''}, value=name}}
+
+        for (Column c: keySet) {
+            assertTrue(c.getField().getName() == "F1");
+            assertEquals(c.getValue(), "333993");
+
+            Column v = map.get(c);
+
+            assertEquals(v.getField().getName(),"");
+            assertEquals(v.getValue(),"name");
+        }
     }
 
     @Test

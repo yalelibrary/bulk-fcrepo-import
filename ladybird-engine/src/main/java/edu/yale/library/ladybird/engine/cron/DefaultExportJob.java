@@ -59,9 +59,8 @@ public class DefaultExportJob implements Job, ExportJob {
             //2. Write to object metadata tables
             logger.debug("Writing contents to object metadata tables. . .");
             ObjectWriter objectWriter = new ObjectWriter(); //TODO
-            objectWriter.write(importJobCtx);
-
-            logger.debug("[end] Wrote to object metadata tables");
+            //objectWriter.write(importJobCtx);
+            //logger.debug("[end] Wrote to object metadata tables");
 
             /* Add params as desired */
             final Event exportEvent = new ExportCompleteEventBuilder()

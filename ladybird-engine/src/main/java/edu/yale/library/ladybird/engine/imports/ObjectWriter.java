@@ -24,7 +24,7 @@ import java.util.Set;
 
 /**
  * Populates object metadata (acid/strings) tables.
- * @see MediaFunctionProcessor for object_file
+ * @see MediaFunctionProcessor for object_file population
   */
 public class ObjectWriter {
 
@@ -50,16 +50,19 @@ public class ObjectWriter {
         logger.debug("Writing object metadata");
         try {
             List<ImportEntity.Row> importRows = importJobCtx.getImportJobList();
+            logger.debug("Import Row size={}", importRows.size());
+
+            logger.debug("Import Rows={}", importRows.toString());
 
             final int userId = getUserId(importJobCtx);
 
             ImportEntityValue importEntityValue = new ImportEntityValue(importRows);
-            importEntityValue.print();
 
             //Go through each column (F1.. fdid=220), and persist object data (i.e. it processes vertically):
+
             List<FieldConstant> fieldConstants = importEntityValue.getAllFieldConstants();
 
-            logger.debug("Field constants are={}", fieldConstants.toString());
+            logger.debug("Field constants for this sheet are={}", fieldConstants.toString());
 
             for (FieldConstant f : fieldConstants) {
 
@@ -67,10 +70,12 @@ public class ObjectWriter {
                     continue;
                 }
 
-                logger.debug("Eval fieldconstant={} ", f.getName());
+                logger.debug("Evaluating FieldConstant={} ", f.getName());
 
-                //(oid -> value), (11222, "name field for this oid");
                 Map<ImportEntity.Column, ImportEntity.Column> columnMap = importEntityValue.getContentColumnValuesWithOIds(f);
+
+                logger.debug("Column value is={}", columnMap.toString());
+
                 //TODO in reality (e.g. FieldDefinion.69) but there's no such abstraction for FieldDefintion, only for FunctionConstant
 
                 Set<ImportEntity.Column> keySet = columnMap.keySet();
@@ -78,37 +83,41 @@ public class ObjectWriter {
                 logger.debug("Map key set size={}", keySet.size());
 
                 for (ImportEntity.Column c : keySet) {
-                    logger.debug("Eval column={}", c.getField().toString());
-                    String oidValue = (String) c.getValue();
-                    logger.debug("Oid={}", oidValue);
-                    ImportEntity.Column valueForOid = columnMap.get(c); //value for oid ..
-                    logger.debug("Field ={}, Value={}", valueForOid.getField().toString(), valueForOid.getValue());
+
+                    logger.debug("Evaluating Column={}", c.toString());
+
+                    String oid = (String) c.getValue();
+
+                    ImportEntity.Column fdidValueForOid = columnMap.get(c);
+
+                    logger.debug("Oid={}, Field Name={}, Field Value={}", oid, fdidValueForOid.getField().getName(), fdidValueForOid.getValue());
 
 
-                    if (true) { //assuming each fdid is an acid value
+                    //TODO (currently assuming each fdid is an acid value)
+                    if (true) {
 
                         final ObjectAcid objectAcid = new ObjectAcid();
-                        objectAcid.setFdid(fdidAsInt(f.getName())); //TODO
+                        objectAcid.setFdid(fdidAsInt(f.getName()));
 
-                        if (oidValue != null || oidValue.length() > 1  ) {
-                            objectAcid.setObjectId(Integer.parseInt(oidValue));
+                        if (oid != null || oid != "") {
+                            objectAcid.setObjectId(Integer.parseInt(oid));
                         } else {
                             logger.error("Oid value null or less than 1");
                         }
 
+                        //persist acid:
                         final AuthorityControl authorityControl = new AuthorityControl();
                         authorityControl.setFdid(fdidAsInt(f.getName()));
                         authorityControl.setUserId(userId);
                         authorityControl.setDate(new Date());
-                        authorityControl.setValue((String) valueForOid.getValue());
+                        authorityControl.setValue((String) fdidValueForOid.getValue());
                         int acid = authorityControlDAO.save(authorityControl);
 
-                        objectAcid.setValue(acid); //FIXME the acid value...stupid PK in db
-
+                        //persist object acid
+                        objectAcid.setValue(acid); //TODO acid PK
                         objectAcid.setUserId(userId);
                         objectAcid.setDate(new Date());
-
-                        logger.debug("Saving entity={}", objectAcid.toString());
+                        //logger.debug("Saving entity={}", objectAcid.toString());
                         objectAcidDAO.save(objectAcid);
                     }
                 }
@@ -121,15 +130,14 @@ public class ObjectWriter {
 
     /**
      * converter helper
-     * FiXME this depends on the the fdidsa are loaded (currently through fdid.test.propeties
-     * @param s string
+     * FiXME this depends on the the fdids are loaded (currently through fdid.test.propeties at boot)
+     * @param s string e.g. from Host, note{fdid=68}
      * @return integer value
      */
     private Integer fdidAsInt(String s) {
         try {
             return Integer.parseInt(s);
         } catch (NumberFormatException e) {
-            // e.g. from Host, note{fdid=68}, get 68
             String[] parsedString = s.split("fdid=");
             return Integer.parseInt(parsedString[1].replace("}",""));
         }
@@ -145,5 +153,14 @@ public class ObjectWriter {
         final User user = monitor.getUser();
         final int userId = user.getUserId();
         return userId;
+    }
+    private void printMap(Map<ImportEntity.Column, ImportEntity.Column> columnMap) {
+        Set<ImportEntity.Column> keySet = columnMap.keySet();
+
+        for(ImportEntity.Column key: keySet) {
+            String keyString = key.getField().getName();
+            String valueString = columnMap.get(key).getValue().toString();
+            logger.debug("key={} value={}", keyString, valueString);
+        }
     }
 }

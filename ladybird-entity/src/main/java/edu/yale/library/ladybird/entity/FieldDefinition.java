@@ -147,19 +147,19 @@ public class FieldDefinition implements java.io.Serializable {
     public String toString() {
         return "FieldDefinition{"
                 + "fdid=" + fdid
-                + ", date=" + date
-                + ", type='" + type + '\''
+                //+ ", date=" + date
+                //+ ", type='" + type + '\''
                 + ", acid=" + acid
-                + ", faid=" + faid
+                //+ ", faid=" + faid
                 + ", handle='" + handle + '\''
-                + ", tooltip='" + tooltip + '\''
-                + ", multivalue=" + multivalue
-                + ", display=" + display
-                + ", technical=" + technical
-                + ", export=" + export
-                + ", locked=" + locked
-                + ", required='" + required + '\''
-                + ", style='" + style + '\''
+                //+ ", tooltip='" + tooltip + '\''
+                //+ ", multivalue=" + multivalue
+                //+ ", display=" + display
+                //+ ", technical=" + technical
+                //+ ", export=" + export
+                //+ ", locked=" + locked
+                //+ ", required='" + required + '\''
+                //+ ", style='" + style + '\''
                 + '}';
     }
 
