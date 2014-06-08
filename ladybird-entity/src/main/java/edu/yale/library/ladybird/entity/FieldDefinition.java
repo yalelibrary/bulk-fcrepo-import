@@ -31,6 +31,12 @@ public class FieldDefinition implements java.io.Serializable, FieldConstant {
         this.handle = handle;
     }
 
+    public FieldDefinition(final int fdid, final String handle, final Date date) {
+        this.fdid = fdid;
+        this.handle = handle;
+        this.date = date;
+    }
+
     public int getFdid() {
         return this.fdid;
     }

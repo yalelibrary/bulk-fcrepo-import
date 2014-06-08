@@ -63,7 +63,7 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
             logger.debug("Saving item={}", item.toString());
             s.flush();
             tx.commit();
-            //logger.debug("Saved item");
+            logger.trace("Saved item");
         } catch (HibernateException t) {
             logger.error("Exception tyring to persist item." + t.getMessage());
             t.printStackTrace();

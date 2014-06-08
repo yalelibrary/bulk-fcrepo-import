@@ -88,7 +88,7 @@ public class ImportWriter {
                     setDate(JOB_EXEC_DATE).setValue(column.field.getName()).createImportJobExhead();
             dao.save(entry);
             logger.debug("Saved={}", entry.toString());
-            col++;
+            col++; //TODO bug
         }
     }
 

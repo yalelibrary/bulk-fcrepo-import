@@ -32,6 +32,12 @@
                         </p:column>
                         <p:column>
                             <f:facet name="header">
+                                <h:outputText value="Handle"/>
+                            </f:facet>
+                            <h:outputText value="#{item.handle}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
                                 <h:outputText value="Acid"/>
                             </f:facet>
                             <h:outputText value="#{item.acid}"/>
@@ -47,12 +53,6 @@
                                 <h:outputText value="Faid"/>
                             </f:facet>
                             <h:outputText value="#{item.faid}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="Handle"/>
-                            </f:facet>
-                            <h:outputText value="#{item.handle}"/>
                         </p:column>
                         <p:column>
                             <f:facet name="header">
@@ -78,12 +78,13 @@
                             </f:facet>
                             <h:outputText value="#{item.technical}"/>
                         </p:column>
-                        <p:column>
+                        <p:column rendered="false">
                             <f:facet name="header">
                                 <h:outputText value="Export"/>
                             </f:facet>
                             <h:outputText value="#{item.export}"/>
                         </p:column>
+                        <!--
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Locked"/>
@@ -96,6 +97,7 @@
                             </f:facet>
                             <h:selectBooleanCheckbox value="#{item.required}"/>
                         </p:column>
+                        -->
                         <p:column rendered="false">
                             <f:facet name="header">
                                 <h:outputText value="Style"/>

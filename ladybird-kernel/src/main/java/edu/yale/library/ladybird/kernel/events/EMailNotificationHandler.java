@@ -27,8 +27,7 @@ public class EMailNotificationHandler implements NotificationHandler {
             email.send();
 
         } catch (EmailException e) {
-            logger.error("Exception sending notification");
-            e.printStackTrace(); //TODO
+            logger.error("Exception sending notification", e.getMessage()); //TODO
         }
     }
 }

@@ -7,20 +7,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Properties;
 
 /**
- * Helps in fdid initialization. Subject to removal.
+ * Utility for field definition(fdid) initialization.
  */
 public class FieldDefinitionInitializer {
 
     private final Logger logger = LoggerFactory.getLogger(FieldDefinitionInitializer.class);
 
-    /** Contains fdids meant to be loaded into db for init */
+    /** Contains fdids meant to be loaded into db */
     private static final String FDID_INITIAL_PROPS_FILE = "/fdids.initial.properties";
 
     /**
-     * Initializes fdids. This concept needs to be re-visited.
+     * Initializes fdids.
      */
     public void setInitialFieldDefinitionDb() throws IOException {
         logger.debug("Init db with fdid from file={}", FDID_INITIAL_PROPS_FILE);
@@ -35,12 +36,12 @@ public class FieldDefinitionInitializer {
             try {
                 fieldDefinitionDAO.save(f);
             } catch (Exception e) {
-                logger.debug("Error saving fdid", e);  //ignore
+                logger.error("Error saving fdid", e);  //ignore
             }
         }
     }
 
     private FieldDefinition getFdid(final int fdid, final String s) {
-        return new FieldDefinition(fdid, s);
+        return new FieldDefinition(fdid, s, new Date());
     }
 }

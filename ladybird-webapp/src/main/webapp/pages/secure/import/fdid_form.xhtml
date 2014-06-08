@@ -7,20 +7,25 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../../templates/template_yul.xhtml">
     <ui:define name="content">
-        <h4>Add fdid</h4>
 
         <h:outputText value="Your role does not have permissions to add an fdid."
-                      styleClass="alert alert-danger"
+                      styleClass="alert alert-warning"
                       rendered="#{not FieldDefinitionView.checkAddFdidPermission()}"/>
 
+        <!-- FORM -->
+        <h:form id="FieldDefinitionForm" enctype="multipart/form-data"
+                rendered="#{FieldDefinitionView.checkAddFdidPermission()}">
 
-        <h:form id="FieldDefinitionForm" enctype="multipart/form-data" rendered="#{FieldDefinitionView.checkAddFdidPermission()}">
+            <h4>Add Field Definition</h4>
 
             <div>
                 <label>Fdid</label>
 
                 <div>
-                    <p:inputText value="#{FieldDefinitionView.item.fdid}"/>
+                    <p:inputText id="fdidInput" value="#{FieldDefinitionView.item.fdid}">
+                        <f:validateLongRange minimum="1" maximum="1000" />
+                    </p:inputText>
+                    <h:message for="fdidInput" style="color:red" />
                 </div>
             </div>
 
@@ -28,7 +33,10 @@
                 <label>Acid</label>
 
                 <div>
-                    <p:inputText value="#{FieldDefinitionView.item.acid}"/>
+                    <p:inputText id="acidInput" value="#{FieldDefinitionView.item.acid}">
+                        <f:validateLongRange minimum="1" maximum="1000" />
+                    </p:inputText>
+                    <h:message for="acidInput" style="color:red" />
                 </div>
             </div>
 
@@ -48,6 +56,7 @@
                 </div>
             </div>
 
+            <!--
             <div>
                 <label>Locked</label>
 
@@ -64,6 +73,8 @@
                     <h:selectBooleanCheckbox value="#{FieldDefinitionView.item.required}"/>
                 </div>
             </div>
+
+            -->
 
             <!-- Submit Button -->
             <h:commandButton value="Submit" styleClass="btn" action="#{FieldDefinitionView.save()}"/>

@@ -37,18 +37,18 @@ public final class ImportReader {
     /**
      * Process a sheet (NOTE: assumes default sheet 0)
      *
-     * @return datastructure containing all the data from the spreadsheet
+     * @return data structure containing all the data from the spreadsheet
      * @throws ImportReaderValidationException
      * @throws IOException
      */
     public List<ImportEntity.Row> processSheet() throws ImportReaderValidationException, IOException {
-        final List<ImportEntity.Row> sheetRows = new ArrayList<>();
 
-        // value list hods column function values. Could be replaced with a map.
+        logger.debug("Processing sheet of file={}", file);
+
+        final List<ImportEntity.Row> sheetRows = new ArrayList<>();
         final List<FieldConstant> valueMap = new ArrayList<>();
 
         try {
-            logger.debug("Processing sheet of file={}", file);
             final XSSFSheet sheet = getDefaultSheet();
             final Iterator<Row> it = sheet.iterator();
 
@@ -62,10 +62,13 @@ public final class ImportReader {
 
                 // Reader Header value.
                 try {
-                    final FieldConstant f = getFieldConstant(String.valueOf(cellValue(cell)));
+                    FieldConstant f = getFieldConstant(String.valueOf(cellValue(cell)));
+
                     valueMap.add(f);
+
                     final ImportEntity.Column<String> column = new ImportEntity()
                             .new Column<>(f, String.valueOf(cellValue(cell)));
+                    logger.debug("1st row Column={}", column.toString());
                     headerSheetRow.getColumns().add(column);
                 } catch (UnknownFieldConstantException unknownFunction) {
                     if (this.readMode == ReadMode.HALT) {
@@ -75,8 +78,16 @@ public final class ImportReader {
                         importReaderValidationException.initCause(unknownFunction);
                         throw importReaderValidationException;
                     }
-                    logger.debug("Unknown exhead value= {}", unknownFunction.getMessage());
+                    logger.debug("Unknown exhead= {}", unknownFunction.getMessage()); //means probably fdid has not been added in the properties
                     valueMap.add(FunctionConstants.UNK); //TODO shouldn't be used to represent both unknown func and fdid
+
+                    logger.debug("Adding UNK in 1st row for this unrecognized FieldConstant"); //added to keep the exhead and contents col. the same.
+
+                    final ImportEntity.Column<String> column = new ImportEntity()
+                            .new Column<>(FunctionConstants.UNK, String.valueOf(cellValue(cell)));
+                    logger.debug("1st row Column={}", column.toString());
+                    headerSheetRow.getColumns().add(column);
+
                 } catch (Exception e) {
                     logger.error("Unknown error iterating header row", e);
                 }
@@ -86,7 +97,9 @@ public final class ImportReader {
 
             logger.debug("Done iterating sheet exhead");
 
-            //iterate body: //FIXME Check empty columnns.
+            logger.debug("Writing import content rows");
+
+            //iterate body: //TODO Check empty columnns.
             int cellCount = 0;
             while (it.hasNext()) {
                 final ImportEntity.Row contentsSheetRow = new ImportEntity().new Row();
@@ -96,19 +109,21 @@ public final class ImportReader {
                     final Cell cell = cellIterator.next();
                     final ImportEntity.Column<String> column = new ImportEntity().new Column<>(valueMap.get(cellCount),
                             String.valueOf(cellValue(cell)));
+                    logger.debug("Column={}", column.toString());
                     contentsSheetRow.getColumns().add(column);
                     cellCount++;
                 }
+                logger.debug("Added content row={}", contentsSheetRow.toString());
                 sheetRows.add(contentsSheetRow);
                 cellCount = 0;
             }
         } catch (IOException e) {
-            logger.error("Error reading", e);
+            logger.error("Error reading value in import reading", e);
             throw e;
         } catch (Exception ge) {
-            logger.error("General exception reading", ge); //ignore
+            logger.error("General exception import reading", ge); //ignore
         }
-        logger.debug("Done processing sheet");
+        logger.debug("Done import reading.");
         return sheetRows;
     }
 

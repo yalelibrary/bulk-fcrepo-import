@@ -173,18 +173,18 @@ public class ExportReader {
             final Row row = new ImportEntity().new Row();
 
             //Warning: Gets all columns (including F104/F105 COLUMN)
-            for (int j = 0; j < rowJobContentsList.size(); j++) {
+            for (int j = 0; j < rowJobContentsList.size(); j++) { //FIXME BUG
                 //logger.debug("Processing row={}, col={}", i, j);
                 try {
                     final ImportJobExhead importJobExhead = importJobExheads.get(j);
                     String headerValue = importJobExhead.getValue();
-                    //logger.debug("Header val={}", headerValue);
+                    logger.debug("Header val={}", headerValue);
                     final FieldConstant fieldConstant = FieldConstantRules.convertStringToFieldConstant(headerValue);
                     if (fieldConstant == null) {
                         logger.debug("Field Constant null for headerValue={}", headerValue);
                     }
                     final ImportJobContents jobContents = rowJobContentsList.get(j);
-                    //logger.debug("JobContents={}", jobContents.toString());
+                    logger.debug("JobContents={}", jobContents.toString());
                     row.getColumns().add(new ImportEntity()
                             .new Column<>(fieldConstant, jobContents.getValue()));
                     //logger.debug("Added value={}", jobContents.getValue());

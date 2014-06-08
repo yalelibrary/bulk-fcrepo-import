@@ -104,7 +104,7 @@ public class MarcImportEngineIT extends AbstractDBTest {
         //logger.debug("Read oai-marc spreadseet rows");
 
         assertEquals("Rows size mismatch", rows.size(), ExportFileConstants.ROW_COUNT);
-        assertEquals("Columns size mismatch", rows.get(0).getColumns().size(), 3);
+        assertEquals("Columns size mismatch", rows.get(0).getColumns().size(), ExportFileConstants.ROW_COUNT);
 
         //kick off import writer
         //note: oai reading and writing is done at this time
