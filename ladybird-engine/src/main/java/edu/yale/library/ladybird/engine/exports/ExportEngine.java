@@ -9,8 +9,6 @@ import java.util.List;
 
 
 public interface ExportEngine {
-    //List<ImportEntity.Row> read();
-
     ImportJobCtx read();
 
     void write(List<ImportEntity.Row> list, String spreadSheetFilePath) throws IOException;

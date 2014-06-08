@@ -93,7 +93,7 @@ public class FieldConstantRules {
             final FunctionConstants f = FunctionConstants.valueOf(value);
             return f;
         } catch (Exception e) {
-            logger.warn("Error converting to FieldConstant(FunctionConstant) value={}", value);
+            logger.debug("Error converting to FieldConstant(FunctionConstant) value={}", value);
         }
 
         return null;
@@ -125,9 +125,13 @@ public class FieldConstantRules {
      */
     @Deprecated
     public static Marc21Field getFieldConstantToMarc21Mapping(final FieldConstant fieldConstant) {
-        if (fieldConstant.getName().equals("70") || fieldConstant.getName().equals("Title{fdid=70}")) {
+        logger.error("Mappings are supposed to be injected via db");
+        String f = fieldConstant.getName();
+        if (f.equals("70") || f.equals("Title{fdid=70}") || f.equals("fdid=70")) {
+            logger.debug("Returning for this field, Marc tag={}", Marc21Field._245.toString());
             return Marc21Field._245;
         }
+        logger.debug("Returning for this field, Marc tag={}", Marc21Field.UNK);
         return Marc21Field.UNK;
     }
 }

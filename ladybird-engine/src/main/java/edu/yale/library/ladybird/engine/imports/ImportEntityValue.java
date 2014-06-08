@@ -252,6 +252,18 @@ public class ImportEntityValue {
         throw new NoSuchElementException(f.getName());
     }
 
+    public List<String> getColumnStrings(FunctionConstants functionConstants) {
+        final List<ImportEntity.Column> bibIdColumn = getColumnValues(functionConstants);
+        final List<String> values = new ArrayList<>();
+
+        for (ImportEntity.Column c : bibIdColumn) {
+            values.add(c.getValue().toString());
+        }
+
+        return values;
+    }
+
+
     @Override
     public String toString() {
         return "ImportEntityValue{"

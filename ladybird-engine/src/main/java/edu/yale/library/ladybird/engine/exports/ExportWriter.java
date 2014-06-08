@@ -33,7 +33,6 @@ public class ExportWriter {
                 final Cell cell = row.createCell(cellNum++);
 
                 if (colValue instanceof String) {
-                    //logger.debug("Writing value={}", colValue);
                     cell.setCellValue(colValue);
                 } else {
                     logger.debug("Unknown col data type={}", colValue);

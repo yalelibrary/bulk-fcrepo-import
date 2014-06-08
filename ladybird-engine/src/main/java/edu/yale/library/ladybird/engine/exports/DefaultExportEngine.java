@@ -17,14 +17,19 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class DefaultExportEngine extends AbstractExportEngine {
     private final Logger logger = getLogger(this.getClass());
 
+    //TODO inject DAO(s):
+    final ExportReader reader = new ExportReader();
+    final ExportWriter exportWriter = new ExportWriter();
+    final SettingsDAO settingsDAO = new SettingsHibernateDAO();
+
+    /**
+     *
+     * @return
+     */
     @Override
     public ImportJobCtx doRead() {
-
-        final ExportReader reader = new ExportReader();
         final ImportJobCtx importJobCtx = reader.readRowsFromImportTables();
-
         logger.debug("Read list size={}", importJobCtx.getImportJobList().size());
-
         return importJobCtx;
     }
 
@@ -34,27 +39,24 @@ public class DefaultExportEngine extends AbstractExportEngine {
      * @param relativePath relative path, e.g. project1/a.xlsx
      * @throws IOException
      */
-
     @Override
     public void doWrite(final List<ImportEntity.Row> list, final String relativePath) throws IOException {
-        logger.debug("Initiating write to spreadsheet to relative path={}", relativePath);
-        final ExportWriter exportWriter = new ExportWriter();
         final String fullPath = getWritePath(relativePath);
-        logger.debug("Initiating write to spreadsheet to path={}", fullPath);
+        logger.debug("Initiating write to spreadsheet to relative path={}, path={}", relativePath, fullPath);
         exportWriter.write(list, fullPath);
     }
 
-    /** Returns absolute write appeneded with project */
+    /**
+     * Returns absolute write appended with project
+     * @param relativePath
+     * @return
+     */
     private String getWritePath(final String relativePath) {
-
-        //FIXME for IT value is retured as is.
-        // TODO the test ladybird.properties should either contain this path or the reader should be able to recover from the error
+        logger.debug("Looking up relative path={}", relativePath);
         if (ApplicationProperties.CONFIG_STATE.IMPORT_ROOT_PATH == null) {
-            logger.error("Returning relative path as is");
+            logger.error("No import root path. Returning relative path as is.");
             return relativePath;
         }
-
-        SettingsDAO settingsDAO = new SettingsHibernateDAO();
 
         final Settings settings = settingsDAO.findByProperty(ApplicationProperties.IMPORT_ROOT_PATH_ID);
 
