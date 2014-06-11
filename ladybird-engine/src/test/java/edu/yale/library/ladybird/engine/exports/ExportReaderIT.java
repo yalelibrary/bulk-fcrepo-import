@@ -1,7 +1,8 @@
 package edu.yale.library.ladybird.engine.exports;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import edu.yale.library.ladybird.engine.AbstractDBTest;
+import edu.yale.library.ladybird.engine.FdidMarcMappingUtil;
 import edu.yale.library.ladybird.engine.imports.ImportSourceDataReader;
 import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.engine.model.FieldConstantRules;
@@ -11,24 +12,27 @@ import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.FieldDefinitionBuilder;
 import edu.yale.library.ladybird.entity.ImportSourceData;
 import edu.yale.library.ladybird.entity.ImportSourceDataBuilder;
+import edu.yale.library.ladybird.persistence.dao.hibernate.FieldMarcMappingHibernateDAO;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
 /**
- *
+ * FIXME It's an abstract DB test because the DAO for shouldGetMultiMapValue() is not currently being injected
  */
-public class ExportReaderTest {
+public class ExportReaderIT extends AbstractDBTest {
 
-    private Logger logger = LoggerFactory.getLogger(ExportReaderTest.class);
+    private Logger logger = LoggerFactory.getLogger(ExportReaderIT.class);
 
     @Test
     public void shouldConvertFunctionStringToFieldConst() {
@@ -44,25 +48,11 @@ public class ExportReaderTest {
         }
     }
 
-    //This method would change as marc fdids bindings or what to return for a binding are changed.
-    /** @see edu.yale.library.ladybird.engine.model.FieldConstantRules#getFieldConstantToMarc21Mapping for specific bindings  */
-    @Test
-    public void shouldEqualMarc21Mapping() {
-
-        final FieldConstant f1 = new FieldDefinition(70, "A FIELD");
-        final Marc21Field marc21Field1 = FieldConstantRules.getFieldConstantToMarc21Mapping(f1);
-        assertEquals("Marc21 field mismatch", marc21Field1, Marc21Field._245);
-
-        final FieldConstant f2 = new FieldDefinition(69, "SOME FIELD");
-        final Marc21Field marc21Field2 = FieldConstantRules.getFieldConstantToMarc21Mapping(f2);
-        assertEquals("Marc21 field mismatch", marc21Field2, Marc21Field.UNK);
-    }
-
-
-
     /** @see edu.yale.library.ladybird.engine.exports.ExportReader#getMultiMapValue */
     @Test
     public void shouldGetMultiMapValue() {
+        initMarcMappingDB(); //FIXME Inst. db because ExportReader creates a new FdidMarcMappingUtil object
+
         ExportReader exportReader = new ExportReader();
         final List<FieldConstant> globalFConstantsList = fakeGlobalApplicationFieldConstants();
 
@@ -78,11 +68,23 @@ public class ExportReaderTest {
         }
     }
 
+    private void initMarcMappingDB() {
+        FdidMarcMappingUtil fdidMarcMappingUtil = new FdidMarcMappingUtil();
+        try {
+            fdidMarcMappingUtil.setFieldMarcMappingDAO(new FieldMarcMappingHibernateDAO()); //TODO
+            fdidMarcMappingUtil.setInitialFieldMarcDb();
+        } catch (Exception e) {
+            e.printStackTrace();  //TODO
+        }
+    }
+
     private List<ImportSourceData> fakeImportSourceData() {
+        List<ImportSourceData> list = new ArrayList<>();
+
         ImportSourceData importSourceData = new ImportSourceDataBuilder().setK1("245").setK2("a").setAttr("a").setValue("Test value").setAttrVal("a").createImportSourceData();
-        List<ImportSourceData> lsit = new ArrayList<>();
-        lsit.add(importSourceData);
-        return lsit;
+        list.add(importSourceData);
+
+        return list;
     }
 
     private List<FieldConstant> fakeGlobalApplicationFieldConstants() {
@@ -93,11 +95,15 @@ public class ExportReaderTest {
         return fieldConstants;
     }
 
-    private Multimap fakeMultipmap() {
-        Multimap<Marc21Field, Map<String, String>> map = HashMultimap.create();
-        Map<String, String> mapString = new HashMap();
-        map.put(Marc21Field._245, mapString);
-        return map;
+
+    @Before
+    public void init() {
+        super.init();
+    }
+
+    @After
+    public void stopDB() throws SQLException {
+        super.stop();
     }
 
 }

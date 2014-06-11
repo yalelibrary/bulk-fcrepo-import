@@ -26,7 +26,7 @@ public class UserView extends AbstractView implements Serializable {
     private final Logger logger = getLogger(this.getClass());
 
     private List<User> itemList;
-    private User item = new UserBuilder().createUser();
+    private User item = new UserBuilder().setEmail("osman.din@yale.edu").setUsername("od26").setName("test").createUser();
     private User selectedItem = new UserBuilder().createUser();
 
     /**

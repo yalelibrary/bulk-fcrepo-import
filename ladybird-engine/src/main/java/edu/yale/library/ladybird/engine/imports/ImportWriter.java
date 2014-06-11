@@ -1,8 +1,9 @@
 package edu.yale.library.ladybird.engine.imports;
 
 
-import com.google.common.collect.Multimap;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
+import edu.yale.library.ladybird.engine.model.LocalIdMarcImportSource;
+import edu.yale.library.ladybird.engine.model.LocalIdentifier;
 import edu.yale.library.ladybird.engine.oai.Marc21Field;
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
 import edu.yale.library.ladybird.entity.FieldMarcMapping;
@@ -11,7 +12,6 @@ import edu.yale.library.ladybird.entity.ImportJobContents;
 import edu.yale.library.ladybird.entity.ImportJobContentsBuilder;
 import edu.yale.library.ladybird.entity.ImportJobExhead;
 import edu.yale.library.ladybird.entity.ImportJobExheadBuilder;
-import edu.yale.library.ladybird.entity.ImportSourceData;
 import edu.yale.library.ladybird.persistence.dao.FieldMarcMappingDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobContentsDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
@@ -22,6 +22,7 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobExheadHibern
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobHibernateDAO;
 import org.slf4j.Logger;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -92,14 +93,14 @@ public class ImportWriter {
     public void writeContents(final int importId, final ImportEntityValue importEntityValue) {
 
         //Write import source data
-        final List<String> bibIds = importEntityValue.getColumnStrings(FunctionConstants.F104);
+        final List<LocalIdentifier<String>> bibIdList = getBibIds(importEntityValue);
         final ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
         final List<FieldMarcMapping> fieldMarcMappingList = fieldMarcMappingDAO.findAll();
         final Map<Marc21Field, FieldMarcMapping> marc21FieldMap = buildMarcFdidMap(fieldMarcMappingList);
-        final Map<String, Multimap<Marc21Field, ImportSourceData>> importSourceMap =
-                importSourceDataReader.readBibIdMarcData(oaiProvider, bibIds, marc21FieldMap, importId);
+        final List<LocalIdMarcImportSource> importSourceLocalIdList =
+                importSourceDataReader.readBibIdMarcData(oaiProvider, bibIdList, marc21FieldMap, importId);
         ImportSourceDataWriter importSourceDataWriter = new ImportSourceDataWriter();
-        importSourceDataWriter.persistMarcData(importSourceMap, importId);
+        importSourceDataWriter.persistMarcData(importSourceLocalIdList, importId);
 
         final List<ImportEntity.Row> rowList = importEntityValue.getContentRows();
         logger.debug("Writing spreadsheet body contents. Row list size={}", rowList.size());
@@ -163,6 +164,18 @@ public class ImportWriter {
             }
         }
         return marc21FieldMap;
+    }
+
+    public List<LocalIdentifier<String>> getBibIds(ImportEntityValue importEntityValue) {
+        List<String> list = importEntityValue.getColumnStrings(FunctionConstants.F104);
+        List<LocalIdentifier<String>> listLocalIds = new ArrayList<>();
+
+        for (String s: list) {
+            LocalIdentifier localIdentifier = new LocalIdentifier(s);
+            listLocalIds.add(localIdentifier);
+        }
+
+        return listLocalIds;
     }
 
     /**

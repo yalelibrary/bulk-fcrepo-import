@@ -15,7 +15,7 @@ public class ImportSourceData implements java.io.Serializable {
     private String attr;
     private String attrVal;
     private String value;
-    private Integer zindex;
+    private String localidentifier;
     private String notes;
 
     public ImportSourceData() {
@@ -93,12 +93,12 @@ public class ImportSourceData implements java.io.Serializable {
         this.value = value;
     }
 
-    public Integer getZindex() {
-        return this.zindex;
+    public String getLocalidentifier() {
+        return this.localidentifier;
     }
 
-    public void setZindex(Integer zindex) {
-        this.zindex = zindex;
+    public void setLocalidentifier(String localidentifier) {
+        this.localidentifier = localidentifier;
     }
 
     public String getNotes() {
@@ -106,6 +106,20 @@ public class ImportSourceData implements java.io.Serializable {
     }
 
     public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public ImportSourceData(Integer id, Date date, int importSourceId, String k1, String k2, String k3, String attr, String attrVal, String value, String localidentifier, String notes) {
+        this.id = id;
+        this.date = date;
+        this.importSourceId = importSourceId;
+        this.k1 = k1;
+        this.k2 = k2;
+        this.k3 = k3;
+        this.attr = attr;
+        this.attrVal = attrVal;
+        this.value = value;
+        this.localidentifier = localidentifier;
         this.notes = notes;
     }
 

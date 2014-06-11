@@ -1,7 +1,6 @@
 package edu.yale.library.ladybird.engine.model;
 
 import edu.yale.library.ladybird.engine.imports.ImportEntity;
-import edu.yale.library.ladybird.engine.oai.Marc21Field;
 import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.persistence.dao.FieldDefinitionDAO;
@@ -108,7 +107,7 @@ public class FieldConstantRules {
      * @see edu.yale.library.ladybird.engine.model.FieldConstantRules#convertStringToFieldConstant(String)
      * for similiar functionality
      */
-    private static Integer fdidAsInt(String s) {
+    public static Integer fdidAsInt(String s) {
         logger.debug("Converting={}", s);
         try {
             return Integer.parseInt(s);
@@ -118,20 +117,5 @@ public class FieldConstantRules {
         }
     }
 
-    /**
-     * Note: Mappings are defined via db, and will be injected.
-     * @param fieldConstant
-     * @return
-     */
-    @Deprecated
-    public static Marc21Field getFieldConstantToMarc21Mapping(final FieldConstant fieldConstant) {
-        logger.error("Mappings are supposed to be injected via db");
-        String f = fieldConstant.getName();
-        if (f.equals("70") || f.equals("Title{fdid=70}") || f.equals("fdid=70")) {
-            logger.debug("Returning for this field, Marc tag={}", Marc21Field._245.toString());
-            return Marc21Field._245;
-        }
-        logger.debug("Returning for this field, Marc tag={}", Marc21Field.UNK);
-        return Marc21Field.UNK;
-    }
-}
+
+  }

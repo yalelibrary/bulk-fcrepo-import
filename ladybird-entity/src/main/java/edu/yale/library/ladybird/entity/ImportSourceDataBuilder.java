@@ -12,7 +12,7 @@ public class ImportSourceDataBuilder {
     private String attr;
     private String attrVal;
     private String value;
-    private Integer zindex;
+    private String localidentifier;
     private String notes;
 
     public ImportSourceDataBuilder setId(Integer id) {
@@ -60,8 +60,8 @@ public class ImportSourceDataBuilder {
         return this;
     }
 
-    public ImportSourceDataBuilder setZindex(Integer zindex) {
-        this.zindex = zindex;
+    public ImportSourceDataBuilder setLocalidentifier(String localidentifier) {
+        this.localidentifier = localidentifier;
         return this;
     }
 
@@ -71,18 +71,6 @@ public class ImportSourceDataBuilder {
     }
 
     public ImportSourceData createImportSourceData() {
-        final ImportSourceData importSourceData = new ImportSourceData();
-        importSourceData.setId(id);
-        importSourceData.setDate(date);
-        importSourceData.setImportSourceId(importSourceId);
-        importSourceData.setK1(k1);
-        importSourceData.setK2(k2);
-        importSourceData.setK3(k3);
-        importSourceData.setAttr(attr);
-        importSourceData.setAttrVal(attrVal);
-        importSourceData.setValue(value);
-        importSourceData.setZindex(zindex);
-        importSourceData.setNotes(notes);
-        return importSourceData;
+        return new ImportSourceData(id, date, importSourceId, k1, k2, k3, attr, attrVal, value, localidentifier, notes);
     }
 }

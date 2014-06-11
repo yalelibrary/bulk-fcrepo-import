@@ -1,12 +1,16 @@
 package edu.yale.library.ladybird.engine.exports;
 
 import com.google.common.collect.Multimap;
+import edu.yale.library.ladybird.engine.FdidMarcMappingUtil;
 import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
 import edu.yale.library.ladybird.engine.imports.ImportEntity;
 import edu.yale.library.ladybird.engine.imports.ImportEntity.Column;
 import edu.yale.library.ladybird.engine.imports.ImportEntity.Row;
+import edu.yale.library.ladybird.engine.imports.ImportEntityValue;
 import edu.yale.library.ladybird.engine.imports.ImportJobCtx;
 import edu.yale.library.ladybird.engine.imports.ImportSourceDataReader;
+import edu.yale.library.ladybird.engine.model.FunctionConstants;
+import edu.yale.library.ladybird.engine.model.LocalIdMarcValue;
 import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.engine.model.FieldConstantRules;
 import edu.yale.library.ladybird.engine.oai.Marc21Field;
@@ -14,6 +18,7 @@ import edu.yale.library.ladybird.entity.ImportJobContents;
 import edu.yale.library.ladybird.entity.ImportJobExhead;
 import edu.yale.library.ladybird.persistence.dao.ImportJobContentsDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobExheadDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.FieldMarcMappingHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobContentsHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobExheadHibernateDAO;
 import org.slf4j.Logger;
@@ -35,6 +40,7 @@ public class ExportReader {
 
     /**
      * Main method. Reads import tables (import job contents and import source) to construct data.
+     * TODO test
      * @return ImportJobCtx
      */
     public ImportJobCtx readRowsFromImportTables() {
@@ -44,21 +50,14 @@ public class ExportReader {
         final ExportRequestEvent exportRequestEvent = ExportEngineQueue.getJob();
         final int importId = exportRequestEvent.getImportId();
 
-
         int expectedNumRowsToWrite = importJobContentsDAO.getNumRowsPerImportJob(importId); //gets contents count not exhead
         expectedNumRowsToWrite = expectedNumRowsToWrite + 1; //N.B. to accomodate for row num. starting from 0
 
-        logger.debug("Import job contents num rows={}", expectedNumRowsToWrite);
-        logger.trace("Import job contents total rows={}", importJobContentsDAO.getNumEntriesPerImportJob(importId));
-
         ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
 
+        final List<LocalIdMarcValue> bibIdValueList = importSourceDataReader.toLocalIdMarcValue(importId);
 
-        final Map<Integer, Multimap<Marc21Field, Map<String, String>>> bibIdDataFieldTypeMap
-                = importSourceDataReader.readBibIdData(importId, expectedNumRowsToWrite);
-
-        logger.debug("BibIdDataFieldTypeMap size={}", bibIdDataFieldTypeMap.size());
-        //logger.debug("BibIdDataFieldTypeMap={}", bibIdDataFieldTypeMap.toString());
+        //logger.debug("List of localIdMarcValues size={}", bibIdValueList.size());
 
         //Get all FunctionConstants. Every FunctionConstant should have a column in the output spreadsheet.
         final List<FieldConstant> globalFConstantsList = FieldConstantRules.getApplicationFieldConstants();
@@ -76,30 +75,53 @@ public class ExportReader {
 
         resultRowList.add(exheadRow); //N.B. exhead row is added
 
-        //Get import job contents rows of columns. These will be merged with the oai data:
+        //Get import job contents rows of columns. These will be MERGED with the oai data:
+
         final List<Row> regularRows = getImportJobContents(importId);
+
+        ImportEntityValue importEntityValue = new ImportEntityValue(regularRows);
+
+        int bibIdCol;
+        try {
+            bibIdCol = importEntityValue.getFunctionPosition(FunctionConstants.F104); //or F105 TODO
+        } catch (Exception e) {
+           logger.debug("Col with bibId data not found in this sheet");
+            bibIdCol = -1; //TODO
+        }
 
         for (int i = 0; i < expectedNumRowsToWrite; i++) {
             final Row row = regularRows.get(i);
             final Row rowToWrite = new ImportEntity().new Row();
             final List<Column> cols = row.getColumns();
 
+            // for each field constant (NOT for each column):
+
             for (final FieldConstant fieldConst : globalFConstantsList) {
 
-                //logger.debug("Writing FieldConstant={}", fieldConst.getName());
-
-                final String nonOaiValue = findColValueForThisFieldConstant(fieldConst, cols);
+                final String regularValue = findColValueForThisFieldConstant(fieldConst, cols);
 
                 String oaiValue = "";
 
-                if (bibIdDataFieldTypeMap.containsKey(i)) {
-                    oaiValue = getMultiMapValue(fieldConst, bibIdDataFieldTypeMap.get(i));
-                } else {
-                    logger.debug("No OAI value exists for this FieldConstant={}", fieldConst.getName());
+                //merge only if bibId col exists, and if not a function constant (like f104 itself)
+                if (bibIdCol != -1 && !FunctionConstants.isFunction(fieldConst.getName())) {
+
+                    final Column<String> bibIdColumn = cols.get(bibIdCol);
+
+                    logger.debug("BibIdColumn={}", bibIdColumn.toString());
+
+                    for (LocalIdMarcValue localIdMarcValue: bibIdValueList) { //iterate to find the right data..TODO utility method
+
+                        //logger.debug("Comparing bibIdcolum={} with value={}", bibIdColumn.getValue(), localIdMarcValue.getBibId().getId());
+
+                        if (localIdMarcValue.getBibId().getId().equals(bibIdColumn.getValue())) {
+                            oaiValue = getMultiMapValue(fieldConst, localIdMarcValue.getValue());
+                            logger.debug("OAI value={}", oaiValue);
+                        }
+                    }
                 }
 
-                final String mergedValue = nonOaiValue + oaiValue;
-                logger.debug("Merged value={} with non-Oaivalue={}", mergedValue, nonOaiValue);
+                final String mergedValue = regularValue + oaiValue;
+                logger.debug("Merged value={} from regular value={}", mergedValue, regularValue);
 
                 final ImportEntity importEntity = new ImportEntity();
                 rowToWrite.getColumns().add(importEntity.new Column<>(fieldConst, mergedValue));
@@ -107,7 +129,7 @@ public class ExportReader {
             resultRowList.add(rowToWrite);
         }
 
-        logger.debug("ImportJobCtx row size={}", resultRowList.size());
+        //logger.debug("ImportJobCtx row size={}", resultRowList.size());
 
         final ImportJobCtx importJobCtx = new ImportJobCtx();
         importJobCtx.setImportJobList(resultRowList);
@@ -121,15 +143,18 @@ public class ExportReader {
      * @return
      */
     public String getMultiMapValue(FieldConstant fieldConstant, final Multimap<Marc21Field, Map<String, String>> map) {
-        logger.debug("Extracting value for={}", fieldConstant.getName());
+        //logger.debug("Extracting value for={}", fieldConstant.getName());
 
-        final Marc21Field fieldToQuery = FieldConstantRules.getFieldConstantToMarc21Mapping(fieldConstant);
+        FdidMarcMappingUtil fdidMarcMappingUtil = new FdidMarcMappingUtil();
+        fdidMarcMappingUtil.setFieldMarcMappingDAO(new FieldMarcMappingHibernateDAO()); //TODO
 
-        logger.debug("Field to query={}", fieldToQuery.toString());
+        final Marc21Field fieldToQuery = fdidMarcMappingUtil.toMarc21Field(fieldConstant);
+
+        //logger.debug("Field to query={}", fieldToQuery.toString());
 
         final Collection<Map<String, String>> attrCollection = map.get(fieldToQuery);
 
-        logger.debug("Attr collection size={}", attrCollection.size());
+        //logger.debug("Attrcollection size={}", attrCollection.size());
 
         final Iterator<Map<String, String>> it = attrCollection.iterator();
         String oaiValue = "";
@@ -141,9 +166,9 @@ public class ExportReader {
                 oaiValue = attrValueMap.get("a");
             }
         }
-        logger.debug("Found value={}", oaiValue);
-        logger.debug("Map is={]", map.toString());
-        logger.debug("Map value is={}", attrCollection.toString());
+        //logger.debug("Found value={}", oaiValue);
+        //logger.debug("Map is={]", map.toString());
+        //logger.debug("Map value is={}", attrCollection.toString());
         return oaiValue;
     }
 

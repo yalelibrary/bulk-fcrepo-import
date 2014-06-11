@@ -60,6 +60,8 @@ public class ImportSourceDataReaderTest {
         ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
 
         Multimap<Marc21Field, Map<String, String>> m = importSourceDataReader.marshallMarcData(sourceData);
+
+
         logger.debug(m.toString());
         Collection marcMap = m.get(Marc21Field._245);
 
@@ -71,8 +73,13 @@ public class ImportSourceDataReaderTest {
 
     private List<ImportSourceData> fakeImportSourceData() {
         ImportSourceData importSourceData = new ImportSourceDataBuilder().setK1("245").setK2("a").setAttr("test attr").setValue("Test value").setAttrVal("Test attr value").createImportSourceData();
-        List<ImportSourceData> lsit = new ArrayList<>();
-        lsit.add(importSourceData);
-        return lsit;
+        List<ImportSourceData> list = new ArrayList<>();
+        list.add(importSourceData);
+
+        ImportSourceData importSourceData2 = new ImportSourceDataBuilder().setK1("245").setK2("a").setAttr("test attr 2").setValue("Test value 2").setAttrVal("Test attr value 2").createImportSourceData();
+        list.add(importSourceData2);
+
+
+        return list;
     }
 }

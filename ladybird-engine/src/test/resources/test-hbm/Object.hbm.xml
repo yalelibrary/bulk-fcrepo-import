@@ -20,8 +20,8 @@
         <property name="oid_1" type="int">
             <column name="_oid" not-null="true" />
         </property>
-        <property name="zindex" type="int">
-            <column name="zindex" not-null="true" />
+        <property name="localidentifier" type="int">
+            <column name="localidentifier" not-null="true" />
         </property>
         <property name="parent" type="string">
             <column name="parent" length="1" not-null="true" />

@@ -28,7 +28,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ProjectView extends AbstractView {
     private final Logger logger = getLogger(this.getClass());
 
-    private Project item = new ProjectBuilder().createProject();
+    private Project item = new ProjectBuilder().setUrl("http://www.yale.edu").setLabel("project").setLocation("location").createProject();
     private List<Project> itemList;
     private Project selectedItem = new ProjectBuilder().createProject();
 

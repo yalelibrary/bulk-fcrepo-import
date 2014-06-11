@@ -8,7 +8,7 @@ public interface ImportSourceDataDAO extends GenericDAO<ImportSourceData, Intege
 
     List<ImportSourceData> findByImportId(int importId);
 
-    List<ImportSourceData> findByImportId(int importId, int rowNum);
+    List<ImportSourceData> findByImportIdAndLocalIdentifier(int importId, String localIdentifier); //e.g. bibid
 
 
 }

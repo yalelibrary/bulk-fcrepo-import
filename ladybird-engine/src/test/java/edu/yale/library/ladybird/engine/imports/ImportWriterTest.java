@@ -3,6 +3,8 @@ package edu.yale.library.ladybird.engine.imports;
 import com.google.common.collect.Multimap;
 import edu.yale.library.ladybird.engine.model.FieldConstantRules;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
+import edu.yale.library.ladybird.engine.model.LocalIdMarcImportSource;
+import edu.yale.library.ladybird.engine.model.LocalIdentifier;
 import edu.yale.library.ladybird.engine.oai.Marc21Field;
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
 import edu.yale.library.ladybird.entity.FieldConstant;
@@ -55,14 +57,15 @@ public class ImportWriterTest {
                 util.getProperty("oai_url_id"));
         importWriter.setOaiProvider(provider);
         final String bibId = "9807234";
-        final List<String> bibIds = Collections.singletonList(bibId);
+        final LocalIdentifier<String> localIdentifier = new LocalIdentifier<String>(bibId);
+        final List<LocalIdentifier<String>> bibIds = Collections.singletonList(localIdentifier);
 
         ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
 
-        final Map<String, Multimap<Marc21Field, ImportSourceData>> map =
+        final List<LocalIdMarcImportSource> list =
                 importSourceDataReader.readBibIdMarcData(provider, bibIds, null, 0); //FIXME params null and 0 for importid
-        assertEquals("Map size mismatch", map.size(), 1);
-        final Multimap<Marc21Field, ImportSourceData> innerMap = map.get(bibId);
+        assertEquals("List size mismatch", list.size(), 1);
+        final Multimap<Marc21Field, ImportSourceData> innerMap = list.get(0).getValue();
         Collection<ImportSourceData> collection = innerMap.get(Marc21Field._520);
         final Iterator<ImportSourceData> it = collection.iterator();
 

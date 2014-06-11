@@ -18,10 +18,10 @@ public class ImportSourceDataHibernateDAO extends GenericHibernateDAO<ImportSour
         return q.list();
     }
 
-    public List<ImportSourceData>  findByImportId(final int importId, final int row) {
-        final Query q = getSession().createQuery("from ImportSourceData where importSourceId = :param1 and zindex = :param2");
+    public List<ImportSourceData> findByImportIdAndLocalIdentifier(final int importId, final String localid) {
+        final Query q = getSession().createQuery("from edu.yale.library.ladybird.entity.ImportSourceData where importSourceId = :param1 and localidentifier = :param2");
         q.setParameter("param1", importId);
-        q.setParameter("param2", row);
+        q.setParameter("param2", localid);
         return q.list();
     }
 

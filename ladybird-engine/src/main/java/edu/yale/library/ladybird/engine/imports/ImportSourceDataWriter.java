@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.engine.imports;
 
 import com.google.common.collect.Multimap;
+import edu.yale.library.ladybird.engine.model.LocalIdMarcImportSource;
 import edu.yale.library.ladybird.engine.oai.Marc21Field;
 import edu.yale.library.ladybird.entity.ImportSourceData;
 import edu.yale.library.ladybird.persistence.dao.ImportSourceDataDAO;
@@ -9,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -21,22 +22,17 @@ public class ImportSourceDataWriter {
 
     final ImportSourceDataDAO dao = new ImportSourceDataHibernateDAO(); //TODO
 
-    /**
+     /**
      * Persists MARC data to import source data tables
-     * @param bibIdValueMap a Map of String => MultiMap
-     * @param importId import id of the job. ?
+     * @param list
+     * @param importId
      */
-    public void persistMarcData(final Map<String, Multimap<Marc21Field, ImportSourceData>> bibIdValueMap,
+    public void persistMarcData(final List<LocalIdMarcImportSource> list,
                                 final int importId) {
-        if (bibIdValueMap.isEmpty()) {
-            logger.debug("Empty bibIdValueMap");
-            return;
-        }
 
-        Set<String> bibIds = bibIdValueMap.keySet();
+        for (LocalIdMarcImportSource item: list) {
+            Multimap<Marc21Field, ImportSourceData> m  = item.getValue();
 
-        for (String id : bibIds) {
-            Multimap<Marc21Field, ImportSourceData> m = bibIdValueMap.get(id);
             Set<Marc21Field> marc21FieldsKeySet = m.keySet();
 
             for (Marc21Field marc21Field : marc21FieldsKeySet) {

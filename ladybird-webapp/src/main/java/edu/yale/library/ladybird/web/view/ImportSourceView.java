@@ -20,7 +20,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ImportSourceView extends AbstractView {
     private final Logger logger = getLogger(this.getClass());
 
-    private ImportSource item = new ImportSourceBuilder().createImportSource();
+    private ImportSource item = new ImportSourceBuilder().setUrl("http://columbus.library.yale.edu:8055/OAI_Orbis/src/OAIOrbisTool.jsp").setGetPrefix("oai:orbis.library.yale.edu:").createImportSource();
     private List<ImportSource> itemList;
 
     @Inject

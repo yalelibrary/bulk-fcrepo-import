@@ -4,5 +4,7 @@ import edu.yale.library.ladybird.entity.FieldMarcMapping;
 
 public interface FieldMarcMappingDAO extends GenericDAO<FieldMarcMapping, Integer> {
 
+    FieldMarcMapping findByFdid(int fdid);
+
 }
 
