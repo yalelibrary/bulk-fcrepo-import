@@ -19,6 +19,12 @@ import java.util.List;
 public class ExportWriter {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * Writes out Excel file to disk
+     * @param list content
+     * @param filePath path to write to
+     * @throws IOException
+     */
     public void write(final List<ImportEntity.Row> list, final String filePath) throws IOException {
         final XSSFWorkbook workbook = new XSSFWorkbook();
         final XSSFSheet sheet = workbook.createSheet("Default Sheet");

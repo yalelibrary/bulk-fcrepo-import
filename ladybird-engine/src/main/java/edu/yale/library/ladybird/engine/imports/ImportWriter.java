@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.engine.imports;
 
 
+import edu.yale.library.ladybird.engine.FdidMarcMappingUtil;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.engine.model.LocalIdMarcImportSource;
 import edu.yale.library.ladybird.engine.model.LocalIdentifier;
@@ -22,9 +23,7 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobExheadHibern
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobHibernateDAO;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,19 +33,14 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ImportWriter {
     private final Logger logger = getLogger(this.getClass());
 
-    private final Date JOB_EXEC_DATE = new Date(System.currentTimeMillis()); //TODO pass
-
     //TODO inject dao(s), etc
 
     private OaiProvider oaiProvider;
-
     private MediaFunctionProcessor mediaFunctionProcessor;
-
     private final FieldMarcMappingDAO fieldMarcMappingDAO = new FieldMarcMappingHibernateDAO();
-
     private final ImportJobContentsDAO dao = new ImportJobContentsHibernateDAO();
-
     private final ImportJobDAO importJobDAO = new ImportJobHibernateDAO();
+    private final Date JOB_EXEC_DATE = new Date(System.currentTimeMillis()); //TODO pass
 
     /**
      * Full cycle import writing
@@ -55,18 +49,23 @@ public class ImportWriter {
      * @param ctx Job Context
      * @return Import Id
      */
-    public int write(final ImportEntityValue importEntityValue, final ImportJobContext ctx) {
-        final int importId = writeImportJob(ctx);
-        writeExHead(importId, importEntityValue.getHeaderRow().getColumns());
-        writeContents(importId, importEntityValue); //change to only columns
-        return importId;
+    public int write(final ImportEntityValue importEntityValue, final ImportJobContext ctx) throws Exception {
+        try {
+            final int importId = writeImportJob(ctx);
+            writeExHead(importId, importEntityValue.getHeaderRow().getColumns());
+            writeContents(importId, importEntityValue); //change to only columns
+            return importId;
+        } catch (Exception e) {
+            logger.error("Error writing.", e);
+            throw e;
+        }
     }
 
     /**
      * Write header ("ex head")
      *
-     * @param importId
-     * @param list
+     * @param importId import id of the job
+     * @param list list of contents
      */
     public void writeExHead(final int importId, final List<ImportEntity.Column> list) {
         logger.debug("Writing spreadsheet headers. Columns list size={}", list.size());
@@ -93,12 +92,12 @@ public class ImportWriter {
     public void writeContents(final int importId, final ImportEntityValue importEntityValue) {
 
         //Write import source data
-        final List<LocalIdentifier<String>> bibIdList = getBibIds(importEntityValue);
+        final List<LocalIdentifier<String>> bibIdList = LocalIdentifier.getBibIds(importEntityValue);
         final ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
         final List<FieldMarcMapping> fieldMarcMappingList = fieldMarcMappingDAO.findAll();
-        final Map<Marc21Field, FieldMarcMapping> marc21FieldMap = buildMarcFdidMap(fieldMarcMappingList);
+        final Map<Marc21Field, FieldMarcMapping> marc21FieldMap = new FdidMarcMappingUtil().buildMarcFdidMap(fieldMarcMappingList);
         final List<LocalIdMarcImportSource> importSourceLocalIdList =
-                importSourceDataReader.readBibIdMarcData(oaiProvider, bibIdList, marc21FieldMap, importId);
+                importSourceDataReader.readBibIdMarcData(oaiProvider, bibIdList, importId);
         ImportSourceDataWriter importSourceDataWriter = new ImportSourceDataWriter();
         importSourceDataWriter.persistMarcData(importSourceLocalIdList, importId);
 
@@ -144,49 +143,10 @@ public class ImportWriter {
     }
 
     /**
-     * Builds a map of Marc21Field and FieldMarcMapping, with key being the k1 field
-     * (e.g. Marc21Field._245 => FieldMarcMapping(1, new Date(), 245, k2, fdid)
-     * @see FieldMarcMapping
-     * @see Marc21Field
-     * @return
-     */
-    public Map<Marc21Field, FieldMarcMapping> buildMarcFdidMap(List<FieldMarcMapping> fieldMarcMappingList) {
-
-        logger.trace("Field marc mapping list size={}", fieldMarcMappingList);
-
-        final List<String> debugList = new ArrayList<>(); //print warning
-
-        final Map<Marc21Field, FieldMarcMapping> marc21FieldMap = new HashMap<>(); //e.g. 880 -> FieldMarcMapping
-
-        for (final FieldMarcMapping f : fieldMarcMappingList) {
-            try {
-                marc21FieldMap.put(Marc21Field.valueOf("_" + f.getK1()), f);
-            } catch (IllegalArgumentException e) { //No matching enum
-                debugList.add(f.getK1());
-                continue;
-            }
-        }
-        logger.debug("Enums not found for={}", debugList);
-        return marc21FieldMap;
-    }
-
-    public List<LocalIdentifier<String>> getBibIds(ImportEntityValue importEntityValue) {
-        List<String> list = importEntityValue.getColumnStrings(FunctionConstants.F104);
-        List<LocalIdentifier<String>> listLocalIds = new ArrayList<>();
-
-        for (String s: list) {
-            LocalIdentifier localIdentifier = new LocalIdentifier(s);
-            listLocalIds.add(localIdentifier);
-        }
-
-        return listLocalIds;
-    }
-
-    /**
-     * Writes import job
+     * Writes to import job table
      *
      * @param ctx Context containing information about the job
-     * @return newly minted job id
+     * @return minted job id
      */
     public Integer writeImportJob(final ImportJobContext ctx) {
         return importJobDAO.save(new ImportJobBuilder().setDate(JOB_EXEC_DATE).setJobDirectory(ctx.getJobDir()).

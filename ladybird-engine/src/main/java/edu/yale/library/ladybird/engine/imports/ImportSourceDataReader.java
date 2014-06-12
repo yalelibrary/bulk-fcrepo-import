@@ -44,14 +44,12 @@ public class ImportSourceDataReader {
      * Hits OAI feed and gets a Record
      *
      * @param bibIds
-     * @param marc21FieldMap
      * @return List<LocalIdMarcImportSource> a list of data structures containing the mappings
      */
     public List<LocalIdMarcImportSource> readBibIdMarcData(final OaiProvider oaiProvider,
                                                                                   final List<LocalIdentifier<String>> bibIds,
-                                                                                  final Map<Marc21Field, FieldMarcMapping> marc21FieldMap,
                                                                                   final int importId) {
-        final List<LocalIdMarcImportSource> list = new ArrayList<>();  //final Map<String, Multimap<Marc21Field, ImportSourceData>> bibIdMarcValues = new HashMap<>();
+        final List<LocalIdMarcImportSource> list = new ArrayList<>();  //Map<String, Multimap<Marc21Field, ImportSourceData>> bibIdMarcValues
 
 
         logger.debug("Reading marc data for the bibIds");
@@ -77,7 +75,7 @@ public class ImportSourceDataReader {
     }
 
     /**
-     * @see ImportSourceDataReader#readBibIdMarcData(edu.yale.library.ladybird.engine.oai.OaiProvider, java.util.List, java.util.Map, int)
+     * @see ImportSourceDataReader#readBibIdMarcData(edu.yale.library.ladybird.engine.oai.OaiProvider, java.util.List, int)
      * @param record MarcRecord
      * @return a map(k,v) where k=Tag, v=ImportSourceData
      */

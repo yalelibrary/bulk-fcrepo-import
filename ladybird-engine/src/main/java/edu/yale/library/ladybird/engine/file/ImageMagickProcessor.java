@@ -1,5 +1,6 @@
 package edu.yale.library.ladybird.engine.file;
 
+import com.google.common.base.Preconditions;
 import edu.yale.library.ladybird.entity.Settings;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
 import edu.yale.library.ladybird.persistence.dao.SettingsDAO;
@@ -25,6 +26,16 @@ public class ImageMagickProcessor implements ImageProcessor {
 
     public void toFormat(final String src, final String dest) {
 
+        String sourceImage;
+        String destImage;
+
+        try {
+            sourceImage = Preconditions.checkNotNull(src);
+            destImage = Preconditions.checkNotNull(dest);
+        } catch (NullPointerException e) {
+            return; //ignore
+        }
+
         final ConvertCmd cmd = new ConvertCmd();
 
         String imageMagickPath = getImgMagickPath();
@@ -41,11 +52,11 @@ public class ImageMagickProcessor implements ImageProcessor {
         try {
             logger.trace("Converting file={}", src);
             final IMOperation op = new IMOperation();
-            op.addImage(src);
-            op.addImage(dest);
+            op.addImage(sourceImage);
+            op.addImage(destImage);
             cmd.run(op);
         } catch (IOException | InterruptedException | IM4JavaException e) {
-            throw new ImageProcessingException(e);
+            throw new RuntimeException("Error processing image", e);
         }
     }
 
@@ -53,7 +64,7 @@ public class ImageMagickProcessor implements ImageProcessor {
      * Get image magick path
      * @return path or empty string since the field is held statically for now
      */
-    private static String getImgMagickPath() {
+    public static String getImgMagickPath() {
         try {
             final SettingsDAO settingsDAO = new SettingsHibernateDAO();
             final Settings s = settingsDAO.findByProperty(ApplicationProperties.IMAGE_MAGICK_PATH_ID);
@@ -72,7 +83,7 @@ public class ImageMagickProcessor implements ImageProcessor {
         return "";
     }
 
-    private static boolean pathContains(final String path) {
+    public static boolean pathContains(final String path) {
         final String PROGRAM = "convert";
         File file = new File(path + File.separator + PROGRAM);
         return file.exists();

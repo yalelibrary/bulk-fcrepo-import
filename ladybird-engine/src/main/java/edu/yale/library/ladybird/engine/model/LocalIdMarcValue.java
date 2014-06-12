@@ -2,13 +2,18 @@ package edu.yale.library.ladybird.engine.model;
 
 import com.google.common.collect.Multimap;
 import edu.yale.library.ladybird.engine.oai.Marc21Field;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Map;
 
 /**
  *
  */
 public class LocalIdMarcValue {
+
+    private static Logger logger = LoggerFactory.getLogger(LocalIdMarcValue.class);
 
     LocalIdentifier<String> bibId;
 
@@ -29,4 +34,19 @@ public class LocalIdMarcValue {
     public void setValue(Multimap<Marc21Field, Map<String, String>> value) {
         this.value = value;
     }
+
+    public static LocalIdMarcValue findMatch(List<LocalIdMarcValue> bibIdValueList, String value) {
+
+        for (LocalIdMarcValue localIdMarcValue : bibIdValueList) {
+
+            logger.trace("Comparing bibIdcolum={} with value={}", value, localIdMarcValue.getBibId().getId());
+
+            if (localIdMarcValue.getBibId().getId().equals(value)) {
+                return localIdMarcValue;
+            }
+        }
+        return null;
+    }
+
+
 }

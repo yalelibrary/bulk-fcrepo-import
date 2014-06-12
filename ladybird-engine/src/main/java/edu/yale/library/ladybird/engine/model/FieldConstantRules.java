@@ -117,5 +117,31 @@ public class FieldConstantRules {
         }
     }
 
+    /**
+     * Transform a strihng into a a FieldConstant
+     *
+     * @param cellValue spreadsheet cell value
+     * @return a FieldConstant
+     * @throws edu.yale.library.ladybird.engine.model.UnknownFieldConstantException
+     * @see FunctionConstants
+     */
+    public static FieldConstant getFieldConstant(final String cellValue) throws UnknownFieldConstantException {
+
+        FieldConstant f = FieldConstantRules.convertStringToFieldConstant(cellValue);
+        if (f != null) {
+            return f;
+        }
+
+        //try converting it to function constant (redundantly) FIXME
+
+        try {
+            final String normCellString = cellValue.replace("{", "").replace("}", "");
+            final FieldConstant fieldConst = FunctionConstants.valueOf(normCellString.toUpperCase());
+            return fieldConst;
+        } catch (IllegalArgumentException e) {
+            throw new UnknownFieldConstantException("Specified cell=" + cellValue + " not a recognized function or fdid.");
+        }
+    }
+
 
   }

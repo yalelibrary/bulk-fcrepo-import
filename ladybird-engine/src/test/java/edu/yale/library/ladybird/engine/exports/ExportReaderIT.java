@@ -32,7 +32,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 
 /**
- * FIXME It's an abstract DB test because the DAO for shouldGetMultiMapValue() is not currently being injected
+ * FIXME It's an abstract DB test because the DAO for shouldGetMultiMapValue() is not currently being injected, e.g.
  */
 public class ExportReaderIT extends AbstractDBTest {
 
@@ -48,7 +48,7 @@ public class ExportReaderIT extends AbstractDBTest {
 
 
         ExportReader exportReader = new ExportReader();
-        ImportJobCtx importJobCtx = exportReader.readRowsFromImportTables();
+        ImportJobCtx importJobCtx = exportReader.read();
         assert (importJobCtx.getImportJobList().size() == 0);
     }
 
@@ -66,7 +66,7 @@ public class ExportReaderIT extends AbstractDBTest {
         }
     }
 
-    /** @see edu.yale.library.ladybird.engine.exports.ExportReader#getMultiMapValue */
+    /** @see edu.yale.library.ladybird.engine.exports.ExportReader#getMultimapMarc21Field */
     @Test
     public void shouldGetMultiMapValue() {
         initMarcMappingDB(); //FIXME Inst. db because ExportReader creates a new FdidMarcMappingUtil object
@@ -80,10 +80,18 @@ public class ExportReaderIT extends AbstractDBTest {
         //logger.debug("Map={}", map.toString());
 
         for (FieldConstant f: globalFConstantsList) {
-            String s = exportReader.getMultiMapValue(f, map);
+            Marc21Field marc21Field = new FdidMarcMappingUtil().toMarc21Field(f);
+            String s = exportReader.getMultimapMarc21Field(marc21Field, map);
             //logger.debug("Value={}", s);
             assertEquals("Value mismatch", s, "Test value");
         }
+    }
+
+    //TODO DAO (results in NPE)
+    @Test
+    public void shouldGetImportJobContents() {
+        ExportReader exportReader = new ExportReader();
+        exportReader.readImportRows(0);
     }
 
     private void initMarcMappingDB() {

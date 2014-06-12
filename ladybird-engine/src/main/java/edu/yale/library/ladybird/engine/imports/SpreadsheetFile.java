@@ -1,6 +1,10 @@
 package edu.yale.library.ladybird.engine.imports;
 
 
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -53,6 +57,18 @@ public class SpreadsheetFile implements Cloneable {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    /**
+     * Read default sheet (0 for now)
+     *
+     * @return
+     * @throws java.io.IOException
+     */
+    public XSSFSheet getDefaultSheet(int sheetNumber) throws IOException {
+        final XSSFWorkbook workbook = new XSSFWorkbook(fileStream);
+        final XSSFSheet sheet = workbook.getSheetAt(sheetNumber);
+        return sheet;
     }
 
     @Override

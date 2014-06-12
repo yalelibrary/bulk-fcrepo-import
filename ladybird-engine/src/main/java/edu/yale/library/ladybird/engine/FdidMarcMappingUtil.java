@@ -6,11 +6,16 @@ import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.entity.FieldMarcMapping;
 import edu.yale.library.ladybird.entity.FieldMarcMappingBuilder;
 import edu.yale.library.ladybird.persistence.dao.FieldMarcMappingDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.FieldMarcMappingHibernateDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -22,23 +27,16 @@ public class FdidMarcMappingUtil {
 
     //TODO for now simple int from a text file
     public void setInitialFieldMarcDb() throws Exception {
-
         InputStream f = this.getClass().getResourceAsStream("/marc-mappings-int.txt");
 
         try {
             Scanner sc = new Scanner(f);
-
-            if (sc == null) {
-                logger.error("File not found");
-            }
-
             String s;
 
             while ((s = sc.nextLine()) != null) {
                 String[] t = s.split("\t");
                 fieldMarcMappingDAO.save(newFdid(t[0], Integer.parseInt(t[3]))); //e.g. 245, 70
             }
-
         } catch (NoSuchElementException e1) {
             logger.trace(e1.getMessage());
         } catch (Exception e) {
@@ -52,23 +50,21 @@ public class FdidMarcMappingUtil {
     }
 
     /**
+     * FIXME needs to be static perhaps, but has a reference to DAO
      * Returns Marc21Field mapped value or Marc21Field.UNK
      * @param fieldConstant
      * @return
      */
     public Marc21Field toMarc21Field(FieldConstant fieldConstant) {
-        //logger.debug("Finding Marc21Field for={}", fieldConstant);
-       /* String f = fieldConstant.getName();
-        if (f.equals("70") || f.equals("Title{fdid=70}") || f.equals("fdid=70")) {
-            return Marc21Field._245;
-        }
-        return Marc21Field.UNK;
-        */
 
         try {
-            //try converting to integer fdid
+            //Try converting to integer fdid:
             int fdid = FieldConstantRules.fdidAsInt(fieldConstant.getName());
             //logger.debug("Field Contant as Fdid={}", fdid);
+
+            if (fieldMarcMappingDAO == null) { //TODO
+                fieldMarcMappingDAO = new FieldMarcMappingHibernateDAO();
+            }
 
             FieldMarcMapping fieldMarcMapping = fieldMarcMappingDAO.findByFdid(fdid);
             Marc21Field marc21Field = Marc21Field.valueOfTag(fieldMarcMapping.getK1());
@@ -79,6 +75,31 @@ public class FdidMarcMappingUtil {
         }
 
         return Marc21Field.UNK; // if error
+    }
+
+    /**
+     * Builds a map of Marc21Field and FieldMarcMapping, with key being the k1 field
+     * (e.g. Marc21Field._245 => FieldMarcMapping(1, new Date(), 245, k2, fdid)
+     * @see FieldMarcMapping
+     * @see Marc21Field
+     * @return Mapping of Marc21Field to FIeldMarcMapping
+     */
+    public Map<Marc21Field, FieldMarcMapping> buildMarcFdidMap(List<FieldMarcMapping> fieldMarcMappingList) {
+
+        logger.trace("Field marc mapping list size={}", fieldMarcMappingList);
+
+        final List<String> debugList = new ArrayList<>(); //print warning
+        final Map<Marc21Field, FieldMarcMapping> marc21FieldMap = new HashMap<>(); //e.g. 880 -> FieldMarcMapping
+
+        for (final FieldMarcMapping f : fieldMarcMappingList) {
+            try {
+                marc21FieldMap.put(Marc21Field.valueOf("_" + f.getK1()), f);
+            } catch (IllegalArgumentException e) { //No matching enum
+                debugList.add(f.getK1());
+            }
+        }
+        logger.debug("Enums not found for={}", debugList);
+        return marc21FieldMap;
     }
 
     /** For testing */

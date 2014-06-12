@@ -28,7 +28,7 @@ public class DefaultExportEngine extends AbstractExportEngine {
      */
     @Override
     public ImportJobCtx doRead() {
-        final ImportJobCtx importJobCtx = reader.readRowsFromImportTables();
+        final ImportJobCtx importJobCtx = reader.read();
         logger.debug("Read list size={}", importJobCtx.getImportJobList().size());
         return importJobCtx;
     }

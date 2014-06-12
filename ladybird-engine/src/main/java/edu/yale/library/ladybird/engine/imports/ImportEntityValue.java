@@ -30,14 +30,9 @@ public class ImportEntityValue {
         this.rowList = rowList;
     }
 
-    @Deprecated
-    public List<Row> getRowList() {
-        return rowList;
-    }
-
     /**
      * Get all specific column values.
-     * @param columnNum
+     * @param columnNum column number
      * @return
      */
     public List<Column> getColumnValues(final short columnNum) {
@@ -45,25 +40,6 @@ public class ImportEntityValue {
         for (ImportEntity.Row r: rowList) {
             Column c = r.getColumns().get(columnNum);
             columns.add(c);
-        }
-        return columns;
-    }
-
-    /**
-     * Get column values for a specific column for a subset of rows. Assumes only one occurrence.
-     * @param fieldConstant
-     * @return
-     */
-    public List<Column> getColumnValues(final FieldConstant fieldConstant, final List<Row> rowList) {
-       final  List<Column> columns = new ArrayList<>();
-        for (ImportEntity.Row r: rowList) {
-            for (Column c: r.getColumns()) {
-                if (c.getField() != null) {
-                    if (c.getField().getName().equals(fieldConstant.getName())) {
-                        columns.add(c);
-                    }
-                }
-            }
         }
         return columns;
     }
@@ -247,6 +223,21 @@ public class ImportEntityValue {
         }
 
         return values;
+    }
+
+    /**
+     * Find value from row
+     * @param f FieldConstant
+     * @param column row with columns
+     * @return first value or empty string
+     */
+    public static String findColValueFromRow(final FieldConstant f, final List<Column> column) {
+        for (final Column<String> col: column) {
+            if (col.getField().getName().equals(f.getName())) {
+                return col.getValue();
+            }
+        }
+        return "";
     }
 
 

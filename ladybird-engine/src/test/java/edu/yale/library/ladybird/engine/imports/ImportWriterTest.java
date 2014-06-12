@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.engine.imports;
 
 import com.google.common.collect.Multimap;
+import edu.yale.library.ladybird.engine.FdidMarcMappingUtil;
 import edu.yale.library.ladybird.engine.model.FieldConstantRules;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.engine.model.LocalIdMarcImportSource;
@@ -12,8 +13,6 @@ import edu.yale.library.ladybird.entity.FieldMarcMapping;
 import edu.yale.library.ladybird.entity.FieldMarcMappingBuilder;
 import edu.yale.library.ladybird.entity.ImportSourceData;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,8 +29,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ImportWriterTest {
-
-    private Logger logger = LoggerFactory.getLogger(ImportWriterTest.class);
 
     @Test
     public void shoudEqualOAIFunction() {
@@ -63,7 +60,7 @@ public class ImportWriterTest {
         ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
 
         final List<LocalIdMarcImportSource> list =
-                importSourceDataReader.readBibIdMarcData(provider, bibIds, null, 0); //FIXME params null and 0 for importid
+                importSourceDataReader.readBibIdMarcData(provider, bibIds, 0); //FIXME params 0 for importid
         assertEquals("List size mismatch", list.size(), 1);
         final Multimap<Marc21Field, ImportSourceData> innerMap = list.get(0).getValue();
         Collection<ImportSourceData> collection = innerMap.get(Marc21Field._520);
@@ -101,10 +98,9 @@ public class ImportWriterTest {
 
        final FieldMarcMapping fieldMarcMapping3 = new FieldMarcMappingBuilder()
                .setK1("999").setK2("a").setDate(new Date()).setFdid(69).createFieldMarcMapping();
-       fieldMarcMappingList.add(fieldMarcMapping2);
+       fieldMarcMappingList.add(fieldMarcMapping3);
 
-       ImportWriter importWriter = new ImportWriter();
-       Map<Marc21Field, FieldMarcMapping> marc21FieldMap = importWriter.buildMarcFdidMap(fieldMarcMappingList);
+       Map<Marc21Field, FieldMarcMapping> marc21FieldMap = new FdidMarcMappingUtil().buildMarcFdidMap(fieldMarcMappingList);
        //logger.debug(marc21FieldMap.toString());
 
        assert (marc21FieldMap.get(Marc21Field._245) == fieldMarcMapping1);
