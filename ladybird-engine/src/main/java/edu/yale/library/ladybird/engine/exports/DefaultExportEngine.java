@@ -52,7 +52,7 @@ public class DefaultExportEngine extends AbstractExportEngine {
      * @return
      */
     private String getWritePath(final String relativePath) {
-        logger.debug("Looking up relative path={}", relativePath);
+        logger.trace("Looking up relative path={}", relativePath);
         if (ApplicationProperties.CONFIG_STATE.IMPORT_ROOT_PATH == null) {
             logger.error("No import root path. Returning relative path as is.");
             return relativePath;

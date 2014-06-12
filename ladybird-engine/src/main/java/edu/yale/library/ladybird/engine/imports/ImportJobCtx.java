@@ -2,6 +2,7 @@ package edu.yale.library.ladybird.engine.imports;
 
 import edu.yale.library.ladybird.entity.Monitor;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ImportJobCtx {
@@ -31,5 +32,16 @@ public class ImportJobCtx {
                 + "importJobList size=" + importJobList.size()
                 + ", monitor=" + monitor
                 + '}';
+    }
+
+    /**
+     * Instantiates empty instance
+     * @return
+     */
+    public static ImportJobCtx newInstance() {
+        ImportJobCtx importJobCtx = new ImportJobCtx();
+        importJobCtx.setImportJobList(Collections.emptyList());
+        importJobCtx.setMonitor(new Monitor());
+        return importJobCtx;
     }
 }

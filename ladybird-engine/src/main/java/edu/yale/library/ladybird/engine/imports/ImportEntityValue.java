@@ -133,8 +133,8 @@ public class ImportEntityValue {
             Column o = rowList.get(i).getColumns().get(order);
             for (Column c: rowList.get(i).getColumns()) {
                 if (c.getField().getName().equals(fieldConstant.getName())) {
-                    logger.debug("Found match={} with value={}", c.getField().getName(), fieldConstant.getName());
-                    logger.debug("Values c1={} c2={}", o, c);
+                    logger.trace("Found match={} with value={}", c.getField().getName(), fieldConstant.getName());
+                    logger.trace("Values c1={} c2={}", o, c);
                     rowIdMap.put(o, c);
                 }
             }
@@ -223,21 +223,7 @@ public class ImportEntityValue {
         return rowList.subList(CONTENT_ROW, rowList.size());
     }
 
-    /**
-     * TODO multiple occurrences; missing column values
-     * @return
-     */
-    public Map<FieldConstant, List<Column>> getValuesByFieldConstant() {
-        Map<FieldConstant, List<Column>> map = new HashMap<>();
-        List<FieldConstant> fieldConstants = getAllFieldConstants();
-        for (FieldConstant f: fieldConstants) {
-            List<Column> columnsForFieldConstant =  getColumnValues(f);
-            map.put(f, columnsForFieldConstant);
-        }
-        return map;
-    }
-
-    /**
+     /**
      * Get (1st) column number of Function
      * @param f
      * @return

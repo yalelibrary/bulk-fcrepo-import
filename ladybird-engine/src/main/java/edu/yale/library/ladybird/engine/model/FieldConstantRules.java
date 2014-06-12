@@ -84,7 +84,7 @@ public class FieldConstantRules {
 
             }
         } catch (Exception e) {
-            logger.error("Could not convert, seeing if it's a function constant");
+            logger.trace("Could not convert, seeing if it's a function constant");
         }
 
         //Otherwise, see if it's a function constant
@@ -108,7 +108,7 @@ public class FieldConstantRules {
      * for similiar functionality
      */
     public static Integer fdidAsInt(String s) {
-        logger.debug("Converting={}", s);
+        logger.trace("Converting={}", s);
         try {
             return Integer.parseInt(s);
         } catch (NumberFormatException e) {

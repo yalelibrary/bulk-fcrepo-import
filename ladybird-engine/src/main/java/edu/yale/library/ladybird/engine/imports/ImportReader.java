@@ -68,7 +68,6 @@ public final class ImportReader {
 
                     final ImportEntity.Column<String> column = new ImportEntity()
                             .new Column<>(f, String.valueOf(cellValue(cell)));
-                    logger.debug("1st row Column={}", column.toString());
                     headerSheetRow.getColumns().add(column);
                 } catch (UnknownFieldConstantException unknownFunction) {
                     if (this.readMode == ReadMode.HALT) {
@@ -85,7 +84,7 @@ public final class ImportReader {
 
                     final ImportEntity.Column<String> column = new ImportEntity()
                             .new Column<>(FunctionConstants.UNK, String.valueOf(cellValue(cell)));
-                    logger.debug("1st row Column={}", column.toString());
+                    logger.trace("1st row Column={}", column.toString());
                     headerSheetRow.getColumns().add(column);
 
                 } catch (Exception e) {
@@ -95,9 +94,8 @@ public final class ImportReader {
             //add header row:
             sheetRows.add(headerSheetRow);
 
-            logger.debug("Done iterating sheet exhead");
-
-            logger.debug("Writing import content rows");
+            logger.trace("Done iterating sheet exhead");
+            logger.trace("Writing import content rows");
 
             //iterate body: //TODO Check empty columnns.
             int cellCount = 0;
@@ -109,19 +107,21 @@ public final class ImportReader {
                     final Cell cell = cellIterator.next();
                     final ImportEntity.Column<String> column = new ImportEntity().new Column<>(valueMap.get(cellCount),
                             String.valueOf(cellValue(cell)));
-                    logger.debug("Column={}", column.toString());
+                    logger.trace("Column={}", column.toString());
                     contentsSheetRow.getColumns().add(column);
                     cellCount++;
                 }
-                logger.debug("Added content row={}", contentsSheetRow.toString());
+                logger.trace("Added content row={}", contentsSheetRow.toString());
                 sheetRows.add(contentsSheetRow);
                 cellCount = 0;
             }
         } catch (IOException e) {
             logger.error("Error reading value in import reading", e);
             throw e;
-        } catch (Exception ge) {
-            logger.error("General exception import reading", ge); //ignore
+        } catch (IllegalArgumentException e) {
+            logger.debug("Error reading cell", e); //ignore
+        } catch (Exception e) {
+            logger.error("General exception.", e); //ignore
         }
         logger.debug("Done import reading.");
         return sheetRows;
@@ -152,7 +152,6 @@ public final class ImportReader {
             throw new UnknownFieldConstantException("Specified cell=" + cellValue + " not a recognized function or fdid.");
         }
     }
-
 
     /**
      * TODO change return type

@@ -55,13 +55,13 @@ public class ObjectWriter {
 
             final int userId = getUserId(importJobCtx);
 
-            logger.debug("Writing object metadata. Import Row size={}, UserId{}", importRows.size(), userId);
+            logger.trace("Writing object metadata. Import Row size={}, UserId{}", importRows.size(), userId);
 
             //Go through each column (F1.. fdid=220), and persist object data (i.e. it processes vertically):
 
             final List<FieldConstant> fieldConstants = importEntityValue.getAllFieldConstants();
 
-            logger.debug("Field constants for this sheet are={}", fieldConstants.toString());
+            logger.trace("Field constants for this sheet are={}", fieldConstants.toString());
 
             for (FieldConstant f : fieldConstants) {
 
@@ -69,22 +69,22 @@ public class ObjectWriter {
                     continue;
                 }
 
-                logger.debug("Evaluating FieldConstant={} ", f.getName());
+                logger.trace("Evaluating FieldConstant={} ", f.getName());
 
                 Map<ImportEntity.Column, ImportEntity.Column> columnMap = importEntityValue.getContentColumnValuesWithOIds(f);
 
-                logger.debug("All column values for this field are={}", columnMap.toString());
+                logger.trace("All column values for this field are={}", columnMap.toString());
 
                 Set<ImportEntity.Column> keys = columnMap.keySet();
 
-                logger.debug("Column map key set size={}", keys.size());
+                logger.trace("Column map key set size={}", keys.size());
 
                 for (ImportEntity.Column c : keys) {
 
                     String oid = (String) c.getValue();
                     ImportEntity.Column fdidForOid = columnMap.get(c);
 
-                    logger.debug("Processing (key oid) Oid={}, Field Name={}, Field Value={}", oid,
+                    logger.trace("Processing (key oid) Oid={}, Field Name={}, Field Value={}", oid,
                             fdidForOid.getField().getName(), fdidForOid.getValue());
 
                     //Save object metadata:
@@ -98,7 +98,7 @@ public class ObjectWriter {
                         authorityControl.setDate(new Date());
                         authorityControl.setValue((String) fdidForOid.getValue());
                         int acid = authorityControlDAO.save(authorityControl);
-                        logger.debug("Saved entity={}", authorityControl.toString());
+                        logger.trace("Saved entity={}", authorityControl.toString());
 
                         //2. persist object acid
                         final ObjectAcid objectAcid = new ObjectAcid();
@@ -111,7 +111,7 @@ public class ObjectWriter {
                         objectAcid.setUserId(userId);
                         objectAcid.setDate(new Date());
                         objectAcidDAO.save(objectAcid);
-                        logger.debug("Saved entity={}", objectAcid.toString());
+                        logger.trace("Saved entity={}", objectAcid.toString());
                     }
                 }
             }

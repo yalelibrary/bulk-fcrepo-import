@@ -5,7 +5,7 @@ import edu.yale.library.ladybird.entity.ImportJobContents;
 import java.util.List;
 
 public interface ImportJobContentsDAO extends GenericDAO<ImportJobContents, Integer> {
-    List<ImportJobContents> findByRow(final int arg);
+    List<ImportJobContents> findByRow(int importId, int row);
 
     List<ImportJobContents> findByImportId(final int arg);
 

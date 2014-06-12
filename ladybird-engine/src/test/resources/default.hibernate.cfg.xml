@@ -23,5 +23,7 @@
         <mapping resource="test-hbm/ObjectAcid.hbm.xml"/>
         <mapping resource="test-hbm/ObjectString.hbm.xml"/>
         <mapping resource="test-hbm/AuthorityControl.hbm.xml"/>
+        <!-- for ExportReaderIT -->
+        <mapping resource="test-hbm/UserEvent.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

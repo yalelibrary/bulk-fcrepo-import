@@ -3,6 +3,8 @@ package edu.yale.library.ladybird.engine.exports;
 import com.google.common.collect.Multimap;
 import edu.yale.library.ladybird.engine.AbstractDBTest;
 import edu.yale.library.ladybird.engine.FdidMarcMappingUtil;
+import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
+import edu.yale.library.ladybird.engine.imports.ImportJobCtx;
 import edu.yale.library.ladybird.engine.imports.ImportSourceDataReader;
 import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.engine.model.FieldConstantRules;
@@ -12,6 +14,8 @@ import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.FieldDefinitionBuilder;
 import edu.yale.library.ladybird.entity.ImportSourceData;
 import edu.yale.library.ladybird.entity.ImportSourceDataBuilder;
+import edu.yale.library.ladybird.kernel.JobModule;
+import edu.yale.library.ladybird.kernel.KernelBootstrap;
 import edu.yale.library.ladybird.persistence.dao.hibernate.FieldMarcMappingHibernateDAO;
 import org.junit.After;
 import org.junit.Before;
@@ -33,6 +37,20 @@ import static org.junit.Assert.assertEquals;
 public class ExportReaderIT extends AbstractDBTest {
 
     private Logger logger = LoggerFactory.getLogger(ExportReaderIT.class);
+
+    //TODO
+    @Test
+    public void shouldReadRowsFromImportTable() {
+        KernelBootstrap kernelBootstrap = new KernelBootstrap();
+        kernelBootstrap.setAbstractModule(new JobModule());
+
+        ExportEngineQueue.addJob(new ExportRequestEvent());
+
+
+        ExportReader exportReader = new ExportReader();
+        ImportJobCtx importJobCtx = exportReader.readRowsFromImportTables();
+        assert (importJobCtx.getImportJobList().size() == 0);
+    }
 
     @Test
     public void shouldConvertFunctionStringToFieldConst() {

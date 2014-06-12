@@ -78,7 +78,7 @@ public class ImportWriter {
             ImportJobExhead entry = new ImportJobExheadBuilder().setImportId(importId).setCol(col).
                     setDate(JOB_EXEC_DATE).setValue(column.field.getName()).createImportJobExhead();
             dao.save(entry);
-            logger.debug("Saved={}", entry.toString());
+            logger.trace("Saved={}", entry.toString());
             col++; //TODO bug
         }
     }
@@ -152,17 +152,21 @@ public class ImportWriter {
      */
     public Map<Marc21Field, FieldMarcMapping> buildMarcFdidMap(List<FieldMarcMapping> fieldMarcMappingList) {
 
-        logger.debug("Field marc mapping list size={}", fieldMarcMappingList);
+        logger.trace("Field marc mapping list size={}", fieldMarcMappingList);
+
+        final List<String> debugList = new ArrayList<>(); //print warning
+
         final Map<Marc21Field, FieldMarcMapping> marc21FieldMap = new HashMap<>(); //e.g. 880 -> FieldMarcMapping
 
         for (final FieldMarcMapping f : fieldMarcMappingList) {
             try {
                 marc21FieldMap.put(Marc21Field.valueOf("_" + f.getK1()), f);
             } catch (IllegalArgumentException e) { //No matching enum
-                logger.debug("No such enum={}", f.getK1());
+                debugList.add(f.getK1());
                 continue;
             }
         }
+        logger.debug("Enums not found for={}", debugList);
         return marc21FieldMap;
     }
 

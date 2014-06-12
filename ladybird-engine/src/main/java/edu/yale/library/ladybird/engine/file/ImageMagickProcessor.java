@@ -29,7 +29,7 @@ public class ImageMagickProcessor implements ImageProcessor {
 
         String imageMagickPath = getImgMagickPath();
 
-        logger.debug("Image magick path={}", imageMagickPath);
+        logger.trace("Image magick path={}", imageMagickPath);
 
         if (!imageMagickPath.isEmpty()) {
             cmd.setSearchPath(imageMagickPath);
@@ -39,7 +39,7 @@ public class ImageMagickProcessor implements ImageProcessor {
         }
 
         try {
-            logger.debug("Converting file={}", src);
+            logger.trace("Converting file={}", src);
             final IMOperation op = new IMOperation();
             op.addImage(src);
             op.addImage(dest);

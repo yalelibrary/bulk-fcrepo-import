@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="edu.yale.library.ladybird.entity.UserEvent" table="user_event" catalog="pamoja">
+        <id name="eventId" type="java.lang.Integer">
+            <column name="event_id" />
+            <generator class="identity" />
+        </id>
+        <property name="userId" type="string">
+            <column name="user_id">
+                <comment>'User associated with event'</comment>
+            </column>
+        </property>
+        <property name="eventType" type="string">
+            <column name="event_type" length="45" />
+        </property>
+        <property name="createdDate" type="timestamp">
+            <column name="created_date" length="19">
+                <comment>'User associated with event'</comment>
+            </column>
+        </property>
+        <property name="startDate" type="timestamp">
+            <column name="start_date" length="19">
+                <comment>Start time for event</comment>
+            </column>
+        </property>
+        <property name="endDate" type="timestamp">
+            <column name="end_date" length="19">
+                <comment>End time for event</comment>
+            </column>
+        </property>
+        <property name="value" type="string">
+            <column name="value" length="45">
+                <comment>'JSON value'</comment>
+            </column>
+        </property>
+    </class>
+</hibernate-mapping>

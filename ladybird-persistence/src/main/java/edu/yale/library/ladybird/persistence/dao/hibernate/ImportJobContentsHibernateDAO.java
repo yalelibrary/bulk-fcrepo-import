@@ -3,19 +3,17 @@ package edu.yale.library.ladybird.persistence.dao.hibernate;
 import edu.yale.library.ladybird.entity.ImportJobContents;
 import edu.yale.library.ladybird.persistence.dao.ImportJobContentsDAO;
 import org.hibernate.Query;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class ImportJobContentsHibernateDAO extends GenericHibernateDAO<ImportJobContents, Integer>
         implements ImportJobContentsDAO {
-    private Logger logger = LoggerFactory.getLogger(ImportJobContentsHibernateDAO.class);
 
     @SuppressWarnings("unchecked")
-    public List<ImportJobContents> findByRow(final int arg) {
-        Query q = getSession().createQuery("from ImportJobContents where row = :param");
-        q.setParameter("param", arg);
+    public List<ImportJobContents> findByRow(final int importId, final int row) {
+        Query q = getSession().createQuery("from ImportJobContents where importId= :param1 and row = :param2");
+        q.setParameter("param1", importId);
+        q.setParameter("param2", row);
         return q.list();
     }
 

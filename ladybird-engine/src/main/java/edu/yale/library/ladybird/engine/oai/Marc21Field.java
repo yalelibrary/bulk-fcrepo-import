@@ -89,6 +89,12 @@ public enum Marc21Field {
 
     String name;
 
+    static String identifierPrefix = "_";
+
+    public static String getIdentifierPrefix() {
+        return identifierPrefix;
+    }
+
     private static final Converter<String, Marc21Field> converter = Enums.stringConverter(Marc21Field.class);
 
     private Marc21Field(final String name) {

@@ -73,7 +73,7 @@ public class FdidMarcMappingUtilTest {
         FieldConstant f = new FieldDefinition(70, "Mapped Field #1");
         Marc21Field marc21Field = fieldMarcMappingUtil.toMarc21Field(f);
 
-        logger.debug("Value={}", marc21Field.toString());
+        //logger.debug("Value={}", marc21Field.toString());
 
         assert (marc21Field == Marc21Field._245);
 
@@ -88,7 +88,7 @@ public class FdidMarcMappingUtilTest {
         FieldConstant f2 = new FieldDefinition(88, "UnMapped Field");
         Marc21Field marc21Field2 = fieldMarcMappingUtil.toMarc21Field(f2);
 
-        logger.debug("Value={}", marc21Field2.toString());
+        //logger.debug("Value={}", marc21Field2.toString());
         assert (marc21Field2 == Marc21Field.UNK);
     }
 }

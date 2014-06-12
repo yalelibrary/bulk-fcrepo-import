@@ -113,12 +113,12 @@ public class ImportSourceDataReader {
      * @return
      */
     public Marc21Field getMar21FieldForString(final String tag) {
-        final String TAG_ID = "_"; //TODO
+        final String TAG_ID = Marc21Field.getIdentifierPrefix(); //fields start with _, e.g. _245
         try {
             Marc21Field marc21Field = Marc21Field.valueOf(TAG_ID + tag);
             return marc21Field;
         } catch (IllegalArgumentException e) {
-            //ignore fields since need to fill the Mar21Field list
+            //ignore error
             logger.error(e.getMessage());
             return Marc21Field.UNK;
         }
@@ -171,7 +171,7 @@ public class ImportSourceDataReader {
      * @return MultiMap(245 => {f,"dd"} {a,"title"} {6,"1797"}).
      */
     public Multimap<Marc21Field, Map<String, String>> marshallMarcData(final List<ImportSourceData> importSourceDataList) {
-        logger.debug("Marshalling marc data from import source data.");
+        logger.trace("Marshalling marc data from import source data.");
 
         //populate map (e.g. (245,{a,"text"}), (245, {b,"text b"}). This map will then be read.
         final Multimap<Marc21Field, Map<String, String>> map = HashMultimap.create(); //k=tag, v={subfield,value}
@@ -182,10 +182,10 @@ public class ImportSourceDataReader {
 
             switch (k1) {
                 case "880":
-                    //logger.debug("Ignoring field 880");
+                    logger.trace("Ignoring field 880");
                     break;
                 default:
-                    logger.debug("Putting field={} value={}", k1, entry.getValue());
+                    logger.trace("Putting field={} value={}", k1, entry.getValue());
                     final Map<String, String> attrValue = new HashMap<>();
                     attrValue.put(entry.getK2(), entry.getValue());
                     map.put(Marc21Field.valueOfTag(k1), attrValue);

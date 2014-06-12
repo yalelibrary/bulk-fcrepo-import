@@ -60,11 +60,12 @@ public class MediaFunctionProcessor {
 
                 final Column<String> o = columnsList.get(OID_COLUMN);
                 Integer oid = Integer.parseInt(o.getValue());
-                ImportFile importFile = new ImportFileBuilder().setImportId(importId).setFileLocation(c.getValue()).setDate(new Date()).setOid(oid).createImportFile();
+                ImportFile importFile = new ImportFileBuilder().setImportId(importId)
+                        .setFileLocation(c.getValue()).setDate(new Date()).setOid(oid).createImportFile();
 
                 importFileDAO.save(importFile);
 
-                logger.debug("Saved entity={}", importFile.toString());
+                logger.trace("Saved entity={}", importFile.toString());
 
                 //2. convert image
                 convertImage(c.getValue(), MediaFormat.TIFF, MediaFormat.JPEG, oid);
@@ -81,7 +82,7 @@ public class MediaFunctionProcessor {
             final String inputFilePath = getPath(fileName);
             final String outputFilePath = asFormat(getOutPath(fileName), fromExt.toString(), toExt.toString());
             imgMagick.toFormat(inputFilePath, outputFilePath);
-            logger.debug("Converted image to={}", outputFilePath);
+            logger.trace("Converted image to={}", outputFilePath);
         } catch (Exception e) {
             logger.error("Error or warning converting image", e.getMessage()); //ignore errors and warnings
         }
@@ -107,38 +108,38 @@ public class MediaFunctionProcessor {
             imgMagick.toFormat(inputFilePath, outputFilePath);
             logger.debug("Converted image to={}", outputFilePath);
         } catch (Exception e) {
-            logger.error("Error or warning converting image", e); //ignore errors and warnings
+            logger.error("Error or warning converting image", e.getMessage()); //ignore errors and warnings
+            logger.trace("Error={}", e);
         }
 
         //FIXME exception order (if error occurs, object file is still writtten)
 
         //2. prepare object file and persist
-        ObjectFile objectFile = new ObjectFileBuilder().setDate(new Date()).setFilePath(outputFilePath).setFileExt(MediaFormat.JPEG.toString())
-                .setOid(oid).setUserId(1).setFileLabel(fileName).setFileName(fileName.replace(fromExt.toString(), toExt.toString())).createObjectFile(); //FIXME userid
+        ObjectFile objectFile = new ObjectFileBuilder()
+                .setDate(new Date()).setFilePath(outputFilePath)
+                .setFileExt(MediaFormat.JPEG.toString())
+                .setOid(oid).setUserId(1).setFileLabel(fileName)
+                .setFileName(fileName.replace(fromExt.toString(), toExt.toString())).createObjectFile(); //FIXME userid
 
-        logger.debug("Saving entity={}", objectFile);
+        logger.trace("Saving entity={}", objectFile);
 
         ObjectFileDAO objectFileDAO = new ObjectFileHibernateDAO();
         objectFileDAO.save(objectFile);
-        logger.debug("Saved.");
+        logger.trace("Saved.");
     }
 
     private String getPath(final String fileName) {
-        logger.debug("Src path={}", rootPath + File.separator + path + File.separator + fileName);
+        logger.trace("Src path={}", rootPath + File.separator + path + File.separator + fileName);
         return rootPath + File.separator + path + File.separator + fileName;
     }
 
     private String getOutPath(final String fileName) {
-        logger.debug("Dest path value={}", rootPath + File.separator + path + File.separator + "exports" + File.separator + fileName);
+        logger.trace("Dest path value={}", rootPath + File.separator + path + File.separator + "exports" + File.separator + fileName);
         return rootPath + File.separator + path + File.separator + "exports" + File.separator + fileName;
     }
 
     private static String asFormat(final String fileName, final String from, final String ext) {
         return fileName.replace(from, ext);
-    }
-
-    private String getRootPath() {
-        return rootPath;
     }
 
     private enum MediaFormat {

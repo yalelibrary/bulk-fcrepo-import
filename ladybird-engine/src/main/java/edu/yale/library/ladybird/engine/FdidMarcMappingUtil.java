@@ -40,7 +40,7 @@ public class FdidMarcMappingUtil {
             }
 
         } catch (NoSuchElementException e1) {
-            //ignore
+            logger.trace(e1.getMessage());
         } catch (Exception e) {
             throw e;
         }
@@ -57,7 +57,7 @@ public class FdidMarcMappingUtil {
      * @return
      */
     public Marc21Field toMarc21Field(FieldConstant fieldConstant) {
-        logger.debug("Finding Marc21Field for={}", fieldConstant);
+        //logger.debug("Finding Marc21Field for={}", fieldConstant);
        /* String f = fieldConstant.getName();
         if (f.equals("70") || f.equals("Title{fdid=70}") || f.equals("fdid=70")) {
             return Marc21Field._245;
@@ -68,11 +68,11 @@ public class FdidMarcMappingUtil {
         try {
             //try converting to integer fdid
             int fdid = FieldConstantRules.fdidAsInt(fieldConstant.getName());
-            logger.debug("Field Contant as Fdid={}", fdid);
+            //logger.debug("Field Contant as Fdid={}", fdid);
 
             FieldMarcMapping fieldMarcMapping = fieldMarcMappingDAO.findByFdid(fdid);
             Marc21Field marc21Field = Marc21Field.valueOfTag(fieldMarcMapping.getK1());
-            logger.debug("Found value={}", marc21Field);
+            //logger.debug("Found value={}", marc21Field);
             return marc21Field;
         } catch (Exception e) {
             logger.error(e.getMessage());

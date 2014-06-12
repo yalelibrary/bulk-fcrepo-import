@@ -40,40 +40,42 @@ public class ExportReader {
 
     /**
      * Main method. Reads import tables (import job contents and import source) to construct data.
-     * TODO test
      * @return ImportJobCtx
      */
     public ImportJobCtx readRowsFromImportTables() {
-        logger.debug("Reading rows from Import tables");
 
-        //Get the job from the queue
-        final ExportRequestEvent exportRequestEvent = ExportEngineQueue.getJob();
+
+        final ExportRequestEvent exportRequestEvent = ExportEngineQueue.getJob(); //from Queue
         final int importId = exportRequestEvent.getImportId();
 
-        int expectedNumRowsToWrite = importJobContentsDAO.getNumRowsPerImportJob(importId); //gets contents count not exhead
-        expectedNumRowsToWrite = expectedNumRowsToWrite + 1; //N.B. to accomodate for row num. starting from 0
+        logger.debug("Read job from export engine queue, importId={}", importId);
+
+        int numRowsToWrite = getExpectedNumRowsToWrite(importId);
+
+        if (numRowsToWrite == 0) {
+            logger.debug("No rows to write.");
+            return ImportJobCtx.newInstance();
+        }
 
         ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
 
         final List<LocalIdMarcValue> bibIdValueList = importSourceDataReader.toLocalIdMarcValue(importId);
 
-        //logger.debug("List of localIdMarcValues size={}", bibIdValueList.size());
-
-        //Get all FunctionConstants. Every FunctionConstant should have a column in the output spreadsheet.
+        //Get all FieldConstant. Each should have a column in the output.
         final List<FieldConstant> globalFConstantsList = FieldConstantRules.getApplicationFieldConstants();
-
-        final List<Row> resultRowList = new ArrayList<>();
 
         //Write exhead
         final Row exheadRow = new ImportEntity().new Row();
 
-        for (final FieldConstant fConst : globalFConstantsList) {
+        for (final FieldConstant fieldConst : globalFConstantsList) {
             ImportEntity importEntity = new ImportEntity();
-            //logger.debug("Adding header={}", fConst.toString());
-            exheadRow.getColumns().add(importEntity.new Column(fConst, fConst.getName()));
+            logger.trace("Adding to exhead={}", fieldConst.getName());
+            exheadRow.getColumns().add(importEntity.new Column(fieldConst, fieldConst.getName()));
         }
 
-        resultRowList.add(exheadRow); //N.B. exhead row is added
+        final List<Row> resultRowList = new ArrayList<>();
+
+        resultRowList.add(exheadRow); //N.B. exhead row added
 
         //Get import job contents rows of columns. These will be MERGED with the oai data:
 
@@ -85,11 +87,11 @@ public class ExportReader {
         try {
             bibIdCol = importEntityValue.getFunctionPosition(FunctionConstants.F104); //or F105 TODO
         } catch (Exception e) {
-           logger.debug("Col with bibId data not found in this sheet");
+           logger.debug("Col with bibId data not found in this dataset(sheet)");
             bibIdCol = -1; //TODO
         }
 
-        for (int i = 0; i < expectedNumRowsToWrite; i++) {
+        for (int i = 0; i < numRowsToWrite; i++) {
             final Row row = regularRows.get(i);
             final Row rowToWrite = new ImportEntity().new Row();
             final List<Column> cols = row.getColumns();
@@ -97,6 +99,8 @@ public class ExportReader {
             // for each field constant (NOT for each column):
 
             for (final FieldConstant fieldConst : globalFConstantsList) {
+
+                logger.trace("Eval={}", fieldConst.getName());
 
                 final String regularValue = findColValueForThisFieldConstant(fieldConst, cols);
 
@@ -107,29 +111,27 @@ public class ExportReader {
 
                     final Column<String> bibIdColumn = cols.get(bibIdCol);
 
-                    logger.debug("BibIdColumn={}", bibIdColumn.toString());
+                    //logger.debug("BibIdColumn={}", bibIdColumn.toString());
 
-                    for (LocalIdMarcValue localIdMarcValue: bibIdValueList) { //iterate to find the right data..TODO utility method
+                    for (LocalIdMarcValue localIdMarcValue : bibIdValueList) { //iterate to find the right data..TODO utility method
 
                         //logger.debug("Comparing bibIdcolum={} with value={}", bibIdColumn.getValue(), localIdMarcValue.getBibId().getId());
 
                         if (localIdMarcValue.getBibId().getId().equals(bibIdColumn.getValue())) {
                             oaiValue = getMultiMapValue(fieldConst, localIdMarcValue.getValue());
-                            logger.debug("OAI value={}", oaiValue);
+                            //logger.debug("OAI value={}", oaiValue);
                         }
                     }
                 }
 
                 final String mergedValue = regularValue + oaiValue;
-                logger.debug("Merged value={} from regular value={}", mergedValue, regularValue);
+                //logger.debug("Merged value={} from regular value={}", mergedValue, regularValue);
 
                 final ImportEntity importEntity = new ImportEntity();
                 rowToWrite.getColumns().add(importEntity.new Column<>(fieldConst, mergedValue));
             }
             resultRowList.add(rowToWrite);
         }
-
-        //logger.debug("ImportJobCtx row size={}", resultRowList.size());
 
         final ImportJobCtx importJobCtx = new ImportJobCtx();
         importJobCtx.setImportJobList(resultRowList);
@@ -143,53 +145,61 @@ public class ExportReader {
      * @return
      */
     public String getMultiMapValue(FieldConstant fieldConstant, final Multimap<Marc21Field, Map<String, String>> map) {
-        //logger.debug("Extracting value for={}", fieldConstant.getName());
+        logger.trace("Extracting value for={}", fieldConstant.getName());
 
         FdidMarcMappingUtil fdidMarcMappingUtil = new FdidMarcMappingUtil();
         fdidMarcMappingUtil.setFieldMarcMappingDAO(new FieldMarcMappingHibernateDAO()); //TODO
 
         final Marc21Field fieldToQuery = fdidMarcMappingUtil.toMarc21Field(fieldConstant);
 
-        //logger.debug("Field to query={}", fieldToQuery.toString());
+        logger.trace("Field to query={}", fieldToQuery.toString());
 
         final Collection<Map<String, String>> attrCollection = map.get(fieldToQuery);
 
-        //logger.debug("Attrcollection size={}", attrCollection.size());
+        logger.trace("Attrcollection size={}", attrCollection.size());
 
         final Iterator<Map<String, String>> it = attrCollection.iterator();
         String oaiValue = "";
 
         while (it.hasNext()) {
             final Map<String, String> attrValueMap = it.next();
-            logger.debug("Attr value map={}", attrValueMap.toString());
+            logger.trace("Attr value map={}", attrValueMap.toString());
             if (attrValueMap.get("a") != null) {
                 oaiValue = attrValueMap.get("a");
             }
         }
-        //logger.debug("Found value={}", oaiValue);
-        //logger.debug("Map is={]", map.toString());
-        //logger.debug("Map value is={}", attrCollection.toString());
+        logger.trace("Found value={}", oaiValue);
+        logger.trace("Map is={]", map.toString());
+        logger.trace("Map value is={}", attrCollection.toString());
         return oaiValue;
     }
 
 
     /**
+     * TODO test
      * Returns rows of ImportJobContents
      * @param importId The import id of the job
      * @return list of ImportEntity.Row
      */
     private List<Row> getImportJobContents(final int importId) {
-        logger.debug("Getting Import Job contents");
+        logger.trace("Getting Import Job contents");
 
         final List<Row> resultList = new ArrayList<>();
 
         final ImportJobExheadDAO importJobExheadDAO = new ImportJobExheadHibernateDAO();
-        final List<ImportJobExhead> importJobExheads = importJobExheadDAO.findByImportId(importId);
+
+        List<ImportJobExhead> importJobExheads = new ArrayList<>();
+
+        try {
+            importJobExheads = importJobExheadDAO.findByImportId(importId);
+        } catch (Exception e) {
+            logger.error("Error={}", e);
+        }
 
         logger.debug("ImportJobExheads size={}", importJobExheads.size());
         //logger.debug("ImportJobExheads content={}", importJobExheads.toString());
 
-        final ImportJobContentsDAO importJobContentsDAO = new ImportJobContentsHibernateDAO();
+        //final ImportJobContentsDAO importJobContentsDAO = new ImportJobContentsHibernateDAO();
         int numRowsPerImportJob = importJobContentsDAO.getNumRowsPerImportJob(importId);
         numRowsPerImportJob = numRowsPerImportJob + 1;
 
@@ -197,7 +207,7 @@ public class ExportReader {
         logger.debug("Import job contents num rows={}", numRowsPerImportJob);
 
         for (int i = 0; i < numRowsPerImportJob; i++) {
-            final List<ImportJobContents> rowJobContentsList = importJobContentsDAO.findByRow(i);
+            final List<ImportJobContents> rowJobContentsList = importJobContentsDAO.findByRow(importId, i); //note
             //logger.debug("Job contents for row={}" + rowJobContentsList.toString());
             final Row row = new ImportEntity().new Row();
 
@@ -207,13 +217,13 @@ public class ExportReader {
                 try {
                     final ImportJobExhead importJobExhead = importJobExheads.get(j);
                     String headerValue = importJobExhead.getValue();
-                    logger.debug("Header val={}", headerValue);
+                    logger.trace("Header val={}", headerValue);
                     final FieldConstant fieldConstant = FieldConstantRules.convertStringToFieldConstant(headerValue);
                     if (fieldConstant == null) {
-                        logger.debug("Field Constant null for headerValue={}", headerValue);
+                        logger.trace("Field Constant null for headerValue={}", headerValue);
                     }
                     final ImportJobContents jobContents = rowJobContentsList.get(j);
-                    logger.debug("JobContents={}", jobContents.toString());
+                    logger.trace("JobContents={}", jobContents.toString());
                     row.getColumns().add(new ImportEntity().new Column<>(fieldConstant, jobContents.getValue()));
                     //logger.debug("Added value={}", jobContents.getValue());
                 } catch (Exception e) {
@@ -224,6 +234,24 @@ public class ExportReader {
             resultList.add(row);
         }
         return resultList;
+    }
+
+    /**
+     * Return expected number of write by consutling the import job contents.
+     * @param importId
+     * @return number of exact rows or 0 if error
+     */
+    private int getExpectedNumRowsToWrite(final int importId) {
+        int expectedNumRowsToWrite = 0;
+
+        try {
+            expectedNumRowsToWrite = importJobContentsDAO.getNumRowsPerImportJob(importId); //gets contents count not exhead
+            expectedNumRowsToWrite = expectedNumRowsToWrite + 1; //N.B. to accomodate for row num. starting from 0
+        } catch (Exception e) {
+            logger.error("No rows found");
+        }
+
+        return expectedNumRowsToWrite;
     }
 
     /**

@@ -36,14 +36,15 @@ public class DefaultExportJob implements Job, ExportJob {
      *
      */
     public void execute(JobExecutionContext ctx) throws JobExecutionException {
-        logger.debug("[start] export job.");
 
         final ExportEngine exportEngine = new DefaultExportEngine();
 
         try {
             final long startTime = System.currentTimeMillis();
+            logger.trace("Looking for export job.");
             final ImportJobCtx importJobCtx = exportEngine.read();
 
+            logger.debug("[start] export job.");
             logger.debug("Read rows from export engine, list size={}, import job context={}",
                     importJobCtx.getImportJobList().size(), importJobCtx.toString());
 
@@ -53,7 +54,8 @@ public class DefaultExportJob implements Job, ExportJob {
 
             exportEngine.write(importJobCtx.getImportJobList(), tmpFile(importJobCtx.getMonitor().getExportPath()));
 
-            logger.debug("[end] Completed export job in={}", DurationFormatUtils.formatDuration(System.currentTimeMillis() - startTime, "HH:mm:ss:SS"));
+            logger.debug("[end] Completed export job in={}",
+                    DurationFormatUtils.formatDuration(System.currentTimeMillis() - startTime, "HH:mm:ss:SS"));
 
             //2. Write to object metadata tables
             logger.debug("Writing contents to object metadata tables. Row size={}", importJobCtx.getImportJobList().size());
@@ -72,7 +74,7 @@ public class DefaultExportJob implements Job, ExportJob {
 
             sendNotification(exportEvent, Collections.singletonList(importJobCtx.getMonitor().getUser())); //todo
 
-            logger.debug("Added export event to notification queue.");
+            logger.trace("Added export event to notification queue.");
         } catch (IOException e) {
             logger.error("Error executing job", e.getMessage());
             throw new ImportEngineException(e);

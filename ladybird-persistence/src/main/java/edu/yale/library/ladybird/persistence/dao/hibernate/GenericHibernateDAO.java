@@ -60,7 +60,7 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
             s = getSession();
             tx = s.beginTransaction();
             id = (Integer) s.save(item);
-            logger.debug("Saving item={}", item.toString());
+            logger.trace("Saving item={}", item.toString());
             s.flush();
             tx.commit();
             logger.trace("Saved item");

@@ -33,7 +33,7 @@ public final class DerbySchemaUtil {
             conn.setAutoCommit(false);
             final Statement statement = conn.createStatement();
 
-            logger.debug("Creating table(s)");
+            logger.trace("Creating table(s)");
 
             final SchemaBean schemaBean = new SchemaBean();
             final Map<String, String> m = schemaBean.getSchema();
@@ -44,7 +44,7 @@ public final class DerbySchemaUtil {
             Iterator it = m.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry p = (Map.Entry) it.next();
-                logger.debug("Executing create statement for table={}", p.getKey());
+                logger.trace("Executing create statement for table={}", p.getKey());
                 statement.execute(p.getValue().toString());
             }
             conn.commit();
@@ -77,7 +77,7 @@ public final class DerbySchemaUtil {
             Iterator it = m.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry p = (Map.Entry) it.next();
-                logger.debug("Executing drop statement for table={}",  p.getKey());
+                logger.trace("Executing drop statement for table={}",  p.getKey());
                 statement.execute(p.getValue().toString());
             }
             conn.commit();

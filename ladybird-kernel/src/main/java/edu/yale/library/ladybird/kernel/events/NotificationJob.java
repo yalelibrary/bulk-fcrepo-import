@@ -38,7 +38,7 @@ public class NotificationJob extends AbstractNotificationJob implements Job {
         try {
             logger.debug("Notifying user=" + user.toString());
             notificationHandler.notifyUser(user, event); //todo actual/more params
-            logger.debug("Notification sent.");
+            logger.trace("Notification sent.");
         } catch (Exception e) {
             e.printStackTrace(); //todo
         }
