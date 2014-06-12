@@ -32,7 +32,7 @@ public class DefaultImportEngine extends AbstractImportEngine {
         ImportEntityValue importEntityValue = new ImportEntityValue(list);
         try {
             return importWriter.write(importEntityValue,
-                    new ImportJobContextBuilder().userId(USER_ID).file("").dir("").build());
+                    new ImportJobRequestBuilder().userId(USER_ID).file("").dir("").build());
         } catch (Exception e) {
             throw new ImportEngineException(e);
         }

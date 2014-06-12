@@ -2,7 +2,6 @@ package edu.yale.library.ladybird.engine.exports;
 
 
 import edu.yale.library.ladybird.engine.imports.ImportEntity;
-import edu.yale.library.ladybird.engine.imports.ImportJobCtx;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,9 +18,9 @@ public abstract class AbstractExportEngine implements ExportEngine {
      *
      * @return list of row values and job context
      */
-    public ImportJobCtx read() {
-        final ImportJobCtx importJobCtx = doRead();
-        return importJobCtx;
+    public ImportEntityContext read() {
+        final ImportEntityContext importEntityContext = doRead();
+        return importEntityContext;
     }
 
     /**
@@ -33,7 +32,7 @@ public abstract class AbstractExportEngine implements ExportEngine {
         doWrite(list, pathName);
     }
 
-    public abstract ImportJobCtx doRead();
+    public abstract ImportEntityContext doRead();
 
     public abstract void doWrite(List<ImportEntity.Row> file, String pathName) throws IOException;
 

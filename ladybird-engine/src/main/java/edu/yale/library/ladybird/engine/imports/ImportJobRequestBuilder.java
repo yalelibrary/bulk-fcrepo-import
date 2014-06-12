@@ -2,33 +2,33 @@ package edu.yale.library.ladybird.engine.imports;
 
 import java.util.Date;
 
-public class ImportJobContextBuilder {
+public class ImportJobRequestBuilder {
     private int userId;
     private Date date;
     private String jobFile;
     private String jobDir;
 
-    public ImportJobContextBuilder userId(int userId) {
+    public ImportJobRequestBuilder userId(int userId) {
         this.userId = userId;
         return this;
     }
 
-    public ImportJobContextBuilder date(Date date) {
+    public ImportJobRequestBuilder date(Date date) {
         this.date = date;
         return this;
     }
 
-    public ImportJobContextBuilder file(String jobFile) {
+    public ImportJobRequestBuilder file(String jobFile) {
         this.jobFile = jobFile;
         return this;
     }
 
-    public ImportJobContextBuilder dir(String jobDir) {
+    public ImportJobRequestBuilder dir(String jobDir) {
         this.jobDir = jobDir;
         return this;
     }
 
-    public ImportJobContext build() {
-        return new ImportJobContext(userId, date, jobFile, jobDir);
+    public ImportJobRequest build() {
+        return new ImportJobRequest(userId, date, jobFile, jobDir);
     }
 }

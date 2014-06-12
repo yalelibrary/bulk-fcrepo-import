@@ -23,13 +23,12 @@ public class ProgressEventChangeRecorder {
         try {
 
             if (event.getJobId() == null) {
-                throw new NullPointerException("Job id null");
+                throw new NullPointerException("Job Id null");
             }
 
             if (progressMap.get(event.getJobId()) != null) {
                 int original = progressMap.get(event.getJobId());
                 progressMap.put(event.getJobId(), original + 1);
-                //logger.debug("Put event in map for jobId={} with count={}", event.getJobId(), original + 1);
             } else {
                 progressMap.put(event.getJobId(), 1); //TODO
             }
@@ -51,6 +50,4 @@ public class ProgressEventChangeRecorder {
     public int getExpectedTotalSteps() {
         return expectedSteps;
     }
-
-
 }

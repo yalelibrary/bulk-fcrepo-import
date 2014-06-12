@@ -5,6 +5,10 @@ import edu.yale.library.ladybird.engine.imports.ImportEntityValue;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * LocalIdentifier represents a barcode or bibid.
+ * @param <T>
+ */
 public class LocalIdentifier<T> {
 
     private T id;
@@ -21,6 +25,11 @@ public class LocalIdentifier<T> {
         this.id = id;
     }
 
+    /**
+     * Convets a list of columns to a list of LocalIdentifier (barcode or bibids)
+     * @param importEntityValue representing list of columns
+     * @return list of LocalIdentifier
+     */
     public static List<LocalIdentifier<String>> getBibIds(ImportEntityValue importEntityValue) {
         List<String> list = importEntityValue.getColumnStrings(FunctionConstants.F104);
         List<LocalIdentifier<String>> listLocalIds = new ArrayList<>();

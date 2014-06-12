@@ -25,7 +25,7 @@ public class FdidMarcMappingUtil {
 
     FieldMarcMappingDAO fieldMarcMappingDAO;
 
-    //TODO for now simple int from a text file
+    /** for now simple initialization from a text file */
     public void setInitialFieldMarcDb() throws Exception {
         InputStream f = this.getClass().getResourceAsStream("/marc-mappings-int.txt");
 
@@ -56,11 +56,9 @@ public class FdidMarcMappingUtil {
      * @return
      */
     public Marc21Field toMarc21Field(FieldConstant fieldConstant) {
-
         try {
-            //Try converting to integer fdid:
+            //Try converting to (integer) fdid:
             int fdid = FieldConstantRules.fdidAsInt(fieldConstant.getName());
-            //logger.debug("Field Contant as Fdid={}", fdid);
 
             if (fieldMarcMappingDAO == null) { //TODO
                 fieldMarcMappingDAO = new FieldMarcMappingHibernateDAO();
@@ -68,10 +66,9 @@ public class FdidMarcMappingUtil {
 
             FieldMarcMapping fieldMarcMapping = fieldMarcMappingDAO.findByFdid(fdid);
             Marc21Field marc21Field = Marc21Field.valueOfTag(fieldMarcMapping.getK1());
-            //logger.debug("Found value={}", marc21Field);
             return marc21Field;
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage()); //ignore
         }
 
         return Marc21Field.UNK; // if error
@@ -85,7 +82,6 @@ public class FdidMarcMappingUtil {
      * @return Mapping of Marc21Field to FIeldMarcMapping
      */
     public Map<Marc21Field, FieldMarcMapping> buildMarcFdidMap(List<FieldMarcMapping> fieldMarcMappingList) {
-
         logger.trace("Field marc mapping list size={}", fieldMarcMappingList);
 
         final List<String> debugList = new ArrayList<>(); //print warning

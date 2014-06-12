@@ -60,9 +60,9 @@ public class ImportWriterTest {
         ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
 
         final List<LocalIdMarcImportSource> list =
-                importSourceDataReader.readBibIdMarcData(provider, bibIds, 0); //FIXME params 0 for importid
+                importSourceDataReader.readMarc(provider, bibIds, 0); //FIXME params 0 for importid
         assertEquals("List size mismatch", list.size(), 1);
-        final Multimap<Marc21Field, ImportSourceData> innerMap = list.get(0).getValue();
+        final Multimap<Marc21Field, ImportSourceData> innerMap = list.get(0).getValueMap();
         Collection<ImportSourceData> collection = innerMap.get(Marc21Field._520);
         final Iterator<ImportSourceData> it = collection.iterator();
 

@@ -6,7 +6,7 @@ import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportCompleteEventBuilder;
 import edu.yale.library.ladybird.engine.exports.ExportEngine;
 import edu.yale.library.ladybird.engine.imports.ImportEngineException;
-import edu.yale.library.ladybird.engine.imports.ImportJobCtx;
+import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
 import edu.yale.library.ladybird.engine.imports.ObjectWriter;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.kernel.events.Event;
@@ -42,37 +42,37 @@ public class DefaultExportJob implements Job, ExportJob {
         try {
             final long startTime = System.currentTimeMillis();
             logger.trace("Looking for export job.");
-            final ImportJobCtx importJobCtx = exportEngine.read();
+            final ImportEntityContext importEntityContext = exportEngine.read();
 
             logger.debug("[start] export job.");
             logger.debug("Read rows from export engine, list size={}, import job context={}",
-                    importJobCtx.getImportJobList().size(), importJobCtx.toString());
+                    importEntityContext.getImportJobList().size(), importEntityContext.toString());
 
 
             //1. Write to spreadsheet
             logger.debug("Writing content rows to spreadsheet. . .");
 
-            exportEngine.write(importJobCtx.getImportJobList(), tmpFile(importJobCtx.getMonitor().getExportPath()));
+            exportEngine.write(importEntityContext.getImportJobList(), tmpFile(importEntityContext.getMonitor().getExportPath()));
 
             logger.debug("[end] Completed export job in={}",
                     DurationFormatUtils.formatDuration(System.currentTimeMillis() - startTime, "HH:mm:ss:SS"));
 
             //2. Write to object metadata tables
-            logger.debug("Writing contents to object metadata tables. Row size={}", importJobCtx.getImportJobList().size());
+            logger.debug("Writing contents to object metadata tables. Row size={}", importEntityContext.getImportJobList().size());
             ObjectWriter objectWriter = new ObjectWriter(); //TODO
-            objectWriter.write(importJobCtx);
+            objectWriter.write(importEntityContext);
             //logger.debug("[end] Wrote to object metadata tables");
 
             /* Add params as desired */
             final Event exportEvent = new ExportCompleteEventBuilder()
-                    .setRowsProcessed(importJobCtx.getImportJobList().size()).createExportCompleteEvent();
+                    .setRowsProcessed(importEntityContext.getImportJobList().size()).createExportCompleteEvent();
 
             //Post progress
-            ExportBus.postEvent(new ExportProgressEvent(exportEvent, importJobCtx.getMonitor().getId())); //TODO consolidate
+            ExportBus.postEvent(new ExportProgressEvent(exportEvent, importEntityContext.getMonitor().getId())); //TODO consolidate
 
             logger.debug("Adding export event; notifying user registered for this event instance.");
 
-            sendNotification(exportEvent, Collections.singletonList(importJobCtx.getMonitor().getUser())); //todo
+            sendNotification(exportEvent, Collections.singletonList(importEntityContext.getMonitor().getUser())); //todo
 
             logger.trace("Added export event to notification queue.");
         } catch (IOException e) {

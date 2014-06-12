@@ -1,7 +1,9 @@
 package edu.yale.library.ladybird.engine.imports;
 
 import com.google.common.collect.Multimap;
+import edu.yale.library.ladybird.engine.model.LocalIdentifier;
 import edu.yale.library.ladybird.engine.oai.Marc21Field;
+import edu.yale.library.ladybird.engine.oai.Record;
 import edu.yale.library.ladybird.entity.ImportSourceData;
 import edu.yale.library.ladybird.entity.ImportSourceDataBuilder;
 import org.junit.Test;
@@ -24,7 +26,7 @@ public class ImportSourceDataReaderTest {
         final List<ImportSourceData> sourceData = getImportSourceData();
         ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
 
-        Multimap<Marc21Field, Map<String, String>> m = importSourceDataReader.marshallMarcData(sourceData);
+        Multimap<Marc21Field, Map<String, String>> m = importSourceDataReader.buildMultimap(sourceData);
 
         //logger.debug(m.toString());
 
@@ -46,5 +48,17 @@ public class ImportSourceDataReaderTest {
         list.add(importSourceData2);
 
         return list;
+    }
+
+    @Test
+    public void shouldBuildMultiMap() { //TODO
+        ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
+        importSourceDataReader.buildMultiMap(new LocalIdentifier<>("1122"), new Record(), 0);
+    }
+
+    @Test
+    public void shouldGetLocalIdMarcValueTest() { //TODO
+        ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
+        importSourceDataReader.readImportSourceData(0);
     }
 }

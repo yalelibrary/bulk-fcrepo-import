@@ -9,6 +9,7 @@ import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
 import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
+import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
 import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
 import edu.yale.library.ladybird.entity.FieldDefinition;
@@ -137,9 +138,9 @@ public class MarcImportEngineIT extends AbstractDBTest {
 
         //logger.debug("Export engine reading import tables");
 
-        final ImportJobCtx importJobCtx = exportEngine.read();
+        final ImportEntityContext importEntityContext = exportEngine.read();
 
-        final List<ImportEntity.Row> listExportRows = importJobCtx.getImportJobList();
+        final List<ImportEntity.Row> listExportRows = importEntityContext.getImportJobList();
 
         assert (listExportRows != null);
 

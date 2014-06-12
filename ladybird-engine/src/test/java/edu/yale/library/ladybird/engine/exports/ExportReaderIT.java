@@ -4,7 +4,6 @@ import com.google.common.collect.Multimap;
 import edu.yale.library.ladybird.engine.AbstractDBTest;
 import edu.yale.library.ladybird.engine.FdidMarcMappingUtil;
 import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
-import edu.yale.library.ladybird.engine.imports.ImportJobCtx;
 import edu.yale.library.ladybird.engine.imports.ImportSourceDataReader;
 import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.engine.model.FieldConstantRules;
@@ -48,8 +47,8 @@ public class ExportReaderIT extends AbstractDBTest {
 
 
         ExportReader exportReader = new ExportReader();
-        ImportJobCtx importJobCtx = exportReader.read();
-        assert (importJobCtx.getImportJobList().size() == 0);
+        ImportEntityContext importEntityContext = exportReader.read();
+        assert (importEntityContext.getImportJobList().size() == 0);
     }
 
     @Test
@@ -75,7 +74,7 @@ public class ExportReaderIT extends AbstractDBTest {
         final List<FieldConstant> globalFConstantsList = fakeGlobalApplicationFieldConstants();
 
         ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
-        final Multimap<Marc21Field, Map<String, String>> map = importSourceDataReader.marshallMarcData(fakeImportSourceData());
+        final Multimap<Marc21Field, Map<String, String>> map = importSourceDataReader.buildMultimap(fakeImportSourceData());
 
         //logger.debug("Map={}", map.toString());
 

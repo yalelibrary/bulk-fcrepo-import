@@ -1,7 +1,6 @@
 package edu.yale.library.ladybird.engine.exports;
 
 import edu.yale.library.ladybird.engine.imports.ImportEntity;
-import edu.yale.library.ladybird.engine.imports.ImportJobCtx;
 import edu.yale.library.ladybird.entity.Settings;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
 import edu.yale.library.ladybird.persistence.dao.SettingsDAO;
@@ -27,10 +26,10 @@ public class DefaultExportEngine extends AbstractExportEngine {
      * @return
      */
     @Override
-    public ImportJobCtx doRead() {
-        final ImportJobCtx importJobCtx = reader.read();
-        logger.debug("Read list size={}", importJobCtx.getImportJobList().size());
-        return importJobCtx;
+    public ImportEntityContext doRead() {
+        final ImportEntityContext importEntityContext = reader.read();
+        logger.debug("Read list size={}", importEntityContext.getImportJobList().size());
+        return importEntityContext;
     }
 
     /**

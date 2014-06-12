@@ -1,5 +1,6 @@
 package edu.yale.library.ladybird.engine.imports;
 
+import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
 import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.AuthorityControl;
@@ -42,18 +43,18 @@ public class ObjectWriter {
     /**
      * Populates object metadata tables
      *
-     * @param importJobCtx context
+     * @param importEntityContext context
      * @see edu.yale.library.ladybird.engine.cron.DefaultExportJob#execute(org.quartz.JobExecutionContext) for call
      *
      * TODO pass ImportEntity directly
      */
-    public void write(ImportJobCtx importJobCtx) {
+    public void write(ImportEntityContext importEntityContext) {
 
         try {
-            List<ImportEntity.Row> importRows = importJobCtx.getImportJobList();
+            List<ImportEntity.Row> importRows = importEntityContext.getImportJobList();
             ImportEntityValue importEntityValue = new ImportEntityValue(importRows);
 
-            final int userId = getUserId(importJobCtx);
+            final int userId = getUserId(importEntityContext);
 
             logger.trace("Writing object metadata. Import Row size={}, UserId{}", importRows.size(), userId);
 
@@ -140,11 +141,11 @@ public class ObjectWriter {
 
     /** helper
      *
-     * @param importJobCtx import job context
+     * @param importEntityContext import job context
      * @return user id
      */
-    private int getUserId(final ImportJobCtx importJobCtx) {
-        final Monitor monitor = importJobCtx.getMonitor();
+    private int getUserId(final ImportEntityContext importEntityContext) {
+        final Monitor monitor = importEntityContext.getMonitor();
         final User user = monitor.getUser();
         final int userId = user.getUserId();
         return userId;

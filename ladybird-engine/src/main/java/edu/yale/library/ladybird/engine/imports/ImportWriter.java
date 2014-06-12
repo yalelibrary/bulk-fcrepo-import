@@ -40,20 +40,20 @@ public class ImportWriter {
     private final FieldMarcMappingDAO fieldMarcMappingDAO = new FieldMarcMappingHibernateDAO();
     private final ImportJobContentsDAO dao = new ImportJobContentsHibernateDAO();
     private final ImportJobDAO importJobDAO = new ImportJobHibernateDAO();
-    private final Date JOB_EXEC_DATE = new Date(System.currentTimeMillis()); //TODO pass
+    private final Date JOB_EXEC_DATE = new Date(); //TODO
 
     /**
      * Full cycle import writing
      *
      * @param importEntityValue Abstraction on top of List<ImportEntity.Row>
-     * @param ctx Job Context
+     * @param importJobRequest Job Context
      * @return Import Id
      */
-    public int write(final ImportEntityValue importEntityValue, final ImportJobContext ctx) throws Exception {
+    public int write(final ImportEntityValue importEntityValue, final ImportJobRequest importJobRequest) throws Exception {
         try {
-            final int importId = writeImportJob(ctx);
+            final int importId = writeImportJob(importJobRequest);
             writeExHead(importId, importEntityValue.getHeaderRow().getColumns());
-            writeContents(importId, importEntityValue); //change to only columns
+            writeContents(importId, importEntityValue);
             return importId;
         } catch (Exception e) {
             logger.error("Error writing.", e);
@@ -86,7 +86,7 @@ public class ImportWriter {
      * Writes body to db
      *
      * @param importId import id of the job
-     * @param importEntityValue helper datastructre representing list<rows></rows>
+     * @param importEntityValue helper data structure representing list<rows>
      */
     @SuppressWarnings("unchecked")
     public void writeContents(final int importId, final ImportEntityValue importEntityValue) {
@@ -97,9 +97,9 @@ public class ImportWriter {
         final List<FieldMarcMapping> fieldMarcMappingList = fieldMarcMappingDAO.findAll();
         final Map<Marc21Field, FieldMarcMapping> marc21FieldMap = new FdidMarcMappingUtil().buildMarcFdidMap(fieldMarcMappingList);
         final List<LocalIdMarcImportSource> importSourceLocalIdList =
-                importSourceDataReader.readBibIdMarcData(oaiProvider, bibIdList, importId);
+                importSourceDataReader.readMarc(oaiProvider, bibIdList, importId);
         ImportSourceDataWriter importSourceDataWriter = new ImportSourceDataWriter();
-        importSourceDataWriter.persistMarcData(importSourceLocalIdList, importId);
+        importSourceDataWriter.write(importSourceLocalIdList, importId);
 
         final List<ImportEntity.Row> rowList = importEntityValue.getContentRows();
         logger.debug("Writing spreadsheet body contents. Row list size={}", rowList.size());
@@ -148,7 +148,7 @@ public class ImportWriter {
      * @param ctx Context containing information about the job
      * @return minted job id
      */
-    public Integer writeImportJob(final ImportJobContext ctx) {
+    public Integer writeImportJob(final ImportJobRequest ctx) {
         return importJobDAO.save(new ImportJobBuilder().setDate(JOB_EXEC_DATE).setJobDirectory(ctx.getJobDir()).
                 setJobFile(ctx.getJobFile()).setUserId(ctx.getUserId()).createImportJob());
     }

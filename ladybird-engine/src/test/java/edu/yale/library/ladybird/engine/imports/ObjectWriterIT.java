@@ -2,6 +2,7 @@ package edu.yale.library.ladybird.engine.imports;
 
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
+import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.FieldDefinition;
@@ -44,7 +45,7 @@ public class ObjectWriterIT extends AbstractDBTest {
     @Test
     public void shouldWriteToObjectMetadataTabes() {
 
-        //Populate our ImportJobCtx
+        //Populate our ImportEntityContext
 
         //1. monitor
         Monitor monitor = new Monitor();
@@ -90,13 +91,13 @@ public class ObjectWriterIT extends AbstractDBTest {
         rowList.add(contentRow);
 
         //3. Init Object
-        ImportJobCtx importJobCtx = new ImportJobCtx();
-        importJobCtx.setMonitor(monitor);
-        importJobCtx.setImportJobList(rowList);
+        ImportEntityContext importEntityContext = new ImportEntityContext();
+        importEntityContext.setMonitor(monitor);
+        importEntityContext.setImportJobList(rowList);
 
         // Finally, test the method:
         ObjectWriter objectWriter = new ObjectWriter();
-        objectWriter.write(importJobCtx);
+        objectWriter.write(importEntityContext);
 
         // Now verify:
 

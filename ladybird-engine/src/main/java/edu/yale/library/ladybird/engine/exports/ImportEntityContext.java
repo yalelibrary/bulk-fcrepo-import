@@ -1,11 +1,16 @@
-package edu.yale.library.ladybird.engine.imports;
+package edu.yale.library.ladybird.engine.exports;
 
+import edu.yale.library.ladybird.engine.imports.ImportEntity;
 import edu.yale.library.ladybird.entity.Monitor;
 
 import java.util.Collections;
 import java.util.List;
 
-public class ImportJobCtx {
+/**
+ * Used by Export related artifacts.
+ * @see edu.yale.library.ladybird.engine.imports.ImportJobRequest for a related class
+ */
+public class ImportEntityContext {
 
     private List<ImportEntity.Row> importJobList;
     private Monitor monitor;
@@ -26,22 +31,22 @@ public class ImportJobCtx {
         this.importJobList = importJobList;
     }
 
-    @Override
-    public String toString() {
-        return "ImportJobCtx{"
-                + "importJobList size=" + importJobList.size()
-                + ", monitor=" + monitor
-                + '}';
-    }
-
     /**
      * Instantiates empty instance
      * @return
      */
-    public static ImportJobCtx newInstance() {
-        ImportJobCtx importJobCtx = new ImportJobCtx();
-        importJobCtx.setImportJobList(Collections.emptyList());
-        importJobCtx.setMonitor(new Monitor());
-        return importJobCtx;
+    public static ImportEntityContext newInstance() {
+        ImportEntityContext importEntityContext = new ImportEntityContext();
+        importEntityContext.setImportJobList(Collections.emptyList());
+        importEntityContext.setMonitor(new Monitor());
+        return importEntityContext;
+    }
+
+    @Override
+    public String toString() {
+        return "ImportEntityContext{"
+                + "importJobList size=" + importJobList.size()
+                + ", monitor=" + monitor
+                + '}';
     }
 }

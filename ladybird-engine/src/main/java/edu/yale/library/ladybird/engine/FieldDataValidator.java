@@ -7,5 +7,4 @@ interface FieldDataValidator {
     boolean validate();
 
     boolean validate(FieldConstant f, String value);
-
 }

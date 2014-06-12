@@ -1,5 +1,6 @@
 package edu.yale.library.ladybird.engine.imports;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import edu.yale.library.ladybird.engine.model.LocalIdMarcImportSource;
@@ -20,61 +21,60 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Utility methods for reading import source data into LocalIdMarcValue
+ * Utility methods for manipulating (serialization and de-serialization of) import source data.
+ * @see ImportSourceDataWriter
  */
 public class ImportSourceDataReader {
 
     private Logger logger = LoggerFactory.getLogger(ImportSourceDataReader.class);
 
-    final ImportSourceDataDAO importSourceDataDAO = new ImportSourceDataHibernateDAO();
+    final ImportSourceDataDAO importSrcDataDAO = new ImportSourceDataHibernateDAO(); //TODO
 
     // --------------------------------------------------------------
     // Used by ImportWriter
     //---------------------------------------------------------------
 
     /**
-     * Hits OAI feed and gets a Record
+     * Hits OAI feed and gets a Record. A multimap is then used to relate the record's data to the local identifier.
      *
-     * @param bibIds
-     * @return List<LocalIdMarcImportSource> a list of data structures containing the mappings
+     * @param bibIds list of LocalIdentifier (bibids or barcodes)
+     * @return List<LocalIdMarcImportSource> a list of data structures containing the mappings. Ignores exception.
      */
-    public List<LocalIdMarcImportSource> readBibIdMarcData(final OaiProvider oaiProvider,
-                                                           final List<LocalIdentifier<String>> bibIds,
-                                                           final int importId) {
-        //Map<String, Multimap<Marc21Field, ImportSourceData>> bibIdMarcValues
+    public List<LocalIdMarcImportSource> readMarc(final OaiProvider oaiProvider,
+                                                  final List<LocalIdentifier<String>> bibIds,
+                                                  final int importId) {
         final List<LocalIdMarcImportSource> list = new ArrayList<>();
 
-        logger.debug("Reading marc data for the bibIds");
-
-        for (final LocalIdentifier<String> localIdentifier : bibIds) {
+        for (final LocalIdentifier<String> localId : bibIds) {
             final OaiHttpClient oaiClient = new OaiHttpClient(oaiProvider);
             try {
-                final Record recordForBibId = oaiClient.readMarc(localIdentifier.getId()); //Read OAI feed
-                final Multimap<Marc21Field, ImportSourceData> marc21Values = buildMultiMap(localIdentifier, recordForBibId, importId);
+                logger.trace("Reading marc feed for local identifier={}", localId.getId());
+
+                final Record record = oaiClient.readMarc(localId.getId()); //Read OAI feed
+                final Multimap<Marc21Field, ImportSourceData> marc21Values = buildMultiMap(localId, record, importId);
 
                 LocalIdMarcImportSource localIdMarcImportSource = new LocalIdMarcImportSource();
-                localIdMarcImportSource.setBibId(localIdentifier);
-                localIdMarcImportSource.setValue(marc21Values);
+                localIdMarcImportSource.setBibId(localId);
+                localIdMarcImportSource.setValueMap(marc21Values);
                 list.add(localIdMarcImportSource);
-            } catch (IOException e) {
-                logger.error("Error reading source", e);
-            } catch (MarcReadingException e) {
-                logger.error("Error reading oai marc record", e);
+            } catch (IOException|MarcReadingException e) {
+                logger.error("Error reading source", e); //ignore
             }
         }
-        logger.debug("Returning list size={}", list.size());
         return list;
     }
 
     /**
-     * TODO test
-     * @see ImportSourceDataReader#readBibIdMarcData(edu.yale.library.ladybird.engine.oai.OaiProvider, java.util.List, int)
+     * Helps in building a multimap of Marc21Field and ImportSourceData
+     *
+     * @see ImportSourceDataReader#readMarc(edu.yale.library.ladybird.engine.oai.OaiProvider, java.util.List, int)
      * @param record MarcRecord
      * @return a map(k,v) where k=Tag, v=ImportSourceData
      */
@@ -87,20 +87,18 @@ public class ImportSourceDataReader {
         for (final DatafieldType type : datafieldTypeList) {
             final String tag = type.getTag();
 
-            //Get subfields:
+            //Get SubFieldType:
             final List<SubfieldType> subfieldTypeList = type.getSubfield();
 
-            //Get k2 values
+            //Get k2 values:
             for (final SubfieldType s : subfieldTypeList) {
                 final String code = s.getCode(); //e.g "a", "c", "d"
                 final String codeValue = s.getValue(); //e.g. "(oOCoLC) ocn709288147"
 
-                final ImportSourceData importSourceData =
-                        new ImportSourceDataBuilder().setK1(tag).setK2(code).setValue(codeValue)
-                                .setLocalidentifier(localIdentifier.getId())
-                                .setDate(new Date())
-                                .setImportSourceId(importId)
-                                .createImportSourceData();
+                final ImportSourceData importSourceData = new ImportSourceDataBuilder().setK1(tag).setK2(code)
+                        .setValue(codeValue).setLocalidentifier(localIdentifier.getId()).setDate(new Date())
+                        .setImportSourceId(importId).createImportSourceData();
+
                 attrMap.put(Marc21Field.getMar21FieldForString(tag), importSourceData);
             }
         }
@@ -112,68 +110,71 @@ public class ImportSourceDataReader {
     //---------------------------------------------------------------
 
     /**
-     * TODO test
-     * Converts to List<LocalIdMarcValue>  , v=map(s,t), where s=Mar21Tag,t=Marc21DataFieldType
+     * Converts to List<LocalIdMarcValue>, v=map(s,t), where s=Mar21Tag,t=Marc21DataFieldType
      * @param importId import id of job
-     * @return list of localIdMarcValues
+     * @return list of localIdMarcValues or empty list. Ignores exceptions.
      */
-    public List<LocalIdMarcValue> getLocalIdMarcValueList(final int importId) {
+    public List<LocalIdMarcValue> readImportSourceData(final int importId) {
 
-        List<LocalIdMarcValue> list = new ArrayList<>();
+        try {
+            Preconditions.checkNotNull(importId);
 
-        //find all the entries for this import
-        List<ImportSourceData> importSourceDataList = importSourceDataDAO.findByImportId(importId);
+            List<LocalIdMarcValue> list = new ArrayList<>();
 
-        for (ImportSourceData importSourceData: importSourceDataList) {
-            //for each entry, fetch the bibId
-            String bibId = importSourceData.getLocalidentifier();
+            //find all the entries for this import
+            List<ImportSourceData> importSourceDataList = importSrcDataDAO.findByImportId(importId);
 
-            //find all the entries for this bib and this import
-            List<ImportSourceData> valuesForBibId = importSourceDataDAO.findByImportIdAndLocalIdentifier(importId, bibId);
+            for (ImportSourceData importSourceData: importSourceDataList) {
+                //for each entry, fetch the bibId or barcode
+                String localId = importSourceData.getLocalidentifier();
 
-            //Get map representation for this bibids values
-            Multimap multimap = marshallMarcData(valuesForBibId);
+                //find all the entries for this identifier and this import
+                List<ImportSourceData> listForId = importSrcDataDAO.findByImportIdAndLocalIdentifier(importId, localId);
 
-            //construct LocalIdMarcValue
-            LocalIdMarcValue localIdMarcValue = new LocalIdMarcValue();
-            localIdMarcValue.setBibId(new LocalIdentifier<>(bibId));
-            localIdMarcValue.setValue(multimap);
+                //Get map representation
+                Multimap multimap = buildMultimap(listForId);
 
-            list.add(localIdMarcValue);
+                //construct LocalIdMarcValue
+                LocalIdMarcValue localIdMarcValue = new LocalIdMarcValue();
+                localIdMarcValue.setBibId(new LocalIdentifier<>(localId));
+                localIdMarcValue.setValueMap(multimap);
+
+                list.add(localIdMarcValue);
+            }
+            return list;
+        } catch (Exception e) {
+            logger.trace("Error={}", e);
+            return Collections.emptyList(); //ignore
         }
-        return list;
     }
 
     /**
-     * Re-creates multimap from table
+     * Helps in re-creating multimap from table
      *
-     * @see #getLocalIdMarcValueList(int) for invocation
-     * @param importSourceDataList list of importsourcedata
+     * @see #readImportSourceData(int) for invocation
+     * @param importSrcDataList list of ImportSourceData
      * @return <code> MultiMap(245 => {f,"dd"} {a,"title"} {6,"1797"}). </code>
      */
-    public Multimap<Marc21Field, Map<String, String>> marshallMarcData(final List<ImportSourceData> importSourceDataList) {
-        logger.trace("Marshalling marc data from import source data.");
-
-        //populate map (e.g. (245,{a,"text"}), (245, {b,"text b"}). This map will then be read.
+    public Multimap<Marc21Field, Map<String, String>> buildMultimap(final List<ImportSourceData> importSrcDataList) {
+        //populate map (e.g. (245,{a,"text"}), (245, {b,"text b"}):
         final Multimap<Marc21Field, Map<String, String>> map = HashMultimap.create(); //k=tag, v={subfield,value}
 
-        for (int i = 0; i < importSourceDataList.size(); i++) {
-            final ImportSourceData entry = importSourceDataList.get(i);
-            final String k1 = entry.getK1();
+        for (int i = 0; i < importSrcDataList.size(); i++) {
+            final ImportSourceData importEntry = importSrcDataList.get(i);
+            final String k1 = importEntry.getK1();
 
             switch (k1) {
                 case "880":
                     logger.trace("Ignoring field 880");
                     break;
                 default:
-                    logger.trace("Putting field={} value={}", k1, entry.getValue());
+                    logger.trace("Putting in multimap field={} value={}", k1, importEntry.getValue());
                     final Map<String, String> attrValue = new HashMap<>();
-                    attrValue.put(entry.getK2(), entry.getValue());
+                    attrValue.put(importEntry.getK2(), importEntry.getValue());
                     map.put(Marc21Field.valueOfTag(k1), attrValue);
                     break;
             }
         }
         return map;
     }
-
 }

@@ -7,12 +7,12 @@ import java.util.List;
 
 /**
  * Represents rows and columns.
- * <p/>
- * A bean for now. Subject to modification.
  */
 public class ImportEntity {
-    final List<Row> sheetRows = new ArrayList<>();
-
+    /**
+     * Column represents a spreadsheet cell
+     * @param <T>
+     */
     public class Column<T> {
         FieldConstant field;
         T value;
@@ -67,6 +67,9 @@ public class ImportEntity {
         }
     }
 
+    /**
+     * Row represents a spreadsheet row
+     */
     public class Row {
         private List<Column> columns = new ArrayList<>();
 

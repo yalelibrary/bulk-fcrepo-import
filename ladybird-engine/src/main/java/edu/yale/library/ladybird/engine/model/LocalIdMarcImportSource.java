@@ -5,13 +5,13 @@ import edu.yale.library.ladybird.engine.oai.Marc21Field;
 import edu.yale.library.ladybird.entity.ImportSourceData;
 
 /**
- * TOOD test
+ * Represents LocalIdentifier Marc21Field ImportSourceData values
  */
 public class LocalIdMarcImportSource {
 
-    LocalIdentifier<String> bibId;
+    private LocalIdentifier<String> bibId;
 
-    Multimap<Marc21Field, ImportSourceData> value;
+    private Multimap<Marc21Field, ImportSourceData> valueMap;
 
     public LocalIdentifier<String> getBibId() {
         return bibId;
@@ -21,11 +21,11 @@ public class LocalIdMarcImportSource {
         this.bibId = bibId;
     }
 
-    public Multimap<Marc21Field, ImportSourceData> getValue() {
-        return value;
+    public Multimap<Marc21Field, ImportSourceData> getValueMap() {
+        return valueMap;
     }
 
-    public void setValue(Multimap<Marc21Field, ImportSourceData> value) {
-        this.value = value;
+    public void setValueMap(Multimap<Marc21Field, ImportSourceData> value) {
+        this.valueMap = value;
     }
 }

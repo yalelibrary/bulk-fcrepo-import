@@ -37,13 +37,13 @@ public class LocalIdMarcValueTest {
         multiMap.put(Marc21Field._245, firstSetFor245);
         multiMap.put(Marc21Field._245, secondSetFor245);
 
-        localIdMarcValue.setValue(multiMap);
+        localIdMarcValue.setValueMap(multiMap);
 
 
         //test:
         assertEquals("Value mismatch", localIdMarcValue.getBibId().getId(), "980725");
 
-        Multimap<Marc21Field, Map<String, String>> multiMapReadback = localIdMarcValue.getValue();
+        Multimap<Marc21Field, Map<String, String>> multiMapReadback = localIdMarcValue.getValueMap();
 
         Collection collection = multiMapReadback.get(Marc21Field._245);
 

@@ -7,7 +7,6 @@ import edu.yale.library.ladybird.engine.imports.ImportEntity;
 import edu.yale.library.ladybird.engine.imports.ImportEntity.Column;
 import edu.yale.library.ladybird.engine.imports.ImportEntity.Row;
 import edu.yale.library.ladybird.engine.imports.ImportEntityValue;
-import edu.yale.library.ladybird.engine.imports.ImportJobCtx;
 import edu.yale.library.ladybird.engine.imports.ImportSourceDataReader;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.engine.model.LocalIdMarcValue;
@@ -42,9 +41,9 @@ public class ExportReader {
      * Main method. Reads import tables (import job contents and import source) and merges OAI data from maps
      * to construct data.
      *
-     * @return ImportJobCtx
+     * @return ImportEntityContext
      */
-    public ImportJobCtx read() {
+    public ImportEntityContext read() {
 
         final ExportRequestEvent exportRequestEvent = ExportEngineQueue.getJob(); //from Queue
         final int importId = exportRequestEvent.getImportId();
@@ -55,12 +54,12 @@ public class ExportReader {
 
         if (numRowsToWrite == 0) {
             logger.debug("No rows to write.");
-            return ImportJobCtx.newInstance();
+            return ImportEntityContext.newInstance();
         }
 
         ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
 
-        final List<LocalIdMarcValue> bibIdValueList = importSourceDataReader.getLocalIdMarcValueList(importId);
+        final List<LocalIdMarcValue> bibIdValueList = importSourceDataReader.readImportSourceData(importId);
 
         //Get all FieldConstant. Each should have a column in the output.
         final List<FieldConstant> globalFConstantsList = FieldConstantRules.getApplicationFieldConstants();
@@ -109,7 +108,7 @@ public class ExportReader {
                 if (bibIdCol != -1 && !FunctionConstants.isFunction(fieldConst.getName())) {
                     final Column<String> bibIdColumn = cols.get(bibIdCol);
                     LocalIdMarcValue localIdMarcValue = LocalIdMarcValue.findMatch(bibIdValueList, bibIdColumn.getValue());
-                    oaiVal = getMultimapMarc21Field(new FdidMarcMappingUtil().toMarc21Field(fieldConst), localIdMarcValue.getValue());
+                    oaiVal = getMultimapMarc21Field(new FdidMarcMappingUtil().toMarc21Field(fieldConst), localIdMarcValue.getValueMap());
                 }
 
                 final String mergedValue = regularValue + oaiVal;
@@ -121,10 +120,10 @@ public class ExportReader {
             resultRowList.add(rowToWrite);
         }
 
-        final ImportJobCtx importJobCtx = new ImportJobCtx();
-        importJobCtx.setImportJobList(resultRowList);
-        importJobCtx.setMonitor(exportRequestEvent.getMonitor());
-        return importJobCtx;
+        final ImportEntityContext importEntityContext = new ImportEntityContext();
+        importEntityContext.setImportJobList(resultRowList);
+        importEntityContext.setMonitor(exportRequestEvent.getMonitor());
+        return importEntityContext;
     }
 
     /**
@@ -167,7 +166,7 @@ public class ExportReader {
                         final ImportJobContents jobContents = rowJobContentsList.get(j);
                         logger.trace("JobContents={}", jobContents.toString());
                         row.getColumns().add(new ImportEntity().new Column<>(fieldConstant, jobContents.getValue()));
-                        //logger.debug("Added value={}", jobContents.getValue());
+                        //logger.debug("Added value={}", jobContents.getValueMap());
                     } catch (Exception e) {
                         //logger.error("Error retrieving value", e.getMessage());
                         continue;
@@ -201,7 +200,7 @@ public class ExportReader {
             }
         }
         logger.trace("Found for field={} value={} map={} map value={} attr. collection size={}",
-                marc21Field.toString(), val, multimap.toString() ,attrCollection.toString(), attrCollection.size());
+                marc21Field.toString(), val, multimap.toString(), attrCollection.toString(), attrCollection.size());
         return val;
     }
 

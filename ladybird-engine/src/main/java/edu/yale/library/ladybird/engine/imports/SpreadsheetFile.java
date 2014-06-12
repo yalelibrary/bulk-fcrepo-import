@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Represents a spreadsheet file. Subject to modification. Simple implementation for now.
+ * Represents a spreadsheet file.
  */
 public class SpreadsheetFile implements Cloneable {
     private String fileName;
@@ -26,20 +26,8 @@ public class SpreadsheetFile implements Cloneable {
         this.fileStream = fileStream;
     }
 
-    public InputStream getFileStream() {
-        return fileStream;
-    }
-
-    public void setFileStream(InputStream fileStream) {
-        this.fileStream = fileStream;
-    }
-
     public String getAltName() {
         return altName;
-    }
-
-    public void setAltName(String altName) {
-        this.altName = altName;
     }
 
     public String getPath() {
@@ -50,19 +38,10 @@ public class SpreadsheetFile implements Cloneable {
         this.path = path;
     }
 
-    public String getFileName() {
-
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
     /**
-     * Read default sheet (0 for now)
+     * Return sheet
      *
-     * @return
+     * @return XSSF sheet
      * @throws java.io.IOException
      */
     public XSSFSheet getDefaultSheet(int sheetNumber) throws IOException {
