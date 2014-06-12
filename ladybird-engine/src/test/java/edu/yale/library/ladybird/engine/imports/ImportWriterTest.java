@@ -78,8 +78,7 @@ public class ImportWriterTest {
 
     @Test
     public void shouldTranslateToMarc21Field() {
-        final ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
-        final Marc21Field marc21Field = importSourceDataReader.getMar21FieldForString("245");
+        final Marc21Field marc21Field = Marc21Field.getMar21FieldForString("245");
         assert (marc21Field.equals(Marc21Field._245));
     }
 
@@ -101,7 +100,6 @@ public class ImportWriterTest {
        fieldMarcMappingList.add(fieldMarcMapping3);
 
        Map<Marc21Field, FieldMarcMapping> marc21FieldMap = new FdidMarcMappingUtil().buildMarcFdidMap(fieldMarcMappingList);
-       //logger.debug(marc21FieldMap.toString());
 
        assert (marc21FieldMap.get(Marc21Field._245) == fieldMarcMapping1);
        assert (marc21FieldMap.get(Marc21Field._520) == fieldMarcMapping2);

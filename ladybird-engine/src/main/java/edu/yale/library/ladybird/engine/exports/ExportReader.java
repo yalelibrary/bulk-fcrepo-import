@@ -60,7 +60,7 @@ public class ExportReader {
 
         ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
 
-        final List<LocalIdMarcValue> bibIdValueList = importSourceDataReader.toLocalIdMarcValue(importId);
+        final List<LocalIdMarcValue> bibIdValueList = importSourceDataReader.getLocalIdMarcValueList(importId);
 
         //Get all FieldConstant. Each should have a column in the output.
         final List<FieldConstant> globalFConstantsList = FieldConstantRules.getApplicationFieldConstants();

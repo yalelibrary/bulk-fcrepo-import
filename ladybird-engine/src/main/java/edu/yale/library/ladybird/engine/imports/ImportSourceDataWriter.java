@@ -6,8 +6,6 @@ import edu.yale.library.ladybird.engine.oai.Marc21Field;
 import edu.yale.library.ladybird.entity.ImportSourceData;
 import edu.yale.library.ladybird.persistence.dao.ImportSourceDataDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceDataHibernateDAO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.List;
@@ -18,11 +16,10 @@ import java.util.Set;
  */
 public class ImportSourceDataWriter {
 
-    private Logger logger = LoggerFactory.getLogger(ImportSourceDataWriter.class);
-
     final ImportSourceDataDAO dao = new ImportSourceDataHibernateDAO(); //TODO
 
      /**
+     * TODO test
      * Persists MARC data to import source data tables
      * @param list
      * @param importId

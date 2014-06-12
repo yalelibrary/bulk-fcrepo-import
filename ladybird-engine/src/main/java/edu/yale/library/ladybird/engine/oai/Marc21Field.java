@@ -109,4 +109,20 @@ public enum Marc21Field {
         }
     }
 
+    /**
+     * @param tag marc tag
+     * @return Marc21Field corresponding or Marc21Field.UNK if not known
+     */
+    public static Marc21Field getMar21FieldForString(final String tag) {
+        final String TAG_ID = Marc21Field.getIdentifierPrefix(); //fields start with _, e.g. _245
+        try {
+            Marc21Field marc21Field = Marc21Field.valueOf(TAG_ID + tag);
+            return marc21Field;
+        } catch (IllegalArgumentException e) {
+            //ignore error
+            return Marc21Field.UNK;
+        }
+    }
+
+
 }
