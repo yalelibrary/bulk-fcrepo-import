@@ -5,6 +5,8 @@ import com.google.inject.TypeLiteral;
 import edu.yale.library.ladybird.entity.Project;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.persistence.dao.hibernate.CollectionHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.HydraHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.HydraPublishHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportFileHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceDataHibernateDAO;
@@ -70,5 +72,7 @@ public class TestDaoHibernateModule extends AbstractModule {
         bind(SettingsDAO.class).to(SettingsHibernateDAO.class);
         bind(ObjectAcidDAO.class).to(ObjectAcidHibernateDAO.class);
         bind(ObjectStringDAO.class).to(ObjectStringHibernateDAO.class);
+        bind(HydraDAO.class).to(HydraHibernateDAO.class);
+        bind(HydraPublishDAO.class).to(HydraPublishHibernateDAO.class);
     }
 }

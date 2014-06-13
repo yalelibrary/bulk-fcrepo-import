@@ -51,4 +51,9 @@ public class DummyEventDAO implements UserEventDAO {
     public List<UserEvent> findEventsByUser(String eventType, String userId) {
         return null;
     }
+
+    @Override
+    public int count() {
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

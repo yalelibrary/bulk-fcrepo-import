@@ -113,6 +113,12 @@ public class ImportWriter {
                 logger.debug("Done media processing.");
             }
 
+            //Process F40 (hydra publishing staging)
+            if (importEntityValue.fieldConstantsInExhead(FunctionConstants.F40)
+                    && importEntityValue.fieldConstantsInExhead(FunctionConstants.F1)) {
+                publishHydra(importEntityValue);
+            }
+
             //Save all to DB table import job contents (N.B. f104/f105 column(s) also persisted):
             for (int i = 0; i < rowList.size(); i++) {
                 final ImportEntity.Row row = rowList.get(i);
@@ -160,5 +166,11 @@ public class ImportWriter {
 
     public void setImportSourceProcessor(ImportSourceProcessor importSourceProcessor) {
         this.importSourceProcessor = importSourceProcessor;
+    }
+
+    public void publishHydra(ImportEntityValue importEntityValue) {
+        HydraProcessor hydraProcessor = new HydraProcessor();
+        hydraProcessor.write(importEntityValue);
+
     }
 }

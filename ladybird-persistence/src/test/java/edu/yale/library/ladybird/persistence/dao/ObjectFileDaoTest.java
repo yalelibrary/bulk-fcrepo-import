@@ -17,8 +17,6 @@ import static org.junit.Assert.fail;
 
 public class ObjectFileDaoTest extends AbstractPersistenceTest {
 
-    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(ObjectFileDaoTest.class);
-
     {
         TestDaoInitializer.injectFields(this);
     }
@@ -37,12 +35,14 @@ public class ObjectFileDaoTest extends AbstractPersistenceTest {
     private ObjectFileDAO dao;
 
     @Test
-    public void testSave() {
+    public void shouldSave() {
         final ObjectFile item = build();
+        ObjectFile itemByOid = null;
         List<ObjectFile> list = null;
         try {
             dao.save(item);
             list = dao.findAll();
+            itemByOid = dao.findByOid(55);
         } catch (Throwable e) {
             e.printStackTrace();
             fail("Error testing saving or finding item");
@@ -50,10 +50,11 @@ public class ObjectFileDaoTest extends AbstractPersistenceTest {
 
         assertEquals("Item count incorrect", list.size(), 1);
         assertEquals("Value mismatch", list.get(0).getFileName(), "tmpFile");
+        assertEquals(itemByOid.getFileName(), "tmpFile");
     }
 
     private ObjectFile build() {
-        final ObjectFile item = new ObjectFileBuilder().setFileName("tmpFile").createObjectFile();
+        final ObjectFile item = new ObjectFileBuilder().setOid(55).setFileName("tmpFile").createObjectFile();
         final Date date = new Date(System.currentTimeMillis());
         item.setDate(date);
         return item;

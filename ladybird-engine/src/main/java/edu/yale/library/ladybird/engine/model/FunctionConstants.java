@@ -46,7 +46,13 @@ public enum FunctionConstants implements FieldConstant {
     /**
      * Barcode Import
      */
-    F105("F105", "OAI-Barcode-Import");
+    F105("F105", "OAI-Barcode-Import"),
+
+    /**
+     * places objects into hydra table for staging into hydra_publish
+     */
+    F40("F40", "Hydra-Publish-Staging");
+
 
     private String name;
     private String title;
