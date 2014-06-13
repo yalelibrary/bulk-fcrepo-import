@@ -13,5 +13,7 @@ public interface GenericDAO<T, ID extends Serializable> {
 
     void saveOrUpdateList(List<T> itemList);
 
+    int count();
+
     void delete(List<T> entities);
 }

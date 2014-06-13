@@ -36,6 +36,11 @@ public class ObjectView extends AbstractView {
     public void setItemList(List<Object> itemList) {
         this.itemList = itemList;
     }
+
+    /** Should probably be moved */
+    public Integer getCount() {
+        return dao.count();
+    }
 }
 
 

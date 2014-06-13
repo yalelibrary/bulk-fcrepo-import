@@ -81,7 +81,7 @@ public class ObjectMetadataView extends AbstractView {
 
             map = populateFieldMap(oid); //map contains fdid values
         } catch (Exception e) {
-            logger.error("Error={}", e);
+            logger.error("Error={}", e.getMessage());
         }
     }
 
@@ -182,6 +182,11 @@ public class ObjectMetadataView extends AbstractView {
 
     public void setObjectAcid(ObjectAcid objectAcid) {
         this.objectAcid = objectAcid;
+    }
+
+    /** Should be moved */
+    public int getCount() {
+        return objectFileDAO.count();
     }
 
     public Map getMap() {

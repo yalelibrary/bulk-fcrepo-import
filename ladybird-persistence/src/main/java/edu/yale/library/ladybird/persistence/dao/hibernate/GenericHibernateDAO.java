@@ -40,6 +40,11 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
         return persistentClass;
     }
 
+    public int count() {
+        Query q = getSession().createQuery("select count(*) from " + persistentClass.getName());
+        return ((Long) q.uniqueResult()).intValue();
+    }
+
     @SuppressWarnings("unchecked")
     public List<T> find(int startRow, int count) {
         Query q = getSession().createQuery("from " + persistentClass.getName());
