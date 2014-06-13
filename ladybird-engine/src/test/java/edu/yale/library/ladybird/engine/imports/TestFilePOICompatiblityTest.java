@@ -1,4 +1,4 @@
-package edu.yale.library.ladybird.engine;
+package edu.yale.library.ladybird.engine.imports;
 
 
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -12,9 +12,9 @@ import java.util.Iterator;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Exercises general Excel reading. The test is meant for testing the format of the test file.
+ * Meant for testing whether the test file can be read with POI.
  */
-public class GenericExcelReaderTest {
+public class TestFilePOICompatiblityTest {
 
     private static class TestFileConstants {
         static final String TEST_XLS_FILE = "excel/4654-pt1-READY-FOR-INGEST-A.xlsx";

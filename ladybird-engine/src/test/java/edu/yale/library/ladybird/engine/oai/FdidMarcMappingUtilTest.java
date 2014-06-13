@@ -1,13 +1,11 @@
-import edu.yale.library.ladybird.engine.FdidMarcMappingUtil;
-import edu.yale.library.ladybird.engine.oai.Marc21Field;
+package edu.yale.library.ladybird.engine.oai;
+
 import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.FieldMarcMapping;
 import edu.yale.library.ladybird.entity.FieldMarcMappingBuilder;
 import edu.yale.library.ladybird.persistence.dao.FieldMarcMappingDAO;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +14,6 @@ import java.util.List;
  *
  */
 public class FdidMarcMappingUtilTest {
-
-    private Logger logger = LoggerFactory.getLogger(FdidMarcMappingUtil.class);
 
     @Test
     public void shouldGetMarc21Field() {

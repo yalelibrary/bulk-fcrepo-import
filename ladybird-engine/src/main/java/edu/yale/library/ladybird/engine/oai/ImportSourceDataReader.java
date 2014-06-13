@@ -1,4 +1,4 @@
-package edu.yale.library.ladybird.engine.imports;
+package edu.yale.library.ladybird.engine.oai;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;
@@ -6,13 +6,6 @@ import com.google.common.collect.Multimap;
 import edu.yale.library.ladybird.engine.model.LocalIdMarcImportSource;
 import edu.yale.library.ladybird.engine.model.LocalIdMarcValue;
 import edu.yale.library.ladybird.engine.model.LocalIdentifier;
-import edu.yale.library.ladybird.engine.oai.DatafieldType;
-import edu.yale.library.ladybird.engine.oai.Marc21Field;
-import edu.yale.library.ladybird.engine.oai.MarcReadingException;
-import edu.yale.library.ladybird.engine.oai.OaiHttpClient;
-import edu.yale.library.ladybird.engine.oai.OaiProvider;
-import edu.yale.library.ladybird.engine.oai.Record;
-import edu.yale.library.ladybird.engine.oai.SubfieldType;
 import edu.yale.library.ladybird.entity.ImportSourceData;
 import edu.yale.library.ladybird.entity.ImportSourceDataBuilder;
 import edu.yale.library.ladybird.persistence.dao.ImportSourceDataDAO;
@@ -44,15 +37,15 @@ public class ImportSourceDataReader {
     /**
      * Hits OAI feed and gets a Record. A multimap is then used to relate the record's data to the local identifier.
      *
-     * @param bibIds list of LocalIdentifier (bibids or barcodes)
+     * @param localIdentifierList list of LocalIdentifier (bibids or barcodes)
      * @return List<LocalIdMarcImportSource> a list of data structures containing the mappings. Ignores exception.
      */
     public List<LocalIdMarcImportSource> readMarc(final OaiProvider oaiProvider,
-                                                  final List<LocalIdentifier<String>> bibIds,
+                                                  final List<LocalIdentifier<String>> localIdentifierList,
                                                   final int importId) {
         final List<LocalIdMarcImportSource> list = new ArrayList<>();
 
-        for (final LocalIdentifier<String> localId : bibIds) {
+        for (final LocalIdentifier<String> localId : localIdentifierList) {
             final OaiHttpClient oaiClient = new OaiHttpClient(oaiProvider);
             try {
                 logger.trace("Reading marc feed for local identifier={}", localId.getId());

@@ -1,11 +1,13 @@
 package edu.yale.library.ladybird.engine.imports;
 
 import com.google.common.collect.Multimap;
-import edu.yale.library.ladybird.engine.FdidMarcMappingUtil;
+import edu.yale.library.ladybird.engine.Util;
+import edu.yale.library.ladybird.engine.oai.FdidMarcMappingUtil;
 import edu.yale.library.ladybird.engine.model.FieldConstantRules;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.engine.model.LocalIdMarcImportSource;
 import edu.yale.library.ladybird.engine.model.LocalIdentifier;
+import edu.yale.library.ladybird.engine.oai.ImportSourceDataReader;
 import edu.yale.library.ladybird.engine.oai.Marc21Field;
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
 import edu.yale.library.ladybird.entity.FieldConstant;
@@ -14,8 +16,6 @@ import edu.yale.library.ladybird.entity.FieldMarcMappingBuilder;
 import edu.yale.library.ladybird.entity.ImportSourceData;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -23,7 +23,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -44,11 +43,10 @@ public class ImportWriterTest {
         assert (!fieldConstantRules.isOAIFunction(column2));
     }
 
-
     @Test
     public void shouldContainBibIdMarcTags() {
         final ImportWriter importWriter = new ImportWriter();
-        final PropUtil util = new PropUtil();
+        final Util util = new Util();
         final OaiProvider provider = new OaiProvider("id",
                 util.getProperty("oai_test_url_prefix"),
                 util.getProperty("oai_url_id"));
@@ -105,37 +103,6 @@ public class ImportWriterTest {
        assert (marc21FieldMap.get(Marc21Field._520) == fieldMarcMapping2);
 
        assert (marc21FieldMap.size() == 2);
-    }
-
-    /**
-     * General utility. Subject to removal.
-     */
-    public class PropUtil {
-        final Properties prop;
-
-        {
-            prop = new Properties();
-            InputStream input = null;
-
-            try {
-                input = PropUtil.class.getResourceAsStream("/ladybird.properties");
-                prop.load(input);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (input != null) {
-                    try {
-                        input.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-
-        public String getProperty(String p) {
-            return prop.getProperty(p);
-        }
     }
 
 }

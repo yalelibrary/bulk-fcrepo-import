@@ -16,8 +16,6 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectAcidHibernateDA
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -26,7 +24,6 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class ObjectWriterIT extends AbstractDBTest {
-    private Logger logger = LoggerFactory.getLogger(ObjectWriterIT.class);
 
     @Before
     public void init() {
@@ -90,7 +87,7 @@ public class ObjectWriterIT extends AbstractDBTest {
 
         rowList.add(contentRow);
 
-        //3. Init Object
+        //3. Init Object:
         ImportEntityContext importEntityContext = new ImportEntityContext();
         importEntityContext.setMonitor(monitor);
         importEntityContext.setImportJobList(rowList);
@@ -100,13 +97,9 @@ public class ObjectWriterIT extends AbstractDBTest {
         objectWriter.write(importEntityContext);
 
         // Now verify:
-
         ObjectAcidDAO objectAcidDAO = new ObjectAcidHibernateDAO();
         List<ObjectAcid> objectAcidList = objectAcidDAO.findAll();
         assertEquals("Value mismatch", objectAcidList.size(), 1);
-
-        logger.debug(objectAcidList.toString());
-
 
         ObjectAcid objectAcid = objectAcidList.get(0);
 
@@ -114,7 +107,6 @@ public class ObjectWriterIT extends AbstractDBTest {
         assertEquals("Value mismatch", objectAcid.getValue(), 1);
 
         //Verify the value of this acid:
-
         AuthorityControlDAO authorityControlDAO = new AuthorityControlHibernateDAO();
         AuthorityControl acid = authorityControlDAO.findByAcid(1);
 

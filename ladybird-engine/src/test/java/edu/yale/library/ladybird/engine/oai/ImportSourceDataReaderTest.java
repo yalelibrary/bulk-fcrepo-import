@@ -1,9 +1,7 @@
-package edu.yale.library.ladybird.engine.imports;
+package edu.yale.library.ladybird.engine.oai;
 
 import com.google.common.collect.Multimap;
 import edu.yale.library.ladybird.engine.model.LocalIdentifier;
-import edu.yale.library.ladybird.engine.oai.Marc21Field;
-import edu.yale.library.ladybird.engine.oai.Record;
 import edu.yale.library.ladybird.entity.ImportSourceData;
 import edu.yale.library.ladybird.entity.ImportSourceDataBuilder;
 import org.junit.Test;
@@ -16,9 +14,6 @@ import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 
-/**
- *
- */
 public class ImportSourceDataReaderTest {
 
     @Test

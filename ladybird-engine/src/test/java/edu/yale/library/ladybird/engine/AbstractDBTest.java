@@ -5,9 +5,6 @@ import edu.yale.library.ladybird.kernel.ServicesManager;
 
 import java.sql.SQLException;
 
-/**
- *
- */
 public class AbstractDBTest {
 
     private ServicesManager servicesManager;
@@ -16,14 +13,14 @@ public class AbstractDBTest {
     protected void init() {
         servicesManager = new ServicesManager();
 
-        if (dbInit == false) {
+        if (!dbInit) {
             servicesManager.initDB();
             dbInit = true;
         }
     }
 
     protected void stop() throws SQLException {
-        if (dbInit == true) {
+        if (dbInit) {
             servicesManager.stopDB();
             dbInit = false;
         }

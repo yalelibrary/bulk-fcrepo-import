@@ -1,7 +1,6 @@
-package edu.yale.library.ladybird.engine;
+package edu.yale.library.ladybird.engine.oai;
 
 import edu.yale.library.ladybird.engine.model.FieldConstantRules;
-import edu.yale.library.ladybird.engine.oai.Marc21Field;
 import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.entity.FieldMarcMapping;
 import edu.yale.library.ladybird.entity.FieldMarcMappingBuilder;

@@ -4,8 +4,6 @@ package edu.yale.library.ladybird.engine.imports;
 import edu.yale.library.ladybird.engine.oai.Record;
 import it.svario.xpathapi.jaxp.XPathAPI;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -22,13 +20,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
- * Test against a document
+ * Tests against a document
  */
-public class Marc21ReaderTest {
-    private Logger logger = LoggerFactory.getLogger(Marc21ReaderTest.class);
+public class Marc21ReadingTest {
 
     @Test
-    public void readContents() {
+    public void shouldReadContents() {
         try {
             final InputStream is = this.getClass().getClassLoader().getResourceAsStream("oai/marc21_doc.xml");
             assert (is != null);
@@ -45,7 +42,7 @@ public class Marc21ReaderTest {
      * Tests full feed, and extract marc:record element
      */
     @Test
-    public void testDataFieldsUnMarshalling() {
+    public void shouldUnmarshallDataFields() {
         try {
             final DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
             domFactory.setNamespaceAware(true);

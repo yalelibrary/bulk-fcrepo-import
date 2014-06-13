@@ -14,6 +14,7 @@ import edu.yale.library.ladybird.engine.imports.ImportRequestEvent;
 import edu.yale.library.ladybird.engine.imports.MediaFunctionProcessor;
 import edu.yale.library.ladybird.engine.imports.ReadMode;
 import edu.yale.library.ladybird.engine.imports.SpreadsheetFile;
+import edu.yale.library.ladybird.engine.oai.ImportSourceProcessor;
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
 import edu.yale.library.ladybird.entity.ImportSource;
 import edu.yale.library.ladybird.entity.Settings;
@@ -63,12 +64,10 @@ public class DefaultImportJob implements Job, ImportJob {
             //TODO provide
             final OaiProvider provider = getCtxOaiProvider();
             importEngine.setOaiProvider(provider);
-            logger.debug("Set OAI Provider={}", provider);
-
-            //TODO provide
             //passes relative path for each import job. This is provided by the user on each run. The root path is set application wide.
             final MediaFunctionProcessor mediaFunctionProcessor = getCtxMediaFunctionProcessor(importRequestedEvent.getMonitor().getExportPath());
             importEngine.setMediaFunctionProcessor(mediaFunctionProcessor);
+            importEngine.setImportSourceProcessor(new ImportSourceProcessor());
 
             logger.debug("Writing to import table(s)");
 
@@ -77,8 +76,6 @@ public class DefaultImportJob implements Job, ImportJob {
             logger.debug("[end] Completed import (writing) job in {}", DurationFormatUtils.formatDuration(System.currentTimeMillis() - startTime, "HH:mm:ss:SS"));
 
             final Event importEvent = new ImportCompleteEventBuilder().setRowsProcessed(rowList.size()).createImportDoneEvent();
-
-            logger.debug("Adding import event and notifying all registered users");
 
             //Post progress
             ExportBus.postEvent(new ExportProgressEvent(importEvent, importRequestedEvent.getMonitor().getId())); //TODO consolidate
@@ -106,12 +103,11 @@ public class DefaultImportJob implements Job, ImportJob {
     }
 
     /**
-     * Returns OAI provider. Subject to removal.
+     * Returns OAI provider. Subject to removal (when oai provider is avaialable via some sort of context).
      * Note: returns the 1st provider with status active.
      * @return
      */
     private OaiProvider getCtxOaiProvider() {
-        //Note: Full list is importted. This will be removed when some sort of ctx is available.
         final ImportSourceDAO importSourceDAO = new ImportSourceHibernateDAO();
         final List<ImportSource> importSourceList = importSourceDAO.findAll();
 

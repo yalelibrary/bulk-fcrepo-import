@@ -23,11 +23,12 @@ public class DefaultImportEngine extends AbstractImportEngine {
 
     @Override
     public int doWrite(final List<ImportEntity.Row> list) {
-        logger.debug("Initiating write");
+        logger.debug("Initiating write, size={}", list.size());
 
         ImportWriter importWriter = new ImportWriter();
         importWriter.setOaiProvider(oaiProvider);  //TODO
         importWriter.setMediaFunctionProcessor(mediaFunctionProcessor); //TODO
+        importWriter.setImportSourceProcessor(importSourceProcessor); //TODO
 
         ImportEntityValue importEntityValue = new ImportEntityValue(list);
         try {

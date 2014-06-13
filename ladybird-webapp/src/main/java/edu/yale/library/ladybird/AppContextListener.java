@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird;
 
 import edu.yale.library.ladybird.engine.ExportBus;
-import edu.yale.library.ladybird.engine.FdidMarcMappingUtil;
+import edu.yale.library.ladybird.engine.oai.FdidMarcMappingUtil;
 import edu.yale.library.ladybird.kernel.KernelBootstrap;
 import edu.yale.library.ladybird.persistence.dao.hibernate.FieldMarcMappingHibernateDAO;
 

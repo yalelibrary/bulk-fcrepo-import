@@ -2,9 +2,9 @@ package edu.yale.library.ladybird.engine.exports;
 
 import com.google.common.collect.Multimap;
 import edu.yale.library.ladybird.engine.AbstractDBTest;
-import edu.yale.library.ladybird.engine.FdidMarcMappingUtil;
+import edu.yale.library.ladybird.engine.oai.FdidMarcMappingUtil;
 import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
-import edu.yale.library.ladybird.engine.imports.ImportSourceDataReader;
+import edu.yale.library.ladybird.engine.oai.ImportSourceDataReader;
 import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.engine.model.FieldConstantRules;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
@@ -19,8 +19,6 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.FieldMarcMappingHiber
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -35,7 +33,6 @@ import static org.junit.Assert.assertEquals;
  */
 public class ExportReaderIT extends AbstractDBTest {
 
-    private Logger logger = LoggerFactory.getLogger(ExportReaderIT.class);
 
     //TODO
     @Test

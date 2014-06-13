@@ -12,9 +12,6 @@ import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 
-/**
- *
- */
 public class LocalIdMarcValueTest {
 
     @Test

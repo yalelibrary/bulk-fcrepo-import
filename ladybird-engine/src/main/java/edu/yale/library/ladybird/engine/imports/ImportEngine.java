@@ -2,6 +2,7 @@ package edu.yale.library.ladybird.engine.imports;
 
 
 import edu.yale.library.ladybird.engine.DefaultFieldDataValidator;
+import edu.yale.library.ladybird.engine.oai.ImportSourceProcessor;
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
 
 import java.io.IOException;
@@ -21,5 +22,7 @@ public interface ImportEngine {
     void setOaiProvider(OaiProvider oaiProvider);
 
     void setMediaFunctionProcessor(MediaFunctionProcessor mediaFunctionProcessor);
+
+    void setImportSourceProcessor(ImportSourceProcessor importSourceProcessor);
 
 }

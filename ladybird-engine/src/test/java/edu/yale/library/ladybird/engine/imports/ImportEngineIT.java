@@ -2,15 +2,13 @@ package edu.yale.library.ladybird.engine.imports;
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
 import edu.yale.library.ladybird.engine.DefaultFieldDataValidator;
-import edu.yale.library.ladybird.engine.FieldDefinitionInitializer;
 import edu.yale.library.ladybird.engine.TestModule;
 import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
 import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
 import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
-import edu.yale.library.ladybird.entity.FieldConstant;
-import edu.yale.library.ladybird.entity.FieldDefinition;
+import edu.yale.library.ladybird.engine.oai.ImportSourceProcessor;
 import edu.yale.library.ladybird.entity.ImportJob;
 import edu.yale.library.ladybird.entity.ImportJobContents;
 import edu.yale.library.ladybird.entity.ImportJobExhead;
@@ -25,17 +23,12 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 
@@ -44,11 +37,6 @@ import static org.junit.Assert.assertEquals;
  * Tests full cycle for read/write import/export.
  */
 public class ImportEngineIT extends AbstractDBTest {
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    /* Contains test fdids corresponding to test excel file (instead of via db) */
-    private static final String FDID_TEST_PROPS_FILE = "/fdids.test.properties";
 
     @Deprecated
     private static final String XLS_FILE_TO_WRITE = asTmp("test_export.xlsx");
@@ -59,32 +47,28 @@ public class ImportEngineIT extends AbstractDBTest {
      * @throws Exception
      */
     @Test
-    public void execute() throws Exception {
+    public void shouldRunFullCycle() throws Exception {
 
         KernelBootstrap kernelBootstrap = new KernelBootstrap();
         kernelBootstrap.setAbstractModule(new TestModule());
 
-        setApplicationData(); //TODO tmp. Inst app. rules for test (since db state is cleaned)
+        initFdids(); //TODO tmp. Inst app. rules for test (since db state is cleaned)
 
         final ImportEngine importEngine = new DefaultImportEngine();
+        importEngine.setImportSourceProcessor(new ImportSourceProcessor()); //TODO
 
-        logger.debug("Reading test spreadsheet rows");
         final List<ImportEntity.Row> rows = importEngine.read(getImportSpreadsheeet(), ReadMode.FULL,
                 new DefaultFieldDataValidator());
-        logger.debug("Read spreadseet rows");
 
         assertEquals("Rows size mismatch", rows.size(), FileConstants.ROW_COUNT);
         assertEquals("Columns size mismatch", rows.get(0).getColumns().size(), FileConstants.COL_COUNT);
         assertEquals("Column value mismatch", rows.get(1).getColumns().get(4).getValue(), "Gilchrist, Scott");
 
-        logger.debug("Writing rows to tables");
         final int imid = importEngine.write(rows);
 
         /* Add request for export */
         final ExportRequestEvent exportEvent = new ExportRequestEvent(imid);
         ExportEngineQueue.addJob(exportEvent);
-
-        logger.debug("Added event=" + exportEvent.toString());
 
         //Now read back:
 
@@ -113,55 +97,43 @@ public class ImportEngineIT extends AbstractDBTest {
         /* Test Export */
         final ExportEngine exportEngine = new DefaultExportEngine();
 
-        logger.debug("Export engine reading import tables");
         final ImportEntityContext importEntityContext = exportEngine.read();
 
         final List<ImportEntity.Row> listExportRows = importEntityContext.getImportJobList();
 
         assert (listExportRows != null);
-        logger.debug("Size={}", listExportRows.size());
         assertEquals("Export rows don't equal import expected rows", listExportRows.size(), 78);
 
         //write this spreadsheet
         exportEngine.write(listExportRows, XLS_FILE_TO_WRITE);
 
         //again, read back:
-        logger.debug("Reading the new test spreadsheet created by ExportEngine with ImportEngine");
         final List<ImportEntity.Row> rowsReadBack = importEngine.read(getExportSpreadsheeet(), ReadMode.FULL,
                 new DefaultFieldDataValidator());
         assertEquals("Rows size mismatch", rowsReadBack.size(), 78);
     }
 
-    /**
-     * Utility to create SpreadsheetFile
-     * @return a SpreadsheetFile instance
-     * @see edu.yale.library.ladybird.engine.imports.SpreadsheetFile
-     */
+
     public SpreadsheetFile getImportSpreadsheeet() {
-        final SpreadsheetFile file = new SpreadsheetFileBuilder().setFileName(FileConstants.TEST_XLS_FILE)
+        return new SpreadsheetFileBuilder().setFileName(FileConstants.TEST_XLS_FILE)
                 .setAltName("Test spreadsheet")
                 .setPath(FileConstants.TEST_XLS_FILE)
                 .setFileStream(getClass().getClassLoader().getResourceAsStream(FileConstants.TEST_XLS_FILE))
                 .createSpreadsheetFile();
-        return file;
     }
 
     public SpreadsheetFile getExportSpreadsheeet() throws FileNotFoundException {
         final String testPath = System.getProperty("java.io.tmpdir")
                 + System.getProperty("file.separator") + "test_export.xlsx";
-        SpreadsheetFile file = new SpreadsheetFileBuilder().setFileName("test_export_xlsx")
+        return new SpreadsheetFileBuilder().setFileName("test_export_xlsx")
                 .setAltName("Test export xls")
                 .setPath(testPath)
                 .setFileStream(new FileInputStream(testPath))
                 .createSpreadsheetFile();
-        return file;
     }
 
-    /**
-     * Sets business logic data
-     */
-    private void setApplicationData() {
-        //initFieldDefMap(); //set default fdids
+
+    private void initFdids() {
         try {
             FieldDefinitionInitializer fieldDefinitionInitializer = new FieldDefinitionInitializer();
             fieldDefinitionInitializer.setInitialFieldDefinitionDb();
@@ -172,47 +144,14 @@ public class ImportEngineIT extends AbstractDBTest {
     }
 
      /**
-     * Helps in initing fdids via a tex tfile
-     *
-     * @return
-     * @throws java.io.IOException
-     * @throws NullPointerException
-     */
-    private Map<String, FieldConstant> getTextFieldDefsMap() throws IOException {
-        Map<String, FieldConstant> fdidsMap = new HashMap<>();
-
-        final Properties properties = new Properties();
-        properties.load(this.getClass().getResourceAsStream(FDID_TEST_PROPS_FILE));
-
-        for (final String fdidInt : properties.stringPropertyNames()) {
-            //TODO put Int as key?
-            fdidsMap.put(properties.getProperty(fdidInt), getFdid(Integer.parseInt(fdidInt),
-                    properties.getProperty(fdidInt)));
-        }
-
-        //test file entries should equal the number of spreadsheet columns:
-        assertEquals("Wrong number of test fdids", fdidsMap.size(),
-                FileConstants.FDID_COL_COUNT);
-
-        return fdidsMap;
-    }
-
-    //TODO remove
-    private FieldDefinition getFdid(int fdid, String s) {
-        return new FieldDefinition(fdid, s);
-    }
-
-    /**
      * Test file constants
      */
     private class FileConstants {
         static final String TEST_XLS_FILE = "4654-pt1-READY-FOR-INGEST-A.xlsx";
         static final int ROW_COUNT = 78;
-        static final int COL_COUNT = 31; //Actual number
-        static final int FDID_COL_COUNT = 30; //COL_COUNT (regular fdids) minus a FunctionConstants (F1)
+        static final int COL_COUNT = 31;
     }
 
-    /* Creates the file in the user home directory. */
     @Deprecated
     private static String asTmp(final String s) {
         return System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + s;

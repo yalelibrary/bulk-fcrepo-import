@@ -11,9 +11,6 @@ import java.util.List;
 
 import static org.junit.Assert.fail;
 
-/**
- *
- */
 public class ExportWriterTest {
 
     @Test

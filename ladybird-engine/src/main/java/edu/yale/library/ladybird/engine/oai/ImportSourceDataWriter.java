@@ -1,8 +1,7 @@
-package edu.yale.library.ladybird.engine.imports;
+package edu.yale.library.ladybird.engine.oai;
 
 import com.google.common.collect.Multimap;
 import edu.yale.library.ladybird.engine.model.LocalIdMarcImportSource;
-import edu.yale.library.ladybird.engine.oai.Marc21Field;
 import edu.yale.library.ladybird.entity.ImportSourceData;
 import edu.yale.library.ladybird.persistence.dao.ImportSourceDataDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceDataHibernateDAO;
@@ -13,7 +12,7 @@ import java.util.Set;
 
 /**
  * Persists MARC related data to import source data tables
- * @see ImportSourceDataReader
+ * @see edu.yale.library.ladybird.engine.oai.ImportSourceDataReader
  */
 public class ImportSourceDataWriter {
 
