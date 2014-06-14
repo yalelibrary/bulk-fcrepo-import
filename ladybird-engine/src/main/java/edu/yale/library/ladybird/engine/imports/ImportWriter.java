@@ -123,6 +123,11 @@ public class ImportWriter {
                 publishHydraPointer(importEntityValue);
             }
 
+            //Process F00
+            if (importEntityValue.hasFunction(FunctionConstants.F00)) {
+                processDelete(importEntityValue);
+            }
+
             //Save all to DB table import job contents (N.B. f104/f105 column(s) also persisted):
             for (int i = 0; i < rowList.size(); i++) {
                 final ImportEntity.Row row = rowList.get(i);
@@ -180,5 +185,10 @@ public class ImportWriter {
     public void publishHydraPointer(ImportEntityValue importEntityValue) {
         HydraPointerProcessor hydraPointerProcessor = new HydraPointerProcessor();
         hydraPointerProcessor.write(importEntityValue);
+    }
+
+    public void processDelete(ImportEntityValue importEntityValue) {
+        DeleteProcessor deleteProcessor = new DeleteProcessor();
+        deleteProcessor.process(importEntityValue);
     }
 }

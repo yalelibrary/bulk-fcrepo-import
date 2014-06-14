@@ -56,7 +56,12 @@ public enum FunctionConstants implements FieldConstant {
     /**
      * oid pointer
      */
-    F11("F11", "oid-pointer");
+    F11("F11", "oid-pointer"),
+
+    /**
+     * Deletes
+     */
+    F00("F00", "oid-delete");
 
     private String name;
     private String title;
