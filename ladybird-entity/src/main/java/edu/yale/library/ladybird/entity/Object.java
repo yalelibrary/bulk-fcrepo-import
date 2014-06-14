@@ -12,6 +12,7 @@ public class Object implements java.io.Serializable {
     private Integer oid;
     private int projectId;
     private Date date;
+    private int roid;
 
     public Object() {
     }
@@ -49,12 +50,21 @@ public class Object implements java.io.Serializable {
         this.date = date;
     }
 
+    public int getRoid() {
+        return roid;
+    }
+
+    public void setRoid(final int roid) {
+        this.roid = roid;
+    }
+
     @Override
     public String toString() {
         return "Object{"
                 + "oid=" + oid
                 + ", projectId=" + projectId
                 + ", date=" + date
+                + ", roid=" + roid
                 + '}';
     }
 }

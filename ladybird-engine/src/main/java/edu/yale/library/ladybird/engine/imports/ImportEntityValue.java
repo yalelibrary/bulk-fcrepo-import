@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -238,6 +239,17 @@ public class ImportEntityValue {
             }
         }
         return "";
+    }
+
+    public boolean hasFunction(FunctionConstants... f) {
+        BitSet bitSet = new BitSet(f.length);
+
+        for (int i = 0; i < f.length; i++) {
+            if (fieldConstantsInExhead(f[i])) {
+                bitSet.set(i);
+            }
+        }
+        return bitSet.cardinality() == f.length;
     }
 
 

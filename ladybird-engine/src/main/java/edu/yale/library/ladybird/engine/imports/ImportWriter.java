@@ -105,8 +105,7 @@ public class ImportWriter {
             }
 
             //Process F3 with F1
-            if (importEntityValue.fieldConstantsInExhead(FunctionConstants.F3)
-                    && importEntityValue.fieldConstantsInExhead(FunctionConstants.F1)) {
+            if (importEntityValue.hasFunction(FunctionConstants.F3, FunctionConstants.F1)) {
                 final int f3ColumnNum = importEntityValue.getFunctionPosition(FunctionConstants.F3);
                 final int f1columnNum = importEntityValue.getFunctionPosition(FunctionConstants.F1);
                 mediaFunctionProcessor.process(importId, rowList, f3ColumnNum, f1columnNum);
@@ -114,9 +113,14 @@ public class ImportWriter {
             }
 
             //Process F40 (hydra publishing staging)
-            if (importEntityValue.fieldConstantsInExhead(FunctionConstants.F40)
-                    && importEntityValue.fieldConstantsInExhead(FunctionConstants.F1)) {
+            if (importEntityValue.hasFunction(FunctionConstants.F40, FunctionConstants.F1)) {
                 publishHydra(importEntityValue);
+            }
+
+            //Process F11
+            if (importEntityValue.hasFunction(FunctionConstants.F11, FunctionConstants.F1)) {
+                //TODO check value is oid in this project
+                publishHydraPointer(importEntityValue);
             }
 
             //Save all to DB table import job contents (N.B. f104/f105 column(s) also persisted):
@@ -171,6 +175,10 @@ public class ImportWriter {
     public void publishHydra(ImportEntityValue importEntityValue) {
         HydraProcessor hydraProcessor = new HydraProcessor();
         hydraProcessor.write(importEntityValue);
+    }
 
+    public void publishHydraPointer(ImportEntityValue importEntityValue) {
+        HydraPointerProcessor hydraPointerProcessor = new HydraPointerProcessor();
+        hydraPointerProcessor.write(importEntityValue);
     }
 }

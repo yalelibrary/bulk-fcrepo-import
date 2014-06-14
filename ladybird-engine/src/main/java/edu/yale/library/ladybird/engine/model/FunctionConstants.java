@@ -51,8 +51,12 @@ public enum FunctionConstants implements FieldConstant {
     /**
      * places objects into hydra table for staging into hydra_publish
      */
-    F40("F40", "Hydra-Publish-Staging");
+    F40("F40", "Hydra-Publish-Staging"),
 
+    /**
+     * oid pointer
+     */
+    F11("F11", "oid-pointer");
 
     private String name;
     private String title;

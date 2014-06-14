@@ -35,9 +35,10 @@
         <property name="bparent" type="string">
             <column name="bparent" length="1" not-null="true" />
         </property>
-        <property name="roid" type="int">
-            <column name="_roid" not-null="true" />
-        </property>
         -->
+
+        <property name="roid" type="int">
+            <column name="roid"/>
+        </property>
     </class>
 </hibernate-mapping>

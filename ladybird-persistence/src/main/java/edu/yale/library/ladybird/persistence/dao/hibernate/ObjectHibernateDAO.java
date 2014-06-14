@@ -15,7 +15,7 @@ public class ObjectHibernateDAO extends GenericHibernateDAO<Object, Integer> imp
         final Query q = getSession().createQuery("from edu.yale.library.ladybird.entity.Object where oid = :param");
         q.setParameter("param", oid);
         final List<Object> list = q.list();
-        return list.get(0);
+        return list.isEmpty() ? null : list.get(0);
     }
 }
 

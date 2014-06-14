@@ -38,6 +38,7 @@ public class ObjectDaoTest extends AbstractPersistenceTest {
     @Test
     public void testSave() {
         final Object item = build();
+        item.setRoid(1);
         List list = null;
         try {
             dao.save(item);
@@ -50,6 +51,7 @@ public class ObjectDaoTest extends AbstractPersistenceTest {
         assertEquals("Item count incorrect", list.size(), 1);
         final Object o = (Object) list.get(0);
         assertEquals("Value mismatch", o.getProjectId(), 1);
+        assertEquals("Value mismatch", o.getRoid(), 1);
     }
 
     private Object build() {

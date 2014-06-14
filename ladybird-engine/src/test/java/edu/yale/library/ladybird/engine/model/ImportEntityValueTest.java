@@ -152,9 +152,26 @@ public class ImportEntityValueTest {
         }
     }
 
+    @Test
+    public void shouldGetMultipleFunctions() {
+        ImportEntityValue importEntityValue = getTestTripleEntityValue();
+        assert (importEntityValue.hasFunction(FunctionConstants.F1, FunctionConstants.F40, FunctionConstants.F104) == true);
+    }
+
     private ImportEntityValue getTestSingleColumnRowImportEntityValue() {
         final List<ImportEntity.Column> columns = new ArrayList<>();
         columns.add(getTestColumn(FunctionConstants.F1, "333993"));
+        final Row row = getTestRow(columns);
+        final ImportEntityValue importEntityValue = new ImportEntityValue(Collections.singletonList(row));
+        return importEntityValue;
+    }
+
+    private ImportEntityValue getTestTripleEntityValue() {
+        final List<ImportEntity.Column> columns = new ArrayList<>();
+        columns.add(getTestColumn(FunctionConstants.F1, "333993"));
+        columns.add(getTestColumn(FunctionConstants.F40, "DELETE"));
+        columns.add(getTestColumn(FunctionConstants.F104, "11"));
+
         final Row row = getTestRow(columns);
         final ImportEntityValue importEntityValue = new ImportEntityValue(Collections.singletonList(row));
         return importEntityValue;
