@@ -104,12 +104,17 @@ public class ImportWriter {
                 logger.debug("Done media processing.");
             }
 
-            //Process F3 with F1
+            //Process F3
             if (importEntityValue.hasFunction(FunctionConstants.F3, FunctionConstants.F1)) {
                 final int f3ColumnNum = importEntityValue.getFunctionPosition(FunctionConstants.F3);
                 final int f1columnNum = importEntityValue.getFunctionPosition(FunctionConstants.F1);
                 mediaFunctionProcessor.process(importId, rowList, f3ColumnNum, f1columnNum);
                 logger.debug("Done media processing.");
+            }
+
+            //Process F300
+            if (importEntityValue.hasFunction(FunctionConstants.F300, FunctionConstants.F1))  {
+                processImageReference(importEntityValue);
             }
 
             //Process F40 (hydra publishing staging)
@@ -190,5 +195,10 @@ public class ImportWriter {
     public void processDelete(ImportEntityValue importEntityValue) {
         DeleteProcessor deleteProcessor = new DeleteProcessor();
         deleteProcessor.process(importEntityValue);
+    }
+
+    public void processImageReference(ImportEntityValue importEntityValue) {
+        ImageReferenceProcessor imageReferenceProcessor = new ImageReferenceProcessor();
+        imageReferenceProcessor.write(importEntityValue);
     }
 }
