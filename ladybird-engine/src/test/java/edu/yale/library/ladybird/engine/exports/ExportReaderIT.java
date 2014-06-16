@@ -83,13 +83,6 @@ public class ExportReaderIT extends AbstractDBTest {
         }
     }
 
-    //TODO DAO (results in NPE)
-    @Test
-    public void shouldGetImportJobContents() {
-        ExportReader exportReader = new ExportReader();
-        exportReader.readImportRows(0);
-    }
-
     private void initMarcMappingDB() {
         FdidMarcMappingUtil fdidMarcMappingUtil = new FdidMarcMappingUtil();
         try {

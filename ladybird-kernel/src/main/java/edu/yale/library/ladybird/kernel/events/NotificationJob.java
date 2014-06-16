@@ -28,8 +28,15 @@ public class NotificationJob extends AbstractNotificationJob implements Job {
 
     public void execute(JobExecutionContext ctx) throws JobExecutionException {
         NotificationEventQueue.NotificationItem notificationItem = NotificationEventQueue.getLastEvent();
-        Event event = notificationItem.getE();  //FIXME  see javadoc comment
-        User user = notificationItem.getUsers().get(0); //FIXME; could be multimpe users
+        Event event = null;  //FIXME  see javadoc comment
+        User user = null;
+        try {
+            event = notificationItem.getE();
+            user = notificationItem.getUsers().get(0); //TODO could be multimpe users
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
 
         if (event == null || user == null) { //FIXME
             return;
@@ -40,7 +47,7 @@ public class NotificationJob extends AbstractNotificationJob implements Job {
             notificationHandler.notifyUser(user, event); //todo actual/more params
             logger.trace("Notification sent.");
         } catch (Exception e) {
-            e.printStackTrace(); //todo
+            logger.error(e.getMessage());
         }
     }
 }
