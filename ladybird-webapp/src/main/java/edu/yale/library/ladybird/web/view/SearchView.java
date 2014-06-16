@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -22,14 +22,14 @@ import java.util.List;
  *
  */
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class SearchView extends AbstractView {
 
     private Logger logger = LoggerFactory.getLogger(SearchView.class);
 
     private int oid;
 
-    private List<edu.yale.library.ladybird.entity.Object> itemList;
+    private List<Object> itemList;
 
     @Inject
     ObjectDAO objectDAO;
@@ -50,11 +50,11 @@ public class SearchView extends AbstractView {
         this.oid = oid;
     }
 
-    public List<edu.yale.library.ladybird.entity.Object> getItemList() {
+    public List<Object> getItemList() {
         return itemList;
     }
 
-    public void setItemList(List<edu.yale.library.ladybird.entity.Object> itemList) {
+    public void setItemList(List<Object> itemList) {
         this.itemList = itemList;
     }
 
@@ -67,6 +67,7 @@ public class SearchView extends AbstractView {
 
             final Object o = objectDAO.findByOid(oid);
             itemList = Collections.singletonList(o);
+            //logger.debug("List size={}", itemList.toString());
             return NavigationCase.OK.toString();
         } catch (Exception e) {
             logger.error(e.getMessage());

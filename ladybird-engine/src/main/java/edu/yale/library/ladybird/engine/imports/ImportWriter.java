@@ -42,9 +42,10 @@ public class ImportWriter {
      * @param importJobRequest Job Context
      * @return Import Id
      */
-    public int write(final ImportEntityValue importEntityValue, final ImportJobRequest importJobRequest) throws Exception {
+    public int write(ImportEntityValue importEntityValue, final ImportJobRequest importJobRequest) throws Exception {
         try {
             final int importId = writeImportJob(importJobRequest);
+            importEntityValue = writeF1(importEntityValue);
             writeExHead(importId, importEntityValue.getHeaderRow().getColumns());
             writeContents(importId, importEntityValue);
             return importId;
@@ -52,6 +53,14 @@ public class ImportWriter {
             logger.error("Error writing.", e);
             throw e;
         }
+    }
+
+    private ImportEntityValue writeF1(ImportEntityValue importEntityValue) {
+        //Process F1
+        if (!importEntityValue.fieldConstantsInExhead(FunctionConstants.F1)) {
+            return processF1(importEntityValue);
+        }
+        return importEntityValue;
     }
 
     /**
@@ -90,8 +99,6 @@ public class ImportWriter {
             final List<ImportEntity.Row> rowList = importEntityValue.getContentRows();
             logger.trace("Writing spreadsheet body contents. Row list size={}", rowList.size());
 
-
-            //Process F1
             if (importEntityValue.fieldConstantsInExhead(FunctionConstants.F1)) {
                 final int columnWithF1Field = importEntityValue.getFunctionPosition(FunctionConstants.F1);
             }
@@ -200,5 +207,10 @@ public class ImportWriter {
     public void processImageReference(ImportEntityValue importEntityValue) {
         ImageReferenceProcessor imageReferenceProcessor = new ImageReferenceProcessor();
         imageReferenceProcessor.write(importEntityValue);
+    }
+
+    private ImportEntityValue processF1(ImportEntityValue importEntityValue) {
+        OidMinter oidMinter = new OidMinter();
+        return oidMinter.write(importEntityValue);
     }
 }

@@ -20,7 +20,7 @@
 
                     <p:dataTable id="ObjectDatatable" value="#{searchView.itemList}"
                                  var="item" paginator="true" rows="10"
-                                 tableStyle="" paginatorPosition="bottom"
+                                 paginatorPosition="bottom"
                                  editable="false">
 
                         <p:column>
@@ -35,12 +35,14 @@
                             </f:facet>
                             <h:outputText value="#{item.projectId}"/>
                         </p:column>
+                        <!--
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="User"/>
                             </f:facet>
                             <h:outputText value="#{item.userId}"/>
                         </p:column>
+                        -->
                     </p:dataTable>
 
                 </div>

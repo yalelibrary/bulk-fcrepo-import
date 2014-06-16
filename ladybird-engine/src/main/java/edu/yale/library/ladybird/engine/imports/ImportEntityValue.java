@@ -31,6 +31,14 @@ public class ImportEntityValue {
         this.rowList = rowList;
     }
 
+    public List<Row> getRowList() {
+        return rowList;
+    }
+
+    public void setRowList(final List<Row> rowList) {
+        this.rowList = rowList;
+    }
+
     /**
      * Get all specific column values.
      * @param columnNum column number
@@ -193,11 +201,26 @@ public class ImportEntityValue {
     }
 
     /**
+     * Set header row
+     */
+    public void setHeaderRow(List<Column> columns) {
+        rowList.get(HEADER_ROW).setColumns(columns);
+    }
+
+    /**
      * Get all rows except the exhead row
      * @return
      */
     public List<ImportEntity.Row> getContentRows() {
         return rowList.subList(CONTENT_ROW, rowList.size());
+    }
+
+    public List<ImportEntity.Row> setContentRows(List<Row> newList) {
+        List<ImportEntity.Row> list = new ArrayList<>();
+        Row headerRow = rowList.get(HEADER_ROW);
+        list.add(headerRow);
+        list.addAll(newList);
+        return list;
     }
 
      /**
