@@ -106,13 +106,13 @@ public class ExportReader {
 
             for (final FieldConstant fieldConst : globalFConstantsList) {
 
-                logger.trace("Evaluating FieldConstant={}", fieldConst.getName());
+                logger.trace("Evaluating FieldConstant={} num={} ", fieldConst.getTitle(), fieldConst.getName());
 
                 final String regularValue = ImportEntityValue.findColValueFromRow(fieldConst, cols);
                 String oaiVal = "";
 
                 //merge only if bibId col exists, and if not a function constant (like f104 itself)
-                if (localIdentifierColumnNum != -1 && !FunctionConstants.isFunction(fieldConst.getName())) {
+                if (localIdentifierColumnNum != -1 && !FunctionConstants.isFunction(fieldConst.getName()) && !fieldConst.getTitle().equalsIgnoreCase("Handle")) { //TODO chk via fdid marc mapping
                     final Column<String> bibIdColumn = cols.get(localIdentifierColumnNum);
                     LocalIdMarcValue localIdMarcValue = LocalIdMarcValue.findMatch(bibIdValueList, bibIdColumn.getValue());
                     oaiVal = getMultimapMarc21Field(new FdidMarcMappingUtil().toMarc21Field(fieldConst), localIdMarcValue.getValueMap());

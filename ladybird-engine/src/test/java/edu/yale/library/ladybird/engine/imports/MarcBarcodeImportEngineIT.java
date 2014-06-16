@@ -94,7 +94,7 @@ public class MarcBarcodeImportEngineIT extends AbstractDBTest {
             final ImportJobExheadDAO importJobExheadDAO = new ImportJobExheadHibernateDAO();
             final List<ImportJobExhead> jobExheads = importJobExheadDAO.findAll();
 
-            assertEquals(jobExheads.size(), 6);
+            assertEquals(jobExheads.size(), 7);
 
             /* Test Export */
             final ExportEngine exportEngine = new DefaultExportEngine();

@@ -32,7 +32,7 @@ public class LocalIdentifier<T> {
      */
     public static List<LocalIdentifier<String>> getLocalIdList(ImportEntityValue importEntityValue) {
         List<String> list = importEntityValue.getColumnStrings(FunctionConstants.F104);
-        if (list.isEmpty()) {//try F105 TODO
+        if (list.isEmpty()) { //try F105 TODO
             list = importEntityValue.getColumnStrings(FunctionConstants.F105);
         }
 

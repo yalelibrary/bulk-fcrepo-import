@@ -45,7 +45,9 @@ public class ImportWriter {
     public int write(ImportEntityValue importEntityValue, final ImportJobRequest importJobRequest) throws Exception {
         try {
             final int importId = writeImportJob(importJobRequest);
+            //note 2 columns are added:
             importEntityValue = writeF1(importEntityValue);
+            importEntityValue = processFdid111(importEntityValue);
             writeExHead(importId, importEntityValue.getHeaderRow().getColumns());
             writeContents(importId, importEntityValue);
             return importId;
@@ -212,5 +214,10 @@ public class ImportWriter {
     private ImportEntityValue processF1(ImportEntityValue importEntityValue) {
         OidMinter oidMinter = new OidMinter();
         return oidMinter.write(importEntityValue);
+    }
+
+    private ImportEntityValue processFdid111(ImportEntityValue importEntityValue) {
+        HandleMinter handleMinter = new HandleMinter();
+        return handleMinter.write(importEntityValue);
     }
 }
