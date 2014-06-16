@@ -75,9 +75,8 @@ public class HydraProcessor {
                         HydraPublish hydraPublish = hydraPublishDAO.findByOid(oid);
                         hydraPublish.setAction("delete");
                         hydraPublishDAO.saveOrUpdateList(Collections.singletonList(hydraPublish)); //TODO
-                    } else { //no "hydraID"
-                        //ignore
-                    }
+                    } //else { //no "hydraID"
+                    //}
                 } else {
                     throw new UnsupportedOperationException("Unknown operation");
                 }

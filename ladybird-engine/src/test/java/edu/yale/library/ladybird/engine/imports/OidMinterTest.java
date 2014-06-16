@@ -1,7 +1,6 @@
 package edu.yale.library.ladybird.engine.imports;
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
-import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.entity.FieldDefinition;
 import org.junit.After;
@@ -10,7 +9,6 @@ import org.junit.Test;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -20,14 +18,14 @@ public class OidMinterTest extends AbstractDBTest {
     @Test
     public void shouldMint() {
         OidMinter oidMinter = new OidMinter();
-        ImportEntityValue modifiedImportEntityValue= oidMinter.write(getTestData());
+        ImportEntityValue modifiedImportEntityValue = oidMinter.write(getTestData());
         assert (modifiedImportEntityValue.getHeaderRow().getColumns().size() == 2);
         assertEquals(modifiedImportEntityValue.getContentRows().size(), 1);
         List<ImportEntity.Row> rowsBack = modifiedImportEntityValue.getContentRows();
         ImportEntity.Row firstRow = rowsBack.get(0);
         List<ImportEntity.Column> listcols = firstRow.getColumns();
         assert (listcols.get(0).getValue().equals("The Wizard of Oz."));
-        assertEquals (listcols.get(1).getValue(), "1");
+        assertEquals(listcols.get(1).getValue(), "1");
     }
 
     private ImportEntityValue getTestData() {
