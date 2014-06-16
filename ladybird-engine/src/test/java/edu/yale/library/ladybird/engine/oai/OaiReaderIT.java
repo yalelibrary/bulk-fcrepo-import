@@ -58,7 +58,7 @@ public class OaiReaderIT {
     }
 
     @Test
-    public void shouldReadMarcRecord() {
+    public void shouldReadBibIdMarcRecord() {
         final String bibId = getProp("oai_bibid");
         final OaiProvider provider = new OaiProvider("id", getProp("oai_test_url_prefix"),
                 getProp("oai_url_id"));
@@ -66,6 +66,20 @@ public class OaiReaderIT {
         try {
             Record record = client.readMarc(bibId);
             assertEquals("DataField size mismatch", record.getDatafield().size(), 24);
+        } catch (IOException | MarcReadingException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void shouldReadBarcodeMarcRecord() {
+        final String bibId = getProp("oai_barcode");
+        final OaiProvider provider = new OaiProvider("id", getProp("oai_test_url_prefix_barcode"),
+                getProp("oai_url_id"));
+        final OaiHttpClient client = new OaiHttpClient(provider);
+        try {
+            Record record = client.readMarc(bibId);
+            assertEquals("DataField size mismatch", record.getDatafield().size(), 18);
         } catch (IOException | MarcReadingException e) {
             fail();
         }

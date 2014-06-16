@@ -16,7 +16,7 @@ public class ImportSourceProcessor {
 
     public void process(final int importId, final OaiProvider oaiProvider, final ImportEntityValue importEntityValue) {
         try {
-            final List<LocalIdentifier<String>> bibIdList = LocalIdentifier.getBibIds(importEntityValue);
+            final List<LocalIdentifier<String>> bibIdList = LocalIdentifier.getLocalIdList(importEntityValue);
             final ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
             final List<LocalIdMarcImportSource> importSourceLocalIdList =
                     importSourceDataReader.readMarc(oaiProvider, bibIdList, importId);

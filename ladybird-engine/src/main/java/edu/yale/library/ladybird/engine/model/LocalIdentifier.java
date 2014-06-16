@@ -30,8 +30,12 @@ public class LocalIdentifier<T> {
      * @param importEntityValue representing list of columns
      * @return list of LocalIdentifier
      */
-    public static List<LocalIdentifier<String>> getBibIds(ImportEntityValue importEntityValue) {
+    public static List<LocalIdentifier<String>> getLocalIdList(ImportEntityValue importEntityValue) {
         List<String> list = importEntityValue.getColumnStrings(FunctionConstants.F104);
+        if (list.isEmpty()) {//try F105 TODO
+            list = importEntityValue.getColumnStrings(FunctionConstants.F105);
+        }
+
         List<LocalIdentifier<String>> listLocalIds = new ArrayList<>();
 
         for (String s: list) {

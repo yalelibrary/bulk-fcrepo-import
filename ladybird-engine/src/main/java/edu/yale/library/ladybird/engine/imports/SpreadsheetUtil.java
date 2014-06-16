@@ -19,7 +19,7 @@ public class SpreadsheetUtil {
             case Cell.CELL_TYPE_BOOLEAN:
                 return cell.getBooleanCellValue();
             case Cell.CELL_TYPE_NUMERIC:
-                return (int) cell.getNumericCellValue(); //TODO note int. FIXME
+                return (long) cell.getNumericCellValue(); //TODO note int. FIXME
             case Cell.CELL_TYPE_STRING:
                 return cell.getStringCellValue();
             default:

@@ -82,12 +82,19 @@ public class ExportReader {
 
         ImportEntityValue importEntityValue = new ImportEntityValue(regularRows);
 
-        int bibIdCol;
+        int localIdentifierColumnNum = -1;
         try {
-            bibIdCol = importEntityValue.getFunctionPosition(FunctionConstants.F104); //or F105 TODO
+            localIdentifierColumnNum = importEntityValue.getFunctionPosition(FunctionConstants.F104); //or F105 TODO
         } catch (Exception e) {
-           logger.debug("Col with bibId data not found in this dataset(sheet)");
-            bibIdCol = -1; //TODO
+           logger.debug("Col with bib data not found in this dataset(sheet)");
+        }
+
+        if (localIdentifierColumnNum == -1) {
+            try {
+                localIdentifierColumnNum = importEntityValue.getFunctionPosition(FunctionConstants.F105); //or F105 TODO
+            } catch (Exception e) {
+                logger.debug("Col with barcode data not found in this dataset(sheet)");
+            }
         }
 
         for (int i = 0; i < numRowsToWrite; i++) {
@@ -105,8 +112,8 @@ public class ExportReader {
                 String oaiVal = "";
 
                 //merge only if bibId col exists, and if not a function constant (like f104 itself)
-                if (bibIdCol != -1 && !FunctionConstants.isFunction(fieldConst.getName())) {
-                    final Column<String> bibIdColumn = cols.get(bibIdCol);
+                if (localIdentifierColumnNum != -1 && !FunctionConstants.isFunction(fieldConst.getName())) {
+                    final Column<String> bibIdColumn = cols.get(localIdentifierColumnNum);
                     LocalIdMarcValue localIdMarcValue = LocalIdMarcValue.findMatch(bibIdValueList, bibIdColumn.getValue());
                     oaiVal = getMultimapMarc21Field(new FdidMarcMappingUtil().toMarc21Field(fieldConst), localIdMarcValue.getValueMap());
                 }

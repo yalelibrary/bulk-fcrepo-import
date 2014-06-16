@@ -20,6 +20,26 @@ public enum FunctionConstants implements FieldConstant {
      */
     F3("F3", "Image"),
     /**
+     * F4
+     */
+    F4("F4", "complex-object-1"),
+    /**
+     * F4
+     */
+    F5("F5", "complex-object-2"),
+    /**
+     * F4
+     */
+    F6("F6", "complex-object-3"),
+    /**
+     * F4
+     */
+    F7("F7", "complex-object-4"),
+    /**
+     * F4
+     */
+    F8("F8", "complex-object-5"),
+    /**
      * File attached to an OID from the import folder
      */
     F31("F31", "OID-ATTACHED-IN-IMPORT-FOLDER"),
@@ -47,17 +67,14 @@ public enum FunctionConstants implements FieldConstant {
      * Barcode Import
      */
     F105("F105", "OAI-Barcode-Import"),
-
     /**
      * places objects into hydra table for staging into hydra_publish
      */
     F40("F40", "Hydra-Publish-Staging"),
-
     /**
      * oid pointer
      */
     F11("F11", "oid-pointer"),
-
     /**
      * Deletes
      */
