@@ -2,6 +2,7 @@ package edu.yale.library.ladybird.engine.imports;
 
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.Object;
+import edu.yale.library.ladybird.entity.ObjectBuilder;
 import edu.yale.library.ladybird.persistence.dao.ObjectDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectHibernateDAO;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ public class OidMinter {
         final List<ImportEntity.Row> rowList = importEntityValue.getContentRows();
 
         for (ImportEntity.Row row: rowList) {
-            Object object = new Object();
+            Object object = new ObjectBuilder().createObject();
             object.setDate(new Date());
             object.setProjectId(1); //TODO
 

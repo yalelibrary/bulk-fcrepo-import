@@ -4,6 +4,7 @@ package edu.yale.library.ladybird.engine.imports;
 import edu.yale.library.ladybird.engine.AbstractDBTest;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.FieldConstant;
+import edu.yale.library.ladybird.entity.ObjectBuilder;
 import edu.yale.library.ladybird.persistence.dao.ObjectDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectHibernateDAO;
 import edu.yale.library.ladybird.entity.Object;
@@ -27,7 +28,7 @@ public class HydraPointerProcessorTest extends AbstractDBTest {
     public void shouldProcess() {
         try {
             ObjectDAO objectDAO = new ObjectHibernateDAO();
-            Object obj = new Object();
+            Object obj = new ObjectBuilder().createObject();
 
             obj.setDate(new Date());
 

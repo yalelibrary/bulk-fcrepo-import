@@ -101,10 +101,6 @@ public class ImportWriter {
             final List<ImportEntity.Row> rowList = importEntityValue.getContentRows();
             logger.trace("Writing spreadsheet body contents. Row list size={}", rowList.size());
 
-            if (importEntityValue.fieldConstantsInExhead(FunctionConstants.F1)) {
-                final int columnWithF1Field = importEntityValue.getFunctionPosition(FunctionConstants.F1);
-            }
-
             //Process F3 without F1 (to keep tests working)
             if (importEntityValue.fieldConstantsInExhead(FunctionConstants.F3)
                     && !importEntityValue.fieldConstantsInExhead(FunctionConstants.F1)) {
@@ -140,6 +136,11 @@ public class ImportWriter {
             //Process F00
             if (importEntityValue.hasFunction(FunctionConstants.F00)) {
                 processDelete(importEntityValue);
+            }
+
+            //Process F4,F6 (check step requirement)
+            if (processF4F6(importEntityValue)) {
+                processComplex(importEntityValue);
             }
 
             //Save all to DB table import job contents (N.B. f104/f105 column(s) also persisted):
@@ -219,5 +220,16 @@ public class ImportWriter {
     private ImportEntityValue processFdid111(ImportEntityValue importEntityValue) {
         HandleMinter handleMinter = new HandleMinter();
         return handleMinter.write(importEntityValue);
+    }
+
+    private void processComplex(ImportEntityValue importEntityValue) {
+        ComplexProcessor complexProcessor = new ComplexProcessor();
+        complexProcessor.process(importEntityValue);
+    }
+
+    private boolean processF4F6(final ImportEntityValue importEntityValue) {
+        return importEntityValue.hasFunction(FunctionConstants.F1)
+                && importEntityValue.hasFunction(FunctionConstants.F4)
+                && importEntityValue.hasFunction(FunctionConstants.F6);
     }
 }

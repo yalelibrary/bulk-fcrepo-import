@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.persistence.dao;
 
 import edu.yale.library.ladybird.entity.Object;
+import edu.yale.library.ladybird.entity.ObjectBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +56,7 @@ public class ObjectDaoTest extends AbstractPersistenceTest {
     }
 
     private Object build() {
-        final Object item = new Object(1);
+        final Object item = new ObjectBuilder().setProjectId(1).createObject();
         final Date date = new Date(System.currentTimeMillis());
         item.setDate(date);
         return item;

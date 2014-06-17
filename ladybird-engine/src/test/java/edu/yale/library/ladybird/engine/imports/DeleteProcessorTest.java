@@ -4,7 +4,7 @@ package edu.yale.library.ladybird.engine.imports;
 import edu.yale.library.ladybird.engine.AbstractDBTest;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.FieldConstant;
-import edu.yale.library.ladybird.entity.Object;
+import edu.yale.library.ladybird.entity.ObjectBuilder;
 import edu.yale.library.ladybird.persistence.dao.ObjectDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectHibernateDAO;
 import org.junit.After;
@@ -22,7 +22,7 @@ public class DeleteProcessorTest extends AbstractDBTest {
     @Test
     public void shouldDelete() {
         ObjectDAO objectDAO = new ObjectHibernateDAO();
-        edu.yale.library.ladybird.entity.Object obj = new Object();
+        edu.yale.library.ladybird.entity.Object obj = new ObjectBuilder().createObject();
 
         obj.setDate(new Date());
 

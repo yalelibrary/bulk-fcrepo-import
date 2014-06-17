@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
     <class name="edu.yale.library.ladybird.entity.Object" table="object" catalog="pamoja">
         <id name="oid" type="java.lang.Integer">
@@ -13,29 +13,18 @@
         <property name="projectId" type="int">
             <column name="project_id" not-null="true" />
         </property>
-        <!--
         <property name="userId" type="int">
-            <column name="user_id" not-null="true" />
+            <column name="user_id" />
         </property>
-        <property name="oid_1" type="int">
-            <column name="_oid" not-null="true" />
+        <property name="p_oid" type="int">
+            <column name="poid" />
         </property>
-        <property name="localidentifier" type="int">
-            <column name="localidentifier" not-null="true" />
+        <property name="zindex" type="int">
+            <column name="zindex" />
         </property>
-        <property name="parent" type="string">
-            <column name="parent" length="1" not-null="true" />
+        <property name="parent" type="boolean">
+            <column name="parent" />
         </property>
-        <property name="boid" type="int">
-            <column name="_boid" not-null="true" />
-        </property>
-        <property name="bindex" type="int">
-            <column name="bindex" not-null="true" />
-        </property>
-        <property name="bparent" type="string">
-            <column name="bparent" length="1" not-null="true" />
-        </property>
-        -->
         <property name="roid" type="int">
             <column name="roid"/>
         </property>

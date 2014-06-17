@@ -238,6 +238,27 @@ public class ImportEntityValue {
         throw new NoSuchElementException(f.getName());
     }
 
+    /**
+     * Get value for FieldConstant in a particular Row
+     * @param f FieldConstnat
+     * @return string value of field constant for a particular row
+     */
+    public String getRowFieldValue(final FieldConstant f, int rowNum) {
+        List<Column> columnsList = getHeaderRow().getColumns();
+        int colPosition = -1;
+        for (int i = 0; i < columnsList.size(); i++) {
+            if (columnsList.get(i).getField().getName().equals(f.getName())) {
+                colPosition = i;
+            }
+        }
+
+        if (colPosition == -1 || rowNum < 0) {
+            throw new NoSuchElementException(f.getName());
+        }
+
+        return getContentRows().get(rowNum).getColumns().get(colPosition).getValue().toString();
+    }
+
     public List<String> getColumnStrings(FunctionConstants functionConstants) {
         final List<ImportEntity.Column> bibIdColumn = getColumnValues(functionConstants);
         final List<String> values = new ArrayList<>();
