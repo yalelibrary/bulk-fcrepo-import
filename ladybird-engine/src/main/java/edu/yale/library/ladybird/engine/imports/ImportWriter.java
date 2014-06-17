@@ -143,6 +143,10 @@ public class ImportWriter {
                 processComplex(importEntityValue);
             }
 
+            if (processF5F6(importEntityValue)) {
+                processComplexF5(importEntityValue);
+            }
+
             //Save all to DB table import job contents (N.B. f104/f105 column(s) also persisted):
             for (int i = 0; i < rowList.size(); i++) {
                 final ImportEntity.Row row = rowList.get(i);
@@ -224,12 +228,23 @@ public class ImportWriter {
 
     private void processComplex(ImportEntityValue importEntityValue) {
         ComplexProcessor complexProcessor = new ComplexProcessor();
-        complexProcessor.process(importEntityValue);
+        complexProcessor.processF4(importEntityValue);
+    }
+
+    private void processComplexF5(ImportEntityValue importEntityValue) {
+        ComplexProcessor complexProcessor = new ComplexProcessor();
+        complexProcessor.processF5(importEntityValue);
     }
 
     private boolean processF4F6(final ImportEntityValue importEntityValue) {
         return importEntityValue.hasFunction(FunctionConstants.F1)
                 && importEntityValue.hasFunction(FunctionConstants.F4)
+                && importEntityValue.hasFunction(FunctionConstants.F6);
+    }
+
+    private boolean processF5F6(final ImportEntityValue importEntityValue) {
+        return importEntityValue.hasFunction(FunctionConstants.F1) //note
+                && importEntityValue.hasFunction(FunctionConstants.F5)
                 && importEntityValue.hasFunction(FunctionConstants.F6);
     }
 }

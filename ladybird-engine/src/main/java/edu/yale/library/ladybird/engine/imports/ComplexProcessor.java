@@ -15,7 +15,7 @@ public class ComplexProcessor {
 
     final ObjectDAO objectDAO = new ObjectHibernateDAO();
 
-    public void process(ImportEntityValue importEntityValue) {
+    public void processF4(ImportEntityValue importEntityValue) {
         final List<ImportEntity.Row> rowList = importEntityValue.getContentRows();
         final List<Object> changedObjectLit = new ArrayList<>();
 
@@ -42,6 +42,44 @@ public class ComplexProcessor {
                 }
             } catch (Exception e) {
                 logger.trace(e.getMessage()); //ignore
+            }
+        }
+        logger.debug(changedObjectLit.toString());
+        objectDAO.saveOrUpdateList(changedObjectLit);
+    }
+
+    /**
+     * Logic needs to be adjusted per F1 requirements.
+     * @param importEntityValue importEntityValue
+     */
+    public void processF5(ImportEntityValue importEntityValue) {
+        final List<ImportEntity.Row> rowList = importEntityValue.getContentRows();
+        final List<Object> changedObjectLit = new ArrayList<>();
+
+        for (int i = 0; i < rowList.size(); i++) {
+            try {
+                logger.debug("Finding by oid={}", asInt(importEntityValue.getRowFieldValue(FunctionConstants.F1, i)));
+
+                Object object = objectDAO.findByOid(asInt(importEntityValue.getRowFieldValue(FunctionConstants.F1, i)));
+
+                Integer f1 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F1, i));
+                Integer f5 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F5, i));
+                Integer f6 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F6, i));
+
+                //Set parent oid and parent property:
+                if (f5 == 0 || f1.equals(f5)) {
+                    object.setParent(true);
+                    object.setP_oid(0);
+                    object.setZindex(f6);
+                    changedObjectLit.add(object);
+                } else {
+                    object.setParent(false);
+                    object.setP_oid(f5);
+                    object.setZindex(f6);
+                    changedObjectLit.add(object);
+                }
+            } catch (Exception e) {
+                logger.error("Error={}", e);
             }
         }
         logger.debug(changedObjectLit.toString());
