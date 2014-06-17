@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import javax.inject.Inject;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,8 +17,6 @@ import static org.junit.Assert.fail;
 
 
 public class ObjectDaoTest extends AbstractPersistenceTest {
-
-    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(ObjectDaoTest.class);
 
     {
         TestDaoInitializer.injectFields(this);
@@ -55,10 +54,50 @@ public class ObjectDaoTest extends AbstractPersistenceTest {
         assertEquals("Value mismatch", o.getRoid(), 1);
     }
 
+    @Test
+    public void shouldFindparent() {
+        final List<Object> itemList = buildComplexObjects();
+
+        List list = null;
+        try {
+            dao.saveOrUpdateList(itemList);
+            list = dao.findByParent(1);
+        } catch (Throwable e) {
+            e.printStackTrace();
+            fail("Error testing saving or finding item");
+        }
+
+        assertEquals("Item count incorrect", list.size(), 1);
+        final Object o = (Object) list.get(0);
+        assertEquals("Value mismatch", o.getProjectId(), 1);
+        assertEquals("Value mismatch", (long) o.getP_oid(), 1);
+        assertEquals("Value mismatch", o.isChild(), true);
+
+        assert(dao.childCount(1) == 1);
+    }
+
     private Object build() {
         final Object item = new ObjectBuilder().setProjectId(1).createObject();
         final Date date = new Date(System.currentTimeMillis());
         item.setDate(date);
         return item;
+    }
+
+    private List<Object> buildComplexObjects() {
+
+        final List<Object> objects = new ArrayList<>();
+
+        final Object parent = new ObjectBuilder().setProjectId(1).setParent(true).setP_oid(0).createObject();
+        final Date date = new Date();
+        parent.setDate(date);
+
+        objects.add(parent);
+
+        final Object child = new ObjectBuilder().setProjectId(1).setParent(false).setP_oid(1).createObject();
+        child.setDate(date);
+
+        objects.add(child);
+
+        return objects;
     }
 }

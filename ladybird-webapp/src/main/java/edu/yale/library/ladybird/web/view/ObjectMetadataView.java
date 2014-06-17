@@ -3,6 +3,7 @@ package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.FieldDefinition;
+import edu.yale.library.ladybird.entity.Object;
 import edu.yale.library.ladybird.entity.ObjectAcid;
 import edu.yale.library.ladybird.entity.ObjectFile;
 import edu.yale.library.ladybird.entity.ObjectString;
@@ -140,6 +141,20 @@ public class ObjectMetadataView extends AbstractView {
             String[] parsedString = s.split("fdid=");
             return Integer.parseInt(parsedString[1].replace("}", ""));
         }
+    }
+
+    public int getChildCount(int oid) {
+        return objectDAO.childCount(oid);
+    }
+
+    public boolean isParent(int oid) {
+        try {
+            Object o =  objectDAO.findByOid(oid);
+            return o.isParent();
+        } catch (Exception e) {
+            logger.error("Error finding parent attribute", e.getMessage());
+        }
+        return false;
     }
 
     //Getters and setters -------------------------------------------------------------------

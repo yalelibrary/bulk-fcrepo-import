@@ -89,7 +89,7 @@ public class FieldConstantRules {
 
         //Otherwise, see if it's a function constant
         try {
-            final FunctionConstants f = FunctionConstants.valueOf(value);
+            final FunctionConstants f = FunctionConstants.valueOf(value.toUpperCase());
             return f;
         } catch (Exception e) {
             logger.debug("Error converting to FieldConstant(FunctionConstant) value={}", value);

@@ -11,6 +11,15 @@
 
             <div>
                 <div class="row">
+                    <div class="col-md-12">
+                        <h:outputText value="Parent Object with child objects #{objectMetadataView.getChildCount(param['oid'])}" rendered="#{objectMetadataView.isParent(param['oid'])}"> </h:outputText>
+                    </div>
+
+                </div>
+            </div>
+
+            <div>
+                <div class="row">
                     <div class="col-md-4">
                         <h:graphicImage value="/images/#{objectMetadataView.image}" height="300" width="300"/>
                         #{objectMetadataView.objectFile.fileName}
