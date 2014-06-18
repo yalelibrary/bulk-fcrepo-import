@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template_yul.xhtml">
+    <ui:define name="content">
+        <h:form id="ProjectTemplateAddForm" enctype="multipart/form-data">
+
+            <div>
+                <h4>Add Template</h4>
+                <h:inputText value="#{projectTemplateView.item.label}"/>
+
+                <h:commandButton id="submit_button"
+                                 action="#{projectTemplateView.save}"
+                                 styleClass="btn"
+                                 value="Submit">
+                </h:commandButton>
+            </div>
+
+
+            <p:contextMenu for="ProjectTemplateDatatable">
+                <p:menuitem value="Edit/View" action="#{projectTemplateView.browse}"/>
+            </p:contextMenu>
+
+            <div>
+                <h4>Current Templates</h4>
+
+                <p:dataTable id="ProjectTemplateDatatable" value="#{projectTemplateView.itemList}"
+                             var="item" editable="false"
+                             selection="#{projectTemplateView.selectedItem}"
+                             selectionMode="single"
+                             rowKey="#{item.templateId}">
+
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Date" />
+                        </f:facet>
+                        <h:outputText value="#{item.date}" />
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Creator" />
+                        </f:facet>
+                        <h:outputText value="#{item.creator}" />
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Label" />
+                        </f:facet>
+                        <h:outputText value="#{item.label}" />
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="ProjectId" />
+                        </f:facet>
+                        <h:outputText value="#{item.projectId}" />
+                    </p:column>
+
+                </p:dataTable>
+
+            </div>
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

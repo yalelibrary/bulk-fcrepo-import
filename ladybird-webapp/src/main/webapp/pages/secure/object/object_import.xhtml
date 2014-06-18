@@ -9,6 +9,28 @@
     <ui:define name="content">
 
         <h:form id="ObjectImportFileForm" enctype="multipart/form-data">
+
+            <!-- TEMPLATE -->
+            <div>
+                <span>
+                <h:commandButton id="submit_button"
+                                 action="#{ObjectFileView.applyTemplate}"
+                                 styleClass="btn"
+                                 value="Apply template to results">
+                </h:commandButton>
+                </span>
+
+                <span>
+                <h:selectOneMenu id="templateSelectOneMenu" value="#{ObjectFileView.templateItem.label}">
+
+                    <f:selectItems value="#{projectTemplateView.itemList}"
+                                   var="select_project_var"
+                                   itemLabel="#{select_project_var.label}"
+                                   itemValue="#{select_project_var.label}"/>
+                </h:selectOneMenu>
+                </span>
+            </div>
+
             <br/>
 
             <div>
@@ -16,10 +38,9 @@
 
                     <!-- Data Grid -->
                     <p:dataGrid var="item" value="#{ObjectFileView.itemList}" columns="5"
-                                rows="6" paginator="true" id="ObjectFileDatagrid" paginatorPostion="bottom"
->
+                                rows="6" paginator="true" id="ObjectFileDatagrid" paginatorPostion="bottom">
 
-                      <p:panel header="#{item.oid}" style="text-align:center">
+                        <p:panel header="#{item.oid}" style="text-align:center">
                             <h:panelGrid columns="1" style="width:100%">
                                 <h:graphicImage value="/images/#{item.filePath}" height="151" width="170"/>
                                 <h:outputText value="#{item.fileName}"/>

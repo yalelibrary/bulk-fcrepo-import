@@ -35,7 +35,7 @@ public class NotificationJob extends AbstractNotificationJob implements Job {
             user = notificationItem.getUsers().get(0); //TODO could be multimpe users
 
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.trace(e.getMessage());
         }
 
         if (event == null || user == null) { //FIXME

@@ -16,6 +16,9 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.MonitorHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectFileHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ProjectHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ProjectTemplateAcidHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ProjectTemplateHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ProjectTemplateStringsHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserPreferencesHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserEventHibernateDAO;
@@ -74,5 +77,8 @@ public class TestDaoHibernateModule extends AbstractModule {
         bind(ObjectStringDAO.class).to(ObjectStringHibernateDAO.class);
         bind(HydraDAO.class).to(HydraHibernateDAO.class);
         bind(HydraPublishDAO.class).to(HydraPublishHibernateDAO.class);
+        bind(ProjectTemplateDAO.class).to(ProjectTemplateHibernateDAO.class);
+        bind(ProjectTemplateStringsDAO.class).to(ProjectTemplateStringsHibernateDAO.class);
+        bind(ProjectTemplateAcidDAO.class).to(ProjectTemplateAcidHibernateDAO.class);
     }
 }

@@ -3,6 +3,7 @@ package edu.yale.library.ladybird.web.view;
 
 
 import edu.yale.library.ladybird.entity.ObjectFile;
+import edu.yale.library.ladybird.entity.ProjectTemplate;
 import edu.yale.library.ladybird.persistence.dao.ObjectFileDAO;
 import org.slf4j.Logger;
 
@@ -23,12 +24,15 @@ public class ObjectFileView extends AbstractView {
 
     private List<ObjectFile> itemList = new ArrayList<>();
 
+    /** To be used to apply template */
+    private ProjectTemplate templateItem = new ProjectTemplate();
+
     @Inject
     private ObjectFileDAO entityDAO;
 
     @PostConstruct
     public void init() {
-        logger.debug("Init ObjectFileView");
+        logger.trace("Init ObjectFileView");
         initFields();
         dao = entityDAO;
     }
@@ -42,6 +46,20 @@ public class ObjectFileView extends AbstractView {
 
     public void setItemList(final List<ObjectFile> itemList) {
         this.itemList = itemList;
+    }
+
+    //TODO
+    public String applyTemplate() {
+        logger.debug("Applying to results template={}", templateItem.getLabel());
+        return fail();
+    }
+
+    public ProjectTemplate getTemplateItem() {
+        return templateItem;
+    }
+
+    public void setTemplateItem(ProjectTemplate templateItem) {
+        this.templateItem = templateItem;
     }
 }
 

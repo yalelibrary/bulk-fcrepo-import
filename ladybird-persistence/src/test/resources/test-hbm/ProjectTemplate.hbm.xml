@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="edu.yale.library.ladybird.entity.ProjectTemplate" table="project_template" catalog="pamoja">
+        <id name="templateId" type="java.lang.Integer">
+            <column name="template_id" />
+            <generator class="identity" />
+        </id>
+        <property name="date" type="timestamp">
+            <column name="date" length="19" />
+        </property>
+        <property name="creator" type="java.lang.Integer">
+            <column name="creator" />
+        </property>
+        <property name="label" type="string">
+            <column name="label" length="45" />
+        </property>
+        <property name="projectId" type="java.lang.Integer">
+            <column name="project_id" />
+        </property>
+    </class>
+</hibernate-mapping>

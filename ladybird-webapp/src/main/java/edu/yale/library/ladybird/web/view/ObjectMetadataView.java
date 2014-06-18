@@ -107,7 +107,7 @@ public class ObjectMetadataView extends AbstractView {
     public String getValueByOidAndFdid(int oid, int fdid) {
         try {
             //1. Find acid value for this oid (assuming that's what's needed here)
-            logger.debug("Finding ObjectAcid by oid={} and fdid={}", oid, fdid);
+            logger.trace("Finding ObjectAcid by oid={} and fdid={}", oid, fdid);
 
             final ObjectAcid objectAcid = objectAcidDAO.findByOidAndFdid(oid, fdid);
             //logger.debug("Found entry={}", objectAcid.toString());

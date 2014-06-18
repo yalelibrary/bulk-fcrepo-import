@@ -27,6 +27,9 @@ import edu.yale.library.ladybird.persistence.dao.ObjectLongstringDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectStringDAO;
 import edu.yale.library.ladybird.persistence.dao.PermissionsDAO;
 import edu.yale.library.ladybird.persistence.dao.ProjectDAO;
+import edu.yale.library.ladybird.persistence.dao.ProjectTemplateAcidDAO;
+import edu.yale.library.ladybird.persistence.dao.ProjectTemplateDAO;
+import edu.yale.library.ladybird.persistence.dao.ProjectTemplateStringsDAO;
 import edu.yale.library.ladybird.persistence.dao.RolesDAO;
 import edu.yale.library.ladybird.persistence.dao.RolesPermissionsDAO;
 import edu.yale.library.ladybird.persistence.dao.SettingsDAO;
@@ -52,6 +55,9 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectLongstringHiber
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectStringHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.PermissionsHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ProjectHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ProjectTemplateAcidHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ProjectTemplateHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ProjectTemplateStringsHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.RolesHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.RolesPermissionsHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.SettingsHibernateDAO;
@@ -104,6 +110,9 @@ public class DaoHibernateModule extends AbstractModule {
         bind(AuthorityControlVersionDAO.class).to(AuthorityControlVersionHibernateDAO.class);
         bind(AccessconditionProjectDAO.class).to(AccessconditionProjectHibernateDAO.class);
         bind(SettingsDAO.class).to(SettingsHibernateDAO.class);
+        bind(ProjectTemplateDAO.class).to(ProjectTemplateHibernateDAO.class);
+        bind(ProjectTemplateStringsDAO.class).to(ProjectTemplateStringsHibernateDAO.class);
+        bind(ProjectTemplateAcidDAO.class).to(ProjectTemplateAcidHibernateDAO.class);
 
 
         bind(UserHttpService.class);

@@ -73,7 +73,7 @@ public class ObjectDaoTest extends AbstractPersistenceTest {
         assertEquals("Value mismatch", (long) o.getP_oid(), 1);
         assertEquals("Value mismatch", o.isChild(), true);
 
-        assert(dao.childCount(1) == 1);
+        assert (dao.childCount(1) == 1);
     }
 
     private Object build() {

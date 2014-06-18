@@ -40,5 +40,8 @@
         <mapping resource="test-hbm/Settings.hbm.xml"/>
         <mapping resource="test-hbm/Hydra.hbm.xml"/>
         <mapping resource="test-hbm/HydraPublish.hbm.xml"/>
+        <mapping resource="test-hbm/ProjectTemplate.hbm.xml"/>
+        <mapping resource="test-hbm/ProjectTemplateAcid.hbm.xml"/>
+        <mapping resource="test-hbm/ProjectTemplateStrings.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

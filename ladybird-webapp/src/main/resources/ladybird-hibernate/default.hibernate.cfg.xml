@@ -38,5 +38,8 @@
         <mapping resource="ladybird-hbm/AccessconditionTarget.hbm.xml"/>
         <mapping resource="ladybird-hbm/AccessconditionType.hbm.xml"/>
         <mapping resource="ladybird-hbm/Settings.hbm.xml"/>
+        <mapping resource="ladybird-hbm/ProjectTemplate.hbm.xml"/>
+        <mapping resource="ladybird-hbm/ProjectTemplateAcid.hbm.xml"/>
+        <mapping resource="ladybird-hbm/ProjectTemplateStrings.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>
