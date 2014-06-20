@@ -29,7 +29,10 @@ public class ObjectDaoTest extends AbstractPersistenceTest {
 
     @After
     public void stop() throws SQLException {
-        //TODO
+        //TODO clean up
+        List<Object> delList = dao.findAll();
+        dao.delete(delList);
+        assert (dao.findAll().size() == 0);
     }
 
     @Inject

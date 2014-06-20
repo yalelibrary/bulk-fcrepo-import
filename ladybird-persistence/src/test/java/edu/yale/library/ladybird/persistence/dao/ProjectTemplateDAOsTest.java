@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import javax.inject.Inject;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -47,9 +48,15 @@ public class ProjectTemplateDAOsTest extends AbstractPersistenceTest {
     public void shouldSaveProjectTemplate() {
         final ProjectTemplate item = new ProjectTemplateBuilder().setProjectId(1).setCreator(1).setLabel("Project X").setDate(new Date()).createProjectTemplate();
         List list = null;
+        int projectCount = 0;
+        List<ProjectTemplate> projectTemplateList = new ArrayList<>(); //for a particular project id
         try {
             dao.save(item);
             list = dao.findAll();
+
+            projectCount = dao.getCountByLabel("Project X");
+
+            projectTemplateList = dao.findByProjectId(1);
 
         } catch (Throwable e) {
             e.printStackTrace();
@@ -59,6 +66,9 @@ public class ProjectTemplateDAOsTest extends AbstractPersistenceTest {
         assertEquals("Item count incorrect", list.size(), 1);
         final ProjectTemplate project = (ProjectTemplate) list.get(0);
         assertEquals("Value mismatch", project.getLabel(), "Project X");
+        assert (projectCount == 1);
+
+        assert (projectTemplateList.size() == 1);
     }
 
     @Test

@@ -16,7 +16,7 @@ public class OidMinter {
 
     ObjectDAO objectDAO = new ObjectHibernateDAO();
 
-    public ImportEntityValue write(final ImportEntityValue importEntityValue) {
+    public ImportEntityValue write(final ImportEntityValue importEntityValue, int projectId) {
         final List<ImportEntity.Column> exheadList = importEntityValue.getHeaderRow().getColumns();
         final ImportEntity.Column<String> column = new ImportEntity().new Column(FunctionConstants.F1, "");
         exheadList.add(column);
@@ -26,7 +26,7 @@ public class OidMinter {
         for (ImportEntity.Row row: rowList) {
             Object object = new ObjectBuilder().createObject();
             object.setDate(new Date());
-            object.setProjectId(1); //TODO
+            object.setProjectId(projectId);
 
             try {
                 final int id = objectDAO.save(object);

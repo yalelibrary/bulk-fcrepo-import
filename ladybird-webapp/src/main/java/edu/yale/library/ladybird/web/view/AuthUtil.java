@@ -1,7 +1,11 @@
 package edu.yale.library.ladybird.web.view;
 
+import edu.yale.library.ladybird.entity.Project;
 import edu.yale.library.ladybird.entity.User;
+import edu.yale.library.ladybird.entity.UserPreferences;
+import edu.yale.library.ladybird.persistence.dao.ProjectDAO;
 import edu.yale.library.ladybird.persistence.dao.UserDAO;
+import edu.yale.library.ladybird.persistence.dao.UserPreferencesDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,8 +20,40 @@ public class AuthUtil extends AbstractView {
     @Inject
     UserDAO userDAO;
 
+    @Inject
+    private UserPreferencesDAO entityDAO;
+
+    @Inject
+    private ProjectDAO projectDAO;
+
     public AuthUtil() {
         initFields();
+    }
+
+    /**
+     * Get default project for current user.
+     * @return project label or null
+     */
+    public Project getDefaultProjectForCurrentUser() {
+        Project project = null;
+
+        try {
+            final int userId = getCurrentUserId();
+
+            final List<UserPreferences> userPreferencesList = entityDAO.findByUserId(userId);
+
+            if (userPreferencesList.isEmpty()) {
+                logger.debug("No default project for current user.");
+                return null; //TODO
+            }
+
+            final UserPreferences userPreferences = userPreferencesList.get(0); //TODO only one
+            int projectId = userPreferences.getProjectId();
+            project = projectDAO.findByProjectId(projectId);
+        } catch (final Exception e) {
+            logger.error("Error finding default user/project", e.getMessage());
+        }
+        return project;
     }
 
     /**

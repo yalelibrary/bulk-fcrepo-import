@@ -54,7 +54,7 @@ public class ImportEngineIT extends AbstractDBTest {
 
         initFdids(); //TODO tmp. Inst app. rules for test (since db state is cleaned)
 
-        final ImportEngine importEngine = new DefaultImportEngine();
+        final ImportEngine importEngine = new DefaultImportEngine(0, 1); //TODO chek params logic
         importEngine.setImportSourceProcessor(new ImportSourceProcessor()); //TODO
 
         final List<ImportEntity.Row> rows = importEngine.read(getImportSpreadsheeet(), ReadMode.FULL,

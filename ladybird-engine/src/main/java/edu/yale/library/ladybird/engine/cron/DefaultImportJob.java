@@ -55,7 +55,11 @@ public class DefaultImportJob implements Job, ImportJob {
         logger.debug("[start] import job. File name={}", file);
 
         try {
-            final ImportEngine importEngine = new DefaultImportEngine();
+            final int userId = importRequestedEvent.getMonitor().getUser().getUserId();
+            final int projectId = importRequestedEvent.getMonitor().getCurrentProject().getProjectId();
+
+            final ImportEngine importEngine = new DefaultImportEngine(userId, projectId);
+
             final DefaultFieldDataValidator fieldDataValidator = new DefaultFieldDataValidator();
             final List<ImportEntity.Row>  rowList = importEngine.read(file, ReadMode.FULL, fieldDataValidator);
 
@@ -94,6 +98,9 @@ public class DefaultImportJob implements Job, ImportJob {
             throw new ImportEngineException(e);
         } catch (IOException e) {
             logger.error("Error executing job", e.getMessage());
+            throw new ImportEngineException(e);
+        } catch (Exception e) {
+            logger.error("General exception", e);
             throw new ImportEngineException(e);
         }
     }

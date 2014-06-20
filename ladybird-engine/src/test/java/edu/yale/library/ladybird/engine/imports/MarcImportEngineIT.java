@@ -61,7 +61,7 @@ public class MarcImportEngineIT extends AbstractDBTest {
             assertEquals("FieldMarcMapping size mismatch", fieldMarcMappingList.size(), 86);
 
             /* 2. read the F104 or F105 spreadsheet */
-            final ImportEngine importEngine = new DefaultImportEngine();
+            final ImportEngine importEngine = new DefaultImportEngine(0, 1); //chk params logic
 
             importEngine.setImportSourceProcessor(new ImportSourceProcessor()); //TODO
 

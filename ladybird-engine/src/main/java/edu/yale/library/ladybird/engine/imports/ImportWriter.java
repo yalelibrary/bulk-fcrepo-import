@@ -46,7 +46,7 @@ public class ImportWriter {
         try {
             final int importId = writeImportJob(importJobRequest);
             //note 2 columns are added:
-            importEntityValue = writeF1(importEntityValue);
+            importEntityValue = writeF1(importEntityValue, importJobRequest.getProjectId());
             importEntityValue = processFdid111(importEntityValue);
             writeExHead(importId, importEntityValue.getHeaderRow().getColumns());
             writeContents(importId, importEntityValue);
@@ -57,10 +57,10 @@ public class ImportWriter {
         }
     }
 
-    private ImportEntityValue writeF1(ImportEntityValue importEntityValue) {
+    private ImportEntityValue writeF1(ImportEntityValue importEntityValue, int projectId) {
         //Process F1
         if (!importEntityValue.fieldConstantsInExhead(FunctionConstants.F1)) {
-            return processF1(importEntityValue);
+            return processF1(importEntityValue, projectId);
         }
         return importEntityValue;
     }
@@ -220,9 +220,9 @@ public class ImportWriter {
         imageReferenceProcessor.write(importEntityValue);
     }
 
-    private ImportEntityValue processF1(ImportEntityValue importEntityValue) {
+    private ImportEntityValue processF1(ImportEntityValue importEntityValue, int projectId) {
         OidMinter oidMinter = new OidMinter();
-        return oidMinter.write(importEntityValue);
+        return oidMinter.write(importEntityValue, projectId);
     }
 
     private ImportEntityValue processFdid111(ImportEntityValue importEntityValue) {

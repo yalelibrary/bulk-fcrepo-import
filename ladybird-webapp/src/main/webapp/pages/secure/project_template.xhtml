@@ -10,13 +10,22 @@
         <h:form id="ProjectTemplateAddForm" enctype="multipart/form-data">
 
             <div>
+                <h:outputText styleClass="alert alert-warning"
+                          value="Missing Configuration"
+                          rendered="#{(empty userView.itemList) or (empty ProjectView.itemList) or (userPreferencesView.defaultProjectForCurrentUser == null)}"/>
+            </div>
+
+            <div>
                 <h4>Add Template</h4>
                 <h:inputText value="#{projectTemplateView.item.label}"/>
 
                 <h:commandButton id="submit_button"
                                  action="#{projectTemplateView.save}"
                                  styleClass="btn"
-                                 value="Submit">
+                                 value="Submit"
+                                 rendered="#{(not empty userView.itemList)
+                                        and (not empty ProjectView.itemList)
+                                        and (userPreferencesView.defaultProjectForCurrentUser != null) }">
                 </h:commandButton>
             </div>
 
@@ -38,13 +47,15 @@
                         <f:facet name="header">
                             <h:outputText value="Date" />
                         </f:facet>
-                        <h:outputText value="#{item.date}" />
+                        <h:outputText value="#{item.date}" >
+                            <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                        </h:outputText>
                     </p:column>
                     <p:column>
                         <f:facet name="header">
                             <h:outputText value="Creator" />
                         </f:facet>
-                        <h:outputText value="#{item.creator}" />
+                        <h:outputText value="#{userProjectView.getUserName(item.creator)}"/>
                     </p:column>
                     <p:column>
                         <f:facet name="header">
@@ -56,13 +67,12 @@
                         <f:facet name="header">
                             <h:outputText value="ProjectId" />
                         </f:facet>
-                        <h:outputText value="#{item.projectId}" />
+                        <h:outputText value="#{ProjectView.getProjectLabel(item.projectId)}" />
                     </p:column>
 
                 </p:dataTable>
 
             </div>
-
 
         </h:form>
     </ui:define>

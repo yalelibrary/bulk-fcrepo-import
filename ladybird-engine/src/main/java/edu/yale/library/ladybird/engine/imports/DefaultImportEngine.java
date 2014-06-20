@@ -23,7 +23,7 @@ public class DefaultImportEngine extends AbstractImportEngine {
 
     @Override
     public int doWrite(final List<ImportEntity.Row> list) {
-        logger.debug("Initiating write, size={}", list.size());
+        logger.debug("Initiating write, userId={} projectId={} list size={}", USER_ID, PROJECT_ID, list.size());
 
         ImportWriter importWriter = new ImportWriter();
         importWriter.setOaiProvider(oaiProvider);  //TODO
@@ -33,9 +33,14 @@ public class DefaultImportEngine extends AbstractImportEngine {
         ImportEntityValue importEntityValue = new ImportEntityValue(list);
         try {
             return importWriter.write(importEntityValue,
-                    new ImportJobRequestBuilder().userId(USER_ID).file("").dir("").build());
+                    new ImportJobRequestBuilder().userId(USER_ID).file("").dir("").projectId(PROJECT_ID).build());
         } catch (Exception e) {
             throw new ImportEngineException(e);
         }
+    }
+
+    public DefaultImportEngine(int userId, int projectId) {
+        super.USER_ID = userId;
+        super.PROJECT_ID = projectId;
     }
 }

@@ -15,7 +15,9 @@ public abstract class AbstractImportEngine implements ImportEngine {
 
     private SpreadsheetFile spreadsheetFile = null;
 
-    protected static final Integer USER_ID = 0; //todo
+    protected Integer USER_ID = 0; //todo
+
+    protected Integer PROJECT_ID = 0; //todo
 
     protected OaiProvider oaiProvider; //TODO design
 

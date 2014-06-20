@@ -18,7 +18,7 @@ public class OidMinterTest extends AbstractDBTest {
     @Test
     public void shouldMint() {
         OidMinter oidMinter = new OidMinter();
-        ImportEntityValue modifiedImportEntityValue = oidMinter.write(getTestData());
+        ImportEntityValue modifiedImportEntityValue = oidMinter.write(getTestData(), 1);
         assert (modifiedImportEntityValue.getHeaderRow().getColumns().size() == 2);
         assertEquals(modifiedImportEntityValue.getContentRows().size(), 1);
         List<ImportEntity.Row> rowsBack = modifiedImportEntityValue.getContentRows();

@@ -120,7 +120,7 @@
         <from-view-id>/pages/secure/user_preferences.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>ok</from-outcome>
-            <to-view-id>/pages/form_submission_ok.xhtml</to-view-id>
+            <to-view-id>/pages/secure/welcome.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>

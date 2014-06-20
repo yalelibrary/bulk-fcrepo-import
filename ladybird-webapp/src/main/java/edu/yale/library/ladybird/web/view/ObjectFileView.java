@@ -30,6 +30,9 @@ public class ObjectFileView extends AbstractView {
     @Inject
     private ObjectFileDAO entityDAO;
 
+    @Inject
+    private AuthUtil authUtil;
+
     @PostConstruct
     public void init() {
         logger.trace("Init ObjectFileView");
@@ -38,8 +41,16 @@ public class ObjectFileView extends AbstractView {
     }
 
     public List<ObjectFile> getItemList() {
-        if (itemList.isEmpty()) {
-            itemList = entityDAO.findAll();
+        try {
+            if (itemList.isEmpty()) {
+                //Find objects for only current project
+                int currentProjectId = authUtil.getDefaultProjectForCurrentUser().getProjectId();
+                logger.trace("Current projectId={}", currentProjectId);
+                itemList = entityDAO.findByProject(currentProjectId); //TODO need to revisit dao method
+                logger.trace("Item list size={}", itemList.size());
+            }
+        } catch (Exception e) {
+            logger.error("Error finding items", e);
         }
         return itemList;
     }

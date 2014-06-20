@@ -46,7 +46,6 @@ public class HydraProcessorTest extends AbstractDBTest {
 
             //verify:
             HydraPublish hydraPublishResult = hydraPublishDAO.findByOid(oidToTest);
-            System.out.println(hydraPublishResult.getAction());
             assert (hydraPublishResult.getAction().equalsIgnoreCase("delete"));
 
         } catch (Exception e) {

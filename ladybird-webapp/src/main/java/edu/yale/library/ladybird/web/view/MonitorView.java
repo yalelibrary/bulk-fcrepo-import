@@ -44,6 +44,9 @@ public class MonitorView extends AbstractView {
     @Inject
     private UserDAO userDAO;
 
+    @Inject
+    private AuthUtil authUtil;
+
     @PostConstruct
     public void init() {
         initFields();
@@ -61,6 +64,7 @@ public class MonitorView extends AbstractView {
             monitorItem.setDirPath("local");
             monitorItem.setDate(new Date());
 
+            //set user id:
             try {
                 List<User> userList = userDAO.findByEmail(monitorItem.getNotificationEmail()); //TODO should be only 1
                 monitorItem.setUser(userList.get(0));
@@ -69,7 +73,13 @@ public class MonitorView extends AbstractView {
                 fail();
             }
 
-            //monitorItem.getUser().setEmail(monitorItem.getNotificationEmail());
+            //set project id
+            try {
+                monitorItem.setCurrentProject(authUtil.getDefaultProjectForCurrentUser());
+            } catch (Exception e) {
+                logger.error("Error mapping current project");
+                fail();
+            }
 
             final SpreadsheetFile file = new SpreadsheetFileBuilder()
                     .setFileName(getSessionParam("uploadedFileName").toString())
@@ -77,8 +87,8 @@ public class MonitorView extends AbstractView {
                     .setFileStream((InputStream) getSessionParam("uploadedFileStream"))
                     .createSpreadsheetFile();
 
+            //Queue it:
             final ImportRequestEvent importEvent = new ImportRequestEvent(file, monitorItem);
-
             ImportEngineQueue.addJob(importEvent);
 
             logger.debug("Enqueued event=" + importEvent.toString());

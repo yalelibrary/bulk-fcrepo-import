@@ -73,6 +73,16 @@ public class ProjectView extends AbstractView {
         return list;
     }
 
+    public String getProjectLabel(int projectId) {
+        try {
+            Project project = entityDAO.findByProjectId(projectId);
+            return project.getLabel();
+        } catch (Exception e) {
+            logger.error("Error finding prjoect label");
+            return null;
+        }
+    }
+
     public List<Project> getItemList() {
         final List<Project> list = dao.findAll();
         return list;

@@ -61,14 +61,12 @@ public class MarcBarcodeImportEngineIT extends AbstractDBTest {
             assertEquals("FieldMarcMapping size mismatch", fieldMarcMappingList.size(), 86);
 
             /* 2. read the F104 or F105 spreadsheet */
-            final ImportEngine importEngine = new DefaultImportEngine();
+            final ImportEngine importEngine = new DefaultImportEngine(0, 1); //TODO params logic
 
             importEngine.setImportSourceProcessor(new ImportSourceProcessor()); //TODO
 
             final List<ImportEntity.Row> rows = importEngine.read(getImportSpreadsheeet(), ReadMode.FULL,
                     new DefaultFieldDataValidator());
-
-            System.out.println("Rows are" + rows.toString());
 
             assertEquals("Rows size mismatch", rows.size(), ExportFileConstants.ROW_COUNT);
             assertEquals("Columns size mismatch", rows.get(0).getColumns().size(), 5);

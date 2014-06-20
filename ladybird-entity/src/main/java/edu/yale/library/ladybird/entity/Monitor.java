@@ -13,6 +13,7 @@ public class Monitor implements java.io.Serializable {
     private String exportPath;
     private User user = new UserBuilder().createUser();
     private Date date = new Date();
+    private Project currentProject = new Project();
 
     @Deprecated
     private String notificationEmail; //todo remove
@@ -45,6 +46,15 @@ public class Monitor implements java.io.Serializable {
         this.exportPath = exportPath;
         this.user = user;
         this.notificationEmail = notificationEmail;
+    }
+
+    public Monitor(Integer id, String dirPath, String exportPath, User user, Date date, Project currentProject) {
+        this.id = id;
+        this.dirPath = dirPath;
+        this.exportPath = exportPath;
+        this.user = user;
+        this.date = date;
+        this.currentProject = currentProject;
     }
 
     public String getDirPath() {
@@ -95,13 +105,24 @@ public class Monitor implements java.io.Serializable {
         this.date = date;
     }
 
+    public Project getCurrentProject() {
+        return currentProject;
+    }
+
+    public void setCurrentProject(Project currentProject) {
+        this.currentProject = currentProject;
+    }
+
     @Override
     public String toString() {
         return "Monitor{"
                 + "id=" + id
-                + ", dirPath='" + dirPath + '\''
+                + ", dirPath='"
+                + dirPath + '\''
                 + ", exportPath='" + exportPath + '\''
                 + ", user=" + user
+                + ", date=" + date
+                + ", currentProject=" + currentProject
                 + ", notificationEmail='" + notificationEmail + '\''
                 + '}';
     }

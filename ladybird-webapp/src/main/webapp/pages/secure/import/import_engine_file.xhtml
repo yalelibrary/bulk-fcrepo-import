@@ -22,7 +22,7 @@
                           value="Missing Configuration"
                           rendered="#{(empty userView.itemList)
                             or (empty ImportSourceView.itemList) or (empty ProjectView.itemList)
-                            or (not cronSchedulerView.cronScheduled)}"/>
+                            or (not cronSchedulerView.cronScheduled) or (userPreferencesView.defaultProjectForCurrentUser == null)}"/>
         </div>
 
         <br/>
