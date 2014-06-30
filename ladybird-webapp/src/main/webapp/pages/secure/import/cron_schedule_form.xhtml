@@ -12,7 +12,7 @@
 
             <div class="control-group">
                 <span class="help-block">
-                     Specify schedule of various jobs.
+                     Specify job schedule (Format: Seconds Minutes Hours Day-of-month Month Day-of-Week Year (Optional)).
                      <p:messages id="messages_pf" showDetail="true" autoUpdate="true" closable="true"/>
                  </span>
             </div>
@@ -39,9 +39,11 @@
                 </div>
             </div>
 
-            <!-- Submit Button -->
-            <h:commandButton value="Submit" styleClass="btn" action="#{cronSchedulerView.save}"
-                             rendered="#{not cronSchedulerView.cronScheduled}"/>
+            <div>
+                <!-- Submit Button -->
+                <h:commandButton value="Submit" styleClass="btn" action="#{cronSchedulerView.save}"
+                                 rendered="#{not cronSchedulerView.cronScheduled}"/>
+            </div>
 
         </h:form>
     </ui:define>

@@ -31,7 +31,7 @@ public class SettingsView extends AbstractView {
 
     @PostConstruct
     public void init() {
-        logger.debug("Init SettingsView");
+        logger.trace("Init SettingsView");
         initFields();
     }
 
@@ -66,6 +66,14 @@ public class SettingsView extends AbstractView {
             }
         } catch (Exception e) {
             logger.error("Error finding or persisting settings", e);
+        }
+    }
+
+    public String getSettingValueByProperty(final String key) {
+        try {
+            return settingsDAO.findByProperty(key).getValue();
+        } catch (Exception e) {
+           return "";
         }
     }
 }

@@ -9,10 +9,10 @@
 
 <ui:composition>
 
-    <h:outputLink value="/ladybird-webapp/web/pages/secure/user_manager_form.xhtml"
-                  rendered="#{empty userView.itemList}"
+    <h:outputLink value="/ladybird-webapp/web/pages/secure/user_preferences.xhtml"
+                  rendered="#{userPreferencesView.defaultProjectForCurrentUser == null}"
                   styleClass="btn btn-primary btn-warning">
-        Add Users
+        Change User Default Project
     </h:outputLink>
 
 </ui:composition>

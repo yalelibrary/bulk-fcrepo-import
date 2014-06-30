@@ -16,13 +16,13 @@
                           value="Upload file and specify export directory and where notification should be sent"
                           rendered="#{(not empty userView.itemList)
                             and (not empty ImportSourceView.itemList) and (not empty ProjectView.itemList)
-                            and (cronSchedulerView.cronScheduled)}"/>
+                            and (cronSchedulerView.cronScheduled) and (userPreferencesView.defaultProjectForCurrentUser != null)}"/>
 
             <h:outputText styleClass="alert alert-warning"
                           value="Missing Configuration"
-                          rendered="#{(empty userView.itemList)
-                            or (empty ImportSourceView.itemList) or (empty ProjectView.itemList)
-                            or (not cronSchedulerView.cronScheduled) or (userPreferencesView.defaultProjectForCurrentUser == null)}"/>
+                          rendered="#{(empty userView.itemList) or (empty ImportSourceView.itemList)
+                          or (empty ProjectView.itemList) or (not cronSchedulerView.cronScheduled)
+                          or (userPreferencesView.defaultProjectForCurrentUser == null)}"/>
         </div>
 
         <br/>
@@ -43,9 +43,14 @@
                     <ui:include src="../check_importsource.xhtml"/>
                 </ui:insert>
             </span>
-              <span>
+            <span>
                 <ui:insert>
                     <ui:include src="../check_cron_schedule.xhtml"/>
+                </ui:insert>
+            </span>
+            <span>
+                <ui:insert>
+                    <ui:include src="../check_user_pref.xhtml"/>
                 </ui:insert>
             </span>
         </div>
@@ -53,9 +58,10 @@
         <br/>
 
         <h:form id="UserForm" enctype="multipart/form-data" rendered="#{(not empty userView.itemList)
-            and (not empty ImportSourceView.itemList) and (not empty ProjectView.itemList) and (cronSchedulerView.cronScheduled)}">
+            and (not empty ImportSourceView.itemList) and (not empty ProjectView.itemList) and (cronSchedulerView.cronScheduled)
+            and (userPreferencesView.defaultProjectForCurrentUser != null)}">
 
-           <div>
+            <div>
                 <label>Excel File</label>
 
                 <div>
@@ -69,7 +75,7 @@
                                   required="true"
                                   allowTypes="/(\.|\/)(xlsx)$/"
                                   sizeLimit="1000000"
-                                  fileLimitMessage="Uploaded file cannot exceed 100KB." >
+                                  fileLimitMessage="Uploaded file cannot exceed 100KB.">
                     </p:fileUpload>
                     <h:message for="upload" style="color:red"/>
                 </div>
@@ -79,12 +85,12 @@
                 <label>Export Directory</label>
 
                 <div>
-                    <p:inputText value="#{monitorView.monitorItem.exportPath}"/>
+                    <p:inputText value="#{monitorView.monitorItem.exportPath}"/> (Base directory:#{settingsView.getSettingValueByProperty('import_root_path')})
                 </div>
             </div>
 
             <div>
-                <label>Notification E-mail (select from the list)</label>
+                <label>Notification E-mail</label>
 
                 <div>
                     <p:selectOneMenu id="userSelectBox"

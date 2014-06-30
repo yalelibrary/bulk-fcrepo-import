@@ -40,7 +40,7 @@ public class CronView extends AbstractView {
     @PostConstruct
     public void init() {
         initFields();
-        final JobsManager jobsManager = new DefaultJobsManager();
+        final JobsManager jobsManager = new DefaultJobsManager(); //TODO
         jobs = jobsManager.getJobs();
     }
 

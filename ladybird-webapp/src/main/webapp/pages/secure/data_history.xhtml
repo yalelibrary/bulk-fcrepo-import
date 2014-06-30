@@ -9,39 +9,34 @@
     <f:metadata/>
 
     <ui:define name="content">
-        <h4>User Events</h4>
+        <h4>Search History</h4>
 
-        All events for user #{userEventView.user}
+        <h:outputText value="No results found." rendered="#{empty searchView.searchEvents}"/>
 
-        <h:form id="UserEventForm" enctype="multipart/form-data">
+        <h:form id="UserSearchEventForm" enctype="multipart/form-data">
             <br/>
 
             <div>
                 <div>
 
-                    <br/>
 
-                    <p:dataTable id="UserEventDatatable"
-                                 value="#{userEventView.itemList}"
+                    <p:dataTable id="UserSearchEventDatatable"
+                                 value="#{searchView.searchEvents}"
                                  var="item"
                                  paginator="false"
                                  editable="false">
 
-                        <p:column rendered="false">
-                            <f:facet name="header">
-                                <h:outputText value="UserId"/>
-                            </f:facet>
-                            <h:outputText id="event_userid" value="#{item.userId}"/>
-                        </p:column>
+                        <!--
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Event Type"/>
                             </f:facet>
                             <h:outputText id="event_type" value="#{item.eventType}"/>
                         </p:column>
+                        -->
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="Creation"/>
+                                <h:outputText value="Time"/>
                             </f:facet>
                             <h:outputText id="event_createddate" value="#{item.createdDate}">
                                 <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
@@ -49,23 +44,7 @@
                         </p:column>
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="Start"/>
-                            </f:facet>
-                            <h:outputText id="event_startdate" value="#{item.startDate}">
-                                <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
-                            </h:outputText>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="End"/>
-                            </f:facet>
-                            <h:outputText id="event_enddate" value="#{item.endDate}">
-                                <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
-                            </h:outputText>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="Event Value"/>
+                                <h:outputText value="Search"/>
                             </f:facet>
                             <h:outputText id="event_value" name="event_value" value="#{item.value}"/>
                         </p:column>

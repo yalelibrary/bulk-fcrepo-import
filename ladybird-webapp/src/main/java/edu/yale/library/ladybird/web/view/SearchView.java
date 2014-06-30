@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.entity.Object;
+import edu.yale.library.ladybird.entity.UserEvent;
 import edu.yale.library.ladybird.kernel.KernelBootstrap;
 import edu.yale.library.ladybird.kernel.events.Events;
 import edu.yale.library.ladybird.kernel.events.UserGeneratedEvent;
@@ -18,9 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- *
- */
+
 @ManagedBean
 @SessionScoped
 public class SearchView extends AbstractView {
@@ -36,6 +35,9 @@ public class SearchView extends AbstractView {
 
     @Inject
     UserEventDAO userEventDAO;
+
+    @Inject
+    AuthUtil authUtil;
 
     @PostConstruct
     public void init() {
@@ -67,7 +69,6 @@ public class SearchView extends AbstractView {
 
             final Object o = objectDAO.findByOid(oid);
             itemList = Collections.singletonList(o);
-            //logger.debug("List size={}", itemList.toString());
             return NavigationCase.OK.toString();
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -97,5 +98,17 @@ public class SearchView extends AbstractView {
 
      private String getCurrentUser() {
         return FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("netid").toString();
+    }
+
+    //TODO move to some other user event view?
+    public List<UserEvent> getSearchEvents() {
+        final String SEARCH_EVENT = Events.USER_SEARCH.name();
+        List<UserEvent> list = new ArrayList<>();
+        try {
+            list = userEventDAO.findEventsByUser(SEARCH_EVENT, authUtil.getCurrentUser().getUsername());
+        } catch (Throwable e) {
+            logger.error("Error find search results", e);
+        }
+        return list;
     }
 }
