@@ -25,7 +25,7 @@
                 <p:menubar>
                     <p:submenu label="Dashboard" >
                         <p:menuitem value="Schedule Import" url="/pages/secure/import/import_engine_file.xhtml" />
-                        <p:menuitem value="Project" url="/pages/secure/projects.xhtml" />
+                        <p:menuitem value="Project Manager" url="/pages/secure/projects.xhtml" />
                         <p:menuitem value="Schedule cron" url="/pages/secure/import/cron_schedule_form.xhtml" />
                         <p:menuitem value="Field marc mappings" url="/pages/secure/import/field_marc_mapping.xhtml" />
                         <p:menuitem value="OAI-PMH source" url="/pages/secure/import/import_source.xhtml" />
@@ -91,7 +91,7 @@
 
         <div>
             <h:outputText value="Project: #{userPreferencesView.defaultProjectForCurrentUser.label}"
-                   rendered="#{userPreferencesView.defaultProjectForCurrentUser != null}"/>
+                   rendered="#{userPreferencesView.defaultProjectForCurrentUser != null}" style="font-style:italic"/>
         </div>
 
         <div class="row row-offcanvas row-offcanvas-right">

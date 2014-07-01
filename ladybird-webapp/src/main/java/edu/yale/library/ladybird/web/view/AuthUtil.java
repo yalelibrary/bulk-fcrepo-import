@@ -43,7 +43,7 @@ public class AuthUtil extends AbstractView {
             final List<UserPreferences> userPreferencesList = entityDAO.findByUserId(userId);
 
             if (userPreferencesList.isEmpty()) {
-                logger.debug("No default project for current user.");
+                logger.trace("No default project for current user.");
                 return null; //TODO
             }
 

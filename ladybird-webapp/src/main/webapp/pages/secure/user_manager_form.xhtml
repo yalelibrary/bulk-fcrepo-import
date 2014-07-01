@@ -8,55 +8,71 @@
 <ui:composition template="../../templates/template_yul.xhtml">
 
     <ui:define name="content">
-        <h4>Add User</h4>
-        <h:form id="UserForm" enctype="multipart/form-data">
-            <div>
+        <h:form id="UserForm" enctype="multipart/form-data" styleClass="form-horizontal" role="form">
+
+            <legend> Add User</legend>
+
+            <fieldset>
+
                 <div>
-
                     <div>
-                        <label>Username</label>
-                        <div>
-                            <h:inputText id="username" name="username" value="#{userView.item.username}"/>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Username</label>
+
+                            <div class="col-sm-10">
+                                <h:inputText id="username" name="username" value="#{userView.item.username}"/>
+                            </div>
                         </div>
-                    </div>
 
-                    <div>
-                        <label>Name</label>
-                        <div>
-                            <h:inputText id="name" name="name" value="#{userView.item.name}"/>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Name</label>
+
+                            <div class="col-sm-10">
+                                <h:inputText id="name" name="name" value="#{userView.item.name}"/>
+                            </div>
                         </div>
-                    </div>
 
-                    <div>
-                        <label>E-mail</label>
-                        <div>
-                            <h:inputText id="email" name="email" value="#{userView.item.email}"/>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">E-mail</label>
+
+                            <div class="col-sm-10">
+                                <h:inputText id="email" name="email" value="#{userView.item.email}"/>
+                            </div>
                         </div>
-                    </div>
 
-                    <div>
-                        <label>Role</label>
-                        <div>
-                            <p:selectOneMenu id="roleSelectBox"
-                                             value="#{userView.item.role}">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Role</label>
 
-                                <f:selectItems value="#{roleView.itemList}"
-                                               var="select_role_var"
-                                               itemLabel="#{select_role_var.name}"
-                                               itemValue="#{select_role_var.name}" />
+                            <div class="col-sm-10">
+                                <p:selectOneMenu id="roleSelectBox"
+                                                 value="#{userView.item.role}">
 
-                            </p:selectOneMenu>
-                            <h:message for="roleSelectBox" style="color:red" />
+                                    <f:selectItems value="#{roleView.itemList}"
+                                                   var="select_role_var"
+                                                   itemLabel="#{select_role_var.name}"
+                                                   itemValue="#{select_role_var.name}"/>
+
+                                </p:selectOneMenu>
+                                <h:message for="roleSelectBox" style="color:red"/>
+                            </div>
                         </div>
+
+                        <div class="form-group">
+
+                            <label class="col-sm-2 control-label"></label>
+
+                            <div class="col-sm-10">
+                                <h:commandButton id="submit_button"
+                                                 action="#{userView.save}"
+                                                 styleClass="btn btn-default"
+                                                 value="Submit"/>
+                            </div>
+                        </div>
+
                     </div>
-
-                    <h:commandButton id="submit_button"
-                                     action="#{userView.save}"
-                                     styleClass="btn"
-                                     value="Submit"/>
-
                 </div>
-            </div>
+            </fieldset>
         </h:form>
     </ui:define>
 </ui:composition>
