@@ -24,7 +24,7 @@ public class MediaFunctionProcessor {
     /** root path */
     private String rootPath = "";
 
-    /** relateive path */
+    /** relative path */
     private String path = "";
 
     @SuppressWarnings("unchecked")
@@ -60,6 +60,13 @@ public class MediaFunctionProcessor {
 
                 final Column<String> o = columnsList.get(OID_COLUMN);
                 Integer oid = Integer.parseInt(o.getValue());
+
+                logger.debug("Considering file location={}", c.getValue());
+
+                final File f = new File(getPath(c.getValue()));
+
+                if (f.exists()) {
+
                 ImportFile importFile = new ImportFileBuilder().setImportId(importId)
                         .setFileLocation(c.getValue()).setDate(new Date()).setOid(oid).createImportFile();
 
@@ -69,6 +76,16 @@ public class MediaFunctionProcessor {
 
                 //2. convert image
                 convertImage(c.getValue(), MediaFormat.TIFF, MediaFormat.JPEG, oid);
+                } else { //no image found. update dao with blank image found on project folder & skip image magick. TODO
+                    logger.debug("Replacing no image with path={}", getPath("no-image-found.jpg"));
+                    ImportFile importFile = new ImportFileBuilder().setImportId(importId)
+                            .setFileLocation(getPath("no-image-found.jpg")).setDate(new Date()).setOid(oid).createImportFile();
+                    importFileDAO.save(importFile);
+
+                    convertImage("N/A", getPath("no-image-found.jpg"), oid);
+
+                    logger.trace("Saved entity={}", importFile.toString());
+                }
             } catch (Exception e) {
                 logger.debug("Error/warning persisting entity", e); //ignore persistence error
             }
@@ -120,6 +137,27 @@ public class MediaFunctionProcessor {
                 .setFileExt(MediaFormat.JPEG.toString())
                 .setOid(oid).setUserId(1).setFileLabel(fileName)
                 .setFileName(fileName.replace(fromExt.toString(), toExt.toString())).createObjectFile(); //FIXME userid
+
+        logger.trace("Saving entity={}", objectFile);
+
+        ObjectFileDAO objectFileDAO = new ObjectFileHibernateDAO();
+        objectFileDAO.save(objectFile);
+        logger.trace("Saved.");
+    }
+
+    /**
+     * Converts image and updates object file table
+     * @param fileName
+     * @param oid
+     */
+    private void convertImage(final String fileName, final String outputFilePath, int oid) {
+
+        //2. prepare object file and persist
+        ObjectFile objectFile = new ObjectFileBuilder()
+                .setDate(new Date()).setFilePath(outputFilePath)
+                .setFileExt(MediaFormat.JPEG.toString())
+                .setOid(oid).setUserId(1).setFileLabel(fileName)
+                .setFileName("N/A").createObjectFile(); //FIXME userid
 
         logger.trace("Saving entity={}", objectFile);
 
