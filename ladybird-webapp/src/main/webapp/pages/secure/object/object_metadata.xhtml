@@ -7,7 +7,7 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../../templates/template_yul.xhtml">
     <ui:define name="content">
-        <h:form id="ObjectMetadataForm" enctype="multipart/form-data">
+        <h:form id="ObjectMetadataForm" enctype="multipart/form-data" styleClass="form-horizontal" role="form">
 
             <div>
                 <div class="row">
@@ -30,7 +30,7 @@
                                             <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
                                     </h:outputText>
                         </p>
-                        <p> Created By #{userView.getUserName(objectMetadataView.objectFile.userId)} </p>
+                        <p> Created by #{userView.getUserName(objectMetadataView.objectFile.userId)} </p>
                     </div>
                 </div>
             </div>
@@ -39,7 +39,13 @@
                 <h4>Metadata</h4>
 
                 <ui:repeat value="#{objectMetadataView.map.entrySet().toArray()}" var="entry">
-                    Field #{entry.key} = #{entry.value} <br/>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"><h:outputText value="#{objectMetadataView.getFdidHandle(entry.key)}"/></label>
+
+                        <div class="col-sm-10">
+                            <p:inputText value="#{entry.value}" style="width:100%"/>
+                        </div>
+                    </div>
                 </ui:repeat>
 
                 <!--

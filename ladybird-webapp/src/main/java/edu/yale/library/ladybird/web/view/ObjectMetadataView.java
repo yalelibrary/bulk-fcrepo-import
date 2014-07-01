@@ -68,7 +68,6 @@ public class ObjectMetadataView extends AbstractView {
     @Inject
     private FieldDefinitionDAO fieldDefinitionDAO;
 
-
     @PostConstruct
     public void init() {
         initFields();
@@ -123,6 +122,21 @@ public class ObjectMetadataView extends AbstractView {
             logger.error("Error finding entity={}", e);
         }
         return "N/A";
+    }
+
+    /**
+     * Returns fdid handle
+     * @param fdid int value of fdid, e.g. 69
+     * @return handle, e.g. Name or empty string
+     */
+    public String getFdidHandle(int fdid) {
+        try {
+            FieldDefinition fieldDefinition = fieldDefinitionDAO.findByFdid(fdid);
+            return fieldDefinition.getHandle();
+        } catch (Exception e) {
+            logger.trace("Error finding fdid value={}",fdid, e);
+            return "";
+        }
     }
 
     /**
