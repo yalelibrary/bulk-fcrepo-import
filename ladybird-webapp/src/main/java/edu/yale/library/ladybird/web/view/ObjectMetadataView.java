@@ -13,13 +13,16 @@ import edu.yale.library.ladybird.persistence.dao.ObjectAcidDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectFileDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectStringDAO;
+import edu.yale.library.ladybird.web.view.template.FieldDefinitionValue;
 import org.omnifaces.util.Faces;
 import org.slf4j.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,27 +30,41 @@ import java.util.Map;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @ManagedBean
-@ViewScoped
+@RequestScoped
 @SuppressWarnings("unchecked")
 public class ObjectMetadataView extends AbstractView {
     private final Logger logger = getLogger(this.getClass());
 
-    /** fdid value map*/
-    private Map<Integer, String> map;
+    /**
+     * fdid value map
+     */
+    //private Map<Integer, String> map;
 
-    /** Path to image */
+    private List<FieldDefinitionValue> fieldDefinitionvalueList;
+
+    /**
+     * Path to image
+     */
     private String image;
 
-    /** for file image info */
+    /**
+     * for file image info
+     */
     private ObjectFile objectFile;
 
-    /** for metadata */
+    /**
+     * for metadata
+     */
     private edu.yale.library.ladybird.entity.Object object;
 
-    /** for metadata */
+    /**
+     * for metadata
+     */
     private ObjectString objectString;
 
-    /** for metadata */
+    /**
+     * for metadata
+     */
     private ObjectAcid objectAcid;
 
     @Inject
@@ -72,20 +89,23 @@ public class ObjectMetadataView extends AbstractView {
     public void init() {
         initFields();
         dao = objectDAO;
-        //logger.debug("Init ObjectMedataView");
+        logger.debug("Init ObjectMedataView");
         try {
             final String oidStr = Faces.getRequestParameter("oid");
             final int oid = Integer.parseInt(oidStr);
 
             objectFile = objectFileDAO.findByOid(oid);
 
-            map = populateFieldMap(oid); //map contains fdid values
+            if (fieldDefinitionvalueList == null) {
+                logger.debug("Field definition value null");
+                fieldDefinitionvalueList = buildFieldDefnList(oid);
+            }
         } catch (Exception e) {
             logger.error("Error={}", e.getMessage());
         }
     }
 
-    /** Loads field definitions from dao */
+    /*
     private Map populateFieldMap(int oid) {
         final Map<Integer, String> map = new HashMap<>();
 
@@ -100,6 +120,22 @@ public class ObjectMetadataView extends AbstractView {
         }
 
         return map;
+    } */
+
+    private List<FieldDefinitionValue> buildFieldDefnList(int oid) {
+        final List<FieldDefinitionValue> fieldDefinitionvalueList = new ArrayList<>();
+
+        try {
+            List<FieldDefinition> list = fieldDefinitionDAO.findAll();
+
+            for (FieldDefinition f : list) {
+                fieldDefinitionvalueList.add(new FieldDefinitionValue(f, getValueByOidAndFdid(oid, f.getFdid())));
+            }
+        } catch (Exception e) {
+            logger.debug("Error loading fdid={}", e);
+        }
+
+        return fieldDefinitionvalueList;
     }
 
 
@@ -126,6 +162,7 @@ public class ObjectMetadataView extends AbstractView {
 
     /**
      * Returns fdid handle
+     *
      * @param fdid int value of fdid, e.g. 69
      * @return handle, e.g. Name or empty string
      */
@@ -134,18 +171,55 @@ public class ObjectMetadataView extends AbstractView {
             FieldDefinition fieldDefinition = fieldDefinitionDAO.findByFdid(fdid);
             return fieldDefinition.getHandle();
         } catch (Exception e) {
-            logger.trace("Error finding fdid value={}",fdid, e);
+            logger.trace("Error finding fdid value={}", fdid, e);
             return "";
         }
     }
 
     /**
+     * Updates oid metadata
+     */
+    public String updateOidMetadata() {
+        logger.trace("Updating oid metadata for oid={}", Faces.getRequestParameter("oid"));
+
+        final int oid = Integer.parseInt(Faces.getRequestParameter("oid"));
+
+        final List<AuthorityControl> listToUpdate = new ArrayList<>();
+
+        logger.trace(fieldDefinitionvalueList.toString());
+
+        try {
+            for (FieldDefinitionValue fieldDefinitionValue : fieldDefinitionvalueList) {
+                logger.trace("Chedking for fdid={} and oid={}", fieldDefinitionValue.getFdid().getFdid(), oid);
+
+                ObjectAcid objectAcid = objectAcidDAO.findByOidAndFdid(oid, fieldDefinitionValue.getFdid().getFdid());
+                int acid = objectAcid.getValue();
+                final AuthorityControl authorityControl = authorityControlDAO.findByAcid(acid);
+
+                //update only if the field has been changed
+                if (!authorityControl.getValue().equalsIgnoreCase(fieldDefinitionValue.getValue())) {
+                    authorityControl.setValue(fieldDefinitionValue.getValue());
+                    listToUpdate.add(authorityControl);
+                    logger.debug("Updating for fdid={} and oid={}. Value={}", fieldDefinitionValue.getFdid().getFdid(), oid, fieldDefinitionValue.getValue());
+                }
+            }
+            authorityControlDAO.saveOrUpdateList(listToUpdate);
+        } catch (Exception e) {
+            logger.error("Error saving for oid={}", oid, e);
+            logger.debug("Full object acid={}", objectAcidDAO.findAll().toString());
+            return fail();
+        }
+
+        return ok();
+    }
+
+    /**
      * converter helper
+     *
      * @param s string e.g. from Host, note{fdid=68}
      * @return integer value
-     *
      * @see edu.yale.library.ladybird.engine.model.FieldConstantRules#convertStringToFieldConstant(String)
-     * for similiar functionality
+     *      for similiar functionality
      * @see edu.yale.library.ladybird.engine.imports.ObjectWriter#fdidAsInt(String) for duplicate
      */
     private Integer fdidAsInt(String s) {
@@ -163,7 +237,7 @@ public class ObjectMetadataView extends AbstractView {
 
     public boolean isParent(int oid) {
         try {
-            Object o =  objectDAO.findByOid(oid);
+            Object o = objectDAO.findByOid(oid);
             return o.isParent();
         } catch (Exception e) {
             logger.error("Error finding parent attribute", e.getMessage());
@@ -172,7 +246,10 @@ public class ObjectMetadataView extends AbstractView {
     }
 
     //Getters and setters -------------------------------------------------------------------
-    /** converts request parameter to file path */
+
+    /**
+     * converts request parameter to file path
+     */
     public String getImage() {
         return objectFile.getFilePath();
     }
@@ -213,17 +290,19 @@ public class ObjectMetadataView extends AbstractView {
         this.objectAcid = objectAcid;
     }
 
-    /** Should be moved */
+    /**
+     * Should be moved
+     */
     public int getCount() {
         return objectFileDAO.count();
     }
 
-    public Map getMap() {
-        return map;
+    public List<FieldDefinitionValue> getFieldDefinitionvalueList() {
+        return fieldDefinitionvalueList;
     }
 
-    public void setMap(Map map) {
-        this.map = map;
+    public void setFieldDefinitionvalueList(List<FieldDefinitionValue> fieldDefinitionvalueList) {
+        this.fieldDefinitionvalueList = fieldDefinitionvalueList;
     }
 }
 

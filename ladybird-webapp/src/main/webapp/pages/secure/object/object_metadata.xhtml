@@ -14,7 +14,6 @@
                     <div class="col-md-12">
                         <h:outputText value="Parent Object with child objects #{objectMetadataView.getChildCount(param['oid'])}" rendered="#{objectMetadataView.isParent(param['oid'])}"> </h:outputText>
                     </div>
-
                 </div>
             </div>
 
@@ -38,15 +37,22 @@
             <div>
                 <h4>Metadata</h4>
 
-                <ui:repeat value="#{objectMetadataView.map.entrySet().toArray()}" var="entry">
+                <ui:repeat value="#{objectMetadataView.fieldDefinitionvalueList}" var="entry">
                     <div class="form-group">
-                        <label class="col-sm-2 control-label"><h:outputText value="#{objectMetadataView.getFdidHandle(entry.key)}"/></label>
+                        <label class="col-sm-2 control-label"><h:outputText value="#{objectMetadataView.getFdidHandle(entry.fdid.fdid)}"/></label>
 
                         <div class="col-sm-10">
-                            <p:inputText value="#{entry.value}" style="width:100%"/>
+                            <h:inputText value="#{entry.value}" style="width:100%"/>
                         </div>
                     </div>
                 </ui:repeat>
+
+                <h:commandButton id="submit_button"
+                                 action="#{objectMetadataView.updateOidMetadata}"
+                                 styleClass="btn"
+                                 value="Submit">
+                    <f:param name="oid" value="#{param['oid']}"/>
+                </h:commandButton>
 
                 <!--
                 <h4>Access</h4>

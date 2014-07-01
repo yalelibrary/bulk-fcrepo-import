@@ -84,7 +84,6 @@ public class TemplatePopulateView extends AbstractView {
     public String save() {
         try {
             int templateProjectId = Integer.parseInt(Faces.getRequestParameter("id"));
-            //logger.trace("Template id={}", templateProjectId);
 
             for (FieldDefinitionValue fieldDefinitions: fieldDefinitionvalueList) {
                 ProjectTemplateStrings projectTemplateStrings = new ProjectTemplateStrings();
