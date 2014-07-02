@@ -7,25 +7,24 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../templates/template_yul.xhtml">
 
-    <ui:define name="offcanvas">
-        <a href="/ladybird-webapp/pages/secure/search_oid.xhtml" class="list-group-item">Custom Search</a>
-        <a href="/ladybird-webapp/pages/404.xhtml" class="list-group-item">Browse Project</a>
-    </ui:define>
+     <ui:define name="content">
 
-    <ui:define name="content">
-        <h4>Search</h4>
+        <h:form id="SearchForm" enctype="multipart/form-data" styleClass="form-horizontal" role="form">
 
-        <h:form id="SearchForm" enctype="multipart/form-data">
-            <h:inputText id="oid" name="oid" value="#{searchView.oid}" styleClass="form-control"/>
+            <legend>Search</legend>
 
-            <br/>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Oid</label>
+
+                <div class="col-sm-10">
+                    <h:inputText id="oid" name="oid" value="#{searchView.oid}"/>
+                </div>
+            </div>
 
             <h:commandButton id="submit_button"
                              action="#{searchView.search}"
                              styleClass="btn"
                              value="Search"/>
-
-
         </h:form>
     </ui:define>
 </ui:composition>

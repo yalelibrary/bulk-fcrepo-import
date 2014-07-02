@@ -15,38 +15,24 @@
             <h:outputText value="No match found." rendered="#{empty searchView.itemList}"/>
 
             <div>
-
                 <div>
+                    <div>
+                        <!-- Data Grid -->
+                        <p:dataGrid var="item" value="#{searchView.itemList}" columns="5"
+                                    rows="6" paginator="true" id="ObjectFileDatagrid" paginatorPostion="bottom"
+                                    rendered="#{not empty searchView.itemList}">
 
-                    <p:dataTable id="ObjectDatatable" value="#{searchView.itemList}"
-                                 var="item" paginator="true" rows="10"
-                                 paginatorPosition="bottom"
-                                 editable="false">
+                            <p:panel header="#{item.oid}" style="text-align:center">
+                                <h:panelGrid columns="1" style="width:100%">
+                                    <h:graphicImage value="/images/#{item.filePath}" height="151" width="170"/>
+                                    <h:outputText value="#{item.fileName}"/>
+                                    <h:link outcome="object/object_metadata?oid=#{item.oid}" value="View"/>
+                                </h:panelGrid>
+                            </p:panel>
 
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="Date"/>
-                            </f:facet>
-                            <h:outputText value="#{item.date}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="Project"/>
-                            </f:facet>
-                            <h:outputText value="#{item.projectId}"/>
-                        </p:column>
-                        <!--
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="User"/>
-                            </f:facet>
-                            <h:outputText value="#{item.userId}"/>
-                        </p:column>
-                        -->
-                    </p:dataTable>
-
+                        </p:dataGrid>
+                    </div>
                 </div>
-
             </div>
         </h:form>
     </ui:define>
