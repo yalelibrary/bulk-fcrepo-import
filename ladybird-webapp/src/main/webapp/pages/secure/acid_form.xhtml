@@ -18,22 +18,14 @@
         <h:form id="AcidCreateForm" enctype="multipart/form-data"
                 rendered="#{(not empty userView.itemList) and (authorityControlView.checkAddAcidPermission())}">
 
-            <br/>
-
             <div>
                 <div>
 
                     <div>
                         <label>Fdid</label>
-                        <!--
-                        <div>
-                            <p:inputText value="#{authorityControlView.item.fdid}"/>
-                        </div>
-                        -->
 
                         <div>
-                            <p:selectOneMenu id="fdidSelectBox"
-                                             value="#{authorityControlView.item.fdid}">
+                            <p:selectOneMenu id="fdidSelectBox" value="#{authorityControlView.item.fdid}">
 
                                 <f:selectItems value="#{FieldDefinitionView.itemList}"
                                                var="select_user_var"

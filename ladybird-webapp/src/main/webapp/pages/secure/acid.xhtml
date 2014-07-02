@@ -8,11 +8,11 @@
 <ui:composition template="../../templates/template_yul.xhtml">
 
     <ui:define name="offcanvas">
-        <a href="/ladybird-webapp/pages/secure/acid_form.xhtml" class="list-group-item">Add Acid</a>
+        <a href="/ladybird-webapp/pages/secure/acid_form.xhtml" class="list-group-item">Add Single Item to Acid List</a>
     </ui:define>
 
     <ui:define name="content">
-        <h4>AuthorityControl</h4>
+        <h4>Viewing ACID list: #{param['handle']}</h4>
         <h:form id="AuthorityControlForm" enctype="multipart/form-data">
 
             <br/>
@@ -26,7 +26,7 @@
                                  var="item" paginator="true" rows="10"
                                  tableStyle="" paginatorPosition="bottom"
                                  editable="false">
-
+                        <!--
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Date"/>
@@ -39,12 +39,16 @@
                             </f:facet>
                             <h:outputText value="#{item.fdid}"/>
                         </p:column>
+                        -->
+
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Value"/>
                             </f:facet>
                             <h:outputText value="#{item.value}"/>
                         </p:column>
+                        <!--
+
                         <p:column rendered="false">
                             <f:facet name="header">
                                 <h:outputText value="Code"/>
@@ -53,10 +57,11 @@
                         </p:column>
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="User"/>
+                            <h:outputText value="User"/>
                             </f:facet>
                             <h:outputText value="#{userView.getUserName(item.userId)}"/>
-                        </p:column>
+                            </p:column>
+                         -->
 
                     </p:dataTable>
                 </div>

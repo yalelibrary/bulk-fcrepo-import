@@ -104,7 +104,7 @@
         <from-view-id>/pages/secure/acid_form.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>ok</from-outcome>
-            <to-view-id>/pages/secure/acid.xhtml</to-view-id>
+            <to-view-id>/pages/secure/acid_home.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>
