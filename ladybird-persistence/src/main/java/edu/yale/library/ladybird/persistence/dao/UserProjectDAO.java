@@ -8,7 +8,7 @@ public interface UserProjectDAO extends GenericDAO<UserProject, Integer> {
 
     List<UserProject> findByProjectId(int projectId);
 
-    List<UserProject> findByUserId(int projectId);
+    List<UserProject> findByUserId(int userId);
 
     List<UserProject> findByUserAndProject(int userId, int projectId);
 }

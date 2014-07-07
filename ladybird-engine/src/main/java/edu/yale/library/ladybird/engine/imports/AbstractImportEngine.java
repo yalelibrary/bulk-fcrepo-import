@@ -69,6 +69,15 @@ public abstract class AbstractImportEngine implements ImportEngine {
         return doWrite(list);
     }
 
+    /**
+     * Writes to tables.
+     *
+     * @param list
+     */
+    public final int write(List<ImportEntity.Row> list, SpreadsheetFile spreadsheetFile) {
+        return doWrite(list, spreadsheetFile);
+    }
+
     protected SpreadsheetFile getFile() {
         return spreadsheetFile.clone();
     }
@@ -78,5 +87,6 @@ public abstract class AbstractImportEngine implements ImportEngine {
 
     public abstract int doWrite(List<ImportEntity.Row> file);
 
+    public abstract int doWrite(List<ImportEntity.Row> file, SpreadsheetFile spreadsheetFile);
 
 }

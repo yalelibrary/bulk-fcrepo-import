@@ -1,21 +1,43 @@
 package edu.yale.library.ladybird.web.view;
 
+import edu.yale.library.ladybird.entity.ImportJob;
+import edu.yale.library.ladybird.entity.UserProject;
+import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
+import edu.yale.library.ladybird.persistence.dao.UserProjectDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @SessionScoped
 @ManagedBean
-public class WelcomeView {
+public class WelcomeView extends AbstractView {
+
+    private Logger logger = LoggerFactory.getLogger(WelcomeView.class);
 
     public static final String webXmlPrincipalLoginIdentifier = "netid-last-act-time";
 
-    private Logger logger = LoggerFactory.getLogger(WelcomeView.class);
+    @Inject
+    private AuthUtil authUtil;
+
+    @Inject
+    private UserProjectDAO userProjectDAO;
+
+    @Inject
+    private ImportJobDAO importJobDAO;
+
+    @PostConstruct
+    public void init() {
+        initFields();
+    }
 
     public Date getPrincipalLastActTime() {
         try {
@@ -26,9 +48,39 @@ public class WelcomeView {
         return new Date(System.currentTimeMillis());
     }
 
-
+    @Deprecated
     private Object getSessionAttribute(final String key) {
         return FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(key);
+    }
+
+    /**
+     * Returns list of projects for current user
+     *
+     * @return list of projects
+     */
+    public List<UserProject> projectsForCurrentUser() {
+        List<UserProject> userProjectList = new ArrayList<>();
+        try {
+            userProjectList = userProjectDAO.findByUserId(authUtil.getCurrentUserId());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return userProjectList;
+    }
+
+    /**
+     * Gets all import jobs for current user
+     * @return
+     */
+    public List<ImportJob> jobsForCurrentUser() {
+        try {
+            List<ImportJob> importJobs = importJobDAO.findByUser(authUtil.getCurrentUserId());
+            logger.trace("Found list={}", importJobs.toString());
+            return importJobs;
+        } catch (Exception e) {
+            logger.debug("No current user or error finding jobs.");
+            return new ArrayList<>();
+        }
     }
 
 }

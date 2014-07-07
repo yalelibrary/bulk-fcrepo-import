@@ -38,6 +38,10 @@ public class SpreadsheetFile implements Cloneable {
         this.path = path;
     }
 
+    public String getFileName() {
+        return fileName;
+    }
+
     /**
      * Return sheet
      *

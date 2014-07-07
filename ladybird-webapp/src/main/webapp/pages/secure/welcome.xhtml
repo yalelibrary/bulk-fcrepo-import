@@ -16,7 +16,7 @@
             </h:outputText>
 
 
-            <h4>Project</h4>
+            <h4>Current Project</h4>
 
             <span>
             <h:outputText value="No project assignments yet."
@@ -29,6 +29,48 @@
             </span>
 
             <h:outputText value="#{userPreferencesView.defaultProjectForCurrentUser.label}"/>
+
+            <br/>
+
+            <h4>Projects</h4>
+
+            <p:dataTable id="ProjectsDatatable"
+                         editable="false"
+                         paginator="true"
+                         paginatorPosition="bottom"
+                         rows="10"
+                         value="#{welcomeView.projectsForCurrentUser()}"
+                         var="item">
+
+                <p:column headerText="Project">
+                    <h:outputText value="#{ProjectView.getProjectLabel(item.projectId)}"/>
+                </p:column>
+                <p:column headerText="Role">
+                    <h:outputText value="#{item.role}"/>
+                </p:column>
+            </p:dataTable>
+
+            <br/>
+
+            <h4>Jobs</h4>
+
+            <p:dataTable id="JobViewDatatable"
+                         editable="false"
+                         paginator="true"
+                         paginatorPosition="bottom"
+                         rows="10"
+                         value="#{welcomeView.jobsForCurrentUser()}"
+                         var="jobitem">
+
+                <p:column headerText="File Name">
+                    <h:outputText value="#{jobitem.jobFile}"/>
+                </p:column>
+                <p:column headerText="Date">
+                    <h:outputText value="#{jobitem.date}">
+                        <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                    </h:outputText>
+                </p:column>
+            </p:dataTable>
 
         </div>
     </ui:define>

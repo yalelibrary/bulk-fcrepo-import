@@ -176,6 +176,7 @@ public class ImportWriter {
      * @return minted job id
      */
     public Integer writeImportJob(final ImportJobRequest ctx) {
+        logger.debug("Saving entity={}", ctx.toString());
         return importJobDAO.save(new ImportJobBuilder().setDate(JOB_EXEC_DATE).setJobDirectory(ctx.getJobDir()).
                 setJobFile(ctx.getJobFile()).setUserId(ctx.getUserId()).createImportJob());
     }

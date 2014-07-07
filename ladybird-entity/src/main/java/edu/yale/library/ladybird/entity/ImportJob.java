@@ -6,7 +6,6 @@ import java.util.Date;
 
 public class ImportJob implements java.io.Serializable {
 
-
     private Integer importId;
     private Date date;
     private int userId;

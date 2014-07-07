@@ -50,9 +50,9 @@ public class DefaultImportJob implements Job, ImportJob {
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
         final long startTime = System.currentTimeMillis();
         final ImportRequestEvent importRequestedEvent = ImportEngineQueue.getJob();
-        final SpreadsheetFile file = importRequestedEvent.getSpreadsheetFile();
+        final SpreadsheetFile spreadsheetFile = importRequestedEvent.getSpreadsheetFile();
 
-        logger.debug("[start] import job. File name={}", file);
+        logger.debug("[start] import job. File name={}", spreadsheetFile);
 
         try {
             final int userId = importRequestedEvent.getMonitor().getUser().getUserId();
@@ -61,7 +61,7 @@ public class DefaultImportJob implements Job, ImportJob {
             final ImportEngine importEngine = new DefaultImportEngine(userId, projectId);
 
             final DefaultFieldDataValidator fieldDataValidator = new DefaultFieldDataValidator();
-            final List<ImportEntity.Row>  rowList = importEngine.read(file, ReadMode.FULL, fieldDataValidator);
+            final List<ImportEntity.Row>  rowList = importEngine.read(spreadsheetFile, ReadMode.FULL, fieldDataValidator);
 
             logger.debug("Read rows. list size={}", rowList.size());
 
@@ -75,7 +75,7 @@ public class DefaultImportJob implements Job, ImportJob {
 
             logger.debug("Writing to import table(s)");
 
-            final int imid = importEngine.write(rowList);
+            final int imid = importEngine.write(rowList, spreadsheetFile);
 
             logger.debug("[end] Completed import (writing) job in {}", DurationFormatUtils.formatDuration(System.currentTimeMillis() - startTime, "HH:mm:ss:SS"));
 

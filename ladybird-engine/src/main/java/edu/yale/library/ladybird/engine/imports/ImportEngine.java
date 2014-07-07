@@ -19,6 +19,8 @@ public interface ImportEngine {
 
     int write(List<ImportEntity.Row> list);
 
+    int write(List<ImportEntity.Row> list, SpreadsheetFile spreadsheetFile);
+
     void setOaiProvider(OaiProvider oaiProvider);
 
     void setMediaFunctionProcessor(MediaFunctionProcessor mediaFunctionProcessor);

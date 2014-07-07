@@ -39,6 +39,26 @@ public class DefaultImportEngine extends AbstractImportEngine {
         }
     }
 
+    //TODO consolidate or use different param construct (instead of list of row)
+    @Override
+    public int doWrite(final List<ImportEntity.Row> list, SpreadsheetFile spreadsheetFile) {
+        logger.debug("Initiating write, userId={} projectId={} list size={}", USER_ID, PROJECT_ID, list.size());
+
+        ImportWriter importWriter = new ImportWriter();
+        importWriter.setOaiProvider(oaiProvider);  //TODO
+        importWriter.setMediaFunctionProcessor(mediaFunctionProcessor); //TODO
+        importWriter.setImportSourceProcessor(importSourceProcessor); //TODO
+
+        ImportEntityValue importEntityValue = new ImportEntityValue(list);
+        try {
+            return importWriter.write(importEntityValue,
+                    new ImportJobRequestBuilder().userId(USER_ID).file(spreadsheetFile.getFileName())
+                            .dir("").projectId(PROJECT_ID).build());
+        } catch (Exception e) {
+            throw new ImportEngineException(e);
+        }
+    }
+
     public DefaultImportEngine(int userId, int projectId) {
         super.USER_ID = userId;
         super.PROJECT_ID = projectId;
