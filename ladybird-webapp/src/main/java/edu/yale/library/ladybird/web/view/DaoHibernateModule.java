@@ -3,6 +3,7 @@ package edu.yale.library.ladybird.web.view;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import edu.yale.library.ladybird.engine.ProgressEventChangeRecorder;
+import edu.yale.library.ladybird.engine.cron.ExportFileMailerScheduler;
 import edu.yale.library.ladybird.engine.cron.ExportScheduler;
 import edu.yale.library.ladybird.engine.cron.ImportScheduler;
 import edu.yale.library.ladybird.entity.Project;
@@ -18,6 +19,7 @@ import edu.yale.library.ladybird.persistence.dao.FieldMarcMappingDAO;
 import edu.yale.library.ladybird.persistence.dao.GenericDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportFileDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
+import edu.yale.library.ladybird.persistence.dao.ImportJobNotificationsDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportSourceDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportSourceDataDAO;
 import edu.yale.library.ladybird.persistence.dao.MonitorDAO;
@@ -47,6 +49,7 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.FieldDefinitionHibern
 import edu.yale.library.ladybird.persistence.dao.hibernate.FieldMarcMappingHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportFileHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobNotificationsHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceDataHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.MonitorHibernateDAO;
@@ -116,6 +119,7 @@ public class DaoHibernateModule extends AbstractModule {
         bind(ProjectTemplateStringsDAO.class).to(ProjectTemplateStringsHibernateDAO.class);
         bind(ProjectTemplateAcidDAO.class).to(ProjectTemplateAcidHibernateDAO.class);
         bind(ImportJobDAO.class).to(ImportJobHibernateDAO.class);
+        bind(ImportJobNotificationsDAO.class).to(ImportJobNotificationsHibernateDAO.class);
 
 
         bind(UserHttpService.class);
@@ -127,6 +131,7 @@ public class DaoHibernateModule extends AbstractModule {
 
         bind(ImportScheduler.class);
         bind(ExportScheduler.class);
+        bind(ExportFileMailerScheduler.class);
         bind(ProgressEventChangeRecorder.class);
 
         bind(JobsManager.class).to(DefaultJobsManager.class);

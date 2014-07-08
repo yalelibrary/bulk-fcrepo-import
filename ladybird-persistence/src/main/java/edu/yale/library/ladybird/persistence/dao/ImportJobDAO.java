@@ -8,5 +8,6 @@ public interface ImportJobDAO extends GenericDAO<ImportJob, Integer> {
 
     List<ImportJob> findByUser(int userId);
 
+    List<ImportJob> findByJobId(int jobId);
 }
 

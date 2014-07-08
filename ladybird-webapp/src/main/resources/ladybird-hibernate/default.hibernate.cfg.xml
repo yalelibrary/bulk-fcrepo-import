@@ -44,5 +44,6 @@
         <mapping resource="ladybird-hbm/ProjectTemplate.hbm.xml"/>
         <mapping resource="ladybird-hbm/ProjectTemplateAcid.hbm.xml"/>
         <mapping resource="ladybird-hbm/ProjectTemplateStrings.hbm.xml"/>
+        <mapping resource="ladybird-hbm/ImportJobNotifications.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

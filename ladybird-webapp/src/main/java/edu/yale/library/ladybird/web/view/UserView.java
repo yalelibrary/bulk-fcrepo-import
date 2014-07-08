@@ -166,7 +166,7 @@ public class UserView extends AbstractView implements Serializable {
     //TODO returns empty string due to lack of http service param for creator
     public String getUserName(final int userId) {
         try {
-            return userDAO.findByUserId(userId);
+            return userDAO.findUsernameByUserId(userId);
         } catch (Exception e) {
             logger.debug("Cannot find user name for user id={}", userId);
             return "";

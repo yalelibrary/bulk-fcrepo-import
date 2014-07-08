@@ -54,7 +54,9 @@ public class ExportReader {
 
         if (numRowsToWrite == 0) {
             logger.debug("No rows to write.");
-            return ImportEntityContext.newInstance();
+            ImportEntityContext empty = ImportEntityContext.newInstance();
+            empty.setImportId(importId);
+            return empty;
         }
 
         ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
@@ -130,6 +132,7 @@ public class ExportReader {
         final ImportEntityContext importEntityContext = new ImportEntityContext();
         importEntityContext.setImportJobList(resultRowList);
         importEntityContext.setMonitor(exportRequestEvent.getMonitor());
+        importEntityContext.setImportId(importId);
         return importEntityContext;
     }
 

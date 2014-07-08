@@ -19,5 +19,11 @@
         <property name="jobDirectory" type="string">
             <column name="job_directory" length="500" not-null="true" />
         </property>
+        <property name="exportJobFile" type="string">
+            <column name="export_job_file" length="100" />
+        </property>
+        <property name="exportJobDir" type="string">
+            <column name="export_job_dir" length="500" />
+        </property>
     </class>
 </hibernate-mapping>

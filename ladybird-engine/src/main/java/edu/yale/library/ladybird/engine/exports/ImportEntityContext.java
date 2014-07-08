@@ -14,6 +14,8 @@ public class ImportEntityContext {
 
     private List<ImportEntity.Row> importJobList;
     private Monitor monitor;
+    /** imj id */
+    private int importId;
 
     public Monitor getMonitor() {
         return monitor;
@@ -31,6 +33,14 @@ public class ImportEntityContext {
         this.importJobList = importJobList;
     }
 
+    public int getImportId() {
+        return importId;
+    }
+
+    public void setImportId(int importId) {
+        this.importId = importId;
+    }
+
     /**
      * Instantiates empty instance
      * @return
@@ -39,6 +49,7 @@ public class ImportEntityContext {
         ImportEntityContext importEntityContext = new ImportEntityContext();
         importEntityContext.setImportJobList(Collections.emptyList());
         importEntityContext.setMonitor(new Monitor());
+        importEntityContext.setImportId(-1);
         return importEntityContext;
     }
 

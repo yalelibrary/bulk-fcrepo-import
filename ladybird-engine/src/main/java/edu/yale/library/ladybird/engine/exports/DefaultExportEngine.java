@@ -35,14 +35,14 @@ public class DefaultExportEngine extends AbstractExportEngine {
     /**
      * Writes spreadsheet to disk.
      * @param list content
-     * @param relativePath relative path, e.g. project1/a.xlsx
+     * @param path full path to disk file
      * @throws IOException
      */
     @Override
-    public void doWrite(final List<ImportEntity.Row> list, final String relativePath) throws IOException {
-        final String fullPath = getWritePath(relativePath);
-        logger.debug("Initiating write to spreadsheet to relative path={}, path={}", relativePath, fullPath);
-        exportWriter.write(list, fullPath);
+    public void doWrite(final List<ImportEntity.Row> list, final String path) throws IOException {
+        //final String fullPath = getWritePath(relativePath);
+        logger.debug("Initiating write to spreadsheet to relative path={}", path);
+        exportWriter.write(list, path);
     }
 
     /**
@@ -50,6 +50,7 @@ public class DefaultExportEngine extends AbstractExportEngine {
      * @param relativePath
      * @return
      */
+    @Deprecated
     private String getWritePath(final String relativePath) {
         logger.trace("Looking up relative path={}", relativePath);
         if (ApplicationProperties.CONFIG_STATE.IMPORT_ROOT_PATH == null) {

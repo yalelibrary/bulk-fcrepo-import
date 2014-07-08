@@ -43,5 +43,6 @@
         <mapping resource="test-hbm/ProjectTemplate.hbm.xml"/>
         <mapping resource="test-hbm/ProjectTemplateAcid.hbm.xml"/>
         <mapping resource="test-hbm/ProjectTemplateStrings.hbm.xml"/>
+        <mapping resource="test-hbm/ImportJobNotifications.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

@@ -11,6 +11,8 @@ public class CronBean {
 
     private String filePickerCronExpression;
 
+    private String fileNotificationCronExpression;
+
     public String getImportCronExpression() {
         return importCronExpression;
     }
@@ -33,6 +35,14 @@ public class CronBean {
 
     public void setFilePickerCronExpression(String filePickerCronExpression) {
         this.filePickerCronExpression = filePickerCronExpression;
+    }
+
+    public String getFileNotificationCronExpression() {
+        return fileNotificationCronExpression;
+    }
+
+    public void setFileNotificationCronExpression(String fileNotificationCronExpression) {
+        this.fileNotificationCronExpression = fileNotificationCronExpression;
     }
 
     @Override

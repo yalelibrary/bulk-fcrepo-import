@@ -7,6 +7,9 @@ public class ImportJobBuilder {
     private int userId;
     private String jobFile;
     private String jobDirectory;
+    private String exportJobDir;
+    private String exportJobFile;
+    private Integer importId;
 
     public ImportJobBuilder setDate(Date date) {
         this.date = date;
@@ -28,7 +31,22 @@ public class ImportJobBuilder {
         return this;
     }
 
+    public ImportJobBuilder setExportJobDir(String exportJobDir) {
+        this.exportJobDir = exportJobDir;
+        return this;
+    }
+
+    public ImportJobBuilder setExportJobFile(String exportJobFile) {
+        this.exportJobFile = exportJobFile;
+        return this;
+    }
+
+    public ImportJobBuilder setImportId(Integer importId) {
+        this.importId = importId;
+        return this;
+    }
+
     public ImportJob createImportJob() {
-        return new ImportJob(date, userId, jobFile, jobDirectory);
+        return new ImportJob(date, userId, jobFile, jobDirectory, exportJobFile, exportJobDir);
     }
 }

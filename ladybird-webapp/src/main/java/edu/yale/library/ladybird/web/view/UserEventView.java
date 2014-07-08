@@ -69,7 +69,7 @@ public class UserEventView extends AbstractView implements Serializable {
         String userName = "";
 
         try {
-            userName = userDAO.findByUserId(userId);
+            userName = userDAO.findUsernameByUserId(userId);
         } catch (Exception e) {
             logger.debug("Error={}", e);
         }

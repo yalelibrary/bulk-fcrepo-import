@@ -71,14 +71,12 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
             logger.trace("Saved item");
         } catch (HibernateException t) {
             logger.error("Exception tyring to persist item." + t.getMessage());
-            t.printStackTrace();
             try {
                 if (tx != null) {
                     tx.rollback();
                 }
             } catch (Throwable rt) {
                 logger.error("Exception rolling back transaction", rt);
-                rt.printStackTrace();
                 throw rt;
             }
             throw t;
@@ -92,8 +90,74 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 
     /**
      * Save or udate list
-     * @param itemList
-     * @return
+     * @param item entity to save or update
+     */
+    public void saveOrUpdateItem(T item) {
+        Integer id = -1;
+        Session s = null;
+        Transaction tx = null;
+        try {
+            s = getSession();
+            tx = s.beginTransaction();
+
+            s.saveOrUpdate(item);
+            s.flush();
+            tx.commit();
+        } catch (HibernateException t) {
+            logger.error("Exception tyring to persist item." + t.getMessage());
+            try {
+                if (tx != null) {
+                    tx.rollback();
+                }
+            } catch (Throwable rt) {
+                logger.error("Exception rolling back transaction", rt);
+                throw rt;
+            }
+            throw t;
+        } finally {
+            if (s != null) {
+                s.close();
+            }
+        }
+    }
+
+    /**
+     * Save or udate list
+     * @param item entity to save or update
+     */
+    public void updateItem(T item) {
+        Integer id = -1;
+        Session s = null;
+        Transaction tx = null;
+        try {
+            s = getSession();
+            tx = s.beginTransaction();
+
+            s.update(item);
+            s.flush();
+            tx.commit();
+        } catch (HibernateException t) {
+            logger.error("Exception tyring to persist item." + t.getMessage());
+            try {
+                if (tx != null) {
+                    tx.rollback();
+                }
+            } catch (Throwable rt) {
+                logger.error("Exception rolling back transaction", rt);
+                throw rt;
+            }
+            throw t;
+        } finally {
+            if (s != null) {
+                s.close();
+            }
+        }
+    }
+
+
+    /**
+     * Save or udate list
+     * @param itemList list of entities
      */
     public void saveOrUpdateList(List<T> itemList) {
         Integer id = -1;
@@ -110,14 +174,12 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
             tx.commit();
         } catch (HibernateException t) {
             logger.error("Exception tyring to persist item." + t.getMessage());
-            t.printStackTrace();
             try {
                 if (tx != null) {
                     tx.rollback();
                 }
             } catch (Throwable rt) {
                 logger.error("Exception rolling back transaction", rt);
-                rt.printStackTrace();
                 throw rt;
             }
             throw t;
@@ -142,14 +204,12 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
             tx.commit();
         } catch (HibernateException t) {
             logger.error("Exception tyring to persist item." + t.getMessage());
-            t.printStackTrace();
             try {
                 if (tx != null) {
                     tx.rollback();
                 }
             } catch (Throwable rt) {
                 logger.error("Exception rolling back transaction", rt);
-                rt.printStackTrace();
                 throw rt;
             }
             throw t;

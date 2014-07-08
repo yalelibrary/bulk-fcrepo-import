@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
     <class name="edu.yale.library.ladybird.entity.ImportJob" table="import_job" catalog="pamoja">
         <id name="importId" type="java.lang.Integer">
@@ -18,6 +18,12 @@
         </property>
         <property name="jobDirectory" type="string">
             <column name="job_directory" length="500" not-null="true" />
+        </property>
+        <property name="exportJobFile" type="string">
+            <column name="export_job_file" length="100" />
+        </property>
+        <property name="exportJobDir" type="string">
+            <column name="export_job_dir" length="500" />
         </property>
     </class>
 </hibernate-mapping>

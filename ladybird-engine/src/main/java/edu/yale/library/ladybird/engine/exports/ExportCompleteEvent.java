@@ -27,7 +27,7 @@ public final class ExportCompleteEvent extends ExportEvent {
 
     @Override
     public String toString() {
-        return "ImportCompleteEvent{"
+        return "ExportCompleteEvent{"
                 + "rowsProcessed=" + rowsProcessed
                 + ", passCount=" + passCount
                 + ", failCount=" + failCount

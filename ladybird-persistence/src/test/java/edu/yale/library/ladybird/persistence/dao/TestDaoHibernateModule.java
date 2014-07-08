@@ -8,6 +8,8 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.CollectionHibernateDA
 import edu.yale.library.ladybird.persistence.dao.hibernate.HydraHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.HydraPublishHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportFileHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobNotificationsHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceDataHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.FieldDefinitionHibernateDAO;
@@ -80,5 +82,7 @@ public class TestDaoHibernateModule extends AbstractModule {
         bind(ProjectTemplateDAO.class).to(ProjectTemplateHibernateDAO.class);
         bind(ProjectTemplateStringsDAO.class).to(ProjectTemplateStringsHibernateDAO.class);
         bind(ProjectTemplateAcidDAO.class).to(ProjectTemplateAcidHibernateDAO.class);
+        bind(ImportJobNotificationsDAO.class).to(ImportJobNotificationsHibernateDAO.class);
+        bind(ImportJobDAO.class).to(ImportJobHibernateDAO.class);
     }
 }

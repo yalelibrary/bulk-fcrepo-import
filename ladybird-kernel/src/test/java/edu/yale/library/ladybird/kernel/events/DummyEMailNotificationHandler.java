@@ -8,6 +8,8 @@ import org.apache.commons.mail.SimpleEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+
 public class DummyEMailNotificationHandler implements NotificationHandler {
 
     private final Logger logger = LoggerFactory.getLogger(DummyEMailNotificationHandler.class);
@@ -27,4 +29,11 @@ public class DummyEMailNotificationHandler implements NotificationHandler {
             e.printStackTrace(); //TODO
         }
     }
+
+    @Override
+    public void notifyUserWithFile(User user, Event event, File file) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+
 }

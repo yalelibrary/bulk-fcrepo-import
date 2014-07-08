@@ -15,5 +15,13 @@ public class ImportJobHibernateDAO extends GenericHibernateDAO<ImportJob, Intege
         q.setParameter("param1", uid);
         return q.list();
     }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<ImportJob> findByJobId(int jobId) {
+        final Query q = getSession().createQuery("from edu.yale.library.ladybird.entity.ImportJob where importId = :param1");
+        q.setParameter("param1", jobId);
+        return q.list();
+    }
 }
 

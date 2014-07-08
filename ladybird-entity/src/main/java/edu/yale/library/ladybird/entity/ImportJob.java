@@ -10,17 +10,20 @@ public class ImportJob implements java.io.Serializable {
     private Date date;
     private int userId;
     private String jobFile;
-
     private String jobDirectory;
+    private String exportJobFile;
+    private String exportJobDir;
 
     public ImportJob() {
     }
 
-    public ImportJob(Date date, int userId, String jobFile, String jobDirectory) {
+    public ImportJob(Date date, int userId, String jobFile, String jobDirectory, String exportJobFile, String exportJobDir) {
         this.date = date;
         this.userId = userId;
         this.jobFile = jobFile;
         this.jobDirectory = jobDirectory;
+        this.exportJobFile = exportJobFile;
+        this.exportJobDir = exportJobDir;
     }
 
     public Integer getImportId() {
@@ -63,18 +66,32 @@ public class ImportJob implements java.io.Serializable {
         this.jobDirectory = jobDirectory;
     }
 
+    public String getExportJobDir() {
+        return exportJobDir;
+    }
+
+    public void setExportJobDir(String exportJobDir) {
+        this.exportJobDir = exportJobDir;
+    }
+
+    public String getExportJobFile() {
+        return exportJobFile;
+    }
+
+    public void setExportJobFile(String exportJobFile) {
+        this.exportJobFile = exportJobFile;
+    }
+
     @Override
     public String toString() {
-        return "ImportJob{"
-                + "importId=" + importId
-                + ", date=" + date
-                + ", userId=" + userId
-                + ", jobFile='" + jobFile
-                + '\''
-                + ", jobDirectory='"
-                + jobDirectory
-                + '\''
-                +
+        return "ImportJob{" +
+                "date=" + date +
+                ", importId=" + importId +
+                ", userId=" + userId +
+                ", jobFile='" + jobFile + '\'' +
+                ", jobDirectory='" + jobDirectory + '\'' +
+                ", exportJobFile='" + exportJobFile + '\'' +
+                ", exportJobDir='" + exportJobDir + '\'' +
                 '}';
     }
 }

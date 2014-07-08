@@ -1,8 +1,10 @@
 package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.entity.ImportJob;
+import edu.yale.library.ladybird.entity.ImportJobNotifications;
 import edu.yale.library.ladybird.entity.UserProject;
 import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
+import edu.yale.library.ladybird.persistence.dao.ImportJobNotificationsDAO;
 import edu.yale.library.ladybird.persistence.dao.UserProjectDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,9 @@ public class WelcomeView extends AbstractView {
 
     @Inject
     private ImportJobDAO importJobDAO;
+
+    @Inject
+    private ImportJobNotificationsDAO importJobNotificationsDAO;
 
     @PostConstruct
     public void init() {
@@ -80,6 +85,20 @@ public class WelcomeView extends AbstractView {
         } catch (Exception e) {
             logger.debug("No current user or error finding jobs.");
             return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Finds out if notifications have been sent for the current user
+     * @return return. false if exception.
+     */
+    public boolean notificationSentForCurrentUser(int jobId) {
+        try {
+            List<ImportJobNotifications> notifications = importJobNotificationsDAO.findByUserAndJobId(authUtil.getCurrentUserId(), jobId);
+            return (notifications.get(0).getNotified() == 1);
+        } catch (Exception e) {
+            logger.error("Error finding notifications", e);
+            return false;
         }
     }
 

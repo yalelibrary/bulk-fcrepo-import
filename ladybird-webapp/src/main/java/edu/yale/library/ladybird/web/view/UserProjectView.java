@@ -78,7 +78,7 @@ public class UserProjectView extends AbstractView {
 
     //TODO converter
     public String getUserName(final int userId) {
-        return userDao.findByUserId(userId);
+        return userDao.findUsernameByUserId(userId);
     }
 
     //TODO converter

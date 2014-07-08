@@ -40,6 +40,18 @@
             </div>
 
             <div>
+                <label>Export File Sender Cron</label>
+
+                <div>
+                    <p:inputText value="#{cronSchedulerView.cronBean.fileNotificationCronExpression}"
+                                 rendered="#{not cronSchedulerView.exportFileMailerCronScheduled}"/>
+                    <h:outputLabel value="Entry already exists. Unschedule first."
+                                   rendered="#{cronSchedulerView.exportFileMailerCronScheduled}"/>
+                </div>
+            </div>
+
+
+            <div>
                 <!-- Submit Button -->
                 <h:commandButton value="Submit" styleClass="btn" action="#{cronSchedulerView.save}"
                                  rendered="#{not cronSchedulerView.cronScheduled}"/>
