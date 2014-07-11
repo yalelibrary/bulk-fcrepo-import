@@ -84,15 +84,15 @@ public class ImportJob implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return "ImportJob{" +
-                "date=" + date +
-                ", importId=" + importId +
-                ", userId=" + userId +
-                ", jobFile='" + jobFile + '\'' +
-                ", jobDirectory='" + jobDirectory + '\'' +
-                ", exportJobFile='" + exportJobFile + '\'' +
-                ", exportJobDir='" + exportJobDir + '\'' +
-                '}';
+        return "ImportJob{"
+                + "date=" + date
+                + ", importId=" + importId
+                + ", userId=" + userId
+                + ", jobFile='" + jobFile + '\''
+                + ", jobDirectory='" + jobDirectory + '\''
+                + ", exportJobFile='" + exportJobFile + '\''
+                + ", exportJobDir='" + exportJobDir + '\''
+                + '}';
     }
 }
 

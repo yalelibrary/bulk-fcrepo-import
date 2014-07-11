@@ -8,7 +8,6 @@ import org.junit.Test;
 
 import javax.inject.Inject;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 

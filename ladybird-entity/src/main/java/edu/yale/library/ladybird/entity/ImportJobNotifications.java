@@ -89,15 +89,15 @@ public class ImportJobNotifications implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return "ImportJobNotifications{" +
-                "id=" + id +
-                ", importJobId=" + importJobId +
-                ", userId=" + userId +
-                ", notified=" + notified +
-                ", dateCreated=" + dateCreated +
-                ", numTries=" + numTries +
-                ", dateTried=" + dateTried +
-                '}';
+        return "ImportJobNotifications{"
+                + "id=" + id
+                + ", importJobId=" + importJobId
+                + ", userId=" + userId
+                + ", notified=" + notified
+                + ", dateCreated=" + dateCreated
+                + ", numTries=" + numTries
+                + ", dateTried=" + dateTried
+                + '}';
     }
 }
 

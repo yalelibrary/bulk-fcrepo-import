@@ -35,7 +35,7 @@ public class ImportJobNotificationsTest extends AbstractPersistenceTest {
     private ImportJobNotificationsDAO dao;
 
     @Test
-    public void shouldCreateEntry(){
+    public void shouldCreateEntry() {
         ImportJobNotifications importJobNotification = new ImportJobNotifications();
         importJobNotification.setUserId(USER_ID);
         importJobNotification.setImportJobId(IMPORT_JOB_ID);
