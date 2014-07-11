@@ -52,28 +52,40 @@
 
             <br/>
 
-            <h4>Jobs</h4>
+            <h:form id="DownloadForm" enctype="multipart/form-data">
 
-            <p:dataTable id="JobViewDatatable"
-                         editable="false"
-                         paginator="true"
-                         paginatorPosition="bottom"
-                         rows="10"
-                         value="#{welcomeView.jobsForCurrentUser()}"
-                         var="jobitem">
+                <h4>Jobs</h4>
 
-                <p:column headerText="File Name">
-                    <h:outputText value="#{jobitem.jobFile}"/>
-                </p:column>
-                <p:column headerText="Date">
-                    <h:outputText value="#{jobitem.date}">
-                        <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
-                    </h:outputText>
-                </p:column>
-                <p:column headerText="Notified?">
-                    <h:outputText value="#{welcomeView.notificationSentForCurrentUser(jobitem.importId)}"/>
-                </p:column>
-            </p:dataTable>
+                <p:dataTable id="JobViewDatatable"
+                             editable="false"
+                             paginator="true"
+                             paginatorPosition="bottom"
+                             rows="10"
+                             value="#{welcomeView.jobsForCurrentUser()}"
+                             var="jobitem">
+
+                    <p:column headerText="File Name">
+                        <h:outputText value="#{jobitem.jobFile}"/>
+                    </p:column>
+                    <p:column headerText="Date">
+                        <h:outputText value="#{jobitem.date}">
+                            <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Notified?">
+                        <h:outputText value="#{welcomeView.notificationSentForCurrentUser(jobitem.importId)}"/>
+                    </p:column>
+                    <p:column>
+                        <h:commandButton id="downloadLink" value="Download" ajax="false">
+                            <p:fileDownload value="#{fileDownloadController.file}">
+                                <f:param name="id" value="#{jobitem.importId}"/>
+                            </p:fileDownload>
+                            <f:param name="id" value="#{jobitem.importId}"/>
+                        </h:commandButton>
+                    </p:column>
+                </p:dataTable>
+
+            </h:form>
 
         </div>
     </ui:define>
