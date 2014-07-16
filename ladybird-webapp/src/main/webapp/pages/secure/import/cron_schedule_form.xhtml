@@ -7,8 +7,8 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../../templates/template_yul.xhtml">
     <ui:define name="content">
-        <h4>Cron Scheduling</h4>
-        <h:form id="CronScheduleForm" enctype="multipart/form-data">
+        <legend>Cron Scheduling</legend>
+        <h:form id="CronScheduleForm" enctype="multipart/form-data" styleClass="form-horizontal" role="form">
 
             <div class="control-group">
                 <span class="help-block">
@@ -17,10 +17,10 @@
                  </span>
             </div>
 
-            <div>
-                <label>Import Cron</label>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Import Cron</label>
 
-                <div>
+                <div class="col-sm-10">
                     <p:inputText value="#{cronSchedulerView.cronBean.importCronExpression}"
                                  rendered="#{not cronSchedulerView.importCronScheduled}"/>
                     <h:outputLabel value="Entry already exists. Unschedule first."
@@ -28,10 +28,10 @@
                 </div>
             </div>
 
-            <div>
-                <label>Export Cron</label>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Export Cron</label>
 
-                <div>
+                <div class="col-sm-10">
                     <p:inputText value="#{cronSchedulerView.cronBean.exportCronExpression}"
                                  rendered="#{not cronSchedulerView.exportCronScheduled}"/>
                     <h:outputLabel value="Entry already exists. Unschedule first."
@@ -39,17 +39,16 @@
                 </div>
             </div>
 
-            <div>
-                <label>Export File Sender Cron</label>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Export File Sender Cron</label>
 
-                <div>
+                <div class="col-sm-10">
                     <p:inputText value="#{cronSchedulerView.cronBean.fileNotificationCronExpression}"
                                  rendered="#{not cronSchedulerView.exportFileMailerCronScheduled}"/>
                     <h:outputLabel value="Entry already exists. Unschedule first."
                                    rendered="#{cronSchedulerView.exportFileMailerCronScheduled}"/>
                 </div>
             </div>
-
 
             <div>
                 <!-- Submit Button -->

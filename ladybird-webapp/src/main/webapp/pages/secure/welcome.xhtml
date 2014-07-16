@@ -8,39 +8,43 @@
 <ui:composition template="../../templates/template_yul.xhtml">
     <ui:define name="content">
         <div>
-            <h4>Activity</h4>
 
-            Last login session activity
-            <h:outputText value="#{welcomeView.principalLastActTime}">
-                <f:converter converterId="org.ocpsoft.PrettyTimeConverter"/>
-            </h:outputText>
+            <div>
+                <h4>Activity</h4>
+                Last login session activity
+                <h:outputText value="#{welcomeView.principalLastActTime}">
+                    <f:converter converterId="org.ocpsoft.PrettyTimeConverter"/>
+                </h:outputText>
+            </div>
 
+            <br/>
 
-            <h4>Current Project</h4>
-
+            <div>
+                <h4>Current Project</h4>
             <span>
-            <h:outputText value="No project assignments yet."
+                <h:outputText value="No project assignments yet."
                           rendered="#{userPreferencesView.noAssignments()}"/>
             </span>
-
             <span>
-            <h:outputText value="No default project yet."
+                <h:outputText value="No default project yet."
                           rendered="#{userPreferencesView.defaultProjectForCurrentUser eq null}"/>
             </span>
-
-            <h:outputText value="#{userPreferencesView.defaultProjectForCurrentUser.label}"/>
+                <h:outputText value="#{userPreferencesView.defaultProjectForCurrentUser.label}"/>
+            </div>
 
             <br/>
 
             <h4>Projects</h4>
 
+            <!--
             <p:dataTable id="ProjectsDatatable"
                          editable="false"
                          paginator="true"
                          paginatorPosition="bottom"
                          rows="10"
                          value="#{welcomeView.projectsForCurrentUser()}"
-                         var="item">
+                         var="item"
+                         rendered="false">
 
                 <p:column headerText="Project">
                     <h:outputText value="#{ProjectView.getProjectLabel(item.projectId)}"/>
@@ -49,6 +53,28 @@
                     <h:outputText value="#{item.role}"/>
                 </p:column>
             </p:dataTable>
+            -->
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Project</th>
+                    <th>Role</th>
+                </tr>
+                </thead>
+                <tbody>
+                <ui:repeat value="#{welcomeView.projectsForCurrentUser()}" var="item">
+                    <tr>
+                        <td>
+                            <h:outputText value="#{ProjectView.getProjectLabel(item.projectId)}"/>
+                        </td>
+                        <td>
+                            <h:outputText value="#{item.role}"/>
+                        </td>
+                    </tr>
+                </ui:repeat>
+                </tbody>
+            </table>
 
             <br/>
 
@@ -56,13 +82,15 @@
 
                 <h4>Jobs</h4>
 
+                <!--
                 <p:dataTable id="JobViewDatatable"
                              editable="false"
                              paginator="true"
                              paginatorPosition="bottom"
                              rows="10"
                              value="#{welcomeView.jobsForCurrentUser()}"
-                             var="jobitem">
+                             var="jobitem"
+                             rendered="false">
 
                     <p:column headerText="File Name">
                         <h:outputText value="#{jobitem.jobFile}"/>
@@ -85,8 +113,45 @@
                     </p:column>
                 </p:dataTable>
 
-            </h:form>
+                -->
 
+
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>File</th>
+                        <th>Date</th>
+                        <th>Notified</th>
+                        <th>Download</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <ui:repeat value="#{welcomeView.jobsForCurrentUser()}" var="jobitem">
+                        <tr>
+                            <td>
+                                <h:outputText value="#{jobitem.jobFile}"/>
+                            </td>
+                            <td>
+                                <h:outputText value="#{jobitem.date}">
+                                    <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                                </h:outputText>
+                            </td>
+                            <td>
+                                <h:outputText value="#{welcomeView.notificationSentForCurrentUser(jobitem.importId)}"/>
+                            </td>
+                            <td>
+                                <h:commandButton id="downloadLink" value="Download" ajax="false">
+                                    <p:fileDownload value="#{fileDownloadController.file}">
+                                        <f:param name="id" value="#{jobitem.importId}"/>
+                                    </p:fileDownload>
+                                    <f:param name="id" value="#{jobitem.importId}"/>
+                                </h:commandButton>
+                            </td>
+                        </tr>
+                    </ui:repeat>
+                    </tbody>
+                </table>
+            </h:form>
         </div>
     </ui:define>
 </ui:composition>

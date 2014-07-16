@@ -7,8 +7,9 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../../templates/template_yul.xhtml">
     <ui:define name="content">
-        <h4>Import Source</h4>
-        <h:form id="ImportSourceForm" enctype="multipart/form-data">
+        <legend>Import Source Configuration</legend>
+        <h:form id="ImportSourceForm" enctype="multipart/form-data"
+                styleClass="form-horizontal" role="form">
 
             <div class="control-group">
                 <span class="help-block">
@@ -17,14 +18,15 @@
                  </span>
             </div>
 
-            <div>
-                <label>Provider URL (e.g. http://columbus.library.yale.edu:8055/OAI_Orbis/src/OAIOrbisTool.jsp)</label>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Provider URL</label>
 
-                <div>
+                <div class="col-sm-10">
                     <p:inputText value="#{ImportSourceView.item.url}">
                     </p:inputText>
                 </div>
             </div>
+
 
             <!--
             <div>
@@ -36,18 +38,18 @@
             -->
 
 
-            <div>
-                <label>GetRecord Verb Prefix (e.g. oai:orbis.library.yale.edu:)</label>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">GetRecord Verb Prefix</label>
 
-                <div>
+                <div class="col-sm-10">
                     <p:inputText value="#{ImportSourceView.item.getPrefix}"/>
+
                 </div>
             </div>
 
             <!-- Submit Button -->
 
-            <h:commandButton value="Submit" styleClass="btn" action="#{ImportSourceView.save}">
-            </h:commandButton>
+            <h:commandButton value="Submit" styleClass="btn" action="#{ImportSourceView.save}"/>
 
         </h:form>
     </ui:define>
