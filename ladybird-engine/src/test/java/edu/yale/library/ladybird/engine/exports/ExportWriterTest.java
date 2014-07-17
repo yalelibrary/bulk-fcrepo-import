@@ -6,6 +6,7 @@ import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,6 +20,32 @@ public class ExportWriterTest {
         final String testFilePath = asTemp("temp-test.xlsx");
         try {
             exportWriter.write(getData(), testFilePath);
+        } catch (IOException e) {
+            fail("Failed in writing sheet");
+        }
+    }
+
+    @Test
+    public void shouldWriteMultipleSheets() {
+        final ExportWriter exportWriter = new ExportWriter();
+        final String testFilePath = asTemp("temp-test2.xlsx");
+
+        System.out.println("path" + testFilePath);
+
+        ExportSheet exportSheet = new ExportSheet();
+        exportSheet.setTitle("Sheet 1");
+        exportSheet.setContents(getData());
+
+        ExportSheet exportSheet2 = new ExportSheet();
+        exportSheet2.setTitle("Sheet 2");
+        exportSheet2.setContents(getData());
+
+        List<ExportSheet> list = new ArrayList<>();
+        list.add(exportSheet);
+        list.add(exportSheet2);
+
+        try {
+            exportWriter.writeSheets(list, testFilePath);
         } catch (IOException e) {
             fail("Failed in writing sheet");
         }

@@ -5,22 +5,31 @@ import edu.yale.library.ladybird.engine.ExportBus;
 import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportCompleteEventBuilder;
 import edu.yale.library.ladybird.engine.exports.ExportEngine;
-import edu.yale.library.ladybird.engine.imports.ImportEngineException;
+import edu.yale.library.ladybird.engine.exports.ExportSheet;
 import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
+import edu.yale.library.ladybird.engine.imports.ImportEngineException;
+import edu.yale.library.ladybird.engine.imports.ImportEntity;
 import edu.yale.library.ladybird.engine.imports.ObjectWriter;
+import edu.yale.library.ladybird.engine.model.FieldConstantRules;
+import edu.yale.library.ladybird.engine.model.FunctionConstants;
+import edu.yale.library.ladybird.entity.FieldDefinition;
+import edu.yale.library.ladybird.entity.ImportJob;
 import edu.yale.library.ladybird.entity.ImportJobNotifications;
+import edu.yale.library.ladybird.entity.Monitor;
 import edu.yale.library.ladybird.entity.Settings;
 import edu.yale.library.ladybird.entity.User;
+import edu.yale.library.ladybird.entity.UserProjectFieldExportOptions;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
 import edu.yale.library.ladybird.kernel.events.Event;
 import edu.yale.library.ladybird.kernel.events.NotificationEventQueue;
 import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobNotificationsDAO;
 import edu.yale.library.ladybird.persistence.dao.SettingsDAO;
+import edu.yale.library.ladybird.persistence.dao.UserProjectFieldExportOptionsDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobHibernateDAO;
-import edu.yale.library.ladybird.entity.ImportJob;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobNotificationsHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.SettingsHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.UserProjectFieldExportOptionsHibernateDAO;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -29,6 +38,7 @@ import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -63,7 +73,19 @@ public class DefaultExportJob implements Job, ExportJob {
             final String exportFilePath = getWritePath(exportFile(importEntityContext.getMonitor().getExportPath()));
             logger.debug("Export file path={}", exportFilePath);
 
-            exportEngine.write(importEntityContext.getImportJobList(), exportFilePath);
+
+            //1a. Set export fields
+            final List<ExportSheet> exportSheets = new ArrayList<>();
+
+            ExportSheet exportSheet = new ExportSheet();
+            exportSheet.setTitle("Full Sheet");
+            exportSheet.setContents(importEntityContext.getImportJobList());
+            exportSheets.add(exportSheet);
+
+            ExportSheet exportSheet2 = getCustomSheet(importEntityContext.getImportJobList(), importEntityContext.getMonitor());
+            exportSheets.add(exportSheet2);
+
+            exportEngine.writeSheets(exportSheets, exportFilePath);
             //1b. Update imjobs table
             updateImportJobs(importEntityContext.getImportId(), exportFilePath);
             //1c. Create entry in import job notifications table (spreadsheet file will be emailed)
@@ -158,5 +180,78 @@ public class DefaultExportJob implements Job, ExportJob {
         }
     }
 
+    /**
+     * Gets custom sheet
+     * @param fullList original list
+     * @param monitor context data
+     * @return an ExportSheet representing purged list
+     *
+     * TODO test
+     */
+    private ExportSheet getCustomSheet(List<ImportEntity.Row> fullList, Monitor monitor) {
+        final UserProjectFieldExportOptionsDAO dao = new UserProjectFieldExportOptionsHibernateDAO(); //TODO
+        final ExportSheet exportSheet = new ExportSheet();
+        exportSheet.setTitle("Custom Sheet");
+
+        final int projectId = monitor.getCurrentProject().getProjectId();
+        final int userId = monitor.getUser().getUserId();
+
+        List<Integer> columnsToExclude = new ArrayList<>();
+        List<Integer> columnsFdidsToExclude = new ArrayList<>();
+        List<ImportEntity.Row> newList = new ArrayList<>();
+
+        try {
+            logger.debug("Finding custom fields for user={} for project={}", userId, projectId);
+
+            ImportEntity.Row exheadRow = fullList.get(0); // get exhead (show probably use ImportEntityValue somewhere)
+
+            for (int i = 0; i < exheadRow.getColumns().size(); i++) {
+                ImportEntity.Column<String> c = exheadRow.getColumns().get(i);
+
+                if (FunctionConstants.isFunction(c.getValue())) {
+                    continue;
+                }
+
+                int fdid = FieldConstantRules.fdidAsInt(c.getValue());
+                UserProjectFieldExportOptions u = dao.findByUserAndProjectAndFdid(userId, projectId, fdid);
+                if (u == null) { //not found = should not be exported
+                    columnsToExclude.add(i);
+                    columnsFdidsToExclude.add(fdid);
+                }
+            }
+
+            logger.debug("Col nums to exclude={}", columnsToExclude.size());
+
+            for (ImportEntity.Row row: fullList) {
+
+                List<ImportEntity.Column> newColumns = new ArrayList<>();
+
+                for (ImportEntity.Column<String> col: row.getColumns()) {
+                    if (FunctionConstants.isFunction(col.getField().getName())) {
+                        newColumns.add(col);
+                        continue;
+                    }
+
+                    logger.trace("Eval={}", col.getField());
+                    FieldDefinition f = (FieldDefinition) col.getField();
+                    int fdid = f.getFdid();
+
+                    if (columnsFdidsToExclude.contains(fdid)) {
+                        logger.trace("Excluding={}", fdid);
+                    } else {
+                        newColumns.add(col);
+                    }
+                }
+
+                ImportEntity.Row newRow = new ImportEntity().new Row();
+                newRow.setColumns(newColumns);
+                newList.add(newRow);
+            }
+        } catch (Exception e) {
+            logger.error("Error getting contents for custom sheet", e);
+        }
+        exportSheet.setContents(newList);
+        return exportSheet;
+    }
 
 }

@@ -66,4 +66,59 @@ public class ExportWriter {
         }
     }
 
+    public void writeSheets(final List<ExportSheet> exportSheets, final String filePath) throws IOException {
+        final XSSFWorkbook workbook = new XSSFWorkbook();
+
+        for (ExportSheet exportSheet: exportSheets) {
+            logger.debug("Writing sheet={}", exportSheet.getTitle());
+
+            final XSSFSheet sheet = workbook.createSheet(exportSheet.getTitle());
+            int rowNum = 0;
+            for (final ImportEntity.Row importRow : exportSheet.getContents()) {
+                final Row row = sheet.createRow(rowNum++);
+                final List<ImportEntity.Column> columnList = importRow.getColumns();
+                int cellNum = 0;
+                for (Object o : columnList) {
+                    final ImportEntity.Column col = (ImportEntity.Column) o;
+                    final String colValue = col.getValue().toString();
+                    final Cell cell = row.createCell(cellNum++);
+
+                    if (colValue instanceof String) {
+                        cell.setCellValue(colValue);
+                    } else {
+                        logger.debug("Unknown col data type={}", colValue);
+                    }
+                }
+            }
+        }
+
+        try {
+            writeFile(workbook, filePath);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public void writeFile(XSSFWorkbook workbook, String filePath) throws IOException {
+         /* Write contents */
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(new File(filePath));
+            workbook.write(out);
+            out.close();
+            logger.debug("Wrote Excel file={}" + filePath);
+        } catch (IOException e) {
+            logger.error("Error writing spreadsheet", e);
+            throw e;
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            } catch (Exception e) {
+                logger.error("Error closing file stream", e);
+            }
+        }
+    }
+
 }

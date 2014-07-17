@@ -18,8 +18,8 @@ public class UserProjectFieldExportOptionsHibernateDAO extends GenericHibernateD
      */
     @Override
     public UserProjectFieldExportOptions findByUserAndProjectAndFdid(int userId, int projectId, int fdid) {
-        Query q = getSession().createQuery("from edu.yale.library.ladybird.entity.UserProjectFieldExportOptions " +
-                "where userId= :param1 and projectId = :param2 and fdid = :param3");
+        Query q = getSession().createQuery("from edu.yale.library.ladybird.entity.UserProjectFieldExportOptions "
+                + "where userId= :param1 and projectId = :param2 and fdid = :param3");
         q.setParameter("param1", userId);
         q.setParameter("param2", projectId);
         q.setParameter("param3", fdid);

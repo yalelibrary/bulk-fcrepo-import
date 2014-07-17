@@ -46,6 +46,20 @@ public class DefaultExportEngine extends AbstractExportEngine {
     }
 
     /**
+     * Writes spreadsheet to disk.
+     * @param list content
+     * @param path full path to disk file
+     * @throws IOException
+     */
+    @Override
+    public void doWriteSheets(final List<ExportSheet> list, final String path) throws IOException {
+        //final String fullPath = getWritePath(relativePath);
+        logger.debug("Initiating write to spreadsheet to relative path={}", path);
+        exportWriter.writeSheets(list, path);
+    }
+
+
+    /**
      * Returns absolute write appended with project
      * @param relativePath
      * @return

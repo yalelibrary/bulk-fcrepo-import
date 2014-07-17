@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class ImportEntityContext {
 
-    private List<ImportEntity.Row> importJobList;
+    private List<ImportEntity.Row> importJobList; //TODO rename
     private Monitor monitor;
     /** imj id */
     private int importId;

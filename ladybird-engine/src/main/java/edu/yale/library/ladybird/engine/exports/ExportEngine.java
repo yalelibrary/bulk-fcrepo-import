@@ -11,4 +11,7 @@ public interface ExportEngine {
     ImportEntityContext read();
 
     void write(List<ImportEntity.Row> list, String spreadSheetFilePath) throws IOException;
+
+    void writeSheets(List<ExportSheet> list, String spreadSheetFilePath) throws IOException;
+
 }

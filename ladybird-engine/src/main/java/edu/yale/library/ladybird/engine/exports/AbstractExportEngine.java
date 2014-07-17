@@ -32,8 +32,20 @@ public abstract class AbstractExportEngine implements ExportEngine {
         doWrite(list, pathName);
     }
 
+
+    /**
+     * Writes to spreadsheet (etc) using multiple sheets.
+     *
+     * @param list
+     */
+    public final void writeSheets(final List<ExportSheet> list, final String pathName) throws IOException {
+        doWriteSheets(list, pathName);
+    }
+
     public abstract ImportEntityContext doRead();
 
     public abstract void doWrite(List<ImportEntity.Row> file, String pathName) throws IOException;
+
+    public abstract void doWriteSheets(List<ExportSheet> file, String pathName) throws IOException;
 
 }
