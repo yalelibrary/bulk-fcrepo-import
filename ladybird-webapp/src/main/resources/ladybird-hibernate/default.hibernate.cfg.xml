@@ -35,7 +35,6 @@
         <mapping resource="ladybird-hbm/Permissions.hbm.xml"/>
         <mapping resource="ladybird-hbm/AuthorityControl.hbm.xml"/>
         <mapping resource="ladybird-hbm/AuthorityControlVersion.hbm.xml"/>
-        <mapping resource="ladybird-hbm/UserExportField.hbm.xml"/>
         <mapping resource="ladybird-hbm/AccessconditionObject.hbm.xml"/>
         <mapping resource="ladybird-hbm/AccessconditionProject.hbm.xml"/>
         <mapping resource="ladybird-hbm/AccessconditionTarget.hbm.xml"/>
@@ -45,5 +44,6 @@
         <mapping resource="ladybird-hbm/ProjectTemplateAcid.hbm.xml"/>
         <mapping resource="ladybird-hbm/ProjectTemplateStrings.hbm.xml"/>
         <mapping resource="ladybird-hbm/ImportJobNotifications.hbm.xml"/>
+        <mapping resource="ladybird-hbm/UserProjectFieldExportOptions.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

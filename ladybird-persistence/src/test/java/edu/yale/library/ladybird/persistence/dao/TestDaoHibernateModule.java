@@ -24,13 +24,13 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ProjectTemplateString
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserPreferencesHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserEventHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.UserProjectFieldExportOptionsHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserProjectHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.RolesHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.PermissionsHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.RolesPermissionsHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.AuthorityControlHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.AuthorityControlVersionHibernateDAO;
-import edu.yale.library.ladybird.persistence.dao.hibernate.UserExportFieldHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.AccessconditionObjectHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.AccessconditionProjectHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.AccessconditionTargetHibernateDAO;
@@ -69,7 +69,6 @@ public class TestDaoHibernateModule extends AbstractModule {
         bind(RolesPermissionsDAO.class).to(RolesPermissionsHibernateDAO.class);
         bind(AuthorityControlDAO.class).to(AuthorityControlHibernateDAO.class);
         bind(AuthorityControlVersionDAO.class).to(AuthorityControlVersionHibernateDAO.class);
-        bind(UserExportFieldDAO.class).to(UserExportFieldHibernateDAO.class);
         bind(AccessconditionTypeDAO.class).to(AccessconditionTypeHibernateDAO.class);
         bind(AccessconditionTargetDAO.class).to(AccessconditionTargetHibernateDAO.class);
         bind(AccessconditionProjectDAO.class).to(AccessconditionProjectHibernateDAO.class);
@@ -84,5 +83,6 @@ public class TestDaoHibernateModule extends AbstractModule {
         bind(ProjectTemplateAcidDAO.class).to(ProjectTemplateAcidHibernateDAO.class);
         bind(ImportJobNotificationsDAO.class).to(ImportJobNotificationsHibernateDAO.class);
         bind(ImportJobDAO.class).to(ImportJobHibernateDAO.class);
+        bind(UserProjectFieldExportOptionsDAO.class).to(UserProjectFieldExportOptionsHibernateDAO.class);
     }
 }

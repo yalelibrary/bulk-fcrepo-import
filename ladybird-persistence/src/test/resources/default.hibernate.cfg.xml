@@ -32,7 +32,6 @@
         <mapping resource="test-hbm/Permissions.hbm.xml"/>
         <mapping resource="test-hbm/AuthorityControl.hbm.xml"/>
         <mapping resource="test-hbm/AuthorityControlVersion.hbm.xml"/>
-        <mapping resource="test-hbm/UserExportField.hbm.xml"/>
         <mapping resource="test-hbm/AccessconditionObject.hbm.xml"/>
         <mapping resource="test-hbm/AccessconditionProject.hbm.xml"/>
         <mapping resource="test-hbm/AccessconditionTarget.hbm.xml"/>
@@ -44,5 +43,6 @@
         <mapping resource="test-hbm/ProjectTemplateAcid.hbm.xml"/>
         <mapping resource="test-hbm/ProjectTemplateStrings.hbm.xml"/>
         <mapping resource="test-hbm/ImportJobNotifications.hbm.xml"/>
+        <mapping resource="test-hbm/UserProjectFieldExportOptions.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>
