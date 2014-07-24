@@ -80,7 +80,7 @@
 
             <h:form id="DownloadForm" enctype="multipart/form-data">
 
-                <h4>Jobs</h4>
+                <h4>Jobs For User</h4>
 
                 <!--
                 <p:dataTable id="JobViewDatatable"
@@ -122,6 +122,9 @@
                         <th>File</th>
                         <th>Date</th>
                         <th>Notified</th>
+                        <th>Job Directory</th>
+                        <th>Export File</th>
+                        <th>Progress</th>
                         <th>Download</th>
                     </tr>
                     </thead>
@@ -139,6 +142,24 @@
                             <td>
                                 <h:outputText value="#{welcomeView.notificationSentForCurrentUser(jobitem.importId)}"/>
                             </td>
+
+                            <td>
+                                <h:outputText value="#{jobitem.jobDirectory}"/>
+                            </td>
+
+                            <td>
+                                <h:outputText value="#{jobitem.exportJobDir}"/>
+                            </td>
+
+                            <td>
+                                <h:outputText id="progressOutputText"
+                                              value="#{importProgressView.count(jobitem.importId)} out of #{importProgressView.STEPS_TO_COMPLETE} steps"/>
+
+                                <p:poll id="progressPoll" interval="5"
+                                        listener="#{importProgressView.progress(jobitem.importId)}"
+                                        update="progressOutputText"/>
+                            </td>
+
                             <td>
                                 <h:commandButton id="downloadLink" value="Download" ajax="false">
                                     <p:fileDownload value="#{fileDownloadController.file}">

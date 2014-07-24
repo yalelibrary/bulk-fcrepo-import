@@ -57,12 +57,17 @@ public class MonitorView extends AbstractView {
         logger.debug("Scheduling import, export jobs. Processing file={}", uploadedFileName);
 
         try {
-            logger.debug("Saving import/export pair=" + monitorItem.toString());
 
-            int itemId = dao.save(monitorItem);
 
             monitorItem.setDirPath("local");
             monitorItem.setDate(new Date());
+            monitorItem.setCurrentUserId(authUtil.getCurrentUserId());
+            monitorItem.setCurrentProjectId(authUtil.getDefaultProjectForCurrentUser().getProjectId());
+
+            int itemId = dao.save(monitorItem);
+
+
+            logger.debug("Saving import/export pair=" + monitorItem.toString());
 
             //set user id:
             try {
@@ -100,13 +105,14 @@ public class MonitorView extends AbstractView {
         }
     }
 
+    //TODO
     public List getItemList() {
         final List<Monitor> monitorList;
         try {
-            monitorList = dao.findAll();
+            monitorList = monitorDAO.findByUserAndProject(authUtil.getCurrentUserId(), authUtil.getDefaultProjectForCurrentUser().getProjectId());
             return monitorList;
         } catch (Exception e) {
-            logger.error("Error finding item list={}", e);
+            logger.error("Error finding monitor item list={}", e);
             throw e;
         }
     }

@@ -14,6 +14,8 @@ public class Monitor implements java.io.Serializable {
     private User user = new UserBuilder().createUser();
     private Date date = new Date();
     private Project currentProject = new Project();
+    private Integer currentUserId;
+    private Integer currentProjectId;
 
     @Deprecated
     private String notificationEmail; //todo remove
@@ -113,6 +115,22 @@ public class Monitor implements java.io.Serializable {
         this.currentProject = currentProject;
     }
 
+    public Integer getCurrentUserId() {
+        return currentUserId;
+    }
+
+    public void setCurrentUserId(Integer currentUserId) {
+        this.currentUserId = currentUserId;
+    }
+
+    public Integer getCurrentProjectId() {
+        return currentProjectId;
+    }
+
+    public void setCurrentProjectId(Integer currentProjectId) {
+        this.currentProjectId = currentProjectId;
+    }
+
     @Override
     public String toString() {
         return "Monitor{"
@@ -124,6 +142,8 @@ public class Monitor implements java.io.Serializable {
                 + ", date=" + date
                 + ", currentProject=" + currentProject
                 + ", notificationEmail='" + notificationEmail + '\''
+                + ", currentProjectId=" + currentProjectId
+                + ", currentUserId=" + currentUserId
                 + '}';
     }
 }
