@@ -190,6 +190,44 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
         }
     }
 
+    /**
+     * Save or udate list
+     * @param itemList list of entities
+     */
+    public void saveList(List<T> itemList) {
+        Integer id = -1;
+        Session s = null;
+        Transaction tx = null;
+        try {
+            s = getSession();
+            tx = s.beginTransaction();
+
+            for (T item: itemList) {
+                s.save(item);
+                logger.debug("Saved item={}", item.toString());
+
+                s.flush();
+            }
+            tx.commit();
+        } catch (HibernateException t) {
+            logger.error("Exception tyring to persist item." + t.getMessage());
+            try {
+                if (tx != null) {
+                    tx.rollback();
+                }
+            } catch (Throwable rt) {
+                logger.error("Exception rolling back transaction", rt);
+                throw rt;
+            }
+            throw t;
+        } finally {
+            if (s != null) {
+                s.close();
+            }
+        }
+    }
+
+
     @Override
     public void delete(List<T> entities) {
         Session s = null;

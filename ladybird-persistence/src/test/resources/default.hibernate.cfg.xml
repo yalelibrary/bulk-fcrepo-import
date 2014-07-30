@@ -44,5 +44,8 @@
         <mapping resource="test-hbm/ProjectTemplateStrings.hbm.xml"/>
         <mapping resource="test-hbm/ImportJobNotifications.hbm.xml"/>
         <mapping resource="test-hbm/UserProjectFieldExportOptions.hbm.xml"/>
+        <mapping resource="test-hbm/ObjectAcidVersion.hbm.xml"/>
+        <mapping resource="test-hbm/ObjectStringVersion.hbm.xml"/>
+        <mapping resource="test-hbm/ObjectVersion.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

@@ -76,6 +76,11 @@ public class FdidMarcMappingUtilTest {
             public void updateItem(FieldMarcMapping item) {
                 //To change body of implemented methods use File | Settings | File Templates.
             }
+
+            @Override
+            public void saveList(List<FieldMarcMapping> itemList) {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
         });
 
         FieldMarcMapping fieldMarcMapping = new FieldMarcMappingBuilder().setK1("245").setFdid(70).createFieldMarcMapping();

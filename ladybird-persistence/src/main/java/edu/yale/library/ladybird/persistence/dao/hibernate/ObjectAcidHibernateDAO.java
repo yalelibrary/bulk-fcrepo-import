@@ -11,7 +11,7 @@ public class ObjectAcidHibernateDAO extends GenericHibernateDAO<ObjectAcid, Inte
         final Query q = getSession().createQuery("from ObjectAcid where objectId = :param1 and fdid =:param2");
         q.setParameter("param1", oid);
         q.setParameter("param2", fdid);
-        return (ObjectAcid) q.list().get(0);
+        return q.list().isEmpty() ?  null : (ObjectAcid) q.list().get(0);
     }
 
 }

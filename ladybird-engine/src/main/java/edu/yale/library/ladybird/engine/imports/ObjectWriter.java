@@ -6,6 +6,7 @@ import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.Monitor;
 import edu.yale.library.ladybird.entity.ObjectAcid;
+import edu.yale.library.ladybird.entity.ObjectString;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.persistence.dao.AuthorityControlDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectAcidDAO;
@@ -25,8 +26,9 @@ import java.util.Set;
 
 /**
  * Populates object metadata (acid/strings) tables.
+ *
  * @see MediaFunctionProcessor for object_file population
-  */
+ */
 public class ObjectWriter {
 
     private Logger logger = LoggerFactory.getLogger(ObjectWriter.class);
@@ -34,6 +36,7 @@ public class ObjectWriter {
     //TODO inject DAO(s)
 
     final ObjectDAO objectDAO = new ObjectHibernateDAO();
+
     final ObjectStringDAO objectStringDAO = new ObjectStringHibernateDAO();
 
     final ObjectAcidDAO objectAcidDAO = new ObjectAcidHibernateDAO();
@@ -45,7 +48,6 @@ public class ObjectWriter {
      *
      * @param importEntityContext context
      * @see edu.yale.library.ladybird.engine.cron.DefaultExportJob#execute(org.quartz.JobExecutionContext) for call
-     *
      * TODO pass ImportEntity directly
      */
     public void write(ImportEntityContext importEntityContext) {
@@ -88,31 +90,43 @@ public class ObjectWriter {
                     logger.trace("Processing (key oid) Oid={}, Field Name={}, Field Value={}", oid,
                             fdidForOid.getField().getName(), fdidForOid.getValue());
 
-                    //Save object metadata:
+                    //Save object metadata
+                    final String value = (String) fdidForOid.getValue();
 
-                    if (true) { //FIXME (currently processing each fdid is an acid value)
+                    //Either an acid or a string:
+                    if (getTableType(fdidAsInt(f.getName())).equals(TABLETYPE.OBJECT_ACID)) {
+                        //1a.persist acid:
+                        final AuthorityControl acidObj = new AuthorityControl();
+                        acidObj.setFdid(fdidAsInt(f.getName()));
+                        acidObj.setUserId(userId);
+                        acidObj.setDate(new Date());
+                        acidObj.setValue(value);
+                        int acid = authorityControlDAO.save(acidObj);
+                        logger.trace("Saved entity={}", acidObj.toString());
 
-                        //1.persist acid:
-                        final AuthorityControl authorityControl = new AuthorityControl();
-                        authorityControl.setFdid(fdidAsInt(f.getName()));
-                        authorityControl.setUserId(userId);
-                        authorityControl.setDate(new Date());
-                        authorityControl.setValue((String) fdidForOid.getValue());
-                        int acid = authorityControlDAO.save(authorityControl);
-                        logger.trace("Saved entity={}", authorityControl.toString());
-
-                        //2. persist object acid
-                        final ObjectAcid objectAcid = new ObjectAcid();
-                        objectAcid.setFdid(fdidAsInt(f.getName()));
+                        //1b. persist object acid
+                        final ObjectAcid objAcid = new ObjectAcid();
+                        objAcid.setFdid(fdidAsInt(f.getName()));
                         if (oid != null) { //TODO
-                            objectAcid.setObjectId(Integer.parseInt(oid));
+                            objAcid.setObjectId(Integer.parseInt(oid));
                         }
 
-                        objectAcid.setValue(acid); //TODO acid PK
-                        objectAcid.setUserId(userId);
-                        objectAcid.setDate(new Date());
-                        objectAcidDAO.save(objectAcid);
-                        logger.trace("Saved entity={}", objectAcid.toString());
+                        objAcid.setValue(acid); //TODO acid PK
+                        objAcid.setUserId(userId);
+                        objAcid.setDate(new Date());
+                        objectAcidDAO.save(objAcid);
+                    } else {
+                        final ObjectString objString = new ObjectString();
+                        objString.setFdid(fdidAsInt(f.getName()));
+                        objString.setUserId(userId);
+                        objString.setDate(new Date());
+                        objString.setValue(value);
+
+                        if (oid != null) { //TODO
+                            objString.setOid(Integer.parseInt(oid));
+                        }
+
+                        objectStringDAO.save(objString);
                     }
                 }
             }
@@ -122,13 +136,48 @@ public class ObjectWriter {
     }
 
     /**
+     * Retruns the type of table the metadata should be written to
+     * @param fdid int fdid
+     * @return table type (e.g. object_string or object_acid)
+     */
+    public TABLETYPE getTableType(int fdid) {
+
+        if (isString(fdid)) {
+            return TABLETYPE.OBJECT_STRING;
+        }
+
+        return TABLETYPE.OBJECT_ACID;
+    }
+
+    /**
+     * Helps determine fdid to table mapping
+     * @param fdid int fdid
+     * @return whether a value is a string
+     */
+    //FIXME externalize or make it configurable
+    public static boolean isString(int fdid) {
+        if (fdid == 58 || fdid == 70 || fdid == 71 || fdid == 77 || fdid == 78 || fdid == 79 || fdid == 82
+                || fdid == 104 || fdid == 127 || fdid == 152 || fdid == 156) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private enum TABLETYPE {
+        OBJECT_STRING,
+        OBJECT_ACID,
+        OBJECT_LONGSTRING
+    }
+
+    /**
      * converter helper
      * FiXME this depends on the the fdids are loaded (currently through a file fdid.test.propeties at webapp start up)
+     *
      * @param s string e.g. from Host, note{fdid=68}
      * @return integer value
-     *
      * @see edu.yale.library.ladybird.engine.model.FieldConstantRules#convertStringToFieldConstant(String)
-     * for similiar functionality
+     *      for similiar functionality
      */
     private Integer fdidAsInt(String s) {
         try {
@@ -139,7 +188,8 @@ public class ObjectWriter {
         }
     }
 
-    /** helper
+    /**
+     * helper
      *
      * @param importEntityContext import job context
      * @return user id

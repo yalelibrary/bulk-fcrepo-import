@@ -2,6 +2,7 @@ package edu.yale.library.ladybird.web.view;
 
 
 import edu.yale.library.ladybird.persistence.dao.GenericDAO;
+import org.omnifaces.util.Faces;
 
 public class AbstractView<T> {
     protected GenericDAO<T, Integer> dao;
@@ -23,5 +24,9 @@ public class AbstractView<T> {
 
     public String fail() {
         return NavigationCase.FAIL.toString();
+    }
+
+    public boolean isParamNull(String param) {
+        return Faces.getRequestParameter(param) == null;
     }
 }

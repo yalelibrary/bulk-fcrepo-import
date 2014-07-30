@@ -15,8 +15,11 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceDataHiber
 import edu.yale.library.ladybird.persistence.dao.hibernate.FieldDefinitionHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.FieldMarcMappingHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.MonitorHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectAcidVersionHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectFileHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectStringVersionHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectVersionHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ProjectHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ProjectTemplateAcidHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ProjectTemplateHibernateDAO;
@@ -84,5 +87,8 @@ public class TestDaoHibernateModule extends AbstractModule {
         bind(ImportJobNotificationsDAO.class).to(ImportJobNotificationsHibernateDAO.class);
         bind(ImportJobDAO.class).to(ImportJobHibernateDAO.class);
         bind(UserProjectFieldExportOptionsDAO.class).to(UserProjectFieldExportOptionsHibernateDAO.class);
+        bind(ObjectAcidVersionDAO.class).to(ObjectAcidVersionHibernateDAO.class);
+        bind(ObjectStringVersionDAO.class).to(ObjectStringVersionHibernateDAO.class);
+        bind(ObjectVersionDAO.class).to(ObjectVersionHibernateDAO.class);
     }
 }

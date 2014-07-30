@@ -18,6 +18,15 @@ public class AuthorityControl implements java.io.Serializable {
     public AuthorityControl() {
     }
 
+    public AuthorityControl(AuthorityControl ac) {
+        this.date = ac.date;
+        this.fdid = ac.fdid;
+        this.value = ac.value;
+        this.code = ac.code;
+        this.userId = ac.userId;
+
+    }
+
 
     public AuthorityControl(Date date, int fdid, String value, int userId) {
         this.date = date;

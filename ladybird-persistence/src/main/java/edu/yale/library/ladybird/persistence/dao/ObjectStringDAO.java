@@ -4,5 +4,6 @@ import edu.yale.library.ladybird.entity.ObjectString;
 
 public interface ObjectStringDAO extends GenericDAO<ObjectString, Integer> {
 
+    ObjectString findByOidAndFdid(final int oid, final int fdid);
 }
 

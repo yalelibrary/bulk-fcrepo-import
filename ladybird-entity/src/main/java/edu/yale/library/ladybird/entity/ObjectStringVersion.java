@@ -4,35 +4,38 @@ package edu.yale.library.ladybird.entity;
 import java.util.Date;
 
 /**
- * ObjectString
+ * ObjectStringVersion
  */
-public class ObjectString implements java.io.Serializable {
+public class ObjectStringVersion implements java.io.Serializable {
 
 
     private Integer dataId;
     private Date date;
+    //not used
     private int userId;
     private int oid;
     private String value;
     private int fdid;
+    private int versionId;
 
-    public ObjectString() {
+    public ObjectStringVersion() {
     }
 
-    public ObjectString(ObjectString copy) {
-        this.date = copy.date;
-        this.userId = copy.userId;
-        this.oid = copy.oid;
-        this.value = copy.value;
-        this.fdid = copy.fdid;
+    public ObjectStringVersion(ObjectString copy) {
+        this.date = copy.getDate();
+        this.userId = copy.getUserId();
+        this.oid = copy.getOid();
+        this.value = copy.getValue();
+        this.fdid = copy.getFdid();
     }
 
-    public ObjectString(Date date, int userId, int oid, String value, int fdid) {
+    public ObjectStringVersion(Date date, int userId, int oid, String value, int fdid, int versionId) {
         this.date = date;
         this.userId = userId;
         this.oid = oid;
         this.value = value;
         this.fdid = fdid;
+        this.versionId = versionId;
     }
 
     public Integer getDataId() {
@@ -83,16 +86,18 @@ public class ObjectString implements java.io.Serializable {
         this.fdid = fdid;
     }
 
+    public int getVersionId() {
+        return versionId;
+    }
+
+    public void setVersionId(int versionId) {
+        this.versionId = versionId;
+    }
+
     @Override
     public String toString() {
-        return "ObjectString{"
-                + "dataId=" + dataId
-                + ", date=" + date
-                + ", userId=" + userId
-                + ", oid=" + oid
-                + ", value='" + value + '\''
-                + ", fdid=" + fdid
-                + '}';
+        return "ObjectStringVersion{" + "dataId=" + dataId + ", date=" + date + ", userId=" + userId + ", oid=" + oid
+                + ", value='" + value + '\'' + ", fdid=" + fdid + ", versionId=" + versionId + '}';
     }
 }
 

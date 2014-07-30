@@ -1,20 +1,19 @@
 package edu.yale.library.ladybird.persistence.dao;
 
-import edu.yale.library.ladybird.entity.ObjectString;
+import edu.yale.library.ladybird.entity.ObjectVersion;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.inject.Inject;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 
-public class ObjectStringDaoTest extends AbstractPersistenceTest {
+public class ObjectVersionDaoTest extends AbstractPersistenceTest {
 
     {
         TestDaoInitializer.injectFields(this);
@@ -31,32 +30,34 @@ public class ObjectStringDaoTest extends AbstractPersistenceTest {
     }
 
     @Inject
-    private ObjectStringDAO dao;
+    private ObjectVersionDAO dao;
 
     @Test
     public void testSave() {
-        final ObjectString item = new ObjectString();
-        ObjectString obj1 = new ObjectString();
+        final ObjectVersion item = new ObjectVersion();
 
-        item.setFdid(555);
-        item.setValue("name");
-        item.setDate(new Date());
+        item.setUserId(1);
+        item.setNotes("USER EDIT");
+        item.setVersionId(1);
+        item.setOid(2);
 
         List list = null;
+        int maxVersion = -1;
         try {
             dao.save(item);
-            list = dao.findAll();
-            obj1 = dao.findByOidAndFdid(0, 555);
+            list = dao.findByOid(2);
+            maxVersion = dao.findMaxVersionByOid(2);
+
         } catch (Throwable e) {
             e.printStackTrace();
             fail("Error testing saving or finding item");
         }
 
         assertEquals("Item count incorrect", list.size(), 1);
-        final ObjectString o = (ObjectString) list.get(0);
-        assertEquals("Value mismatch", o.getFdid(), 555);
-        assertEquals("Value mismatch", o.getValue(), "name");
-        assertEquals(obj1.getValue(), "name");
+        final ObjectVersion o = (ObjectVersion) list.get(0);
+        assertEquals("Value mismatch", (long) o.getUserId(), 1);
+
+        assert (maxVersion == 1);
     }
 
 }

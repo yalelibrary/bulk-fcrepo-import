@@ -45,6 +45,8 @@
                                 <h:graphicImage value="/images/#{item.filePath}" height="151" width="170"/>
                                 <h:outputText value="#{item.fileName}"/>
                                 <h:link outcome="object_metadata?oid=#{item.oid}" value="View"/>
+                                <h:link outcome="object_version?oid=#{item.oid}" value="Versions"/>
+
                             </h:panelGrid>
                         </p:panel>
 

@@ -66,4 +66,9 @@ public class DummyEventDAO implements UserEventDAO {
     public void updateItem(UserEvent item) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
+
+    @Override
+    public void saveList(List<UserEvent> itemList) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

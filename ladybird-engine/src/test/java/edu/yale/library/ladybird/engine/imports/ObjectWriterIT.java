@@ -8,11 +8,14 @@ import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.Monitor;
 import edu.yale.library.ladybird.entity.ObjectAcid;
+import edu.yale.library.ladybird.entity.ObjectString;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.persistence.dao.AuthorityControlDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectAcidDAO;
+import edu.yale.library.ladybird.persistence.dao.ObjectStringDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.AuthorityControlHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectAcidHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectStringHibernateDAO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,7 +68,11 @@ public class ObjectWriterIT extends AbstractDBTest {
         FieldDefinition fieldDefinition = new FieldDefinition(69, "69");
         ImportEntity.Column fieldExHeadColumn = new ImportEntity().new Column<>(fieldDefinition, "");
 
+        FieldDefinition fieldDefinition2 = new FieldDefinition(58, "58");
+        ImportEntity.Column fieldExHeadColumn2 = new ImportEntity().new Column<>(fieldDefinition2, "");
+
         exHeadColumns.add(fieldExHeadColumn);
+        exHeadColumns.add(fieldExHeadColumn2);
 
         exHeadRow.setColumns(exHeadColumns);
 
@@ -82,6 +89,10 @@ public class ObjectWriterIT extends AbstractDBTest {
         FieldDefinition fieldDefinitionContent = new FieldDefinition(69, "69");
         ImportEntity.Column fieldContentColumn = new ImportEntity().new Column<>(fieldDefinitionContent, "Name of the rose");
         contentColumns.add(fieldContentColumn);
+
+        FieldDefinition fieldDefinitionContent2 = new FieldDefinition(58, "58");
+        ImportEntity.Column fieldContentColumn2 = new ImportEntity().new Column<>(fieldDefinitionContent2, "Name of the rose");
+        contentColumns.add(fieldContentColumn2);
 
         contentRow.setColumns(contentColumns);
 
@@ -100,6 +111,13 @@ public class ObjectWriterIT extends AbstractDBTest {
         ObjectAcidDAO objectAcidDAO = new ObjectAcidHibernateDAO();
         List<ObjectAcid> objectAcidList = objectAcidDAO.findAll();
         assertEquals("Value mismatch", objectAcidList.size(), 1);
+
+        ObjectStringDAO objectStringDAO = new ObjectStringHibernateDAO();
+        List<ObjectString> objectStrings = objectStringDAO.findAll();
+
+        System.out.println("List" + objectStrings.toString());
+        assert (objectStrings.size() == 1);
+
 
         ObjectAcid objectAcid = objectAcidList.get(0);
 

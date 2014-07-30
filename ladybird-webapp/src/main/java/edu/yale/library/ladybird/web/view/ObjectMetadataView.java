@@ -1,18 +1,26 @@
 package edu.yale.library.ladybird.web.view;
 
 
+import edu.yale.library.ladybird.engine.imports.ObjectWriter;
 import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.Object;
 import edu.yale.library.ladybird.entity.ObjectAcid;
+import edu.yale.library.ladybird.entity.ObjectAcidVersion;
 import edu.yale.library.ladybird.entity.ObjectFile;
 import edu.yale.library.ladybird.entity.ObjectString;
+import edu.yale.library.ladybird.entity.ObjectStringVersion;
+import edu.yale.library.ladybird.entity.ObjectVersion;
+import edu.yale.library.ladybird.entity.ObjectVersionBuilder;
 import edu.yale.library.ladybird.persistence.dao.AuthorityControlDAO;
 import edu.yale.library.ladybird.persistence.dao.FieldDefinitionDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectAcidDAO;
+import edu.yale.library.ladybird.persistence.dao.ObjectAcidVersionDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectFileDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectStringDAO;
+import edu.yale.library.ladybird.persistence.dao.ObjectStringVersionDAO;
+import edu.yale.library.ladybird.persistence.dao.ObjectVersionDAO;
 import edu.yale.library.ladybird.web.view.template.FieldDefinitionValue;
 import org.omnifaces.util.Faces;
 import org.slf4j.Logger;
@@ -22,47 +30,27 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+//TODO size check: how many acid values are created upon any edit.
 @ManagedBean
 @RequestScoped
 @SuppressWarnings("unchecked")
 public class ObjectMetadataView extends AbstractView {
-    private final Logger logger = getLogger(this.getClass());
 
-    /**
-     * fdid value map
-     */
-    //private Map<Integer, String> map;
+    private final Logger logger = getLogger(this.getClass());
 
     private List<FieldDefinitionValue> fieldDefinitionvalueList;
 
     /**
-     * Path to image
-     */
-    private String image;
-
-    /**
-     * for file image info
+     * Field is for file image info
      */
     private ObjectFile objectFile;
 
-    /**
-     * for metadata
-     */
     private edu.yale.library.ladybird.entity.Object object;
-
-    /**
-     * for metadata
-     */
-    private ObjectString objectString;
-
-    /**
-     * for metadata
-     */
-    private ObjectAcid objectAcid;
 
     @Inject
     private ObjectDAO objectDAO;
@@ -80,81 +68,355 @@ public class ObjectMetadataView extends AbstractView {
     private AuthorityControlDAO authorityControlDAO;
 
     @Inject
-    private FieldDefinitionDAO fieldDefinitionDAO;
+    private FieldDefinitionDAO fdidDAO;
+
+    @Inject
+    private ObjectStringVersionDAO objectStringVersionDAO;
+
+    @Inject
+    private ObjectAcidVersionDAO objectAcidVersionDAO;
+
+    @Inject
+    private ObjectVersionDAO objectVersionDAO;
+
+    @Inject
+    private AuthUtil auth;
+
+    /**
+     * For unknown metadata field value (e.g. when an error occurs)
+     */
+    private static final String UNK_VALUE = "N/A";
 
     @PostConstruct
     public void init() {
         initFields();
         dao = objectDAO;
-        logger.debug("Init ObjectMedataView");
+
         try {
             final String oidStr = Faces.getRequestParameter("oid");
             final int oid = Integer.parseInt(oidStr);
-
             objectFile = objectFileDAO.findByOid(oid);
+            final String versionId = Faces.getRequestParameter("version");
 
-            if (fieldDefinitionvalueList == null) {
-                logger.debug("Field definition value null");
-                fieldDefinitionvalueList = buildFieldDefnList(oid);
+            if (fieldDefinitionvalueList == null && versionId == null) {
+                fieldDefinitionvalueList = getFdidValues(oid);
+            } else if (fieldDefinitionvalueList == null && !versionId.isEmpty()) {
+                int version = Integer.parseInt(versionId);
+                logger.trace("Getting version data for version={}", version);
+                fieldDefinitionvalueList = getFdidValues(oid, version);
             }
         } catch (Exception e) {
-            logger.error("Error={}", e.getMessage());
+            logger.error("Error init bean", e.getMessage());
         }
     }
 
-    /*
-    private Map populateFieldMap(int oid) {
-        final Map<Integer, String> map = new HashMap<>();
+    private List<FieldDefinitionValue> getFdidValues(int oid) {
+        final List<FieldDefinitionValue> fdidValues = new ArrayList<>();
 
         try {
-            List<FieldDefinition> list = fieldDefinitionDAO.findAll();
+            List<FieldDefinition> list = fdidDAO.findAll();
 
             for (FieldDefinition f : list) {
-                map.put(f.getFdid(), getValueByOidAndFdid(oid, f.getFdid()));
+                fdidValues.add(new FieldDefinitionValue(f, getValueByOidAndFdid(oid, f.getFdid())));
             }
         } catch (Exception e) {
-            logger.debug("Error loading fdid={}", e);
+            logger.error("Error building fdid map for oid={}", oid, e);
         }
 
-        return map;
-    } */
-
-    private List<FieldDefinitionValue> buildFieldDefnList(int oid) {
-        final List<FieldDefinitionValue> fieldDefinitionvalueList = new ArrayList<>();
-
-        try {
-            List<FieldDefinition> list = fieldDefinitionDAO.findAll();
-
-            for (FieldDefinition f : list) {
-                fieldDefinitionvalueList.add(new FieldDefinitionValue(f, getValueByOidAndFdid(oid, f.getFdid())));
-            }
-        } catch (Exception e) {
-            logger.debug("Error loading fdid={}", e);
-        }
-
-        return fieldDefinitionvalueList;
+        return fdidValues;
     }
 
+    private List<FieldDefinitionValue> getFdidValues(int oid, int versionId) {
+        final List<FieldDefinitionValue> fdidValues = new ArrayList<>();
 
+        try {
+            List<FieldDefinition> list = fdidDAO.findAll();
+
+            for (FieldDefinition f : list) {
+                fdidValues.add(new FieldDefinitionValue(f, getValueByOidAndFdid(oid, f.getFdid(), versionId)));
+            }
+        } catch (Exception e) {
+            logger.error("Error building fdid map for oid={} version={}", oid, versionId, e);
+        }
+
+        return fdidValues;
+    }
+
+    /**
+     * Populates object metadata. Pullsf rom object_acid and object_string table(s).
+     *
+     * @param oid  oid
+     * @param fdid fdid
+     * @return value for an oid for a fdid
+     */
     public String getValueByOidAndFdid(int oid, int fdid) {
         try {
-            //1. Find acid value for this oid (assuming that's what's needed here)
-            logger.trace("Finding ObjectAcid by oid={} and fdid={}", oid, fdid);
+            if (!ObjectWriter.isString(fdid)) { //not a string:
+                //1. Find acid value for this oid
+                final ObjectAcid objectAcid = objectAcidDAO.findByOidAndFdid(oid, fdid);
+                int acid = objectAcid.getValue();
 
-            final ObjectAcid objectAcid = objectAcidDAO.findByOidAndFdid(oid, fdid);
-            //logger.debug("Found entry={}", objectAcid.toString());
-            int acid = objectAcid.getValue();
-
-            //2. Get acid value
-            //logger.debug("Find AuthorityControl by acid={}", acid);
-            final AuthorityControl authorityControl = authorityControlDAO.findByAcid(acid);
-            //logger.debug("Found entry={}", authorityControl.toString());
-            return authorityControl.getValue();
-
+                //2. Get string value corresponding to this acid
+                final AuthorityControl authorityControl = authorityControlDAO.findByAcid(acid);
+                return authorityControl.getValue();
+            } else { //a string:
+                final ObjectString objectString = objectStringDAO.findByOidAndFdid(oid, fdid);
+                return objectString.getValue();
+            }
         } catch (Exception e) {
-            logger.error("Error finding entity={}", e);
+            logger.error("Error finding entity or value=", e);
         }
         return "N/A";
+    }
+
+    /**
+     * Populates object metadata. Pulls rom object_acid and object_string table(s).
+     * If an exception occures during retreival, an unknown error is thrown.
+     *
+     * @param oid  oid
+     * @param fdid fdid
+     * @return value for an oid for a fdid
+     */
+    public String getValueByOidAndFdid(int oid, int fdid, int version) {
+        try {
+            if (!ObjectWriter.isString(fdid)) {
+                //1. Find acid value for this oid
+                logger.trace("Finding ObjectAcid by oid={} and fdid={}", oid, fdid);
+
+                final ObjectAcidVersion objectAcid = objectAcidVersionDAO.findByOidAndFdidAndVersion(oid, fdid, version);
+
+                if (objectAcid == null) {
+                    logger.debug("No acid value={} for fdid={} for versionId={}", oid, fdid, version);
+                    logger.trace("Full acid stack={}", objectAcidVersionDAO.findAll().toString());
+                    return UNK_VALUE;
+                }
+
+                int acid = objectAcid.getValue();
+
+                //2. Get acid value
+                final AuthorityControl authorityControl = authorityControlDAO.findByAcid(acid);
+
+                if (authorityControl == null) {
+                    logger.error("AC null. No acid value={} for fdid={} for versionId={}", oid, fdid, version);
+                    return UNK_VALUE;
+                }
+
+                return authorityControl.getValue();
+            } else { //a string:
+                final ObjectStringVersion objStr = objectStringVersionDAO.findByOidAndFdidAndVersion(oid, fdid, version);
+
+                if (objStr == null) {
+                    logger.debug("No string value={} for fdid={} for versionId={}", oid, fdid, version);
+                    return UNK_VALUE;
+                }
+                return objStr.getValue();
+            }
+        } catch (Exception e) {
+            logger.error("Error finding entity or value. No acid value={} for fdid={} for versionId={}",
+                    oid, fdid, version, e.getMessage());
+        }
+        return UNK_VALUE;
+    }
+
+    /**
+     * Updates object metadata
+     * FIXME transcations handling.
+     * TODO extract functionality to enable testing
+     */
+    public String updateOidMetadata() {
+        logger.trace("Updating oid metadata for oid={}", Faces.getRequestParameter("oid"));
+
+        final int oid = Integer.parseInt(Faces.getRequestParameter("oid"));
+        final List<ObjectString> stringsToUpdate = new ArrayList<>();
+        final List<ObjectAcid> objectAcidsToUpdate = new ArrayList<>();
+        final List<ObjectString> stringsVersions = new ArrayList<>();
+        final List<ObjectAcid> objectAcidVersions = new ArrayList<>();
+
+        try {
+            for (FieldDefinitionValue field : fieldDefinitionvalueList) {
+                int fdid = field.getFdid().getFdid();
+
+                if (ObjectWriter.isString(fdid)) {
+                    final ObjectString objectString = objectStringDAO.findByOidAndFdid(oid, fdid);
+
+                    //add to version list before updating
+                    stringsVersions.add(new ObjectString(objectString));
+
+                    objectString.setValue(field.getValue());
+                    stringsToUpdate.add(objectString);
+                } else { //assuming acid!
+                    final ObjectAcid objectAcid = objectAcidDAO.findByOidAndFdid(oid, field.getFdid().getFdid());
+
+                    //add to version list before updating
+                    objectAcidVersions.add(new ObjectAcid(objectAcid));
+
+                    int acidInt = objectAcid.getValue();
+                    final AuthorityControl oldAcid = authorityControlDAO.findByAcid(acidInt);
+
+                    //update only if the field has been changed
+                    if (!oldAcid.getValue().equalsIgnoreCase(field.getValue())) {
+                        //TODO out of tx (coordinate with objectAcidsToUpdate)
+                        final AuthorityControl newAuthorityControl = new AuthorityControl(oldAcid);
+                        newAuthorityControl.setValue(field.getValue());
+                        int newAcidInt = authorityControlDAO.save(newAuthorityControl);
+
+                        //set object acid to point to this new acid
+                        objectAcid.setValue(newAcidInt);
+                        //1. make sure to write this object acid:
+                        objectAcidsToUpdate.add(objectAcid);
+                    }
+                }
+            }
+            //Save and update lists:
+            //TODO in a tx. Must roll back if error!
+            objectAcidDAO.saveOrUpdateList(objectAcidsToUpdate);
+            objectStringDAO.saveOrUpdateList(stringsToUpdate);
+            versionAcid(objectAcidVersions);
+            versionStrings(stringsVersions);
+            //Save object version:
+            final ObjectVersion objVersion = new ObjectVersionBuilder().setCreationDate(new Date())
+                    .setNotes("User Edit").setOid(oid).setUserId(auth.getCurrentUserId())
+                    .setVersionId(getLastVersion(oid) + 1).createObjectVersion();
+            objectVersionDAO.save(objVersion);
+        } catch (Exception e) {
+            logger.error("Error updating or versioning values for oid={}", oid, e);
+            return fail();
+        }
+        return ok();
+    }
+
+    /**
+     * Versions list of ObjectString. New versions start with 1 (Perhaps should pass version).
+     * @param list an object string value
+     */
+    public void versionStrings(List<ObjectString> list) {
+        for (ObjectString o : list) {
+            try {
+                ObjectStringVersion objStrVersion = new ObjectStringVersion(o);
+                objStrVersion.setVersionId(getLastVersion(o.getOid()) + 1);
+                objectStringVersionDAO.save(objStrVersion);
+            } catch (Exception e) {
+                logger.error("Error versioning object_string={}", o, e);
+                throw e;
+            }
+        }
+    }
+
+    /**
+     * Versions an objectAcid. new versions start with 1 (Perhaps should pass version).
+     * @param list an object acid value
+     */
+    public void versionAcid(List<ObjectAcid> list) {
+        for (ObjectAcid o : list) {
+            try {
+                ObjectAcidVersion objectVersion = new ObjectAcidVersion(o);
+                objectVersion.setVersionId(getLastVersion(o.getObjectId()) + 1);
+                objectAcidVersionDAO.save(objectVersion);
+            } catch (Exception e) {
+                logger.error("Error versioning object_acid={}", o, e);
+                throw e;
+            }
+        }
+    }
+
+    /**
+     * Returns maximum version id
+     *
+     * @param oid object id
+     * @return latet version or 0 if no version found
+     */
+    public int getLastVersion(int oid) {
+        return (objectVersionDAO.findByOid(oid).isEmpty()) ?  0 : objectVersionDAO.findMaxVersionByOid(oid);
+    }
+
+    /**
+     * Rolls back an object. Older copy is perserved.
+     * TODO tx handling
+     * TODO version id control
+     * TODO extract rollback to enable testing
+     */
+    public String rollback() {
+        try {
+            if (isParamNull("oid") || isParamNull("version")) {
+                logger.error("Params oid or version null!");
+                return fail();
+            }
+
+            int oid = Integer.parseInt(Faces.getRequestParameter("oid"));
+            int version = Integer.parseInt(Faces.getRequestParameter("version"));
+
+            logger.trace("User={} requesting rollbacking oid={} to version={}", auth.getCurrentUserId(), oid, version);
+
+            //2. Version the current instance
+            final List<FieldDefinition> flist = fdidDAO.findAll();
+            final List<ObjectString> archiveStrings = new ArrayList<>();
+            final List<ObjectAcid> archiveAcids = new ArrayList<>();
+
+            for (FieldDefinition f : flist) {
+                ObjectString os = objectStringDAO.findByOidAndFdid(oid, f.getFdid());
+                if (os != null) {
+                    archiveStrings.add(new ObjectString(os));
+                } else {
+                    logger.trace("No string val for oid={} fdid={}", oid, f.getFdid());
+                }
+
+                ObjectAcid objAcid = objectAcidDAO.findByOidAndFdid(oid, f.getFdid());
+
+                if (objAcid != null) {
+                    archiveAcids.add(new ObjectAcid(objAcid));
+                } else {
+                    logger.trace("No acid val for oid={} fdid={}", oid, f.getFdid());
+                }
+            }
+
+            logger.trace("Archive acids size={}", archiveAcids.size());
+            logger.trace("Archive strings size={}", archiveStrings.size());
+
+            versionAcid(archiveAcids);
+            versionStrings(archiveStrings);
+
+            logger.trace("Done archiving current instance");
+
+            //3. Replace object string and acid values with version's string and acid values
+            List<FieldDefinition> list = fdidDAO.findAll();
+
+            List<ObjectString> objStrToUpdate = new ArrayList<>();
+            List<ObjectAcid> objAcidToUpdate = new ArrayList<>();
+
+            for (FieldDefinition f : list) {
+
+                int fdid = f.getFdid();
+
+                if (ObjectWriter.isString(f.getFdid())) {
+                    ObjectStringVersion historyObject = objectStringVersionDAO.findByOidAndFdidAndVersion(oid, fdid, version);
+                    ObjectString objectString1 = objectStringDAO.findByOidAndFdid(oid, fdid);
+                    objectString1.setValue(historyObject.getValue());
+                    objStrToUpdate.add(objectString1);
+                } else { //an acid
+                    ObjectAcidVersion historyObjectAcid = objectAcidVersionDAO.findByOidAndFdidAndVersion(oid, fdid, version);
+                    ObjectAcid objectAcid1 = objectAcidDAO.findByOidAndFdid(oid, fdid);
+                    objectAcid1.setValue(historyObjectAcid.getValue());
+                    objAcidToUpdate.add(objectAcid1);
+                }
+            }
+            //4. Hit the dao, update the lists
+            objectStringDAO.saveOrUpdateList(objStrToUpdate);
+            objectAcidDAO.saveOrUpdateList(objAcidToUpdate);
+
+            //5. Create a new ObjectVersion. Note that the version Id must correspond to version acid and version string.
+            // Currently done in the version methods.(Doing this before can trip up the version number)
+            final ObjectVersion objectVersion = new ObjectVersionBuilder().setVersionId(getLastVersion(oid) + 1)
+                    .setCreationDate(new Date()).setNotes("Rollback").setOid(oid).setUserId(auth.getCurrentUserId())
+                    .createObjectVersion();
+            objectVersionDAO.save(objectVersion);
+
+            logger.trace("Done rolling back object");
+            return ok();
+        } catch (Exception e) {
+            logger.error("Error rolling back", e);
+        }
+
+        return fail();
     }
 
     /**
@@ -165,66 +427,11 @@ public class ObjectMetadataView extends AbstractView {
      */
     public String getFdidHandle(int fdid) {
         try {
-            FieldDefinition fieldDefinition = fieldDefinitionDAO.findByFdid(fdid);
-            return fieldDefinition.getHandle();
+            FieldDefinition fdidObj = fdidDAO.findByFdid(fdid);
+            return fdidObj.getHandle();
         } catch (Exception e) {
-            logger.trace("Error finding fdid value={}", fdid, e);
+            logger.trace("Error finding value for fdid={}", fdid, e);
             return "";
-        }
-    }
-
-    /**
-     * Updates oid metadata
-     */
-    public String updateOidMetadata() {
-        logger.trace("Updating oid metadata for oid={}", Faces.getRequestParameter("oid"));
-
-        final int oid = Integer.parseInt(Faces.getRequestParameter("oid"));
-
-        final List<AuthorityControl> listToUpdate = new ArrayList<>();
-
-        logger.trace(fieldDefinitionvalueList.toString());
-
-        try {
-            for (FieldDefinitionValue fieldDefinitionValue : fieldDefinitionvalueList) {
-                logger.trace("Chedking for fdid={} and oid={}", fieldDefinitionValue.getFdid().getFdid(), oid);
-
-                ObjectAcid objectAcid = objectAcidDAO.findByOidAndFdid(oid, fieldDefinitionValue.getFdid().getFdid());
-                int acid = objectAcid.getValue();
-                final AuthorityControl authorityControl = authorityControlDAO.findByAcid(acid);
-
-                //update only if the field has been changed
-                if (!authorityControl.getValue().equalsIgnoreCase(fieldDefinitionValue.getValue())) {
-                    authorityControl.setValue(fieldDefinitionValue.getValue());
-                    listToUpdate.add(authorityControl);
-                    logger.debug("Updating for fdid={} and oid={}. Value={}", fieldDefinitionValue.getFdid().getFdid(), oid, fieldDefinitionValue.getValue());
-                }
-            }
-            authorityControlDAO.saveOrUpdateList(listToUpdate);
-        } catch (Exception e) {
-            logger.error("Error saving for oid={}", oid, e);
-            logger.debug("Full object acid={}", objectAcidDAO.findAll().toString());
-            return fail();
-        }
-
-        return ok();
-    }
-
-    /**
-     * converter helper
-     *
-     * @param s string e.g. from Host, note{fdid=68}
-     * @return integer value
-     * @see edu.yale.library.ladybird.engine.model.FieldConstantRules#convertStringToFieldConstant(String)
-     *      for similiar functionality
-     * @see edu.yale.library.ladybird.engine.imports.ObjectWriter#fdidAsInt(String) for duplicate
-     */
-    private Integer fdidAsInt(String s) {
-        try {
-            return Integer.parseInt(s);
-        } catch (NumberFormatException e) {
-            String[] parsedString = s.split("fdid=");
-            return Integer.parseInt(parsedString[1].replace("}", ""));
         }
     }
 
@@ -251,10 +458,6 @@ public class ObjectMetadataView extends AbstractView {
         return objectFile.getFilePath();
     }
 
-    public void setImage(String image) {
-        this.image = image;
-    }
-
     public edu.yale.library.ladybird.entity.Object getObject() {
         return object;
     }
@@ -271,25 +474,7 @@ public class ObjectMetadataView extends AbstractView {
         this.objectFile = objectFile;
     }
 
-    public ObjectString getObjectString() {
-        return objectString;
-    }
-
-    public void setObjectString(ObjectString objectString) {
-        this.objectString = objectString;
-    }
-
-    public ObjectAcid getObjectAcid() {
-        return objectAcid;
-    }
-
-    public void setObjectAcid(ObjectAcid objectAcid) {
-        this.objectAcid = objectAcid;
-    }
-
-    /**
-     * Should be moved
-     */
+    //TODO move?
     public int getCount() {
         return objectFileDAO.count();
     }

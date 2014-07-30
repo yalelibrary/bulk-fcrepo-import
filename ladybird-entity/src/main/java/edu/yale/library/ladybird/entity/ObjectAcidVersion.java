@@ -4,9 +4,9 @@ package edu.yale.library.ladybird.entity;
 import java.util.Date;
 
 /**
- * ObjectAcid
+ * ObjectAcidVersion
  */
-public class ObjectAcid implements java.io.Serializable {
+public class ObjectAcidVersion implements java.io.Serializable {
 
 
     private Integer dataId;
@@ -15,24 +15,26 @@ public class ObjectAcid implements java.io.Serializable {
     private int objectId;
     private int value;
     private int fdid;
+    private int versionId;
 
-    public ObjectAcid() {
+    public ObjectAcidVersion() {
     }
 
-    public ObjectAcid(Date date, int userId, int objectId, int value, int fdid) {
+    public ObjectAcidVersion(Date date, int userId, int objectId, int value, int fdid, int versionId) {
         this.date = date;
         this.userId = userId;
         this.objectId = objectId;
         this.value = value;
         this.fdid = fdid;
+        this.versionId = versionId;
     }
 
-    public ObjectAcid(ObjectAcid o) {
-        this.date = o.getDate();
-        this.userId = o.getUserId();
-        this.objectId = o.getObjectId();
-        this.value = o.getValue();
-        this.fdid = o.getFdid();
+    public ObjectAcidVersion(ObjectAcid objectAcid) {
+        this.date = objectAcid.getDate();
+        this.userId = objectAcid.getUserId();
+        this.objectId = objectAcid.getObjectId();
+        this.value = objectAcid.getValue();
+        this.fdid = objectAcid.getFdid();
     }
 
     public Integer getDataId() {
@@ -83,15 +85,24 @@ public class ObjectAcid implements java.io.Serializable {
         this.fdid = fdid;
     }
 
+    public int getVersionId() {
+        return versionId;
+    }
+
+    public void setVersionId(int versionId) {
+        this.versionId = versionId;
+    }
+
     @Override
     public String toString() {
-        return "ObjectAcid{"
+        return "ObjectAcidVersion{"
                 + "dataId=" + dataId
                 + ", date=" + date
                 + ", userId=" + userId
                 + ", objectId=" + objectId
                 + ", value=" + value
                 + ", fdid=" + fdid
+                + ", versionId=" + versionId
                 + '}';
     }
 }

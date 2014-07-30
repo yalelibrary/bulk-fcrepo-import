@@ -10,6 +10,4 @@ public class NavigationUtil {
     public static final String ROLE_CHANGE_PERMISSIONS = "role_change_permissions.xhtml";
     public static final String PROJECT_TEMPLATE_FORM = "project_template_form.xhtml";
     public static final String PROJECT_TEMPLATE_EDIT_FORM = "project_template_edit_form.xhtml";
-
-
 }
