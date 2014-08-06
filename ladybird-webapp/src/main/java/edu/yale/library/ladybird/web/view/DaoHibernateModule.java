@@ -14,6 +14,7 @@ import edu.yale.library.ladybird.persistence.dao.AccessconditionProjectDAO;
 import edu.yale.library.ladybird.persistence.dao.AuthorityControlDAO;
 import edu.yale.library.ladybird.persistence.dao.AuthorityControlVersionDAO;
 import edu.yale.library.ladybird.persistence.dao.CollectionDAO;
+import edu.yale.library.ladybird.persistence.dao.EventTypeDAO;
 import edu.yale.library.ladybird.persistence.dao.FieldDefinitionDAO;
 import edu.yale.library.ladybird.persistence.dao.FieldMarcMappingDAO;
 import edu.yale.library.ladybird.persistence.dao.GenericDAO;
@@ -26,6 +27,7 @@ import edu.yale.library.ladybird.persistence.dao.MonitorDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectAcidDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectAcidVersionDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectDAO;
+import edu.yale.library.ladybird.persistence.dao.ObjectEventDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectFileDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectLongstringDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectStringDAO;
@@ -49,6 +51,7 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.AccessconditionProjec
 import edu.yale.library.ladybird.persistence.dao.hibernate.AuthorityControlHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.AuthorityControlVersionHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.CollectionHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.EventTypeHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.FieldDefinitionHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.FieldMarcMappingHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportFileHibernateDAO;
@@ -59,6 +62,7 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceHibernate
 import edu.yale.library.ladybird.persistence.dao.hibernate.MonitorHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectAcidHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectAcidVersionHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectEventHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectFileHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectLongstringHibernateDAO;
@@ -132,6 +136,8 @@ public class DaoHibernateModule extends AbstractModule {
         bind(ObjectVersionDAO.class).to(ObjectVersionHibernateDAO.class);
         bind(ObjectAcidVersionDAO.class).to(ObjectAcidVersionHibernateDAO.class);
         bind(ObjectStringVersionDAO.class).to(ObjectStringVersionHibernateDAO.class);
+        bind(ObjectEventDAO.class).to(ObjectEventHibernateDAO.class);
+        bind(EventTypeDAO.class).to(EventTypeHibernateDAO.class);
 
         bind(UserHttpService.class);
         bind(UserEventHttpService.class);

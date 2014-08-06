@@ -2,7 +2,11 @@ package edu.yale.library.ladybird;
 
 import edu.yale.library.ladybird.engine.ExportBus;
 import edu.yale.library.ladybird.engine.oai.FdidMarcMappingUtil;
+import edu.yale.library.ladybird.entity.event.RollbackEventType;
+import edu.yale.library.ladybird.entity.event.UserEditEvent;
 import edu.yale.library.ladybird.kernel.KernelBootstrap;
+import edu.yale.library.ladybird.persistence.dao.EventTypeDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.EventTypeHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.FieldMarcMappingHibernateDAO;
 
 import javax.servlet.ServletContextEvent;
@@ -52,6 +56,17 @@ public class AppContextListener implements ServletContextListener {
             settingsInitializer.loadAndStore();
         } catch (Exception e) {
             logger.error("Error in setting settings", e); //ignore
+        }
+
+        //Add Object Events
+        //FIXME: need to check to ensure that if the DB already contains these events, they are not added twice
+        try {
+            EventTypeDAO eventTypeDAO = new EventTypeHibernateDAO();
+            eventTypeDAO.save(new UserEditEvent());
+            eventTypeDAO.save(new RollbackEventType());
+            logger.debug("Event types are={}", eventTypeDAO.findAll().toString());
+        } catch (Exception e) {
+            logger.error("Error setting event types", e);
         }
     }
 

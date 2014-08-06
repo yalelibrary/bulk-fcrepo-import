@@ -7,9 +7,9 @@
             <column name="event_id" />
             <generator class="identity" />
         </id>
-        <property name="eventTypeId" type="int">
+        <many-to-one name="eventType" class="edu.yale.library.ladybird.entity.EventType" fetch="select">
             <column name="event_type_id" not-null="true" />
-        </property>
+        </many-to-one>
         <property name="userId" type="int">
             <column name="user_id" not-null="true" />
         </property>
@@ -18,9 +18,6 @@
         </property>
         <property name="oid" type="int">
             <column name="oid" not-null="true" />
-        </property>
-        <property name="event" type="string">
-            <column name="event" length="500" not-null="true" />
         </property>
     </class>
 </hibernate-mapping>

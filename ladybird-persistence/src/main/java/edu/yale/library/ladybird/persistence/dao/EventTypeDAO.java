@@ -4,5 +4,7 @@ import edu.yale.library.ladybird.entity.EventType;
 
 public interface EventTypeDAO extends GenericDAO<EventType, Integer> {
 
+    EventType findByEditEvent();
+
 }
 

@@ -10,21 +10,19 @@ public class ObjectEvent implements java.io.Serializable {
 
 
     private Integer eventId;
-    private int eventTypeId;
+    private EventType eventType;
     private int userId;
     private Date date;
     private int oid;
-    private String event;
 
     public ObjectEvent() {
     }
 
-    public ObjectEvent(int eventTypeId, int userId, Date date, int oid, String event) {
-        this.eventTypeId = eventTypeId;
+    public ObjectEvent(EventType eventType, int userId, Date date, int oid, String event) {
+        this.eventType = eventType;
         this.userId = userId;
         this.date = date;
         this.oid = oid;
-        this.event = event;
     }
 
     public Integer getEventId() {
@@ -34,15 +32,13 @@ public class ObjectEvent implements java.io.Serializable {
     public void setEventId(Integer eventId) {
         this.eventId = eventId;
     }
-
-    public int getEventTypeId() {
-        return this.eventTypeId;
+    public EventType getEventType() {
+        return this.eventType;
     }
 
-    public void setEventTypeId(int eventTypeId) {
-        this.eventTypeId = eventTypeId;
+    public void setEventType(EventType eventType) {
+        this.eventType = eventType;
     }
-
     public int getUserId() {
         return this.userId;
     }
@@ -50,7 +46,6 @@ public class ObjectEvent implements java.io.Serializable {
     public void setUserId(int userId) {
         this.userId = userId;
     }
-
     public Date getDate() {
         return this.date;
     }
@@ -58,21 +53,12 @@ public class ObjectEvent implements java.io.Serializable {
     public void setDate(Date date) {
         this.date = date;
     }
-
     public int getOid() {
         return this.oid;
     }
 
     public void setOid(int oid) {
         this.oid = oid;
-    }
-
-    public String getEvent() {
-        return this.event;
-    }
-
-    public void setEvent(String event) {
-        this.event = event;
     }
 
 

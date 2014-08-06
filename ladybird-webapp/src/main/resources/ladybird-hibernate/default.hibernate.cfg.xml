@@ -49,5 +49,7 @@
         <mapping resource="ladybird-hbm/ObjectVersion.hbm.xml"/>
         <mapping resource="ladybird-hbm/ObjectAcidVersion.hbm.xml"/>
         <mapping resource="ladybird-hbm/ObjectStringVersion.hbm.xml"/>
+        <mapping resource="ladybird-hbm/ObjectEvent.hbm.xml"/>
+        <mapping resource="ladybird-hbm/EventType.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="edu.yale.library.ladybird.entity.EventType" table="event_type" catalog="pamoja">
+        <id name="eventTypeId" type="java.lang.Integer">
+            <column name="event_type_id" />
+            <generator class="identity" />
+        </id>
+        <discriminator column="label" type="java.lang.String" insert="false"/>
+
+        <property name="date" type="timestamp">
+            <column name="date" length="19" />
+        </property>
+        <property name="label" type="string">
+            <column name="label" length="45" />
+        </property>
+        <property name="category" type="string">
+            <column name="category" length="45">
+                <comment>options: system premis</comment>
+            </column>
+        </property>
+        <set name="objectEvents" table="object_event" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="event_type_id" not-null="true" />
+            </key>
+            <one-to-many class="edu.yale.library.ladybird.entity.ObjectEvent" />
+        </set>
+        <!-- discriminator value must match enum value of EventLabel.java -->
+        <subclass name="edu.yale.library.ladybird.entity.event.UserEditEvent" discriminator-value="USER_EDIT"/>
+        <subclass name="edu.yale.library.ladybird.entity.event.RollbackEventType" discriminator-value="OBJECT_ROLLBACK"/>
+    </class>
+</hibernate-mapping>

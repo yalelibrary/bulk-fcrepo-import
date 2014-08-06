@@ -3,20 +3,24 @@ package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.engine.imports.ObjectWriter;
 import edu.yale.library.ladybird.entity.AuthorityControl;
+import edu.yale.library.ladybird.entity.EventType;
 import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.Object;
 import edu.yale.library.ladybird.entity.ObjectAcid;
 import edu.yale.library.ladybird.entity.ObjectAcidVersion;
+import edu.yale.library.ladybird.entity.ObjectEvent;
 import edu.yale.library.ladybird.entity.ObjectFile;
 import edu.yale.library.ladybird.entity.ObjectString;
 import edu.yale.library.ladybird.entity.ObjectStringVersion;
 import edu.yale.library.ladybird.entity.ObjectVersion;
 import edu.yale.library.ladybird.entity.ObjectVersionBuilder;
 import edu.yale.library.ladybird.persistence.dao.AuthorityControlDAO;
+import edu.yale.library.ladybird.persistence.dao.EventTypeDAO;
 import edu.yale.library.ladybird.persistence.dao.FieldDefinitionDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectAcidDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectAcidVersionDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectDAO;
+import edu.yale.library.ladybird.persistence.dao.ObjectEventDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectFileDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectStringDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectStringVersionDAO;
@@ -78,6 +82,12 @@ public class ObjectMetadataView extends AbstractView {
 
     @Inject
     private ObjectVersionDAO objectVersionDAO;
+
+    @Inject
+    private ObjectEventDAO objectEventDAO;
+
+    @Inject
+    private EventTypeDAO eventTypeDAO;
 
     @Inject
     private AuthUtil auth;
@@ -278,11 +288,23 @@ public class ObjectMetadataView extends AbstractView {
                     .setNotes("User Edit").setOid(oid).setUserId(auth.getCurrentUserId())
                     .setVersionId(getLastVersion(oid) + 1).createObjectVersion();
             objectVersionDAO.save(objVersion);
+
+            //Audit event (creates direct db entry, doesn't post it):
+            ObjectEvent objectEvent = new ObjectEvent();
+            objectEvent.setEventType(getEditEvent());
+            objectEvent.setDate(new Date());
+            objectEvent.setOid(oid);
+            objectEvent.setUserId(auth.getCurrentUserId());
+            objectEventDAO.save(objectEvent);
         } catch (Exception e) {
             logger.error("Error updating or versioning values for oid={}", oid, e);
             return fail();
         }
         return ok();
+    }
+
+    public EventType getEditEvent() {
+        return eventTypeDAO.findByEditEvent();
     }
 
     /**

@@ -46,6 +46,8 @@
         <mapping resource="test-hbm/UserProjectFieldExportOptions.hbm.xml"/>
         <mapping resource="test-hbm/ObjectAcidVersion.hbm.xml"/>
         <mapping resource="test-hbm/ObjectStringVersion.hbm.xml"/>
+        <mapping resource="test-hbm/EventType.hbm.xml"/>
         <mapping resource="test-hbm/ObjectVersion.hbm.xml"/>
+        <mapping resource="test-hbm/ObjectEvent.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>
