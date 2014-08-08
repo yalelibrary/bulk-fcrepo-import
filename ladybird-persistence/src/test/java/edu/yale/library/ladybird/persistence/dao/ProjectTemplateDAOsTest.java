@@ -48,6 +48,7 @@ public class ProjectTemplateDAOsTest extends AbstractPersistenceTest {
     public void shouldSaveProjectTemplate() {
         final ProjectTemplate item = new ProjectTemplateBuilder().setProjectId(1).setCreator(1).setLabel("Project X").setDate(new Date()).createProjectTemplate();
         List list = null;
+        ProjectTemplate toFind = null;
         int projectCount = 0;
         List<ProjectTemplate> projectTemplateList = new ArrayList<>(); //for a particular project id
         try {
@@ -57,10 +58,9 @@ public class ProjectTemplateDAOsTest extends AbstractPersistenceTest {
             projectCount = dao.getCountByLabel("Project X");
 
             projectTemplateList = dao.findByProjectId(1);
-
+            toFind = dao.findByLabel("Project X");
         } catch (Throwable e) {
-            e.printStackTrace();
-            fail("Error testing saving or finding item");
+            fail("Error testing saving or finding item" + e.getMessage());
         }
 
         assertEquals("Item count incorrect", list.size(), 1);
@@ -69,6 +69,9 @@ public class ProjectTemplateDAOsTest extends AbstractPersistenceTest {
         assert (projectCount == 1);
 
         assert (projectTemplateList.size() == 1);
+
+        assert (toFind.getProjectId() == 1);
+        assert (toFind.getCreator() == 1);
     }
 
     @Test

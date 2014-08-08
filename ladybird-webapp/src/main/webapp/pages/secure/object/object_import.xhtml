@@ -10,16 +10,16 @@
 
         <h:form id="ObjectImportFileForm" enctype="multipart/form-data">
 
-            <!-- TEMPLATE -->
+            <!-- TEMPLATE selection -->
             <div>
                 <span>
+                <!-- TODO need a converter -->
                 <h:commandButton id="submit_button"
                                  action="#{ObjectFileView.applyTemplate}"
                                  styleClass="btn"
-                                 value="Apply template to results">
-                </h:commandButton>
-                </span>
+                                 value="Apply template to results"/>
 
+                </span>
                 <span>
                 <h:selectOneMenu id="templateSelectOneMenu" value="#{ObjectFileView.templateItem.label}">
 

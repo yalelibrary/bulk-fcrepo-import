@@ -6,8 +6,11 @@ import java.util.List;
 
 public interface ProjectTemplateDAO extends GenericDAO<ProjectTemplate, Integer> {
 
-    int getCountByLabel(final String arg);
+    int getCountByLabel(String arg);
 
-    List<ProjectTemplate> findByProjectId(final int projectId);
+    List<ProjectTemplate> findByProjectId(int projectId);
+
+    ProjectTemplate findByLabel(String label);
+
 }
 

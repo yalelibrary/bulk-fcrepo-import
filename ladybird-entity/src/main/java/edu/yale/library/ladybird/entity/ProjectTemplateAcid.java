@@ -1,5 +1,6 @@
 package edu.yale.library.ladybird.entity;
 
+// Not sure how useful this is
 public class ProjectTemplateAcid implements java.io.Serializable {
 
     private Integer id;

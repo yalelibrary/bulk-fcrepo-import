@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.persistence.dao;
 
 import edu.yale.library.ladybird.entity.ObjectString;
+import edu.yale.library.ladybird.entity.ObjectStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,8 +36,8 @@ public class ObjectStringDaoTest extends AbstractPersistenceTest {
 
     @Test
     public void testSave() {
-        final ObjectString item = new ObjectString();
-        ObjectString obj1 = new ObjectString();
+        final ObjectString item = new ObjectStringBuilder().createObjectString();
+        ObjectString obj1 = new ObjectStringBuilder().createObjectString();
 
         item.setFdid(555);
         item.setValue("name");

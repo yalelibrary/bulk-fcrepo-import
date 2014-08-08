@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ObjectHibernateDAO extends GenericHibernateDAO<Object, Integer> implements ObjectDAO {
 
-
+    @SuppressWarnings("unchecked")
     @Override
     public edu.yale.library.ladybird.entity.Object findByOid(int oid) {
         final Query q = getSession().createQuery("from edu.yale.library.ladybird.entity.Object where oid = :param");
@@ -18,6 +18,7 @@ public class ObjectHibernateDAO extends GenericHibernateDAO<Object, Integer> imp
         return list.isEmpty() ? null : list.get(0);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<edu.yale.library.ladybird.entity.Object> findByParent(int poid) {
         final Query q = getSession().createQuery("from edu.yale.library.ladybird.entity.Object where poid = :param");
@@ -31,6 +32,14 @@ public class ObjectHibernateDAO extends GenericHibernateDAO<Object, Integer> imp
         Query q = getSession().createQuery("select count(*) from edu.yale.library.ladybird.entity.Object where poid = :param");
         q.setParameter("param", oid);
         return ((Long) q.uniqueResult()).intValue();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Object> findByProject(int projectId) {
+        final Query q = getSession().createQuery("from edu.yale.library.ladybird.entity.Object where projectId = :param");
+        q.setParameter("param", projectId);
+        return q.list();
     }
 }
 

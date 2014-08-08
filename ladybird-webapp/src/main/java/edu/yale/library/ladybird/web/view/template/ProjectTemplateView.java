@@ -55,7 +55,6 @@ public class ProjectTemplateView extends AbstractView {
     public List<ProjectTemplate> getItemList() {
         try {
             int currentProjectId = authUtil.getDefaultProjectForCurrentUser().getProjectId();
-            logger.trace("Current project Id={}", currentProjectId);
             return projectTemplateDAO.findByProjectId(currentProjectId);
         } catch (Exception e) {
             logger.error("Error finding items for project.", e.getMessage());
@@ -77,7 +76,6 @@ public class ProjectTemplateView extends AbstractView {
             assertUniqueLabel(item.getLabel());
 
             item.setProjectId(authUtil.getDefaultProjectForCurrentUser().getProjectId());
-
             item.setDate(new Date());
             item.setCreator(authUtil.getCurrentUserId());
 

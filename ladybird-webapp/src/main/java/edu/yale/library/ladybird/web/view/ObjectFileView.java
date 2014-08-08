@@ -2,9 +2,14 @@
 package edu.yale.library.ladybird.web.view;
 
 
+import edu.yale.library.ladybird.engine.metadata.TemplateApplicator;
 import edu.yale.library.ladybird.entity.ObjectFile;
 import edu.yale.library.ladybird.entity.ProjectTemplate;
+import edu.yale.library.ladybird.persistence.dao.ObjectAcidDAO;
+import edu.yale.library.ladybird.persistence.dao.ObjectDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectFileDAO;
+import edu.yale.library.ladybird.persistence.dao.ObjectStringDAO;
+import edu.yale.library.ladybird.persistence.dao.ProjectTemplateDAO;
 import org.slf4j.Logger;
 
 import javax.annotation.PostConstruct;
@@ -31,11 +36,22 @@ public class ObjectFileView extends AbstractView {
     private ObjectFileDAO entityDAO;
 
     @Inject
+    private ObjectStringDAO objectStringDAO;
+
+    @Inject
+    private ObjectAcidDAO objectAcidDAO;
+
+    @Inject
+    private ObjectDAO objectDAO;
+
+    @Inject
     private AuthUtil authUtil;
+
+    @Inject
+    private ProjectTemplateDAO projectTemplateDAO;
 
     @PostConstruct
     public void init() {
-        logger.trace("Init ObjectFileView");
         initFields();
         dao = entityDAO;
     }
@@ -45,9 +61,7 @@ public class ObjectFileView extends AbstractView {
             if (itemList.isEmpty()) {
                 //Find objects for only current project
                 int currentProjectId = authUtil.getDefaultProjectForCurrentUser().getProjectId();
-                logger.trace("Current projectId={}", currentProjectId);
                 itemList = entityDAO.findByProject(currentProjectId); //TODO need to revisit dao method
-                logger.trace("Item list size={}", itemList.size());
             }
         } catch (Exception e) {
             logger.error("Error finding items", e);
@@ -59,11 +73,23 @@ public class ObjectFileView extends AbstractView {
         this.itemList = itemList;
     }
 
-    //TODO
+    /**
+     * Applies template to all objects in the current project
+     * @return navigation outcome
+     */
     public String applyTemplate() {
-        logger.debug("Applying to results template={}", templateItem.getLabel());
-        return fail();
+        final ProjectTemplate templateToApply = projectTemplateDAO.findByLabel(templateItem.getLabel()); //need converter
+
+        try {
+            TemplateApplicator templateApplicator = new TemplateApplicator(); //TODO
+            templateApplicator.updateObjectMetadata(templateToApply);
+            return ok();
+        } catch (Exception e) {
+            logger.error("Error applying template", e);
+            return fail();
+        }
     }
+
 
     public ProjectTemplate getTemplateItem() {
         return templateItem;

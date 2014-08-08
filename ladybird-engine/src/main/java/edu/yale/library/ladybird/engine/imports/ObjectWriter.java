@@ -7,6 +7,7 @@ import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.Monitor;
 import edu.yale.library.ladybird.entity.ObjectAcid;
 import edu.yale.library.ladybird.entity.ObjectString;
+import edu.yale.library.ladybird.entity.ObjectStringBuilder;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.persistence.dao.AuthorityControlDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectAcidDAO;
@@ -116,7 +117,7 @@ public class ObjectWriter {
                         objAcid.setDate(new Date());
                         objectAcidDAO.save(objAcid);
                     } else {
-                        final ObjectString objString = new ObjectString();
+                        final ObjectString objString = new ObjectStringBuilder().createObjectString();
                         objString.setFdid(fdidAsInt(f.getName()));
                         objString.setUserId(userId);
                         objString.setDate(new Date());

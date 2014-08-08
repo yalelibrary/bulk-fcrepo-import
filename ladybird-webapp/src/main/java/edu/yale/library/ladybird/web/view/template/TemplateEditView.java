@@ -64,10 +64,9 @@ public class TemplateEditView extends AbstractView {
      */
     private List<FieldDefinitionValue> loadFieldDefinitions() {
         List<FieldDefinitionValue> fieldDefinitionvalueList = new ArrayList<>();
+        int templateId;
 
         try {
-            int templateId;
-
             //N.B.
             if (Faces.getRequestParameter("project_template_id") == null) {
                 templateId = Integer.parseInt(Faces.getRequestParameter("id"));

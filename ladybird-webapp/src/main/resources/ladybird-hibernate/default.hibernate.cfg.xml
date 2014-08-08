@@ -42,7 +42,7 @@
         <mapping resource="ladybird-hbm/AccessconditionType.hbm.xml"/>
         <mapping resource="ladybird-hbm/Settings.hbm.xml"/>
         <mapping resource="ladybird-hbm/ProjectTemplate.hbm.xml"/>
-        <mapping resource="ladybird-hbm/ProjectTemplateAcid.hbm.xml"/>
+        <!-- <mapping resource="ladybird-hbm/ProjectTemplateAcid.hbm.xml"/> -->
         <mapping resource="ladybird-hbm/ProjectTemplateStrings.hbm.xml"/>
         <mapping resource="ladybird-hbm/ImportJobNotifications.hbm.xml"/>
         <mapping resource="ladybird-hbm/UserProjectFieldExportOptions.hbm.xml"/>

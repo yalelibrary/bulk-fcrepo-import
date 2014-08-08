@@ -11,6 +11,7 @@ import edu.yale.library.ladybird.entity.ObjectAcidVersion;
 import edu.yale.library.ladybird.entity.ObjectEvent;
 import edu.yale.library.ladybird.entity.ObjectFile;
 import edu.yale.library.ladybird.entity.ObjectString;
+import edu.yale.library.ladybird.entity.ObjectStringBuilder;
 import edu.yale.library.ladybird.entity.ObjectStringVersion;
 import edu.yale.library.ladybird.entity.ObjectVersion;
 import edu.yale.library.ladybird.entity.ObjectVersionBuilder;
@@ -250,7 +251,7 @@ public class ObjectMetadataView extends AbstractView {
                     final ObjectString objectString = objectStringDAO.findByOidAndFdid(oid, fdid);
 
                     //add to version list before updating
-                    stringsVersions.add(new ObjectString(objectString));
+                    stringsVersions.add(new ObjectStringBuilder().setCopy(objectString).createObjectString());
 
                     objectString.setValue(field.getValue());
                     stringsToUpdate.add(objectString);
@@ -377,7 +378,7 @@ public class ObjectMetadataView extends AbstractView {
             for (FieldDefinition f : flist) {
                 ObjectString os = objectStringDAO.findByOidAndFdid(oid, f.getFdid());
                 if (os != null) {
-                    archiveStrings.add(new ObjectString(os));
+                    archiveStrings.add(new ObjectStringBuilder().setCopy(os).createObjectString());
                 } else {
                     logger.trace("No string val for oid={} fdid={}", oid, f.getFdid());
                 }

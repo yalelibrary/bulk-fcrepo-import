@@ -10,6 +10,8 @@ public interface ObjectDAO extends GenericDAO<Object, Integer> {
 
     List<Object> findByParent(int oid);
 
+    List<Object> findByProject(int projectId);
+
     int childCount(int oid);
 
 }

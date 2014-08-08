@@ -43,9 +43,11 @@ public class ObjectDaoTest extends AbstractPersistenceTest {
         final Object item = build();
         item.setRoid(1);
         List list = null;
+        List<Object> list2 = null;
         try {
             dao.save(item);
             list = dao.findAll();
+            list2 = dao.findByProject(1);
         } catch (Throwable e) {
             e.printStackTrace();
             fail("Error testing saving or finding item");
@@ -55,6 +57,8 @@ public class ObjectDaoTest extends AbstractPersistenceTest {
         final Object o = (Object) list.get(0);
         assertEquals("Value mismatch", o.getProjectId(), 1);
         assertEquals("Value mismatch", o.getRoid(), 1);
+
+        assertEquals(list2.get(0).getProjectId(), 1);
     }
 
     @Test

@@ -21,5 +21,12 @@ public class ProjectTemplateHibernateDAO extends GenericHibernateDAO<ProjectTemp
         q.setParameter("param1", arg);
         return q.list();
     }
+
+    @Override
+    public ProjectTemplate findByLabel(String label) {
+        Query q = getSession().createQuery("from ProjectTemplate where label = :param1");
+        q.setParameter("param1", label);
+        return (q.list().isEmpty()) ? null : (ProjectTemplate) q.list().get(0);
+    }
 }
 

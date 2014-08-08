@@ -48,6 +48,15 @@ public class ProjectTemplateStrings implements java.io.Serializable {
         this.value = value;
     }
 
+    @Override
+    public String toString() {
+        return "ProjectTemplateStrings{"
+                + "id=" + id
+                + ", templateId=" + templateId
+                + ", fdid=" + fdid
+                + ", value='" + value + '\''
+                + '}';
+    }
 }
 
 

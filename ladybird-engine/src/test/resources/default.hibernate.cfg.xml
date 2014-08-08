@@ -28,5 +28,8 @@
         <mapping resource="test-hbm/UserEvent.hbm.xml"/>
         <!-- for hydraprocessorTest -->
         <mapping resource="test-hbm/HydraPublish.hbm.xml"/>
+        <!-- <mapping resource="test-hbm/ProjectTemplateAcid.hbm.xml"/> -->
+        <mapping resource="test-hbm/ProjectTemplate.hbm.xml"/>
+        <mapping resource="test-hbm/ProjectTemplateStrings.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>
