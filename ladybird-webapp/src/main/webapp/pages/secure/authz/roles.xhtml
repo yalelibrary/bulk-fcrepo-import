@@ -7,13 +7,14 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../../templates/template_yul.xhtml">
 
-    <ui:define name="offcanvas">
-         <a href="/ladybird-webapp/pages/secure/roles_site_form.xhtml"
-           class="list-group-item">Add Role</a>
-    </ui:define>
-
     <ui:define name="content">
         <h4>Roles</h4>
+
+        <div>
+            <a href="/ladybird-webapp/pages/secure/roles_site_form.xhtml">Add Role</a>
+        </div>
+
+
         <h:form id="RolesForm" enctype="multipart/form-data">
             <br/>
 

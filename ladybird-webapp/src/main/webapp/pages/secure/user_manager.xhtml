@@ -6,16 +6,18 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../templates/template_yul.xhtml">
-    <ui:define name="offcanvas">
-        <a href="/ladybird-webapp/pages/secure/user_manager_form.xhtml" class="list-group-item">Add Users</a>
-        <a href="/ladybird-webapp/pages/secure/users_projects.xhtml"
-           class="list-group-item">Project Authorization</a>
-        <a href="/ladybird-webapp/pages/secure/assign_project_access.xhtml"
-           class="list-group-item">Assign Project Access</a>
-    </ui:define>
 
     <ui:define name="content">
         <h4>Users</h4>
+
+        <div>
+        <br/>
+        <a href="/ladybird-webapp/pages/secure/user_manager_form.xhtml">Add Users</a>
+        <a href="/ladybird-webapp/pages/secure/users_projects.xhtml">Project Authorization</a>
+        <a href="/ladybird-webapp/pages/secure/assign_project_access.xhtml">Assign Project Access</a>
+        <br/>
+        </div>
+
         <h:form id="UserForm" enctype="multipart/form-data">
             <div>
                 <div>

@@ -20,6 +20,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -113,7 +114,8 @@ public class MonitorView extends AbstractView {
             return monitorList;
         } catch (Exception e) {
             logger.error("Error finding monitor item list={}", e);
-            throw e;
+            //throw e; //ignore
+            return new ArrayList<>(); //or return error page when we have one
         }
     }
 

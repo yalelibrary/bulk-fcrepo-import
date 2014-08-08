@@ -6,14 +6,14 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../templates/template_yul.xhtml">
-    <ui:define name="offcanvas">
-        <a href="/ladybird-webapp/pages/secure/projects_form.xhtml" class="list-group-item">Add Project</a>
-        <a href="/ladybird-webapp/pages/secure/assign_project_access.xhtml"
-           class="list-group-item">Assign Project Access</a>
-    </ui:define>
 
     <ui:define name="content">
         <h4>Projects</h4>
+
+        <br/>
+
+        <div>
+        <a href="/ladybird-webapp/pages/secure/projects_form.xhtml">Add Project</a>  </div>
 
         <br/>
 
@@ -37,7 +37,7 @@
 
                     <p:dataTable id="ProjectDatatable" value="#{ProjectView.itemList}"
                                  var="item" paginator="true" rows="10"
-                                 tableStyle="" paginatorPosition="bottom"
+                                 paginatorPosition="bottom"
                                  editable="false"
                                  selection="#{ProjectView.selectedItem}"
                                  selectionMode="single"

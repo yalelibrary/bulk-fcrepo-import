@@ -7,13 +7,15 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../../templates/template_yul.xhtml">
 
-    <ui:define name="offcanvas">
-        <a href="/ladybird-webapp/pages/secure/permissions_site_form.xhtml"
-           class="list-group-item">Add Permissions</a>
-    </ui:define>
+
 
     <ui:define name="content">
         <h4>Permissions</h4>
+
+        <div>
+            <a href="/ladybird-webapp/pages/secure/authz/permissions_form.xhtml">Add Permissions</a>
+        </div>
+
         <h:form id="PermissionsForm" enctype="multipart/form-data">
             <br/>
 
@@ -29,13 +31,13 @@
 
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="PermissionsName"/>
+                                <h:outputText value="Permission"/>
                             </f:facet>
                             <h:outputText value="#{item.permissionsName}"/>
                         </p:column>
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="PermissionsDesc"/>
+                                <h:outputText value="Description"/>
                             </f:facet>
                             <h:outputText value="#{item.permissionsDesc}"/>
                         </p:column>

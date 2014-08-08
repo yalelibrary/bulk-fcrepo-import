@@ -11,6 +11,21 @@
 
         <h:form id="StatsForm" enctype="multipart/form-data">
 
+            <p:panelGrid columns="2">
+                <f:facet name="header">
+                    <h:outputText value="General Stats"/>
+                </f:facet>
+
+                <h:outputText value="Objects" />
+                <h:outputText value=" #{ObjectView.getCount()}" />
+
+                <h:outputText value="Images" />
+                <h:outputText value="#{objectMetadataView.getCount()}" />
+            </p:panelGrid>
+
+            <br/>
+
+            <!--
             <h4>General Statistics</h4>
 
             <p> Object count: #{ObjectView.getCount()} </p>
@@ -32,6 +47,7 @@
                     </div>
                 </div>
             </ui:repeat>
+            -->
 
 
         </h:form>
