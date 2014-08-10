@@ -2,11 +2,13 @@ package edu.yale.library.ladybird.engine.exports;
 
 import edu.yale.library.ladybird.engine.metadata.TemplateApplicator;
 import edu.yale.library.ladybird.entity.AuthorityControl;
+import edu.yale.library.ladybird.entity.AuthorityControlBuilder;
 import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.FieldDefinitionBuilder;
 import edu.yale.library.ladybird.entity.Object;
 import edu.yale.library.ladybird.engine.AbstractDBTest;
 import edu.yale.library.ladybird.entity.ObjectAcid;
+import edu.yale.library.ladybird.entity.ObjectAcidBuilder;
 import edu.yale.library.ladybird.entity.ObjectBuilder;
 import edu.yale.library.ladybird.entity.ObjectString;
 import edu.yale.library.ladybird.entity.ObjectStringBuilder;
@@ -123,14 +125,14 @@ public class TemplateApplicatorTest extends AbstractDBTest {
             objectStringDAO.save(objectString);
             assert (objectStringDAO.findAll().size() == 1);
 
-            AuthorityControl authorityControl = new AuthorityControl();
+            AuthorityControl authorityControl = new AuthorityControlBuilder().createAuthorityControl();
 
             authorityControl.setValue("acid value");
             authorityControl.setFdid(ACID_FDID);
             authorityControl.setDate(d);
             int acid = authorityControlDAO.save(authorityControl);
 
-            ObjectAcid objectStringForAcid = new ObjectAcid();
+            ObjectAcid objectStringForAcid = new ObjectAcidBuilder().createObjectAcid();
             objectStringForAcid.setObjectId(1);
             objectStringForAcid.setFdid(ACID_FDID);
             objectStringForAcid.setValue(acid);

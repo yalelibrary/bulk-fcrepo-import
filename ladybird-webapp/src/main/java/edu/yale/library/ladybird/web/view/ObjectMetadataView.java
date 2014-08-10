@@ -2,6 +2,9 @@ package edu.yale.library.ladybird.web.view;
 
 
 import edu.yale.library.ladybird.engine.imports.ObjectWriter;
+import edu.yale.library.ladybird.engine.metadata.FieldDefinitionValue;
+import edu.yale.library.ladybird.engine.metadata.MetadataVersioner;
+import edu.yale.library.ladybird.engine.metadata.Rollbacker;
 import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.EventType;
 import edu.yale.library.ladybird.entity.FieldDefinition;
@@ -9,12 +12,10 @@ import edu.yale.library.ladybird.entity.Object;
 import edu.yale.library.ladybird.entity.ObjectAcid;
 import edu.yale.library.ladybird.entity.ObjectAcidVersion;
 import edu.yale.library.ladybird.entity.ObjectEvent;
+import edu.yale.library.ladybird.entity.ObjectEventBuilder;
 import edu.yale.library.ladybird.entity.ObjectFile;
 import edu.yale.library.ladybird.entity.ObjectString;
-import edu.yale.library.ladybird.entity.ObjectStringBuilder;
 import edu.yale.library.ladybird.entity.ObjectStringVersion;
-import edu.yale.library.ladybird.entity.ObjectVersion;
-import edu.yale.library.ladybird.entity.ObjectVersionBuilder;
 import edu.yale.library.ladybird.persistence.dao.AuthorityControlDAO;
 import edu.yale.library.ladybird.persistence.dao.EventTypeDAO;
 import edu.yale.library.ladybird.persistence.dao.FieldDefinitionDAO;
@@ -26,7 +27,6 @@ import edu.yale.library.ladybird.persistence.dao.ObjectFileDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectStringDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectStringVersionDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectVersionDAO;
-import edu.yale.library.ladybird.web.view.template.FieldDefinitionValue;
 import org.omnifaces.util.Faces;
 import org.slf4j.Logger;
 
@@ -40,7 +40,6 @@ import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-//TODO size check: how many acid values are created upon any edit.
 @ManagedBean
 @RequestScoped
 @SuppressWarnings("unchecked")
@@ -154,7 +153,7 @@ public class ObjectMetadataView extends AbstractView {
     }
 
     /**
-     * Populates object metadata. Pullsf rom object_acid and object_string table(s).
+     * Populates object metadata. Pulls from object_acid and object_string table(s).
      *
      * @param oid  oid
      * @param fdid fdid
@@ -192,13 +191,10 @@ public class ObjectMetadataView extends AbstractView {
         try {
             if (!ObjectWriter.isString(fdid)) {
                 //1. Find acid value for this oid
-                logger.trace("Finding ObjectAcid by oid={} and fdid={}", oid, fdid);
-
                 final ObjectAcidVersion objectAcid = objectAcidVersionDAO.findByOidAndFdidAndVersion(oid, fdid, version);
 
                 if (objectAcid == null) {
                     logger.debug("No acid value={} for fdid={} for versionId={}", oid, fdid, version);
-                    logger.trace("Full acid stack={}", objectAcidVersionDAO.findAll().toString());
                     return UNK_VALUE;
                 }
 
@@ -230,78 +226,19 @@ public class ObjectMetadataView extends AbstractView {
     }
 
     /**
-     * Updates object metadata
-     * FIXME transcations handling.
-     * TODO extract functionality to enable testing
+     * Saves audit events
+     * @param oid
+     * @param userId
      */
-    public String updateOidMetadata() {
-        logger.trace("Updating oid metadata for oid={}", Faces.getRequestParameter("oid"));
-
-        final int oid = Integer.parseInt(Faces.getRequestParameter("oid"));
-        final List<ObjectString> stringsToUpdate = new ArrayList<>();
-        final List<ObjectAcid> objectAcidsToUpdate = new ArrayList<>();
-        final List<ObjectString> stringsVersions = new ArrayList<>();
-        final List<ObjectAcid> objectAcidVersions = new ArrayList<>();
-
+    private void saveAuditEvent(int oid, int userId) {
         try {
-            for (FieldDefinitionValue field : fieldDefinitionvalueList) {
-                int fdid = field.getFdid().getFdid();
-
-                if (ObjectWriter.isString(fdid)) {
-                    final ObjectString objectString = objectStringDAO.findByOidAndFdid(oid, fdid);
-
-                    //add to version list before updating
-                    stringsVersions.add(new ObjectStringBuilder().setCopy(objectString).createObjectString());
-
-                    objectString.setValue(field.getValue());
-                    stringsToUpdate.add(objectString);
-                } else { //assuming acid!
-                    final ObjectAcid objectAcid = objectAcidDAO.findByOidAndFdid(oid, field.getFdid().getFdid());
-
-                    //add to version list before updating
-                    objectAcidVersions.add(new ObjectAcid(objectAcid));
-
-                    int acidInt = objectAcid.getValue();
-                    final AuthorityControl oldAcid = authorityControlDAO.findByAcid(acidInt);
-
-                    //update only if the field has been changed
-                    if (!oldAcid.getValue().equalsIgnoreCase(field.getValue())) {
-                        //TODO out of tx (coordinate with objectAcidsToUpdate)
-                        final AuthorityControl newAuthorityControl = new AuthorityControl(oldAcid);
-                        newAuthorityControl.setValue(field.getValue());
-                        int newAcidInt = authorityControlDAO.save(newAuthorityControl);
-
-                        //set object acid to point to this new acid
-                        objectAcid.setValue(newAcidInt);
-                        //1. make sure to write this object acid:
-                        objectAcidsToUpdate.add(objectAcid);
-                    }
-                }
-            }
-            //Save and update lists:
-            //TODO in a tx. Must roll back if error!
-            objectAcidDAO.saveOrUpdateList(objectAcidsToUpdate);
-            objectStringDAO.saveOrUpdateList(stringsToUpdate);
-            versionAcid(objectAcidVersions);
-            versionStrings(stringsVersions);
-            //Save object version:
-            final ObjectVersion objVersion = new ObjectVersionBuilder().setCreationDate(new Date())
-                    .setNotes("User Edit").setOid(oid).setUserId(auth.getCurrentUserId())
-                    .setVersionId(getLastVersion(oid) + 1).createObjectVersion();
-            objectVersionDAO.save(objVersion);
-
-            //Audit event (creates direct db entry, doesn't post it):
-            ObjectEvent objectEvent = new ObjectEvent();
-            objectEvent.setEventType(getEditEvent());
-            objectEvent.setDate(new Date());
-            objectEvent.setOid(oid);
-            objectEvent.setUserId(auth.getCurrentUserId());
+            ObjectEvent objectEvent = new ObjectEventBuilder().setEventType(getEditEvent())
+                    .setDate(new Date()).setOid(oid).setUserId(userId).createObjectEvent();
             objectEventDAO.save(objectEvent);
         } catch (Exception e) {
-            logger.error("Error updating or versioning values for oid={}", oid, e);
-            return fail();
+            logger.error("Error saving audit event", e);
+            throw e;
         }
-        return ok();
     }
 
     public EventType getEditEvent() {
@@ -309,54 +246,37 @@ public class ObjectMetadataView extends AbstractView {
     }
 
     /**
-     * Versions list of ObjectString. New versions start with 1 (Perhaps should pass version).
-     * @param list an object string value
-     */
-    public void versionStrings(List<ObjectString> list) {
-        for (ObjectString o : list) {
-            try {
-                ObjectStringVersion objStrVersion = new ObjectStringVersion(o);
-                objStrVersion.setVersionId(getLastVersion(o.getOid()) + 1);
-                objectStringVersionDAO.save(objStrVersion);
-            } catch (Exception e) {
-                logger.error("Error versioning object_string={}", o, e);
-                throw e;
-            }
-        }
-    }
-
-    /**
-     * Versions an objectAcid. new versions start with 1 (Perhaps should pass version).
-     * @param list an object acid value
-     */
-    public void versionAcid(List<ObjectAcid> list) {
-        for (ObjectAcid o : list) {
-            try {
-                ObjectAcidVersion objectVersion = new ObjectAcidVersion(o);
-                objectVersion.setVersionId(getLastVersion(o.getObjectId()) + 1);
-                objectAcidVersionDAO.save(objectVersion);
-            } catch (Exception e) {
-                logger.error("Error versioning object_acid={}", o, e);
-                throw e;
-            }
-        }
-    }
-
-    /**
      * Returns maximum version id
      *
      * @param oid object id
-     * @return latet version or 0 if no version found
+     * @return latest version or 0 if no version found
      */
     public int getLastVersion(int oid) {
         return (objectVersionDAO.findByOid(oid).isEmpty()) ?  0 : objectVersionDAO.findMaxVersionByOid(oid);
     }
 
     /**
-     * Rolls back an object. Older copy is perserved.
-     * TODO tx handling
-     * TODO version id control
-     * TODO extract rollback to enable testing
+     * Updates object metadata
+     */
+    public String updateOidMetadata() {
+        final int oid = Integer.parseInt(Faces.getRequestParameter("oid"));
+        logger.trace("Updating oid metadata for oid={}", oid);
+
+        MetadataVersioner metadataVersioner = new MetadataVersioner();
+        try {
+            //Save and update list
+            metadataVersioner.updateOidMetadata(oid, auth.getCurrentUserId(), fieldDefinitionvalueList);
+            //Audit event (creates direct db entry, doesn't post it):
+            saveAuditEvent(oid, auth.getCurrentUserId());
+        } catch (Exception e) {
+            logger.error("Error updating or versioning values for oid={}", oid, e);
+            return fail();
+        }
+        return ok();
+    }
+
+    /**
+     * Rolls back an object. Older copy is preserved.
      */
     public String rollback() {
         try {
@@ -370,75 +290,14 @@ public class ObjectMetadataView extends AbstractView {
 
             logger.trace("User={} requesting rollbacking oid={} to version={}", auth.getCurrentUserId(), oid, version);
 
-            //2. Version the current instance
-            final List<FieldDefinition> flist = fdidDAO.findAll();
-            final List<ObjectString> archiveStrings = new ArrayList<>();
-            final List<ObjectAcid> archiveAcids = new ArrayList<>();
-
-            for (FieldDefinition f : flist) {
-                ObjectString os = objectStringDAO.findByOidAndFdid(oid, f.getFdid());
-                if (os != null) {
-                    archiveStrings.add(new ObjectStringBuilder().setCopy(os).createObjectString());
-                } else {
-                    logger.trace("No string val for oid={} fdid={}", oid, f.getFdid());
-                }
-
-                ObjectAcid objAcid = objectAcidDAO.findByOidAndFdid(oid, f.getFdid());
-
-                if (objAcid != null) {
-                    archiveAcids.add(new ObjectAcid(objAcid));
-                } else {
-                    logger.trace("No acid val for oid={} fdid={}", oid, f.getFdid());
-                }
-            }
-
-            logger.trace("Archive acids size={}", archiveAcids.size());
-            logger.trace("Archive strings size={}", archiveStrings.size());
-
-            versionAcid(archiveAcids);
-            versionStrings(archiveStrings);
-
-            logger.trace("Done archiving current instance");
-
-            //3. Replace object string and acid values with version's string and acid values
-            List<FieldDefinition> list = fdidDAO.findAll();
-
-            List<ObjectString> objStrToUpdate = new ArrayList<>();
-            List<ObjectAcid> objAcidToUpdate = new ArrayList<>();
-
-            for (FieldDefinition f : list) {
-
-                int fdid = f.getFdid();
-
-                if (ObjectWriter.isString(f.getFdid())) {
-                    ObjectStringVersion historyObject = objectStringVersionDAO.findByOidAndFdidAndVersion(oid, fdid, version);
-                    ObjectString objectString1 = objectStringDAO.findByOidAndFdid(oid, fdid);
-                    objectString1.setValue(historyObject.getValue());
-                    objStrToUpdate.add(objectString1);
-                } else { //an acid
-                    ObjectAcidVersion historyObjectAcid = objectAcidVersionDAO.findByOidAndFdidAndVersion(oid, fdid, version);
-                    ObjectAcid objectAcid1 = objectAcidDAO.findByOidAndFdid(oid, fdid);
-                    objectAcid1.setValue(historyObjectAcid.getValue());
-                    objAcidToUpdate.add(objectAcid1);
-                }
-            }
-            //4. Hit the dao, update the lists
-            objectStringDAO.saveOrUpdateList(objStrToUpdate);
-            objectAcidDAO.saveOrUpdateList(objAcidToUpdate);
-
-            //5. Create a new ObjectVersion. Note that the version Id must correspond to version acid and version string.
-            // Currently done in the version methods.(Doing this before can trip up the version number)
-            final ObjectVersion objectVersion = new ObjectVersionBuilder().setVersionId(getLastVersion(oid) + 1)
-                    .setCreationDate(new Date()).setNotes("Rollback").setOid(oid).setUserId(auth.getCurrentUserId())
-                    .createObjectVersion();
-            objectVersionDAO.save(objectVersion);
+            Rollbacker rollbacker = new Rollbacker();
+            rollbacker.rollback(oid, version, auth.getCurrentUserId());
 
             logger.trace("Done rolling back object");
             return ok();
         } catch (Exception e) {
             logger.error("Error rolling back", e);
         }
-
         return fail();
     }
 
@@ -467,9 +326,9 @@ public class ObjectMetadataView extends AbstractView {
             Object o = objectDAO.findByOid(oid);
             return o.isParent();
         } catch (Exception e) {
-            logger.error("Error finding parent attribute", e.getMessage());
+            logger.error("Error finding parent attribute for oid={}", oid, e.getMessage());
+            throw e;
         }
-        return false;
     }
 
     //Getters and setters -------------------------------------------------------------------

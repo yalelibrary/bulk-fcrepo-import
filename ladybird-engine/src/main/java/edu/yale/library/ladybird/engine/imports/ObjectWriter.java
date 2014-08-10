@@ -1,11 +1,13 @@
 package edu.yale.library.ladybird.engine.imports;
 
 import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
+import edu.yale.library.ladybird.entity.AuthorityControlBuilder;
 import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.Monitor;
 import edu.yale.library.ladybird.entity.ObjectAcid;
+import edu.yale.library.ladybird.entity.ObjectAcidBuilder;
 import edu.yale.library.ladybird.entity.ObjectString;
 import edu.yale.library.ladybird.entity.ObjectStringBuilder;
 import edu.yale.library.ladybird.entity.User;
@@ -97,7 +99,7 @@ public class ObjectWriter {
                     //Either an acid or a string:
                     if (getTableType(fdidAsInt(f.getName())).equals(TABLETYPE.OBJECT_ACID)) {
                         //1a.persist acid:
-                        final AuthorityControl acidObj = new AuthorityControl();
+                        final AuthorityControl acidObj = new AuthorityControlBuilder().createAuthorityControl();
                         acidObj.setFdid(fdidAsInt(f.getName()));
                         acidObj.setUserId(userId);
                         acidObj.setDate(new Date());
@@ -106,7 +108,7 @@ public class ObjectWriter {
                         logger.trace("Saved entity={}", acidObj.toString());
 
                         //1b. persist object acid
-                        final ObjectAcid objAcid = new ObjectAcid();
+                        final ObjectAcid objAcid = new ObjectAcidBuilder().createObjectAcid();
                         objAcid.setFdid(fdidAsInt(f.getName()));
                         if (oid != null) { //TODO
                             objAcid.setObjectId(Integer.parseInt(oid));

@@ -25,6 +25,9 @@ public class FieldDefinition implements java.io.Serializable, FieldConstant {
 
     public FieldDefinition() {
     }
+    public FieldDefinition(int fdid) {
+        this.fdid = fdid;
+    }
 
     public FieldDefinition(int fdid, String handle) {
         this.fdid = fdid;

@@ -5,6 +5,7 @@ import edu.yale.library.ladybird.auth.Permissions;
 import edu.yale.library.ladybird.auth.PermissionsValue;
 import edu.yale.library.ladybird.auth.Roles;
 import edu.yale.library.ladybird.entity.AuthorityControl;
+import edu.yale.library.ladybird.entity.AuthorityControlBuilder;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.persistence.dao.AuthorityControlDAO;
 import org.omnifaces.util.Faces;
@@ -35,7 +36,7 @@ public class AuthorityControlView extends AbstractView {
     /**
      * Item for editing
      */
-    private AuthorityControl item = new AuthorityControl();
+    private AuthorityControl item = new AuthorityControlBuilder().createAuthorityControl();
 
     @Inject
     private AuthorityControlDAO authControlDao;

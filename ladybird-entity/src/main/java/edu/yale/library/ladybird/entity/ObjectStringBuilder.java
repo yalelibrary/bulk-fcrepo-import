@@ -43,4 +43,8 @@ public class ObjectStringBuilder {
     public ObjectString createObjectString() {
         return new ObjectString(date, userId, oid, value, fdid);
     }
+
+    public ObjectString createObjectString2() {
+        return new ObjectString(copy);
+    }
 }

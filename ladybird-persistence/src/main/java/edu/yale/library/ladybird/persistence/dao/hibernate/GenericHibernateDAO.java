@@ -89,7 +89,7 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
     }
 
     /**
-     * Save or udate list
+     * Save or update list
      * @param item entity to save or update
      */
     public void saveOrUpdateItem(T item) {
@@ -122,7 +122,7 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
     }
 
     /**
-     * Save or udate list
+     * Save or update item
      * @param item entity to save or update
      */
     public void updateItem(T item) {
@@ -156,7 +156,7 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 
 
     /**
-     * Save or udate list
+     * Save or update list
      * @param itemList list of entities
      */
     public void saveOrUpdateList(List<T> itemList) {
@@ -227,7 +227,10 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
         }
     }
 
-
+    /**
+     * Delete list
+     * @param entities list of entites
+     */
     @Override
     public void delete(List<T> entities) {
         Session s = null;

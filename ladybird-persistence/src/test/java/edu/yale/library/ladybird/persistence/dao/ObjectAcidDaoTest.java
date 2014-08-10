@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.persistence.dao;
 
 import edu.yale.library.ladybird.entity.ObjectAcid;
+import edu.yale.library.ladybird.entity.ObjectAcidBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +38,7 @@ public class ObjectAcidDaoTest extends AbstractPersistenceTest {
 
     @Test
     public void testSave() {
-        final ObjectAcid item = new ObjectAcid();
+        final ObjectAcid item = new ObjectAcidBuilder().createObjectAcid();
         item.setFdid(69);
         item.setValue(777);
         item.setDate(new Date());

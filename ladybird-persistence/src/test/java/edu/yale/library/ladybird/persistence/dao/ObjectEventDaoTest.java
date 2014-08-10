@@ -2,6 +2,7 @@ package edu.yale.library.ladybird.persistence.dao;
 
 import edu.yale.library.ladybird.entity.EventType;
 import edu.yale.library.ladybird.entity.ObjectEvent;
+import edu.yale.library.ladybird.entity.ObjectEventBuilder;
 import edu.yale.library.ladybird.entity.event.EventLabel;
 import edu.yale.library.ladybird.entity.event.RollbackEventType;
 import edu.yale.library.ladybird.entity.event.UserEditEvent;
@@ -42,13 +43,13 @@ public class ObjectEventDaoTest extends AbstractPersistenceTest {
         EventType eventType1 = new RollbackEventType();
         eventTypeDAO.save(eventType1);
 
-        final ObjectEvent item1 = new ObjectEvent();
+        final ObjectEvent item1 = new ObjectEventBuilder().createObjectEvent();
         item1.setUserId(1);
         item1.setOid(2);
         item1.setDate(new Date());
         item1.setEventType(eventType2);
 
-        final ObjectEvent item2 = new ObjectEvent();
+        final ObjectEvent item2 = new ObjectEventBuilder().createObjectEvent();
         item2.setUserId(1);
         item2.setOid(2);
         item2.setDate(new Date());

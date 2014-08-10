@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.persistence.dao;
 
 import edu.yale.library.ladybird.entity.AuthorityControl;
+import edu.yale.library.ladybird.entity.AuthorityControlBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +42,7 @@ public class AuthorityControlDaoTest extends AbstractPersistenceTest {
 
     @Test
     public void testSave() {
-        final AuthorityControl item = new AuthorityControl();
+        final AuthorityControl item = new AuthorityControlBuilder().createAuthorityControl();
         item.setFdid(555);
         item.setValue("test value");
         item.setDate(new Date());
