@@ -2,12 +2,14 @@ package edu.yale.library.ladybird.engine.metadata;
 
 import edu.yale.library.ladybird.entity.FieldDefinition;
 
+import java.util.List;
+
 /**
- * Helper datastructure used to pass field definition values for template projects around.
+ * Helper datastructure
  */
 public class FieldDefinitionValue {
-    FieldDefinition fdid;
-    String value;
+    private FieldDefinition fdid;
+    private List<String> value;
 
     public FieldDefinition getFdid() {
         return fdid;
@@ -17,15 +19,15 @@ public class FieldDefinitionValue {
         this.fdid = fdid;
     }
 
-    public String getValue() {
+    public List<String> getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(List<String> value) {
         this.value = value;
     }
 
-    public FieldDefinitionValue(FieldDefinition fdid, String value) {
+    public FieldDefinitionValue(FieldDefinition fdid, List<String> value) {
         this.fdid = fdid;
         this.value = value;
     }

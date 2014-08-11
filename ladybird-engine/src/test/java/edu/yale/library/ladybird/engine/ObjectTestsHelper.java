@@ -47,9 +47,9 @@ public class ObjectTestsHelper {
         ObjVersionBuilder.createVersion(dummObjects);
     }
 
-    public static String fdidValue(int oid, int fdid) {
+    public static List<ObjectString> fdidValue(int oid, int fdid) {
         ObjectStringDAO dao = new ObjectStringHibernateDAO();
-        return dao.findByOidAndFdid(oid, fdid).getValue();
+        return dao.findListByOidAndFdid(oid, fdid);
     }
 
     public static String fdidAcidValue(int oid, int fdid) {
@@ -58,6 +58,17 @@ public class ObjectTestsHelper {
         int acid = oa.getValue();
 
         return new AuthorityControlHibernateDAO().findByAcid(acid).getValue();
+    }
+
+    public static List<AuthorityControl> fdidAcidValueList(int oid, int fdid) {
+        List<AuthorityControl> acListValuesForOid = new ArrayList<>();
+        ObjectAcidDAO objectAcidDAO = new ObjectAcidHibernateDAO();
+        List<ObjectAcid> oalist =  objectAcidDAO.findListByOidAndFdid(oid, fdid);
+
+        for (ObjectAcid objectAcid: oalist) {
+            acListValuesForOid.add(new AuthorityControlHibernateDAO().findByAcid(objectAcid.getValue()));
+        }
+        return acListValuesForOid;
     }
 
     public static int writeDummyAcid(int fdid, String value) {
@@ -77,6 +88,10 @@ public class ObjectTestsHelper {
                 objectVersionDAO.save(o);
             }
         }
+    }
+
+    public static int getMaxVersion(int oid) {
+        return new ObjectVersionHibernateDAO().findMaxVersionByOid(oid);
     }
 
 }

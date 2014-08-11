@@ -5,13 +5,13 @@ package edu.yale.library.ladybird.entity;
  */
 public class CronBean {
 
-    private String importCronExpression;
+    private String importCronExpression = "0/10 * * * * ?";
 
-    private String exportCronExpression;
+    private String exportCronExpression = "0/10 * * * * ?";
 
     private String filePickerCronExpression;
 
-    private String fileNotificationCronExpression;
+    private String fileNotificationCronExpression = "0/10 * * * * ?";
 
     public String getImportCronExpression() {
         return importCronExpression;

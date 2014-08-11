@@ -2,7 +2,7 @@
 package edu.yale.library.ladybird.web.view;
 
 
-import edu.yale.library.ladybird.engine.metadata.TemplateApplicator;
+import edu.yale.library.ladybird.engine.metadata.ProjectTemplateApplicator;
 import edu.yale.library.ladybird.entity.ObjectFile;
 import edu.yale.library.ladybird.entity.ProjectTemplate;
 import edu.yale.library.ladybird.persistence.dao.ObjectAcidDAO;
@@ -81,8 +81,9 @@ public class ObjectFileView extends AbstractView {
         final ProjectTemplate templateToApply = projectTemplateDAO.findByLabel(templateItem.getLabel()); //need converter
 
         try {
-            TemplateApplicator templateApplicator = new TemplateApplicator(); //TODO
-            templateApplicator.updateObjectMetadata(templateToApply);
+            final int userId = authUtil.getCurrentUserId();
+            ProjectTemplateApplicator projectTemplateApplicator = new ProjectTemplateApplicator(); //TODO
+            projectTemplateApplicator.applyTemplate(templateToApply, userId);
             return ok();
         } catch (Exception e) {
             logger.error("Error applying template", e);

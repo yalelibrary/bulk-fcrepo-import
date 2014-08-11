@@ -89,7 +89,7 @@ public class TemplatePopulateView extends AbstractView {
                 ProjectTemplateStrings projectTemplateStrings = new ProjectTemplateStrings();
                 projectTemplateStrings.setTemplateId(templateProjectId);
                 projectTemplateStrings.setFdid(fieldDefinitions.getFdid().getFdid());
-                projectTemplateStrings.setValue(fieldDefinitions.value);
+                projectTemplateStrings.setValue(fieldDefinitions.getValue());
 
                 projectTemplateStringsDAO.save(projectTemplateStrings);
             }

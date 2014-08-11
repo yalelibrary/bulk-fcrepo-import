@@ -3,7 +3,7 @@ package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.engine.imports.ObjectWriter;
 import edu.yale.library.ladybird.engine.metadata.FieldDefinitionValue;
-import edu.yale.library.ladybird.engine.metadata.MetadataVersioner;
+import edu.yale.library.ladybird.engine.metadata.MetadataEditor;
 import edu.yale.library.ladybird.engine.metadata.Rollbacker;
 import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.EventType;
@@ -92,10 +92,8 @@ public class ObjectMetadataView extends AbstractView {
     @Inject
     private AuthUtil auth;
 
-    /**
-     * For unknown metadata field value (e.g. when an error occurs)
-     */
-    private static final String UNK_VALUE = "N/A";
+    /**Making versioned items uneditable */
+    private boolean readOnly = false;
 
     @PostConstruct
     public void init() {
@@ -112,8 +110,8 @@ public class ObjectMetadataView extends AbstractView {
                 fieldDefinitionvalueList = getFdidValues(oid);
             } else if (fieldDefinitionvalueList == null && !versionId.isEmpty()) {
                 int version = Integer.parseInt(versionId);
-                logger.trace("Getting version data for version={}", version);
                 fieldDefinitionvalueList = getFdidValues(oid, version);
+                readOnly = true;
             }
         } catch (Exception e) {
             logger.error("Error init bean", e.getMessage());
@@ -127,7 +125,7 @@ public class ObjectMetadataView extends AbstractView {
             List<FieldDefinition> list = fdidDAO.findAll();
 
             for (FieldDefinition f : list) {
-                fdidValues.add(new FieldDefinitionValue(f, getValueByOidAndFdid(oid, f.getFdid())));
+                fdidValues.add(new FieldDefinitionValue(f, getValuesByOidAndFdid(oid, f.getFdid())));
             }
         } catch (Exception e) {
             logger.error("Error building fdid map for oid={}", oid, e);
@@ -143,8 +141,10 @@ public class ObjectMetadataView extends AbstractView {
             List<FieldDefinition> list = fdidDAO.findAll();
 
             for (FieldDefinition f : list) {
-                fdidValues.add(new FieldDefinitionValue(f, getValueByOidAndFdid(oid, f.getFdid(), versionId)));
+                fdidValues.add(new FieldDefinitionValue(f, getValuesByOidAndFdid(oid, f.getFdid(), versionId)));
             }
+
+            //logger.debug("Fdid values={}", fdidValues);
         } catch (Exception e) {
             logger.error("Error building fdid map for oid={} version={}", oid, versionId, e);
         }
@@ -153,33 +153,43 @@ public class ObjectMetadataView extends AbstractView {
     }
 
     /**
-     * Populates object metadata. Pulls from object_acid and object_string table(s).
+     * Populates object metadata. Pulls from object_acid and object_string table(s). It pulls multiple values
      *
      * @param oid  oid
      * @param fdid fdid
      * @return value for an oid for a fdid
      */
-    public String getValueByOidAndFdid(int oid, int fdid) {
+    public List<String> getValuesByOidAndFdid(int oid, int fdid) {
+        List<String> values = new ArrayList();
+
         try {
             if (!ObjectWriter.isString(fdid)) { //not a string:
                 //1. Find acid value for this oid
-                final ObjectAcid objectAcid = objectAcidDAO.findByOidAndFdid(oid, fdid);
-                int acid = objectAcid.getValue();
+                final List<ObjectAcid> objectAcid = objectAcidDAO.findListByOidAndFdid(oid, fdid);
 
-                //2. Get string value corresponding to this acid
-                final AuthorityControl authorityControl = authorityControlDAO.findByAcid(acid);
-                return authorityControl.getValue();
+                for (ObjectAcid oa: objectAcid) {
+                    int acid = oa.getValue();
+
+                    //2. Get string value corresponding to this acid
+                    final AuthorityControl authorityControl = authorityControlDAO.findByAcid(acid);
+                    values.add(authorityControl.getValue());
+                }
             } else { //a string:
-                final ObjectString objectString = objectStringDAO.findByOidAndFdid(oid, fdid);
-                return objectString.getValue();
+                final List<ObjectString> objectStringList = objectStringDAO.findListByOidAndFdid(oid, fdid);
+
+                for (ObjectString obs: objectStringList) {
+                    values.add(obs.getValue());
+                }
             }
+
+            return values;
         } catch (Exception e) {
             logger.error("Error finding entity or value=", e);
         }
-        return "N/A";
+        return new ArrayList<>();
     }
 
-    /**
+       /**
      * Populates object metadata. Pulls rom object_acid and object_string table(s).
      * If an exception occures during retreival, an unknown error is thrown.
      *
@@ -187,48 +197,49 @@ public class ObjectMetadataView extends AbstractView {
      * @param fdid fdid
      * @return value for an oid for a fdid
      */
-    public String getValueByOidAndFdid(int oid, int fdid, int version) {
+    public List<String> getValuesByOidAndFdid(int oid, int fdid, int version) {
+        List<String> values = new ArrayList();
+
         try {
             if (!ObjectWriter.isString(fdid)) {
-                //1. Find acid value for this oid
-                final ObjectAcidVersion objectAcid = objectAcidVersionDAO.findByOidAndFdidAndVersion(oid, fdid, version);
+                final List<ObjectAcidVersion> objectAcidVersions = objectAcidVersionDAO.findListByOidAndFdidAndVersion(oid, fdid, version);
 
-                if (objectAcid == null) {
-                    logger.debug("No acid value={} for fdid={} for versionId={}", oid, fdid, version);
-                    return UNK_VALUE;
+                //logger.debug("Object Acid Versions size={}", objectAcidVersions.size());
+
+                if (objectAcidVersions.isEmpty()) {
+                    logger.debug("Acid version empty");
                 }
 
-                int acid = objectAcid.getValue();
-
-                //2. Get acid value
-                final AuthorityControl authorityControl = authorityControlDAO.findByAcid(acid);
-
-                if (authorityControl == null) {
-                    logger.error("AC null. No acid value={} for fdid={} for versionId={}", oid, fdid, version);
-                    return UNK_VALUE;
+                for (ObjectAcidVersion oav: objectAcidVersions) {
+                    int acid = oav.getValue();
+                    final AuthorityControl authorityControl = authorityControlDAO.findByAcid(acid);
+                    values.add(authorityControl.getValue());
                 }
 
-                return authorityControl.getValue();
             } else { //a string:
-                final ObjectStringVersion objStr = objectStringVersionDAO.findByOidAndFdidAndVersion(oid, fdid, version);
+                final List<ObjectStringVersion> objStr = objectStringVersionDAO.findListByOidAndFdidAndVersion(oid, fdid, version);
 
-                if (objStr == null) {
-                    logger.debug("No string value={} for fdid={} for versionId={}", oid, fdid, version);
-                    return UNK_VALUE;
+                //logger.debug("Object String version size={}", objStr.size());
+
+                if (objStr.isEmpty()) {
+                    logger.debug("Full list={}", objectStringVersionDAO.findAll());
                 }
-                return objStr.getValue();
+
+                for (ObjectStringVersion osv: objStr) {
+                    values.add(osv.getValue());
+                }
             }
         } catch (Exception e) {
             logger.error("Error finding entity or value. No acid value={} for fdid={} for versionId={}",
                     oid, fdid, version, e.getMessage());
         }
-        return UNK_VALUE;
+        return values;
     }
 
     /**
      * Saves audit events
-     * @param oid
-     * @param userId
+     * @param oid oid
+     * @param userId userid
      */
     private void saveAuditEvent(int oid, int userId) {
         try {
@@ -246,26 +257,16 @@ public class ObjectMetadataView extends AbstractView {
     }
 
     /**
-     * Returns maximum version id
-     *
-     * @param oid object id
-     * @return latest version or 0 if no version found
-     */
-    public int getLastVersion(int oid) {
-        return (objectVersionDAO.findByOid(oid).isEmpty()) ?  0 : objectVersionDAO.findMaxVersionByOid(oid);
-    }
-
-    /**
      * Updates object metadata
      */
     public String updateOidMetadata() {
         final int oid = Integer.parseInt(Faces.getRequestParameter("oid"));
-        logger.trace("Updating oid metadata for oid={}", oid);
+        //logger.debug("Updating oid metadata for oid={} with values={}", oid, fieldDefinitionvalueList);
 
-        MetadataVersioner metadataVersioner = new MetadataVersioner();
+        MetadataEditor metadataEditor = new MetadataEditor();
         try {
             //Save and update list
-            metadataVersioner.updateOidMetadata(oid, auth.getCurrentUserId(), fieldDefinitionvalueList);
+            metadataEditor.updateOidMetadata(oid, auth.getCurrentUserId(), fieldDefinitionvalueList);
             //Audit event (creates direct db entry, doesn't post it):
             saveAuditEvent(oid, auth.getCurrentUserId());
         } catch (Exception e) {
@@ -288,12 +289,12 @@ public class ObjectMetadataView extends AbstractView {
             int oid = Integer.parseInt(Faces.getRequestParameter("oid"));
             int version = Integer.parseInt(Faces.getRequestParameter("version"));
 
-            logger.trace("User={} requesting rollbacking oid={} to version={}", auth.getCurrentUserId(), oid, version);
+            logger.debug("User={} requesting rollbacking oid={} to version={}", auth.getCurrentUserId(), oid, version);
 
             Rollbacker rollbacker = new Rollbacker();
             rollbacker.rollback(oid, version, auth.getCurrentUserId());
 
-            logger.trace("Done rolling back object");
+            logger.debug("Done rolling back object");
             return ok();
         } catch (Exception e) {
             logger.error("Error rolling back", e);
@@ -332,7 +333,6 @@ public class ObjectMetadataView extends AbstractView {
     }
 
     //Getters and setters -------------------------------------------------------------------
-
     /**
      * converts request parameter to file path
      */
@@ -367,6 +367,10 @@ public class ObjectMetadataView extends AbstractView {
 
     public void setFieldDefinitionvalueList(List<FieldDefinitionValue> fieldDefinitionvalueList) {
         this.fieldDefinitionvalueList = fieldDefinitionvalueList;
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
     }
 }
 

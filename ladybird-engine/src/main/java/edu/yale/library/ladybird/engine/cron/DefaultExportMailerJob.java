@@ -36,7 +36,7 @@ public class DefaultExportMailerJob implements Job, ExportMailerJob {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        logger.debug("Executing export mailer job");
+        logger.trace("Executing export mailer job");
 
         try {
             //1. Look up to see if any notifications need to be sent

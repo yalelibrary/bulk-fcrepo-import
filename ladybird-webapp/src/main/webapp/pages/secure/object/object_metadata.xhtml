@@ -12,7 +12,9 @@
             <div>
                 <div class="row">
                     <div class="col-md-12">
-                        <h:outputText value="Parent Object with child objects #{objectMetadataView.getChildCount(param['oid'])}" rendered="#{objectMetadataView.isParent(param['oid'])}"> </h:outputText>
+                        <h:outputText
+                                value="Parent Object with child objects #{objectMetadataView.getChildCount(param['oid'])}"
+                                rendered="#{objectMetadataView.isParent(param['oid'])}"> </h:outputText>
                     </div>
                 </div>
             </div>
@@ -26,9 +28,10 @@
                     <div class="col-md-8"> Object ID <h4> #{param['oid']} </h4>
 
                         <p> Created <h:outputText value="#{objectMetadataView.objectFile.date}">
-                                            <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
-                                    </h:outputText>
+                            <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                        </h:outputText>
                         </p>
+
                         <p> Created by #{userView.getUserName(objectMetadataView.objectFile.userId)} </p>
                     </div>
                 </div>
@@ -39,11 +42,18 @@
 
                 <ui:repeat value="#{objectMetadataView.fieldDefinitionvalueList}" var="entry">
                     <div class="form-group">
-                        <label class="col-sm-2 control-label"><h:outputText value="#{objectMetadataView.getFdidHandle(entry.fdid.fdid)}"/></label>
+                        <label class="col-sm-2 control-label"><h:outputText
+                                value="#{objectMetadataView.getFdidHandle(entry.fdid.fdid)}"/></label>
 
                         <div class="col-sm-10">
-                            <h:inputText value="#{entry.value}" style="width:100%"/>
+                            <ui:repeat varStatus="loop" value="#{entry.value}">
+                                <h:inputText value="#{entry.value[loop.index]}"
+                                             rendered="#{not objectMetadataView.isReadOnly()}"/>
+                                <h:outputText value="#{entry.value[loop.index]}"
+                                              rendered="#{objectMetadataView.isReadOnly()}"/> <!-- TODO should move this to FDV as a property or read version param-->
+                            </ui:repeat>
                         </div>
+
                     </div>
                 </ui:repeat>
 

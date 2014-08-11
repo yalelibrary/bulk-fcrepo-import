@@ -16,6 +16,14 @@ public class ObjectAcidHibernateDAO extends GenericHibernateDAO<ObjectAcid, Inte
         return q.list().isEmpty() ?  null : (ObjectAcid) q.list().get(0);
     }
 
+    @Override
+    public List<ObjectAcid> findListByOidAndFdid(final int oid, final int fdid) {
+        final Query q = getSession().createQuery("from ObjectAcid where objectId = :param1 and fdid =:param2");
+        q.setParameter("param1", oid);
+        q.setParameter("param2", fdid);
+        return q.list();
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public List<ObjectAcid> findByOid(int oid) {

@@ -62,7 +62,7 @@ public class TemplateUpdateView extends AbstractView {
             for (FieldDefinitionValue fieldDefinitions: fieldDefinitionvalueList) {
                 ProjectTemplateStrings projectTemplateStrings = projectTemplateStringsDAO
                         .findByFdidAndTemplateId(fieldDefinitions.getFdid().getFdid(), templateProjectId);
-                projectTemplateStrings.setValue(fieldDefinitions.value);
+                projectTemplateStrings.setValue(fieldDefinitions.getValue());
                 projectTemplateStringsList.add(projectTemplateStrings);
             }
 

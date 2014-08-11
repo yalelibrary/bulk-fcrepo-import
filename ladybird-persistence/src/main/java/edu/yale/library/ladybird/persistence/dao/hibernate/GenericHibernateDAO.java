@@ -204,7 +204,7 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 
             for (T item: itemList) {
                 s.save(item);
-                logger.debug("Saved item={}", item.toString());
+                logger.trace("Saved item={}", item.toString());
 
                 s.flush();
             }

@@ -4,10 +4,12 @@ import edu.yale.library.ladybird.entity.FieldDefinition;
 
 /**
  * Helper datastructure used to pass field definition values for template projects around.
+ *
+ * TODO remove in favor of edu.yale.library.ladybird.engine.FieldDefinitionValue
  */
 public class FieldDefinitionValue {
-    FieldDefinition fdid;
-    String value;
+    private FieldDefinition fdid;
+    private String value;
 
     public FieldDefinition getFdid() {
         return fdid;
