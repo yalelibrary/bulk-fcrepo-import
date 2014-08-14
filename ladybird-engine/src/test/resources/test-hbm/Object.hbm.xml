@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="edu.yale.library.ladybird.entity.Object" table="object" catalog="pamoja">
+        <id name="oid" type="java.lang.Integer">
+            <column name="oid" />
+            <generator class="identity" />
+        </id>
+        <property name="date" type="timestamp">
+            <column name="date" length="19" not-null="true" />
+        </property>
+        <property name="projectId" type="int">
+            <column name="project_id" not-null="true" />
+        </property>
+        <property name="userId" type="int">
+            <column name="user_id" />
+        </property>
+        <property name="p_oid" type="int">
+            <column name="poid" />
+        </property>
+        <property name="zindex" type="int">
+            <column name="zindex" />
+        </property>
+        <property name="parent" type="boolean">
+            <column name="parent" />
+        </property>
+        <property name="roid" type="int">
+            <column name="roid"/>
+        </property>
+    </class>
+</hibernate-mapping>

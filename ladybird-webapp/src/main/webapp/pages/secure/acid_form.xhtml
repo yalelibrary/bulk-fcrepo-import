@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template_yul.xhtml">
+    <ui:define name="content">
+        <h4>Add ACID value</h4>
+
+        <br/>
+
+        <h:outputText value="Your role does not have permissions to add an acid."
+                      styleClass="alert alert-danger"
+                      rendered="#{not authorityControlView.checkAddAcidPermission()}"/>
+
+        <h:form id="AcidCreateForm" enctype="multipart/form-data"
+                rendered="#{(not empty userView.itemList) and (authorityControlView.checkAddAcidPermission())}"
+                styleClass="form-horizontal" role="form">
+
+            <div>
+                <div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Field</label>
+
+                        <div class="col-sm-10">
+                            <p:selectOneMenu id="fdidSelectBox" value="#{authorityControlView.item.fdid}">
+
+                                <f:selectItems value="#{FieldDefinitionView.itemList}"
+                                               var="select_user_var"
+                                               itemLabel="#{select_user_var.fdid}"
+                                               itemValue="#{select_user_var.fdid}"/>
+
+                            </p:selectOneMenu>
+                            <h:message for="fdidSelectBox" style="color:red"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Value</label>
+
+                        <div class="col-sm-10">
+                            <p:inputText value="#{authorityControlView.item.value}"/>
+
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+
+                    <p:commandButton value="Submit" ajax="false" styleClass="btn"
+                                     action="#{authorityControlView.save}"/>
+
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

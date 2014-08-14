@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template_yul.xhtml">
+
+    <ui:define name="content">
+        <h4>Preferences</h4>
+
+        <h:outputText styleClass="alert-warning" value=" No project yet. "
+                      rendered="#{empty ProjectView.projectNames}"/>
+
+        <h:outputText styleClass="alert-warning" value=" No project assignment for you yet. "
+                      rendered="#{userPreferencesView.noAssignments()}"/>
+
+        <h:form id="UserPreferencesForm" enctype="multipart/form-data"
+                rendered="#{not userPreferencesView.noAssignments()}"
+                styleClass="form-horizontal" role="form">
+
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Default Project</label>
+
+                <div class="col-sm-10">
+                    <p:selectOneMenu id="projectSelectOneMenu" value="#{userPreferencesView.defaultProject.label}"
+                                     rendered="#{not empty ProjectView.projectNames}">
+
+                        <f:selectItems value="#{ProjectView.projectNames}"
+                                       var="select_project_var"
+                                       itemLabel="#{select_project_var}"
+                                       itemValue="#{select_project_var}"/>
+                    </p:selectOneMenu>
+                    <h:message for="projectSelectOneMenu" style="color:red"/>
+                </div>
+            </div>
+
+            <div>
+
+                <!-- Submit Button -->
+
+                <h:commandButton id="jump_link" value="Submit"
+                                 action="#{userPreferencesView.updatePreferences}"
+                                 ajax="false"
+                                 rendered="#{not empty ProjectView.projectNames}"/>
+
+            </div>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

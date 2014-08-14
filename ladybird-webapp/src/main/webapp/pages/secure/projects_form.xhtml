@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template_yul.xhtml">
+    <ui:define name="content">
+
+        <h:link value="Add a user before adding project"
+                outcome="user_manager_form"
+                rendered="#{(empty userView.itemList) and (ProjectView.checkAddProjectPermission())}"/>
+
+        <h:outputText value="Your role does not have permissions to add a project."
+                      styleClass="alert alert-danger"
+                      rendered="#{not ProjectView.checkAddProjectPermission()}"/>
+
+        <br/>
+
+        <h:form id="ProjectForm" enctype="multipart/form-data"
+                rendered="#{(not empty userView.itemList) and (ProjectView.checkAddProjectPermission())}"
+                styleClass="form-horizontal" role="form">
+
+            <fieldset>
+
+                <legend> Add Project</legend>
+
+                <div>
+                    <div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Project Label</label>
+
+                            <div class="col-sm-10">
+                                <p:inputText value="#{ProjectView.item.label}">
+                                </p:inputText>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Project Url</label>
+
+                            <div class="col-sm-10">
+                                <p:inputText value="#{ProjectView.item.url}">
+                                </p:inputText>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Creator E-mail</label>
+
+                            <div class="col-sm-10">
+                                <p:selectOneMenu id="userSelectBox"
+                                                 value="#{ProjectView.item.creator.email}">
+
+                                    <f:selectItems value="#{userView.userEmailList}"
+                                                   var="select_user_var"
+                                                   itemLabel="#{select_user_var}"
+                                                   itemValue="#{select_user_var}"/>
+
+                                </p:selectOneMenu>
+                                <h:message for="userSelectBox" style="color:red"/>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Address</label>
+
+                            <div class="col-sm-10">
+                                <p:inputText value="#{ProjectView.item.add1}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Address (2)</label>
+
+                            <div class="col-sm-10">
+                                <p:inputText value="#{ProjectView.item.add2}"/>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">City</label>
+
+                            <div class="col-sm-10">
+                                <p:inputText value="#{ProjectView.item.city}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">State</label>
+
+                            <div class="col-sm-10">
+                                <p:inputText value="#{ProjectView.item.state}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Zip code</label>
+
+                            <div class="col-sm-10">
+                                <p:inputText value="#{ProjectView.item.zip}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Phone</label>
+
+                            <div class="col-sm-10">
+                                <p:inputText value="#{ProjectView.item.phone}"/>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+
+                        <div class="form-group">
+
+                            <label class="col-sm-2 control-label"></label>
+
+                            <div class="col-sm-10">
+                                <p:commandButton value="Submit" ajax="false" styleClass="btn btn-default"
+                                                 action="#{ProjectView.save}"
+                                                 rendered="#{not empty userView.userEmailList}"/>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

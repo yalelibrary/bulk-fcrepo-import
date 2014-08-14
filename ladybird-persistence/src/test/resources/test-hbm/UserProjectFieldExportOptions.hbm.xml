@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="edu.yale.library.ladybird.entity.UserProjectFieldExportOptions" table="user_project_field_export_options" catalog="pamoja">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="userId" type="java.lang.Integer">
+            <column name="user_id" />
+        </property>
+        <property name="projectId" type="java.lang.Integer">
+            <column name="project_id" />
+        </property>
+        <property name="fdid" type="java.lang.Integer">
+            <column name="fdid" />
+        </property>
+        <property name="export" type="java.lang.Character">
+            <column name="export" length="1" />
+        </property>
+    </class>
+</hibernate-mapping>

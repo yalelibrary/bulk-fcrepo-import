@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template_yul.xhtml">
+
+    <ui:define name="content">
+        <h4>Search Results</h4>
+
+        <h:form id="SearchResultsForm" enctype="multipart/form-data">
+
+            <h:outputText value="No match found." rendered="#{empty searchView.itemList}"/>
+
+            <div>
+                <div>
+                    <div>
+                        <!-- Data Grid -->
+                        <p:dataGrid var="item" value="#{searchView.itemList}" columns="5"
+                                    rows="6" paginator="true" id="ObjectFileDatagrid" paginatorPostion="bottom"
+                                    rendered="#{not empty searchView.itemList}">
+
+                            <p:panel header="#{item.oid}" style="text-align:center">
+                                <h:panelGrid columns="1" style="width:100%">
+                                    <h:graphicImage value="/images/#{item.filePath}" height="151" width="170"/>
+                                    <h:outputText value="#{item.fileName}"/>
+                                    <h:link outcome="object/object_metadata?oid=#{item.oid}" value="View"/>
+                                </h:panelGrid>
+                            </p:panel>
+
+                        </p:dataGrid>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

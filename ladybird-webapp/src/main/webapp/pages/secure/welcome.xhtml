@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template_yul.xhtml">
+    <ui:define name="content">
+        <div>
+
+            <div>
+                <h4>Activity</h4>
+                Last login session activity
+                <h:outputText value="#{welcomeView.principalLastActTime}">
+                    <f:converter converterId="org.ocpsoft.PrettyTimeConverter"/>
+                </h:outputText>
+            </div>
+
+            <br/>
+
+            <div>
+                <h4>Current Project</h4>
+            <span>
+                <h:outputText value="No project assignments yet."
+                          rendered="#{userPreferencesView.noAssignments()}"/>
+            </span>
+            <span>
+                <h:outputText value="No default project yet."
+                          rendered="#{userPreferencesView.defaultProjectForCurrentUser eq null}"/>
+            </span>
+                <h:outputText value="#{userPreferencesView.defaultProjectForCurrentUser.label}"/>
+            </div>
+
+            <br/>
+
+            <h4>Projects</h4>
+
+            <!--
+            <p:dataTable id="ProjectsDatatable"
+                         editable="false"
+                         paginator="true"
+                         paginatorPosition="bottom"
+                         rows="10"
+                         value="#{welcomeView.projectsForCurrentUser()}"
+                         var="item"
+                         rendered="false">
+
+                <p:column headerText="Project">
+                    <h:outputText value="#{ProjectView.getProjectLabel(item.projectId)}"/>
+                </p:column>
+                <p:column headerText="Role">
+                    <h:outputText value="#{item.role}"/>
+                </p:column>
+            </p:dataTable>
+            -->
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Project</th>
+                    <th>Role</th>
+                </tr>
+                </thead>
+                <tbody>
+                <ui:repeat value="#{welcomeView.projectsForCurrentUser()}" var="item">
+                    <tr>
+                        <td>
+                            <h:outputText value="#{ProjectView.getProjectLabel(item.projectId)}"/>
+                        </td>
+                        <td>
+                            <h:outputText value="#{item.role}"/>
+                        </td>
+                    </tr>
+                </ui:repeat>
+                </tbody>
+            </table>
+
+            <br/>
+
+            <h:form id="DownloadForm" enctype="multipart/form-data">
+
+                <h4>Jobs For User</h4>
+
+                <!--
+                <p:dataTable id="JobViewDatatable"
+                             editable="false"
+                             paginator="true"
+                             paginatorPosition="bottom"
+                             rows="10"
+                             value="#{welcomeView.jobsForCurrentUser()}"
+                             var="jobitem"
+                             rendered="false">
+
+                    <p:column headerText="File Name">
+                        <h:outputText value="#{jobitem.jobFile}"/>
+                    </p:column>
+                    <p:column headerText="Date">
+                        <h:outputText value="#{jobitem.date}">
+                            <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Notified?">
+                        <h:outputText value="#{welcomeView.notificationSentForCurrentUser(jobitem.importId)}"/>
+                    </p:column>
+                    <p:column>
+                        <h:commandButton id="downloadLink" value="Download" ajax="false">
+                            <p:fileDownload value="#{fileDownloadController.file}">
+                                <f:param name="id" value="#{jobitem.importId}"/>
+                            </p:fileDownload>
+                            <f:param name="id" value="#{jobitem.importId}"/>
+                        </h:commandButton>
+                    </p:column>
+                </p:dataTable>
+
+                -->
+
+
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>File</th>
+                        <th>Date</th>
+                        <th>Notified</th>
+                        <th>Job Directory</th>
+                        <th>Export File</th>
+                        <th>Progress</th>
+                        <th>Download</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <ui:repeat value="#{welcomeView.jobsForCurrentUser()}" var="jobitem">
+                        <tr>
+                            <td>
+                                <h:outputText value="#{jobitem.jobFile}"/>
+                            </td>
+                            <td>
+                                <h:outputText value="#{jobitem.date}">
+                                    <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                                </h:outputText>
+                            </td>
+                            <td>
+                                <h:outputText value="#{welcomeView.notificationSentForCurrentUser(jobitem.importId)}"/>
+                            </td>
+
+                            <td>
+                                <h:outputText value="#{jobitem.jobDirectory}"/>
+                            </td>
+
+                            <td>
+                                <h:outputText value="#{jobitem.exportJobDir}"/>
+                            </td>
+
+                            <td>
+                                <h:outputText id="progressOutputText"
+                                              value="#{importProgressView.count(jobitem.importId)} out of #{importProgressView.STEPS_TO_COMPLETE} steps"/>
+
+                                <p:poll id="progressPoll" interval="5"
+                                        listener="#{importProgressView.progress(jobitem.importId)}"
+                                        update="progressOutputText"/>
+                            </td>
+
+                            <td>
+                                <h:commandButton id="downloadLink" value="Download" ajax="false">
+                                    <p:fileDownload value="#{fileDownloadController.file}">
+                                        <f:param name="id" value="#{jobitem.importId}"/>
+                                    </p:fileDownload>
+                                    <f:param name="id" value="#{jobitem.importId}"/>
+                                </h:commandButton>
+                            </td>
+                        </tr>
+                    </ui:repeat>
+                    </tbody>
+                </table>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

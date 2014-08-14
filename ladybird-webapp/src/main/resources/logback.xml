@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d | %p | %logger{15} | %M >>  %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.hibernate" level="OFF" />
+
+    <logger name="org.quartz.simpl" level="OFF" />
+
+    <logger name="org.quartz.core" level="OFF" />
+
+    <logger name="org.quartz.impl" level="OFF" />
+
+    <logger name="org.jboss.logging" level="OFF" />
+
+    <root additivity="false" level="DEBUG">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

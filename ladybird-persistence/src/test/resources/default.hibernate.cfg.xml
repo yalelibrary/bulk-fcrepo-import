@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.driver_class">org.apache.derby.jdbc.EmbeddedDriver</property>
+        <property name="hibernate.connection.url">jdbc:derby:memory:pamoja</property>
+        <property name="show_sql">false</property>
+        <property name="hibernate.dialect"> org.hibernate.dialect.DerbyTenSevenDialect</property>
+        <mapping resource="test-hbm/Collection.hbm.xml"/>
+        <mapping resource="test-hbm/FieldDefinition.hbm.xml"/>
+        <mapping resource="test-hbm/FieldMarcMapping.hbm.xml"/>
+        <mapping resource="test-hbm/ImportFile.hbm.xml"/>
+        <mapping resource="test-hbm/ImportJob.hbm.xml"/>
+        <mapping resource="test-hbm/ImportJobContents.hbm.xml"/>
+        <mapping resource="test-hbm/ImportJobExhead.hbm.xml"/>
+        <mapping resource="test-hbm/ImportSource.hbm.xml"/>
+        <mapping resource="test-hbm/ImportSourceData.hbm.xml"/>
+        <mapping resource="test-hbm/Monitor.hbm.xml"/>
+        <mapping resource="test-hbm/Project.hbm.xml"/>
+        <mapping resource="test-hbm/Object.hbm.xml"/>
+        <mapping resource="test-hbm/ObjectFile.hbm.xml"/>
+        <mapping resource="test-hbm/ObjectAcid.hbm.xml"/>
+        <mapping resource="test-hbm/ObjectString.hbm.xml"/>
+        <mapping resource="test-hbm/Users.hbm.xml"/>
+        <mapping resource="test-hbm/UserPreferences.hbm.xml"/>
+        <mapping resource="test-hbm/UserEvent.hbm.xml"/>
+        <mapping resource="test-hbm/UserProject.hbm.xml"/>
+        <mapping resource="test-hbm/Roles.hbm.xml"/>
+        <mapping resource="test-hbm/RolesPermissions.hbm.xml"/>
+        <mapping resource="test-hbm/Permissions.hbm.xml"/>
+        <mapping resource="test-hbm/AuthorityControl.hbm.xml"/>
+        <mapping resource="test-hbm/AuthorityControlVersion.hbm.xml"/>
+        <mapping resource="test-hbm/AccessconditionObject.hbm.xml"/>
+        <mapping resource="test-hbm/AccessconditionProject.hbm.xml"/>
+        <mapping resource="test-hbm/AccessconditionTarget.hbm.xml"/>
+        <mapping resource="test-hbm/AccessconditionType.hbm.xml"/>
+        <mapping resource="test-hbm/Settings.hbm.xml"/>
+        <mapping resource="test-hbm/Hydra.hbm.xml"/>
+        <mapping resource="test-hbm/HydraPublish.hbm.xml"/>
+        <mapping resource="test-hbm/ProjectTemplate.hbm.xml"/>
+        <mapping resource="test-hbm/ProjectTemplateAcid.hbm.xml"/>
+        <mapping resource="test-hbm/ProjectTemplateStrings.hbm.xml"/>
+        <mapping resource="test-hbm/ImportJobNotifications.hbm.xml"/>
+        <mapping resource="test-hbm/UserProjectFieldExportOptions.hbm.xml"/>
+        <mapping resource="test-hbm/ObjectAcidVersion.hbm.xml"/>
+        <mapping resource="test-hbm/ObjectStringVersion.hbm.xml"/>
+        <mapping resource="test-hbm/EventType.hbm.xml"/>
+        <mapping resource="test-hbm/ObjectVersion.hbm.xml"/>
+        <mapping resource="test-hbm/ObjectEvent.hbm.xml"/>
+    </session-factory>
+</hibernate-configuration>

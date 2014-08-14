@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Replace notification e-mail with User entity -->
+<hibernate-mapping>
+    <class name="edu.yale.library.ladybird.entity.Monitor" table="monitor" catalog="pamoja">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="dirPath" type="string">
+            <column name="dir" length="500" />
+        </property>
+        <property name="exportPath" type="string">
+            <column name="dir_export" length="500" not-null="true" />
+        </property>
+        <property name="notificationEmail" type="string">
+            <column name="notification_email" length="15" not-null="true" />
+        </property>
+        <property name="date" type="timestamp">
+            <column name="date" length="19" not-null="true" />
+        </property>
+        <property name="currentUserId" type="java.lang.Integer">
+            <column name="current_user_id" />
+        </property>
+        <property name="currentProjectId" type="java.lang.Integer">
+            <column name="current_project_id" />
+        </property>
+    </class>
+</hibernate-mapping>

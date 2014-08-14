@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../../templates/template_yul.xhtml">
+    <ui:define name="content">
+        <h4>Object Versions</h4>
+        <h:form id="ObjectForm" enctype="multipart/form-data">
+
+            <f:metadata/>
+
+            <br/>
+            <br/>
+
+            <div>
+                <div>
+
+                    <!-- Data Table -->
+
+                    <p:dataTable id="ObjectVersionDatatable" value="#{objectVersionView.itemList}"
+                                 var="item" paginator="false" editable="false">
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="OID"/>
+                            </f:facet>
+                            <h:outputText value="#{item.oid}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Version"/>
+                            </f:facet>
+                            <h:outputText value="#{item.versionId}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Date"/>
+                            </f:facet>
+                            <h:outputText value="#{item.creationDate}">
+                                <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="User"/>
+                            </f:facet>
+                            <h:outputText value="#{userView.getUserName(item.userId)}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Notes"/>
+                            </f:facet>
+                            <h:outputText value="#{item.notes}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Actions"/>
+                            </f:facet>
+                            <h:link outcome="object_metadata?oid=#{item.oid}&amp;version=#{item.versionId}"
+                                    value="View"/>
+                            &nbsp;
+                            <h:commandLink action="#{objectMetadataView.rollback}" value="Rollback">
+                                <f:param name="oid" value="#{item.oid}"/>
+                                <f:param name="version" value="#{item.versionId}"/>
+                            </h:commandLink>
+                        </p:column>
+
+                    </p:dataTable>
+
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

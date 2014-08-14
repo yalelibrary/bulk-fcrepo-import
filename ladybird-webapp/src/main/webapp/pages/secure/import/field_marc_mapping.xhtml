@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../../templates/template_yul.xhtml">
+    <ui:define name="content">
+        <h4>Field-Marc Mapping</h4>
+        <h:form id="FieldMarcMappingForm" enctype="multipart/form-data">
+            <br/>
+
+            <div>
+                <div>
+                    <!-- Data Table -->
+                    <p:dataTable id="FieldMarcMappingDatatable" value="#{FieldMarcMappingView.itemList}"
+                                 var="item" paginator="false" editable="false">
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Id"/>
+                            </f:facet>
+                            <h:outputText value="#{item.id}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Date"/>
+                            </f:facet>
+                            <h:outputText value="#{item.date}">
+                                <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="K1"/>
+                            </f:facet>
+                            <h:outputText value="#{item.k1}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="K2"/>
+                            </f:facet>
+                            <h:outputText value="#{item.k2}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Concat"/>
+                            </f:facet>
+                            <h:outputText value="#{item.concat}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Delim"/>
+                            </f:facet>
+                            <h:outputText value="#{item.delim}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Fdid"/>
+                            </f:facet>
+                            <h:outputText value="#{item.fdid}"/>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

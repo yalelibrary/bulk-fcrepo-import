@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template_yul.xhtml">
+    <ui:define name="content">
+        <h4>Crons</h4>
+        <h:form id="UserForm" enctype="multipart/form-data">
+
+            <div>
+                <div>
+
+                    The following cron jobs are scheduled.
+                    <br/>
+
+                    <p:contextMenu for="CronViewDatatable">
+                        <p:menuitem value="Unschedule" action="#{cronView.unscheduleJob}"/>
+                    </p:contextMenu>
+
+                    <!-- Data Table -->
+
+                    <p:dataTable id="CronViewDatatable"
+                                 editable="false"
+                                 paginator="true"
+                                 paginatorPosition="bottom"
+                                 rows="10"
+                                 value="#{cronView.jobs}"
+                                 var="jobitem"
+                                 selection="#{cronView.selectedItem}"
+                                 selectionMode="single"
+                                 rowKey="#{jobitem.key.name}">
+
+                        <p:column headerText="Job Name">
+                            <h:outputText value="#{jobitem.key.name}"/>
+                        </p:column>
+                        <p:column headerText="Group">
+                            <h:outputText value="#{jobitem.key.group}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

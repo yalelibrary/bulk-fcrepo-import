@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../../templates/template_yul.xhtml">
+    <ui:define name="content">
+        <h4>User Export Field Selection</h4>
+
+        <div>
+            <p>
+                Select the fields that will appear when you export. If none are selected, all fields will be exported.
+            </p>
+        </div>
+
+        <br/>
+
+        <h:form id="FieldDefinitionForm" enctype="multipart/form-data">
+
+            <!-- Data Table -->
+
+            <p:dataTable id="FieldDefinitionDatatable" value="#{userExportFieldView.fieldDefintionExports}"
+                         var="item" editable="false">
+
+                <p:column width="10%">
+                    <f:facet name="header">
+                        <h:outputText value="Export"/>
+                    </f:facet>
+                    <h:selectBooleanCheckbox value="#{item.enabled}"/>
+                </p:column>
+
+                <p:column width="45%">
+                    <f:facet name="header">
+                        <h:outputText value="Description"/>
+                    </f:facet>
+                    <h:outputText value="#{item.fieldDefinition.handle}"/>
+                </p:column>
+
+                <p:column width="45%">
+                    <f:facet name="header">
+                        <h:outputText value="Fdid"/>
+                    </f:facet>
+                    <h:outputText value="#{item.fieldDefinition.fdid}"/>
+                </p:column>
+
+            </p:dataTable>
+
+            <!-- Submit Button -->
+
+            <h:commandButton value="Submit Export Fields" styleClass="btn" action="#{userExportFieldView.save}"/>
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

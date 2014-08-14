@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="edu.yale.library.ladybird.entity.RolesPermissions" table="roles_permissions" catalog="pamoja">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="roleId" type="int">
+            <column name="role_id" not-null="true" />
+        </property>
+        <property name="permissiosnId" type="int">
+            <column name="permissiosn_id" not-null="true" />
+        </property>
+        <property name="value" type="java.lang.Character">
+            <column name="value" length="1" />
+        </property>
+        <property name="createdDate" type="timestamp">
+            <column name="created_date" length="19" />
+        </property>
+    </class>
+</hibernate-mapping>

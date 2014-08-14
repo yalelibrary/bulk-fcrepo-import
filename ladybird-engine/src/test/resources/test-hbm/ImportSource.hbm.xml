@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="edu.yale.library.ladybird.entity.ImportSource" table="import_source" catalog="pamoja">
+        <id name="importSourceId" type="java.lang.Integer">
+            <column name="import_source_id" />
+            <generator class="identity" />
+        </id>
+        <property name="createdDate" type="timestamp">
+            <column name="created_date" length="19" not-null="true" />
+        </property>
+        <property name="url" type="string">
+            <column name="url" length="200" />
+        </property>
+        <property name="xmlType" type="string">
+            <column name="xml_type" length="200"/>
+        </property>
+        <property name="getPrefix" type="string">
+            <column name="get_prefix" length="200" />
+        </property>
+        <property name="active" type="boolean">
+            <column name="active"/>
+        </property>
+    </class>
+</hibernate-mapping>

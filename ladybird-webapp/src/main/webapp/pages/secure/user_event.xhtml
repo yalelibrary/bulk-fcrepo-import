@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template_yul.xhtml">
+    <f:metadata/>
+
+    <ui:define name="content">
+        <h4>User Events</h4>
+
+        All session-level for user #{userEventView.user}
+
+        <h:form id="UserEventForm" enctype="multipart/form-data">
+            <br/>
+
+            <div>
+                <div>
+
+                    <br/>
+
+                    <p:dataTable id="UserEventDatatable"
+                                 value="#{userEventView.itemList}"
+                                 var="item"
+                                 paginator="false"
+                                 editable="false">
+
+                        <p:column rendered="false">
+                            <f:facet name="header">
+                                <h:outputText value="UserId"/>
+                            </f:facet>
+                            <h:outputText id="event_userid" value="#{item.userId}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Event Type"/>
+                            </f:facet>
+                            <h:outputText id="event_type" value="#{item.eventType}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Creation"/>
+                            </f:facet>
+                            <h:outputText id="event_createddate" value="#{item.createdDate}">
+                                <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Start"/>
+                            </f:facet>
+                            <h:outputText id="event_startdate" value="#{item.startDate}">
+                                <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="End"/>
+                            </f:facet>
+                            <h:outputText id="event_enddate" value="#{item.endDate}">
+                                <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Event Value"/>
+                            </f:facet>
+                            <h:outputText id="event_value" name="event_value" value="#{item.value}"/>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

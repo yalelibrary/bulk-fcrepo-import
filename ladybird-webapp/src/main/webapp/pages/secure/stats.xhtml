@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template_yul.xhtml">
+
+      <ui:define name="content">
+
+        <h:form id="StatsForm" enctype="multipart/form-data">
+
+            <p:panelGrid columns="2">
+                <f:facet name="header">
+                    <h:outputText value="General Stats"/>
+                </f:facet>
+
+                <h:outputText value="Objects" />
+                <h:outputText value=" #{ObjectView.getCount()}" />
+
+                <h:outputText value="Images" />
+                <h:outputText value="#{objectMetadataView.getCount()}" />
+            </p:panelGrid>
+
+            <br/>
+
+            <!--
+            <h4>General Statistics</h4>
+
+            <p> Object count: #{ObjectView.getCount()} </p>
+            <p> Image count: #{objectMetadataView.getCount()} </p>
+            <p> Published objects:</p>
+            <p> Objects not published: </p>
+
+            <h4>Complex Objects</h4>
+
+            <p> Object count: </p>
+            <p> Child count: </p>
+
+            <h4>Items Created</h4>
+
+            <ui:repeat var="p" value="#{userView.itemList}">
+                <div>
+                    <div>
+                        <h:outputText value="#{p.username}"/> :
+                    </div>
+                </div>
+            </ui:repeat>
+            -->
+
+
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

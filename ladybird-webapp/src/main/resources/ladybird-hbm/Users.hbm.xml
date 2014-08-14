@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="edu.yale.library.ladybird.entity.User" table="users" catalog="pamoja">
+        <id name="userId" type="java.lang.Integer">
+            <column name="user_id" />
+            <generator class="identity" />
+        </id>
+        <property name="date" type="timestamp">
+            <column name="date" length="19" not-null="true" />
+        </property>
+        <property name="username" type="string">
+            <column name="username" length="45" not-null="true" />
+        </property>
+        <property name="password" type="string">
+            <column name="password" length="64" />
+        </property>
+        <property name="dateCreated" type="timestamp">
+            <column name="date_created" length="19" not-null="true" />
+        </property>
+        <property name="dateEdited" type="timestamp">
+            <column name="date_edited" length="19"/>
+        </property>
+        <property name="dateLastused" type="timestamp">
+            <column name="date_lastused" length="19"/>
+        </property>
+        <property name="creatorId" type="int">
+            <column name="creator_id" not-null="true">
+                <comment>user ID of the person that created this account</comment>
+            </column>
+        </property>
+        <property name="name" type="string">
+            <column name="name" length="80" />
+        </property>
+        <property name="email" type="string">
+            <column name="email" length="80" />
+        </property>
+        <property name="role" type="string">
+            <column name="role" length="80" />
+        </property>
+    </class>
+</hibernate-mapping>

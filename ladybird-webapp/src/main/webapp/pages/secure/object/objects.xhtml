@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../../templates/template_yul.xhtml">
+    <ui:define name="content">
+        <h4>Objects</h4>
+        <h:form id="ObjectForm" enctype="multipart/form-data">
+            <br/>
+
+            <div>
+                <div>
+
+                    <br/>
+
+                    <!-- Data Table -->
+
+                    <p:dataTable id="ObjectDatatable" value="#{ObjectView.itemList}"
+                                 var="item" paginator="true" rows="10"
+                                 tableStyle="" paginatorPosition="bottom"
+                                 editable="false">
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Date"/>
+                            </f:facet>
+                            <h:outputText value="#{item.date}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Project"/>
+                            </f:facet>
+                            <h:outputText value="#{item.projectId}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="User"/>
+                            </f:facet>
+                            <h:outputText value="#{item.userId}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Oid_1"/>
+                            </f:facet>
+                            <h:outputText value="#{item.oid_1}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Zindex"/>
+                            </f:facet>
+                            <h:outputText value="#{item.localidentifier}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Parent"/>
+                            </f:facet>
+                            <h:outputText value="#{item.parent}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Boid"/>
+                            </f:facet>
+                            <h:outputText value="#{item.boid}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Roid"/>
+                            </f:facet>
+                            <h:outputText value="#{item.roid}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

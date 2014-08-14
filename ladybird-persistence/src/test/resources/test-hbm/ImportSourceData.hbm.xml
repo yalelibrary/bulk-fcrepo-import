@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="edu.yale.library.ladybird.entity.ImportSourceData" table="import_source_data" catalog="pamoja">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="date" type="timestamp">
+            <column name="date" length="19" not-null="true" />
+        </property>
+        <property name="importSourceId" type="int">
+            <column name="import_source_id" not-null="true" />
+        </property>
+        <property name="k1" type="string">
+            <column name="k1" length="500" />
+        </property>
+        <property name="k2" type="string">
+            <column name="k2" length="500" />
+        </property>
+        <property name="k3" type="string">
+            <column name="k3" length="500" />
+        </property>
+        <property name="attr" type="string">
+            <column name="attr" length="50" />
+        </property>
+        <property name="attrVal" type="string">
+            <column name="attr_val" length="150" />
+        </property>
+        <property name="value" type="string">
+            <column name="value" length="5000" />
+        </property>
+        <property name="localidentifier" type="java.lang.String">
+            <column name="localidentifier" />
+        </property>
+        <property name="notes" type="string">
+            <column name="notes" length="45" />
+        </property>
+    </class>
+</hibernate-mapping>

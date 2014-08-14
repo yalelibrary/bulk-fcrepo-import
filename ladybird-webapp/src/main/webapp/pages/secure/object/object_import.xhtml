@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../../templates/template_yul.xhtml">
+    <ui:define name="content">
+
+        <h:form id="ObjectImportFileForm" enctype="multipart/form-data">
+
+            <!-- TEMPLATE selection -->
+            <div>
+                <span>
+                <!-- TODO need a converter -->
+                <h:commandButton id="submit_button"
+                                 action="#{ObjectFileView.applyTemplate}"
+                                 styleClass="btn"
+                                 value="Apply template to results"/>
+
+                </span>
+                <span>
+                <h:selectOneMenu id="templateSelectOneMenu" value="#{ObjectFileView.templateItem.label}">
+
+                    <f:selectItems value="#{projectTemplateView.itemList}"
+                                   var="select_project_var"
+                                   itemLabel="#{select_project_var.label}"
+                                   itemValue="#{select_project_var.label}"/>
+                </h:selectOneMenu>
+                </span>
+            </div>
+
+            <br/>
+
+            <div>
+                <div>
+
+                    <!-- Data Grid -->
+                    <p:dataGrid var="item" value="#{ObjectFileView.itemList}" columns="5"
+                                rows="6" paginator="true" id="ObjectFileDatagrid" paginatorPostion="bottom">
+
+                        <p:panel header="#{item.oid}" style="text-align:center">
+                            <h:panelGrid columns="1" style="width:100%">
+                                <h:graphicImage value="/images/#{item.filePath}" height="151" width="170"/>
+                                <h:outputText value="#{item.fileName}"/>
+                                <h:link outcome="object_metadata?oid=#{item.oid}" value="View"/>
+                                <h:link outcome="object_version?oid=#{item.oid}" value="Versions"/>
+                                <h:link outcome="audit?oid=#{item.oid}" value="Audit Events"/>
+
+                            </h:panelGrid>
+                        </p:panel>
+
+                    </p:dataGrid>
+
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

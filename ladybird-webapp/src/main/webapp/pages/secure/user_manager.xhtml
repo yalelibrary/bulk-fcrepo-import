@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template_yul.xhtml">
+
+    <ui:define name="content">
+        <h4>Users</h4>
+
+        <div>
+        <br/>
+        <a href="/ladybird-webapp/pages/secure/user_manager_form.xhtml">Add Users</a>
+        <a href="/ladybird-webapp/pages/secure/users_projects.xhtml">Project Authorization</a>
+        <a href="/ladybird-webapp/pages/secure/assign_project_access.xhtml">Assign Project Access</a>
+        <br/>
+        </div>
+
+        <h:form id="UserForm" enctype="multipart/form-data">
+            <div>
+                <div>
+
+                    <p:contextMenu for="UserDatatable">
+                        <p:menuitem value="User Activity" action="#{userView.seeUserActivity}"/>
+                        <p:menuitem value="See Site Permissions" action="#{userView.seeSitePermissions}"/>
+                    </p:contextMenu>
+
+                    <!-- Data Table -->
+
+                    <p:dataTable id="UserDatatable"
+                                 editable="false"
+                                 paginator="true"
+                                 paginatorPosition="bottom"
+                                 rows="10"
+                                 value="#{userView.subItemList}"
+                                 var="item"
+                                 lazy="true"
+                                 selection="#{userView.selectedItem}"
+                                 selectionMode="single"
+                                 rowKey="#{item.userId}">
+
+                        <p:column id="col_id" headerText="Id">
+                            <h:outputText id="userid" value="#{item.userId}"/>
+                        </p:column>
+                        <p:column id="col_date" headerText="Date">
+                            <h:outputText id="date" value="#{item.date}">
+                                <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column id="col_name" headerText="Name">
+                            <h:outputText id="name" value="#{item.name}"/>
+                        </p:column>
+                        <p:column id="col_username" headerText="Username">
+                            <h:outputText id="username" value="#{item.username}"/>
+                        </p:column>
+                        <p:column headerText="E-mail">
+                            <h:outputText id="email" name="email" value="#{item.email}"/>
+                        </p:column>
+                        <p:column headerText="Created">
+                            <h:outputText value="#{item.dateCreated}">
+                                <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Edited" rendered="false">
+                            <h:outputText value=""/>
+                        </p:column>
+                        <p:column headerText="Last used" rendered="false">
+                            <h:outputText value=""/>
+                        </p:column>
+                        <p:column headerText="Role">
+                            <h:outputText value="#{item.role}"/>
+                        </p:column>
+                        <p:column headerText="Creator">
+                            <!-- <h:outputText value="#{item.creatorId}"/> -->
+                            <h:outputText value="#{userView.getUserName(item.creatorId)}"/>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

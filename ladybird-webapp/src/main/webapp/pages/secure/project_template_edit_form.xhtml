@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+<ui:composition template="../../templates/template_yul.xhtml">
+    <ui:define name="content">
+
+        <h:form id="ProjectTemplateMetadataEditForm" enctype="multipart/form-data" styleClass="form-horizontal"
+                role="form">
+
+            <div>
+                <h4>Edit Metadata</h4>
+
+                <ui:repeat value="#{templateEditView.fieldDefinitionvalueList}" var="entry">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"> Field #{entry.fdid.handle} </label>
+                        <div class="col-sm-10"><h:inputText value="#{entry.value}" styleClass="form-control"/></div>
+                    </div>
+                </ui:repeat>
+            </div>
+
+            <h:commandButton id="submit_button"
+                             action="#{templateUpdateView.update(templateEditView.fieldDefinitionvalueList)}"
+                             styleClass="btn"
+                             value="Submit">
+                <f:param name="id" value="#{param['project_template_id']}"/>
+            </h:commandButton>
+
+        </h:form>
+
+    </ui:define>
+</ui:composition>
+</html>
+

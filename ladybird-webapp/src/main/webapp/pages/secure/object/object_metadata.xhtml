@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../../templates/template_yul.xhtml">
+    <ui:define name="content">
+        <h:form id="ObjectMetadataForm" enctype="multipart/form-data" styleClass="form-horizontal" role="form">
+
+            <div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h:outputText
+                                value="Parent Object with child objects #{objectMetadataView.getChildCount(param['oid'])}"
+                                rendered="#{objectMetadataView.isParent(param['oid'])}"> </h:outputText>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <h:graphicImage value="/images/#{objectMetadataView.image}" height="300" width="300"/>
+                        #{objectMetadataView.objectFile.fileName}
+                    </div>
+                    <div class="col-md-8"> Object ID <h4> #{param['oid']} </h4>
+
+                        <p> Created <h:outputText value="#{objectMetadataView.objectFile.date}">
+                            <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                        </h:outputText>
+                        </p>
+
+                        <p> Created by #{userView.getUserName(objectMetadataView.objectFile.userId)} </p>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h4>Metadata</h4>
+
+                <ui:repeat value="#{objectMetadataView.fieldDefinitionvalueList}" var="entry">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"><h:outputText
+                                value="#{objectMetadataView.getFdidHandle(entry.fdid.fdid)}"/></label>
+
+                        <div class="col-sm-10">
+                            <ui:repeat varStatus="loop" value="#{entry.value}">
+                                <h:inputText value="#{entry.value[loop.index]}"
+                                             rendered="#{not objectMetadataView.isReadOnly()}"/>
+                                <h:outputText value="#{entry.value[loop.index]}"
+                                              rendered="#{objectMetadataView.isReadOnly()}"/> <!-- TODO should move this to FDV as a property or read version param-->
+                            </ui:repeat>
+                        </div>
+
+                    </div>
+                </ui:repeat>
+
+                <h:commandButton id="submit_button"
+                                 action="#{objectMetadataView.updateOidMetadata}"
+                                 styleClass="btn"
+                                 value="Submit">
+                    <f:param name="oid" value="#{param['oid']}"/>
+                </h:commandButton>
+
+                <!--
+                <h4>Access</h4>
+                <h4>Image Source</h4>
+                <h4>Administrative</h4>
+                <h4>Metadata</h4>
+                -->
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+

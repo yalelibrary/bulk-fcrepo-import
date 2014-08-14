@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../templates/template_yul.xhtml">
+
+    <ui:define name="content">
+
+        <h:form id="SearchForm" enctype="multipart/form-data" styleClass="form-horizontal" role="form">
+
+            <legend>Search</legend>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Oid</label>
+
+                <div class="col-sm-10">
+                    <h:inputText id="oid" name="oid" value="#{searchView.oid}">
+                    </h:inputText>
+                </div>
+            </div>
+
+            <h:commandButton id="submit_button"
+                             action="#{searchView.search}"
+                             styleClass="btn"
+                             value="Search"/>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+
+
+

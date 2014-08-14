@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../../../templates/template_yul.xhtml">
+
+    <ui:define name="content">
+        <h4>Import Scheduler</h4>
+
+        <br/>
+
+        <div>
+
+            <span>
+
+                <h:outputLink value="/ladybird-webapp/web/pages/secure/import/import_engine_file.xhtml"
+                              styleClass="btn btn-primary btn-primary">
+                    Add Import Job
+                </h:outputLink>
+            </span>
+
+        </div>
+        <br/>
+
+        <div>
+
+              <span>
+                <h:outputText styleClass="alert alert-warning"
+                              value="No import jobs exist yet."
+                              rendered="#{empty monitorView.itemList}"/>
+              </span>
+        </div>
+
+        <br/>
+
+
+        <h:form id="SchedulerForm" enctype="multipart/form-data" rendered="#{not empty monitorView.itemList}">
+
+            <div>
+                <div>
+
+                    <!-- Data Table -->
+
+                    <p:dataTable id="DirDatatable"
+                                 editable="false"
+                                 paginator="true"
+                                 paginatorPosition="bottom"
+                                 rows="10"
+                                 value="#{monitorView.itemList}"
+                                 var="monitorItem">
+
+                        <p:column headerText="Import Directory">
+                            <h:outputText value="#{monitorItem.dirPath}"/>
+                            <h:outputText value="local" rendered="#{empty monitorItem.dirPath}"/>
+                        </p:column>
+
+                        <p:column headerText="Export Directory">
+                            <h:outputText value="#{monitorItem.exportPath}"/>
+                        </p:column>
+
+                        <p:column headerText="User">
+                            <h:outputText value="#{monitorItem.notificationEmail}"/>
+                        </p:column>
+
+                        <p:column headerText="Time Scheduled">
+                            <h:outputText value="#{monitorItem.date}">
+                                <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Progress">
+                            <h:outputText id="progressOutputText"
+                                          value="#{importProgressView.count(monitorItem.id)} out of #{importProgressView.STEPS_TO_COMPLETE} steps"/>
+
+                            <p:poll id="progressPoll" interval="5"
+                                    listener="#{importProgressView.progress(monitorItem.id)}"
+                                    update="progressOutputText"/>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
+
