@@ -39,11 +39,11 @@ public class DefaultImportReaderTest extends AbstractDBTest {
 
     public SpreadsheetFile getTestSpreadsheeet() throws IOException {
         return new SpreadsheetFileBuilder()
-                .setFileName(TestFileConstants.TEST_XLS_FILE)
-                .setAltName("Test spreadsheet")
-                .setPath(TestFileConstants.TEST_XLS_FILE)
-                .setFileStream(getClass().getClassLoader().getResourceAsStream(TestFileConstants.TEST_XLS_FILE))
-                .createSpreadsheetFile();
+                .filename(TestFileConstants.TEST_XLS_FILE)
+                .altname("Test spreadsheet")
+                .filepath(TestFileConstants.TEST_XLS_FILE)
+                .stream(getClass().getClassLoader().getResourceAsStream(TestFileConstants.TEST_XLS_FILE))
+                .create();
     }
 
     @Before

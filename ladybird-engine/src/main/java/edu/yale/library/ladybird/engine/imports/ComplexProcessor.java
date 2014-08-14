@@ -16,12 +16,12 @@ public class ComplexProcessor {
     final ObjectDAO objectDAO = new ObjectHibernateDAO();
 
     public void processF4(ImportEntityValue importEntityValue) {
-        final List<ImportEntity.Row> rowList = importEntityValue.getContentRows();
-        final List<Object> changedObjectLit = new ArrayList<>();
+        final List<ImportEntity.Row> rows = importEntityValue.getContentRows();
+        final List<Object> changedObjectList = new ArrayList<>();
 
         int tmp = 0;
 
-        for (int i = 0; i < rowList.size(); i++) {
+        for (int i = 0; i < rows.size(); i++) {
             try {
                 Object object = objectDAO.findByOid(asInt(importEntityValue.getRowFieldValue(FunctionConstants.F1, i)));
 
@@ -34,18 +34,18 @@ public class ComplexProcessor {
                     object.setParent(true);
                     object.setP_oid(0);
                     tmp = f1;
-                    changedObjectLit.add(object);
+                    changedObjectList.add(object);
                 } else {
                     object.setParent(false);
                     object.setP_oid(tmp);
-                    changedObjectLit.add(object);
+                    changedObjectList.add(object);
                 }
             } catch (Exception e) {
                 logger.trace(e.getMessage()); //ignore
             }
         }
-        logger.debug(changedObjectLit.toString());
-        objectDAO.saveOrUpdateList(changedObjectLit);
+        logger.debug(changedObjectList.toString());
+        objectDAO.saveOrUpdateList(changedObjectList);
     }
 
     /**

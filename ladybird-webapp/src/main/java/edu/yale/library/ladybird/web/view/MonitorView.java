@@ -88,10 +88,10 @@ public class MonitorView extends AbstractView {
             }
 
             final SpreadsheetFile file = new SpreadsheetFileBuilder()
-                    .setFileName(getSessionParam("uploadedFileName").toString())
-                    .setAltName(getSessionParam("uploadedFileName").toString())
-                    .setFileStream((InputStream) getSessionParam("uploadedFileStream"))
-                    .createSpreadsheetFile();
+                    .filename(getSessionParam("uploadedFileName").toString())
+                    .altname(getSessionParam("uploadedFileName").toString())
+                    .stream((InputStream) getSessionParam("uploadedFileStream"))
+                    .create();
 
             //Queue it:
             final ImportRequestEvent importEvent = new ImportRequestEvent(file, monitorItem);

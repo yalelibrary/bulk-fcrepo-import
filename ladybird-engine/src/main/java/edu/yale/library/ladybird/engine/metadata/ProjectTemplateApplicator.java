@@ -60,8 +60,8 @@ public class ProjectTemplateApplicator {
             /* Must do this since even a single field application requires all metadata fields to be versioned.
                If they are not versioned the fields will be blank when rolled back */
             if (nullProjectTemplate(projectTemplate)) {
-                logger.error("Ignoring project template={} application for user={}. " +
-                        "The project template does not have any values.", templateId, userId);
+                logger.error("Ignoring project template={} application for user={}. "
+                        + "The project template does not have any values.", templateId, userId);
                 return;
             }
 
@@ -109,7 +109,7 @@ public class ProjectTemplateApplicator {
             metadataEditor.versionObjectStrings(stringsVersions);
             metadataEditor.versionObject(oidVersions, userId, "PROJECT TEMPLATE APPLICATION");
         } catch (Exception e) {
-            logger.error("Error applying project template={}", projectTemplate, e); //TODO: no individual obj exception.
+            logger.error("Error applying project template={}", projectTemplate, e); //TODO no individual obj exception.
             throw e;
         }
     }

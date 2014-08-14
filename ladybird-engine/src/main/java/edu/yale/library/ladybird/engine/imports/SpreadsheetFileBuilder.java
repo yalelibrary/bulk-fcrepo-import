@@ -8,27 +8,27 @@ public class SpreadsheetFileBuilder {
     private String path;
     private InputStream fileStream;
 
-    public SpreadsheetFileBuilder setFileName(String fileName) {
+    public SpreadsheetFileBuilder filename(String fileName) {
         this.fileName = fileName;
         return this;
     }
 
-    public SpreadsheetFileBuilder setAltName(String altName) {
+    public SpreadsheetFileBuilder altname(String altName) {
         this.altName = altName;
         return this;
     }
 
-    public SpreadsheetFileBuilder setPath(String path) {
+    public SpreadsheetFileBuilder filepath(String path) {
         this.path = path;
         return this;
     }
 
-    public SpreadsheetFileBuilder setFileStream(InputStream fileStream) {
+    public SpreadsheetFileBuilder stream(InputStream fileStream) {
         this.fileStream = fileStream;
         return this;
     }
 
-    public SpreadsheetFile createSpreadsheetFile() {
+    public SpreadsheetFile create() {
         return new SpreadsheetFile(fileName, altName, path, fileStream);
     }
 }

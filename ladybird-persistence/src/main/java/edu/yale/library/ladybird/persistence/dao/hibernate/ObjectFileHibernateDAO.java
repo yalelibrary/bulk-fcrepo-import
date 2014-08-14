@@ -17,12 +17,13 @@ public class ObjectFileHibernateDAO extends GenericHibernateDAO<ObjectFile, Inte
 
     private Logger logger = getLogger(ObjectFileHibernateDAO.class);
 
+    @SuppressWarnings("unchecked")
     @Override
     public ObjectFile findByOid(int oid) {
         final Query q = getSession().createQuery("from edu.yale.library.ladybird.entity.ObjectFile where oid = :param");
         q.setParameter("param", oid);
         final List<ObjectFile> list = q.list();
-        return list.get(0);
+        return list.isEmpty() ? null : list.get(0);
     }
 
     /**
@@ -30,6 +31,7 @@ public class ObjectFileHibernateDAO extends GenericHibernateDAO<ObjectFile, Inte
      * @param projectId project id
      * @return list of ojbectfile or empty list
      */
+    @SuppressWarnings("unchecked")
     @Override
     public List<ObjectFile> findByProject(int projectId) {
         try {
@@ -40,6 +42,11 @@ public class ObjectFileHibernateDAO extends GenericHibernateDAO<ObjectFile, Inte
             final List<ObjectFile> objFileList = new ArrayList<>();
 
             for (Object o: list) {
+                ObjectFile objectFile = findByOid(o.getOid());
+                if (objectFile == null) {
+                    logger.debug("No object file for oid={}", o.getOid());
+                    continue;
+                }
                 objFileList.add(findByOid(o.getOid()));
             }
             return objFileList;

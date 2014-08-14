@@ -131,10 +131,10 @@ public class MarcBarcodeImportEngineIT extends AbstractDBTest {
 
 
     private SpreadsheetFile getImportSpreadsheeet() {
-        return new SpreadsheetFileBuilder().setFileName(ExportFileConstants.TEST_XLS_FILE)
-                .setAltName("Test spreadsheet").setPath(ExportFileConstants.TEST_XLS_FILE)
-                .setFileStream(getClass().getClassLoader().getResourceAsStream(ExportFileConstants.TEST_XLS_FILE))
-                .createSpreadsheetFile();
+        return new SpreadsheetFileBuilder().filename(ExportFileConstants.TEST_XLS_FILE)
+                .altname("Test spreadsheet").filepath(ExportFileConstants.TEST_XLS_FILE)
+                .stream(getClass().getClassLoader().getResourceAsStream(ExportFileConstants.TEST_XLS_FILE))
+                .create();
     }
 
     private String getProp(final String p) {

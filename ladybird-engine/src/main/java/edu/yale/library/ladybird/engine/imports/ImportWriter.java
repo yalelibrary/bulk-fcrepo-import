@@ -151,17 +151,18 @@ public class ImportWriter {
                 processComplexF7(importEntityValue);
             }
 
+            final ImportJobContentsBuilder imjBuilder = new ImportJobContentsBuilder();
+
             //Save all to DB table import job contents (N.B. f104/f105 column(s) also persisted):
             for (int i = 0; i < rowList.size(); i++) {
                 final ImportEntity.Row row = rowList.get(i);
-                final List<ImportEntity.Column> columnsList = row.getColumns();
+                final List<ImportEntity.Column> cols = row.getColumns();
 
-                for (int j = 0; j < columnsList.size(); j++) {
-                    final ImportEntity.Column<String> col = columnsList.get(j);
-                    final ImportJobContents imjContentsEntry = new ImportJobContentsBuilder()
-                            .setImportId(importId).setDate(JOB_EXEC_DATE).
-                                    setCol(j).setRow(i).setValue(col.getValue()).build();
-                    dao.save(imjContentsEntry);
+                for (int j = 0; j < cols.size(); j++) {
+                    final ImportEntity.Column<String> col = cols.get(j);
+                    final ImportJobContents entry = imjBuilder.setImportId(importId).setDate(JOB_EXEC_DATE)
+                            .setCol(j).setRow(i).setValue(col.getValue()).build();
+                    dao.save(entry);
                 }
             }
         } catch (Exception e) {

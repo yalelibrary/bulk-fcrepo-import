@@ -29,7 +29,6 @@ public class ComplexProcessorTest extends AbstractDBTest {
         Object parent2 = new ObjectBuilder().setDate(new Date()).createObject();
         Object child2 = new ObjectBuilder().setDate(new Date()).createObject();
 
-
         dao.save(parent);
         dao.save(child);
         dao.save(parent2);
@@ -61,24 +60,26 @@ public class ComplexProcessorTest extends AbstractDBTest {
         Object parent2 = new ObjectBuilder().setDate(new Date()).createObject();
         Object child2 = new ObjectBuilder().setDate(new Date()).createObject();
 
-        dao.save(parent);
-        dao.save(child);
+        int p1 = dao.save(parent); //e.g. 0
+        int c1p1 = dao.save(child); //e.g. 1
+
         dao.save(parent2);
         dao.save(child2);
 
         ComplexProcessor complexProcessor = new ComplexProcessor();
         complexProcessor.processF5(getF5TestData());
 
-        Object parentDB = dao.findByOid(1);
-        assert (parentDB != null);
-        Object childDB = dao.findByOid(2);
-        Object parentDB2 = dao.findByOid(3);
-        Object childDB2 = dao.findByOid(4);
+        Object parentDB = dao.findByOid(p1); //e.g. 0
+        Object childDB = dao.findByOid(c1p1); //e.g 1
 
         assert (parentDB.getP_oid() == 0);
         assert (parentDB.isParent());
         assert (childDB.getP_oid() == 1);
         assert (childDB.isChild());
+
+        Object parentDB2 = dao.findByOid(3);
+        Object childDB2 = dao.findByOid(4);
+
         assert (parentDB2.getP_oid() == 0);
         assert (parentDB2.isParent());
         assert (childDB2.getP_oid() == 3);
@@ -123,44 +124,44 @@ public class ComplexProcessorTest extends AbstractDBTest {
         assert (exHeadRow.getColumns().size() == 3);
 
         //content row 1 (parent)
-        final List<ImportEntity.Column> contentColumns = new ArrayList<>();
-        contentColumns.add(getColumn(FunctionConstants.F1, "1")); //parent oid
-        contentColumns.add(getColumn(FunctionConstants.F4, "0"));
-        contentColumns.add(getColumn(FunctionConstants.F6, "0"));
+        final List<ImportEntity.Column> cols1 = new ArrayList<>();
+        cols1.add(getCol(FunctionConstants.F1, "1")); //parent oid
+        cols1.add(getCol(FunctionConstants.F4, "0"));
+        cols1.add(getCol(FunctionConstants.F6, "0"));
 
-        final ImportEntity.Row contentRow1 = getRow(contentColumns);
+        final ImportEntity.Row row1 = getRow(cols1);
 
         //content row 2 (child)
-        final List<ImportEntity.Column> contentColumns2 = new ArrayList<>();
-        contentColumns2.add(getColumn(FunctionConstants.F1, "2")); //child oid
-        contentColumns2.add(getColumn(FunctionConstants.F4, "1")); //parent oid
-        contentColumns2.add(getColumn(FunctionConstants.F6, "1"));
+        final List<ImportEntity.Column> cols2 = new ArrayList<>();
+        cols2.add(getCol(FunctionConstants.F1, "2")); //child oid
+        cols2.add(getCol(FunctionConstants.F4, "1")); //parent oid
+        cols2.add(getCol(FunctionConstants.F6, "1"));
 
-        final ImportEntity.Row contentRow2 = getRow(contentColumns2);
+        final ImportEntity.Row row2 = getRow(cols2);
 
         //content row 3 (parent 2)
-        final List<ImportEntity.Column> contentColumns3 = new ArrayList<>();
-        contentColumns3.add(getColumn(FunctionConstants.F1, "3")); //child oid
-        contentColumns3.add(getColumn(FunctionConstants.F4, "0")); //parent oid
-        contentColumns3.add(getColumn(FunctionConstants.F6, "0"));
+        final List<ImportEntity.Column> cols3 = new ArrayList<>();
+        cols3.add(getCol(FunctionConstants.F1, "3")); //child oid
+        cols3.add(getCol(FunctionConstants.F4, "0")); //parent oid
+        cols3.add(getCol(FunctionConstants.F6, "0"));
 
-        final ImportEntity.Row contentRow3 = getRow(contentColumns3);
+        final ImportEntity.Row row3 = getRow(cols3);
 
         //content row 4 (child of parent 2)
-        final List<ImportEntity.Column> contentColumns4 = new ArrayList<>();
-        contentColumns4.add(getColumn(FunctionConstants.F1, "4")); //child oid
-        contentColumns4.add(getColumn(FunctionConstants.F4, "3")); //parent oid
-        contentColumns4.add(getColumn(FunctionConstants.F6, "1"));
+        final List<ImportEntity.Column> cols4 = new ArrayList<>();
+        cols4.add(getCol(FunctionConstants.F1, "4")); //child oid
+        cols4.add(getCol(FunctionConstants.F4, "3")); //parent oid
+        cols4.add(getCol(FunctionConstants.F6, "1"));
 
-        final ImportEntity.Row contentRow4 = getRow(contentColumns4);
+        final ImportEntity.Row row4 = getRow(cols4);
 
         //spreadsheet:
         final List<ImportEntity.Row> spreadsheetRows = new ArrayList<>();
         spreadsheetRows.add(exHeadRow);
-        spreadsheetRows.add(contentRow1);
-        spreadsheetRows.add(contentRow2);
-        spreadsheetRows.add(contentRow3);
-        spreadsheetRows.add(contentRow4);
+        spreadsheetRows.add(row1);
+        spreadsheetRows.add(row2);
+        spreadsheetRows.add(row3);
+        spreadsheetRows.add(row4);
 
         return  new ImportEntityValue(spreadsheetRows);
     }
@@ -171,36 +172,36 @@ public class ComplexProcessorTest extends AbstractDBTest {
         assert (exHeadRow.getColumns().size() == 3); //not sure if f1 should be present for all
 
         //content row 1 (parent)
-        final List<ImportEntity.Column> contentColumns = new ArrayList<>();
-        contentColumns.add(getColumn(FunctionConstants.F1, "1")); //parent oid
-        contentColumns.add(getColumn(FunctionConstants.F5, "0")); //parent oid
-        contentColumns.add(getColumn(FunctionConstants.F6, "0"));
+        final List<ImportEntity.Column> cols1 = new ArrayList<>();
+        cols1.add(getCol(FunctionConstants.F1, "1")); //parent oid
+        cols1.add(getCol(FunctionConstants.F5, "0")); //parent oid
+        cols1.add(getCol(FunctionConstants.F6, "0"));
 
-        final ImportEntity.Row contentRow1 = getRow(contentColumns);
+        final ImportEntity.Row contentRow1 = getRow(cols1);
 
         //content row 2 (child)
-        final List<ImportEntity.Column> contentColumns2 = new ArrayList<>();
-        contentColumns2.add(getColumn(FunctionConstants.F1, "2")); //parent oid
-        contentColumns2.add(getColumn(FunctionConstants.F5, "1")); //parent oid
-        contentColumns2.add(getColumn(FunctionConstants.F6, "1"));
+        final List<ImportEntity.Column> cols2 = new ArrayList<>();
+        cols2.add(getCol(FunctionConstants.F1, "2")); //parent oid
+        cols2.add(getCol(FunctionConstants.F5, "1")); //parent oid
+        cols2.add(getCol(FunctionConstants.F6, "1"));
 
-        final ImportEntity.Row contentRow2 = getRow(contentColumns2);
+        final ImportEntity.Row contentRow2 = getRow(cols2);
 
         //content row 3 (parent 2)
-        final List<ImportEntity.Column> contentColumns3 = new ArrayList<>();
-        contentColumns3.add(getColumn(FunctionConstants.F1, "3")); //parent oid
-        contentColumns3.add(getColumn(FunctionConstants.F5, "0")); //parent oid
-        contentColumns3.add(getColumn(FunctionConstants.F6, "0"));
+        final List<ImportEntity.Column> cols3 = new ArrayList<>();
+        cols3.add(getCol(FunctionConstants.F1, "3")); //parent oid
+        cols3.add(getCol(FunctionConstants.F5, "0")); //parent oid
+        cols3.add(getCol(FunctionConstants.F6, "0"));
 
-        final ImportEntity.Row contentRow3 = getRow(contentColumns3);
+        final ImportEntity.Row contentRow3 = getRow(cols3);
 
         //content row 4 (child of parent 2)
-        final List<ImportEntity.Column> contentColumns4 = new ArrayList<>();
-        contentColumns4.add(getColumn(FunctionConstants.F1, "4")); //parent oid
-        contentColumns4.add(getColumn(FunctionConstants.F5, "3")); //parent oid
-        contentColumns4.add(getColumn(FunctionConstants.F6, "1"));
+        final List<ImportEntity.Column> cols4 = new ArrayList<>();
+        cols4.add(getCol(FunctionConstants.F1, "4")); //parent oid
+        cols4.add(getCol(FunctionConstants.F5, "3")); //parent oid
+        cols4.add(getCol(FunctionConstants.F6, "1"));
 
-        final ImportEntity.Row contentRow4 = getRow(contentColumns4);
+        final ImportEntity.Row contentRow4 = getRow(cols4);
 
         //spreadsheet:
         final List<ImportEntity.Row> spreadsheetRows = new ArrayList<>();
@@ -219,48 +220,48 @@ public class ComplexProcessorTest extends AbstractDBTest {
         assert (exHeadRow.getColumns().size() == 4); //not sure if f1 should be present for all
 
         //content row 1 (parent)
-        final List<ImportEntity.Column> contentColumns = new ArrayList<>();
-        contentColumns.add(getColumn(FunctionConstants.F1, "1")); //parent oid
-        contentColumns.add(getColumn(FunctionConstants.F6, "0"));
-        contentColumns.add(getColumn(FunctionConstants.F7, "1")); //parent oid
-        contentColumns.add(getColumn(FunctionConstants.F8, "1")); //parent oid
+        final List<ImportEntity.Column> cols1 = new ArrayList<>();
+        cols1.add(getCol(FunctionConstants.F1, "1")); //parent oid
+        cols1.add(getCol(FunctionConstants.F6, "0"));
+        cols1.add(getCol(FunctionConstants.F7, "1")); //parent oid
+        cols1.add(getCol(FunctionConstants.F8, "1")); //parent oid
 
-        final ImportEntity.Row contentRow1 = getRow(contentColumns);
+        final ImportEntity.Row row1 = getRow(cols1);
 
         //content row 2 (child)
-        final List<ImportEntity.Column> contentColumns2 = new ArrayList<>();
-        contentColumns2.add(getColumn(FunctionConstants.F1, "2")); //parent oid
-        contentColumns2.add(getColumn(FunctionConstants.F6, "1"));
-        contentColumns2.add(getColumn(FunctionConstants.F7, "2"));
-        contentColumns2.add(getColumn(FunctionConstants.F8, "1"));
+        final List<ImportEntity.Column> cols2 = new ArrayList<>();
+        cols2.add(getCol(FunctionConstants.F1, "2")); //parent oid
+        cols2.add(getCol(FunctionConstants.F6, "1"));
+        cols2.add(getCol(FunctionConstants.F7, "2"));
+        cols2.add(getCol(FunctionConstants.F8, "1"));
 
-        final ImportEntity.Row contentRow2 = getRow(contentColumns2);
+        final ImportEntity.Row row2 = getRow(cols2);
 
         //content row 3 (parent 2)
-        final List<ImportEntity.Column> contentColumns3 = new ArrayList<>();
-        contentColumns3.add(getColumn(FunctionConstants.F1, "3")); //parent oid
-        contentColumns3.add(getColumn(FunctionConstants.F6, "0"));
-        contentColumns3.add(getColumn(FunctionConstants.F7, "3"));
-        contentColumns3.add(getColumn(FunctionConstants.F8, "3"));
+        final List<ImportEntity.Column> cols3 = new ArrayList<>();
+        cols3.add(getCol(FunctionConstants.F1, "3")); //parent oid
+        cols3.add(getCol(FunctionConstants.F6, "0"));
+        cols3.add(getCol(FunctionConstants.F7, "3"));
+        cols3.add(getCol(FunctionConstants.F8, "3"));
 
-        final ImportEntity.Row contentRow3 = getRow(contentColumns3);
+        final ImportEntity.Row row3 = getRow(cols3);
 
         //content row 4 (child of parent 2)
-        final List<ImportEntity.Column> contentColumns4 = new ArrayList<>();
-        contentColumns4.add(getColumn(FunctionConstants.F1, "4")); //parent oid
-        contentColumns4.add(getColumn(FunctionConstants.F6, "1"));
-        contentColumns4.add(getColumn(FunctionConstants.F7, "4"));
-        contentColumns4.add(getColumn(FunctionConstants.F8, "3"));
+        final List<ImportEntity.Column> cols4 = new ArrayList<>();
+        cols4.add(getCol(FunctionConstants.F1, "4")); //parent oid
+        cols4.add(getCol(FunctionConstants.F6, "1"));
+        cols4.add(getCol(FunctionConstants.F7, "4"));
+        cols4.add(getCol(FunctionConstants.F8, "3"));
 
-        final ImportEntity.Row contentRow4 = getRow(contentColumns4);
+        final ImportEntity.Row row4 = getRow(cols4);
 
         //spreadsheet:
         final List<ImportEntity.Row> spreadsheetRows = new ArrayList<>();
         spreadsheetRows.add(exHeadRow);
-        spreadsheetRows.add(contentRow1);
-        spreadsheetRows.add(contentRow2);
-        spreadsheetRows.add(contentRow3);
-        spreadsheetRows.add(contentRow4);
+        spreadsheetRows.add(row1);
+        spreadsheetRows.add(row2);
+        spreadsheetRows.add(row3);
+        spreadsheetRows.add(row4);
 
         return  new ImportEntityValue(spreadsheetRows);
     }
@@ -274,7 +275,7 @@ public class ComplexProcessorTest extends AbstractDBTest {
         return columns;
     }
 
-    private ImportEntity.Column getColumn(final FieldConstant f, final String value) {
+    private ImportEntity.Column getCol(final FieldConstant f, final String value) {
         return new ImportEntity().new Column<>(f, value);
     }
 

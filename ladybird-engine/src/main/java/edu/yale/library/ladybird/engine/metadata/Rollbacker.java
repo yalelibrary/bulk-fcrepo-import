@@ -79,8 +79,6 @@ public class Rollbacker {
                 }
             }
 
-            logger.debug("Archive acids size={} strings size={}", archiveAcids.size(), archiveStrings.size());
-
             objVersioner.versionObjectAcid(archiveAcids);
             objVersioner.versionObjectStrings(archiveStrings);
 
@@ -97,7 +95,7 @@ public class Rollbacker {
 
                     if (osvList.isEmpty()) {
                         logger.debug("No corresponding version for this oid={} and fdid={} and version={}", oid, fdid, version);
-                        logger.debug("Full list={}", objectStringVersionDAO.findAll());
+                        //logger.trace("Full list={}", objectStringVersionDAO.findAll());
                     }
 
                     //delete former entries and add new ones. We could've updated but there might be a mismatch between
@@ -116,14 +114,14 @@ public class Rollbacker {
 
                     if (oavList.isEmpty()) {
                         logger.debug("No corresponding version for this oid={} and fdid={} and version={}", oid, fdid, version);
-                        logger.debug("Full list={}", oavList);
+                        //logger.trace("Full list={}", oavList);
                     }
 
                     //delete and add new object acids
                     List<ObjectAcid> oaList = objectAcidDAO.findListByOidAndFdid(oid, fdid);
                     objectAcidDAO.delete(oaList);
 
-                    for (ObjectAcidVersion oav: oavList){
+                    for (ObjectAcidVersion oav: oavList) {
                         ObjectAcid oa = new ObjectAcidBuilder().setObjectId(oid).setFdid(fdid).setDate(oav.getDate()).setUserId(oav.getUserId()).setValue(oav.getValue()).createObjectAcid();
                         objAcidToUpdate.add(oa);
                     }
@@ -141,7 +139,7 @@ public class Rollbacker {
                     .createObjectVersion();
             objectVersionDAO.save(objectVersion);
         } catch (Exception e) {
-            logger.debug("Error rolling back object={}", oid);
+            logger.error("Error rolling back object={}", oid);
             throw e;
         }
     }

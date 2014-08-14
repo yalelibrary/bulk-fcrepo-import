@@ -29,7 +29,6 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.FieldDefinitionHibern
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectAcidHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectStringHibernateDAO;
-import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectVersionHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ProjectTemplateHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ProjectTemplateStringsHibernateDAO;
 import org.junit.After;

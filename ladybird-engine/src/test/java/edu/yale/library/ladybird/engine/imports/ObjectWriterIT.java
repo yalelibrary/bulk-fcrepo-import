@@ -28,26 +28,12 @@ import static org.junit.Assert.assertEquals;
 
 public class ObjectWriterIT extends AbstractDBTest {
 
-    @Before
-    public void init() {
-        super.init();
-    }
-
-    @After
-    public void stop() throws SQLException {
-        super.stop();
-    }
-
     /**
      * @see ObjectWriter creates object metadata tables and hits db to ensure that the values are written and
      * corresonding acid value is created
      */
     @Test
     public void shouldWriteToObjectMetadataTabes() {
-
-        //Populate our ImportEntityContext
-
-        //1. monitor
         Monitor monitor = new Monitor();
         User user = new User();
         user.setUserId(0);
@@ -56,7 +42,6 @@ public class ObjectWriterIT extends AbstractDBTest {
         //2. populate list of import rows
 
         final List<ImportEntity.Row> rowList = new ArrayList<>();
-
 
         //a. exhead
         final ImportEntity.Row exHeadRow = new ImportEntity().new Row();
@@ -130,4 +115,15 @@ public class ObjectWriterIT extends AbstractDBTest {
 
         assertEquals("Value mimsatch", acid.getValue(), "Name of the rose");
     }
+
+    @Before
+    public void init() {
+        super.init();
+    }
+
+    @After
+    public void stop() throws SQLException {
+        super.stop();
+    }
+
 }
