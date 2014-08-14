@@ -20,10 +20,10 @@
             <column name="date_created" length="19" not-null="true" />
         </property>
         <property name="dateEdited" type="timestamp">
-            <column name="date_edited" length="19" not-null="true" />
+            <column name="date_edited" length="19"/>
         </property>
         <property name="dateLastused" type="timestamp">
-            <column name="date_lastused" length="19" not-null="true" />
+            <column name="date_lastused" length="19"/>
         </property>
         <property name="creatorId" type="int">
             <column name="creator_id" not-null="true">

@@ -337,6 +337,10 @@ public class ObjectMetadataView extends AbstractView {
      * converts request parameter to file path
      */
     public String getImage() {
+        if (objectFile == null) {
+            return "";
+        }
+
         return objectFile.getFilePath();
     }
 

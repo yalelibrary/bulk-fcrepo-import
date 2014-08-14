@@ -95,6 +95,9 @@ public class WelcomeView extends AbstractView {
     public boolean notificationSentForCurrentUser(int jobId) {
         try {
             List<ImportJobNotifications> notifications = importJobNotificationsDAO.findByUserAndJobId(authUtil.getCurrentUserId(), jobId);
+            if (notifications.isEmpty()) {
+                return false;
+            }
             return (notifications.get(0).getNotified() == 1);
         } catch (Exception e) {
             logger.error("Error finding notifications", e);

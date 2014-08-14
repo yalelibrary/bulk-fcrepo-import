@@ -29,4 +29,8 @@ public class AbstractView<T> {
     public boolean isParamNull(String param) {
         return Faces.getRequestParameter(param) == null;
     }
+
+    public boolean isParamEmpty(String param) {
+        return Faces.getRequestParameter(param).isEmpty();
+    }
 }

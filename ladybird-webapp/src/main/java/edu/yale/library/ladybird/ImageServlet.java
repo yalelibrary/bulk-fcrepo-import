@@ -17,6 +17,11 @@ public class ImageServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String filename = request.getPathInfo().substring(1);
+
+        if (filename.isEmpty()) {
+            return;
+        }
+
         File file = new File("/" + filename);
         if (!file.exists()) {
             logger.error("File does not exist");
