@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -34,30 +35,32 @@ public final class ImportReader {
     }
 
     /**
-     * Process a sheet of SpreadsheetFile
+     * Process a single sheet SpreadsheetFile.sheetNumber of SpreadsheetFile file
      *
      * @return data structure containing all the data from the spreadsheet
      * @throws ImportReaderValidationException
+     *
      * @throws IOException
      */
     public List<ImportEntity.Row> read() throws ImportReaderValidationException, IOException {
-
-        logger.debug("Processing sheet of file={}", file);
+        logger.debug("Processing sheetNumber={} of file={}", sheetNumber, file);
 
         final List<ImportEntity.Row> sheetRows = new ArrayList<>();
         final List<FieldConstant> valueMap = new ArrayList<>();
 
         try {
-            final XSSFSheet sheet =  file.getDefaultSheet(sheetNumber);
+            final XSSFSheet sheet = file.getDefaultSheet(sheetNumber);
             final Iterator<Row> it = sheet.iterator();
 
             //read first row
             final Row firstRow = it.next();
-            final Iterator<Cell> firstRowCellIterator = firstRow.cellIterator();
-            final ImportEntity.Row headerSheetRow = new ImportEntity().new Row();
+            final Iterator<Cell> firstRowCellItr = firstRow.cellIterator();
+            final ImportEntity.Row headerRow = new ImportEntity().new Row();
 
-            while (firstRowCellIterator.hasNext()) {
-                final Cell cell = firstRowCellIterator.next();
+            int exHeadRowCellCount = 0;
+
+            while (firstRowCellItr.hasNext()) {
+                final Cell cell = firstRowCellItr.next();
 
                 // Reader Header value.
                 try {
@@ -65,61 +68,99 @@ public final class ImportReader {
                     valueMap.add(f);
 
                     final ImportEntity.Column<String> column = new ImportEntity().new Column<>(f, String.valueOf(SpreadsheetUtil.getCellValue(cell)));
-                    headerSheetRow.getColumns().add(column);
+                    headerRow.getColumns().add(column);
                 } catch (UnknownFieldConstantException unknownFunction) {
                     if (this.readMode == ReadMode.HALT) {
-                       logger.error("Unknown field column in header= {}", unknownFunction.getMessage());
-                       final ImportReaderValidationException importReaderValidationException =
-                               new ImportReaderValidationException(unknownFunction);
+                        logger.error("Unknown field column in header={}", unknownFunction.getMessage());
+                        final ImportReaderValidationException importReaderValidationException =
+                                new ImportReaderValidationException(unknownFunction);
                         importReaderValidationException.initCause(unknownFunction);
                         throw importReaderValidationException;
                     }
-                    logger.debug("Unknown exhead= {}", unknownFunction.getMessage()); //means probably fdid has not been added in the properties
+                    logger.debug("Unknown exhead={}", unknownFunction.getMessage()); //means probably fdid has not been added in the properties
+
                     valueMap.add(FunctionConstants.UNK); //TODO shouldn't be used to represent both unknown func and fdid
 
                     logger.debug("Adding UNK in 1st row for this unrecognized FieldConstant"); //added to keep the exhead and contents col. the same.
 
                     final ImportEntity.Column<String> column = new ImportEntity()
                             .new Column<>(FunctionConstants.UNK, String.valueOf(SpreadsheetUtil.getCellValue(cell)));
-                    headerSheetRow.getColumns().add(column);
-
+                    headerRow.getColumns().add(column);
                 } catch (Exception e) {
                     logger.error("Unknown error iterating header row", e);
                 }
+
+                exHeadRowCellCount++;
             }
+
+            logger.trace("Exhead cell count={}", exHeadRowCellCount);
+
             //add header row:
-            sheetRows.add(headerSheetRow);
+            sheetRows.add(headerRow);
 
-            logger.trace("Writing import content rows");
-
-            //iterate body: //TODO Check empty columnns
+            //iterate body:
             int cellCount = 0;
-            while (it.hasNext()) {
-                final ImportEntity.Row contentsSheetRow = new ImportEntity().new Row();
-                final Row row = it.next();
-                final Iterator<Cell> cellIterator = row.cellIterator();
-                while (cellIterator.hasNext()) {
-                    final Cell cell = cellIterator.next();
-                    final ImportEntity.Column<String> column = new ImportEntity().new Column<>(valueMap.get(cellCount),
-                            String.valueOf(SpreadsheetUtil.getCellValue(cell)));
-                    logger.trace("Column={}", column.toString());
-                    contentsSheetRow.getColumns().add(column);
-                    cellCount++;
+            final ImportEntity importEntity = new ImportEntity();
+            int debugRowCount = 0;
+
+            try {
+                while (it.hasNext()) {
+                    logger.trace("Reading content row={}", debugRowCount);
+                    debugRowCount++;
+
+                    final ImportEntity.Row contentsSheetRow = importEntity.new Row();
+                    final Row row = it.next();
+                    final Iterator<Cell> cellIterator = row.cellIterator();
+                    while (cellIterator.hasNext() && cellCount < exHeadRowCellCount) {
+                        final Cell cell = cellIterator.next();
+                        final ImportEntity.Column<String> column = importEntity.new Column<>(valueMap.get(cellCount),
+                                String.valueOf(SpreadsheetUtil.getCellValue(cell)));
+                        logger.trace("Column={}", column.toString());
+                        contentsSheetRow.getColumns().add(column);
+                        cellCount++;
+                    }
+                    logger.trace("Added content row={}", contentsSheetRow.toString());
+
+                    ImportEntity.Row evalRow = new ImportEntity().new Row(Collections.unmodifiableList(contentsSheetRow.getColumns()));
+
+                    if (!allFieldsNull(evalRow)) {
+                        sheetRows.add(contentsSheetRow);
+                    }
+                    cellCount = 0;
                 }
-                logger.trace("Added content row={}", contentsSheetRow.toString());
-                sheetRows.add(contentsSheetRow);
-                cellCount = 0;
+                logger.trace("Content row index={}", debugRowCount);
+            } catch (IllegalArgumentException e) {
+                logger.error("Error reading cell column={}, error={}", cellCount + 1, e.getMessage());
+                throw new IllegalArgumentException(e);
             }
         } catch (IOException e) {
             logger.error("Error reading value in import reading", e);
             throw e;
         } catch (IllegalArgumentException e) {
-            logger.debug("Error reading cell", e.getMessage()); //ignore
-        } catch (Exception e) {
-            logger.error("General exception.", e); //ignore
+            logger.error("Error reading cell value={}", e.getMessage()); //ignore
+            throw e;
         }
-        logger.debug("Done import reading.");
+
+        logger.debug("Done reading sheet.");
         return sheetRows;
+    }
+
+    private boolean allFieldsNull(final ImportEntity.Row row) {
+        List<ImportEntity.Column> cols = row.getColumns();
+        boolean blank = true;
+
+        for (final ImportEntity.Column<String> c : cols) {
+            if (c.getValue() == null) {
+                logger.error("Null column value found");
+                throw new IllegalArgumentException("Null col value");
+            }
+
+            if (!c.getValue().isEmpty()) {
+                blank = false;
+                return blank;
+            }
+        }
+        return blank;
     }
 
 }

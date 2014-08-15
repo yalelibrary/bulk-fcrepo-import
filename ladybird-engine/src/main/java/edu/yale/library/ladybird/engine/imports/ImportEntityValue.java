@@ -296,6 +296,10 @@ public class ImportEntityValue {
         return bitSet.cardinality() == f.length;
     }
 
+    public static ImportEntity.Column newColumn(FunctionConstants f, String value) {
+        return new ImportEntity().new Column<>(f, value);
+    }
+
 
     @Override
     public String toString() {

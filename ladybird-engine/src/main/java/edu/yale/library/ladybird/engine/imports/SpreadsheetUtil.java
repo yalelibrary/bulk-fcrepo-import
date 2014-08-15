@@ -10,14 +10,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- *
- */
 public class SpreadsheetUtil {
     /**
-     * Helper
-     * <p/>
-     * Returns cell value as an object
+     * Helper returns cell value as an object
      *
      * @param cell preadsheet cell
      * @return Object wrapping primitive or string
@@ -30,8 +25,10 @@ public class SpreadsheetUtil {
                 return (long) cell.getNumericCellValue(); //TODO note int. FIXME
             case Cell.CELL_TYPE_STRING:
                 return cell.getStringCellValue();
+            case Cell.CELL_TYPE_BLANK:
+                return "";
             default:
-                throw new IllegalArgumentException("Unknown data type");
+                throw new IllegalArgumentException("Unknown data type:" + cell.getCellType());
         }
     }
 
@@ -40,13 +37,9 @@ public class SpreadsheetUtil {
 
         XSSFWorkbook workbook = new XSSFWorkbook(TEST_EXCEL_FILE);
         XSSFSheet sheet = workbook.getSheetAt(sheetNum);
-
         Iterator<Row> it = sheet.iterator();
-
         org.apache.poi.ss.usermodel.Row header = it.next();
-
         Iterator<Cell> headerItr = header.cellIterator();
-
         int pos = -1;
 
         while (headerItr.hasNext()) {
@@ -55,7 +48,7 @@ public class SpreadsheetUtil {
             if (s.equals(column)) {
                 if (pos == -1) {
                     pos = cell.getColumnIndex();
-                } else { //mutliple
+                } else { //multiple
                     throw new Exception("Wrong column header");
                 }
                 headerItr.next();

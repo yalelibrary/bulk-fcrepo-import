@@ -88,6 +88,13 @@ public class ImportEntity {
                     + "columns=" + columns
                     + '}';
         }
+
+        public Row(final List<Column> columns) {
+            this.columns = columns;
+        }
+
+        public Row() {
+        }
     }
 
 }

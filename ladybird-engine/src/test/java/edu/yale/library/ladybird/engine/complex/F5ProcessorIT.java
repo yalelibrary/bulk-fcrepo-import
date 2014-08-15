@@ -46,7 +46,7 @@ public class F5ProcessorIT extends AbstractDBTest {
 
     private final Logger logger = getLogger(F5ProcessorIT.class);
 
-    private static final String IMPORT_FILE = "F5-test.xlsx";
+    private static final String IMPORT_FILE = "F5.xlsx";
 
     private static final String EXPORT_FILE_NAME = "test_export.xlsx";
 
@@ -73,68 +73,70 @@ public class F5ProcessorIT extends AbstractDBTest {
     public void shouldRunFullCycleForComplex() throws Exception {
         kernelBoot.setAbstractModule(new TestModule());
         initFdids(); //TODO tmp. Inst app. rules for test (since db state is cleaned)
-        int userId = 0, projectId = 1;
+        final int userId = 0, projectId = 1;
 
-        final ImportEngine importEngine = new DefaultImportEngine(userId, projectId);
-        importEngine.setImportSourceProcessor(new ImportSourceProcessor()); //TODO
+        try {
+            final ImportEngine importEngine = new DefaultImportEngine(userId, projectId);
+            importEngine.setImportSourceProcessor(new ImportSourceProcessor()); //TODO
 
-        final List<ImportEntity.Row> rows = importEngine.read(TestUtil.getImportSpreadsheeet(IMPORT_FILE));
+            List<ImportEntity.Row> rows = importEngine.read(TestUtil.getImportSpreadsheeet(IMPORT_FILE));
 
-        assertEquals(rows.size(), ShouldMatch.ROW_COUNT);
-        assertEquals(rows.get(0).getColumns().size(), ShouldMatch.COL_COUNT);
+            assertEquals(rows.size(), ShouldMatch.ROW_COUNT);
+            assertEquals(rows.get(0).getColumns().size(), ShouldMatch.COL_COUNT);
 
-        //Write it:
-        final int imid = importEngine.write(rows);
+            //Write it:
+            final int imid = importEngine.write(rows);
 
-        /* Add request for export */
-        final ExportRequestEvent exportEvent = new ExportRequestEvent(imid);
-        ExportEngineQueue.addJob(exportEvent);
+            /* Add request for export */
+            final ExportRequestEvent exportEvent = new ExportRequestEvent(imid);
+            ExportEngineQueue.addJob(exportEvent);
 
-        //Now read back:
+            //Now read back:
 
-        //The job itself:
-        final List<ImportJob> importJobList = importJobHibernateDAO.findAll();
-        assertEquals(importJobList.size(), 1);
+            //The job itself:
+            final List<ImportJob> importJobList = importJobHibernateDAO.findAll();
+            assertEquals(importJobList.size(), 1);
 
-        final List<ImportJobExhead> jobExheads = importJobExheadDAO.findAll();
-        assertEquals(jobExheads.size(), ShouldMatch.COL_COUNT + 2); //1 for f1, 1 for f111
-        assertEquals(importJobExheadDAO.getNumEntriesPerImportJob(imid), ShouldMatch.COL_COUNT + 2);
+            final List<ImportJobExhead> jobExheads = importJobExheadDAO.findAll();
+            assertEquals(jobExheads.size(), ShouldMatch.COL_COUNT + 2); //1 for f1, 1 for f111
+            assertEquals(importJobExheadDAO.getNumEntriesPerImportJob(imid), ShouldMatch.COL_COUNT + 2);
 
-        //final List<ImportJobContents> importJobContents = importJobContentsDAO.findAll();
+            //final List<ImportJobContents> importJobContents = importJobContentsDAO.findAll();
 
-        /* Test Export */
-        final ImportEntityContext ieContext = exportEngine.read();
+            /* Test Export */
+            final ImportEntityContext ieContext = exportEngine.read();
 
-        final List<ImportEntity.Row> exportRowsList = ieContext.getImportJobList();
-        assertEquals(exportRowsList.size(), ShouldMatch.ROW_COUNT);
+            final List<ImportEntity.Row> exportRowsList = ieContext.getImportJobList();
+            assertEquals(exportRowsList.size(), ShouldMatch.ROW_COUNT);
 
-        //write this spreadsheet
-        exportEngine.write(exportRowsList, EXPORT_FILE);
+            //write this spreadsheet
+            exportEngine.write(exportRowsList, EXPORT_FILE);
 
-        //again, read back:
-        final List<ImportEntity.Row> rowsReadBack = importEngine.read(TestUtil.getExportSpreadsheeet(EXPORT_FILE_NAME));
-        assertEquals(rowsReadBack.size(), ShouldMatch.ROW_COUNT);
+            //again, read back:
+            final List<ImportEntity.Row> rowsReadBack = importEngine.read(TestUtil.getExportSpreadsheeet(EXPORT_FILE_NAME));
+            assertEquals(rowsReadBack.size(), ShouldMatch.ROW_COUNT);
 
-        //assert physical presence of F1 column
-        int sheetNum = 0;
-        List<String> colValues = columnValues(FunctionConstants.F1, EXPORT_FILE_NAME, sheetNum);
-        assertEquals(colValues.size(), ShouldMatch.ROW_COUNT - 1);
+            //assert physical presence of F1 column
+            int sheetNum = 0;
+            List<String> colValues = columnValues(FunctionConstants.F1, EXPORT_FILE_NAME, sheetNum);
+            assertEquals(colValues.size(), ShouldMatch.ROW_COUNT - 1);
 
-        //verify that F1 values are the same as oids created
+            //verify that F1 values are the same as oids created:
+            List<Object> list = objectDAO.findByProject(projectId);
 
-        List<Object> list = objectDAO.findByProject(projectId);
+            assert (list.size() == colValues.size());
 
-        logger.debug(list.toString());
+            for (Object o : list) {
+                assert (colValues.contains(String.valueOf(o.getOid())));
+            }
 
-        assert (list.size() == colValues.size());
+            assert (objectDAO.findByParent(1).size() == 3);
 
-        for (Object o : list) {
-            assert (colValues.contains(String.valueOf(o.getOid())));
+            //and so on.. could test for other object tables, but most important for F5 is to generate F1
+        } catch (Exception e) {
+            logger.error("Error", e);
+            fail("Error testing");
         }
-
-        assert (objectDAO.findByParent(1).size() == 3);
-
-        //and so on.. could test for other object tables, but most important for F5 is to generate F1
     }
 
     private List<String> columnValues(FunctionConstants f, String file, int sheetNum) throws Exception {
