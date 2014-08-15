@@ -322,10 +322,16 @@ public class ObjectMetadataView extends AbstractView {
         return objectDAO.childCount(oid);
     }
 
+    /**
+     * Returns false if prop not set or the acutal value.
+     * That's ok since it's called directly by JSF (javax.el)
+     * @param oid
+     * @return
+     */
     public boolean isParent(int oid) {
         try {
             Object o = objectDAO.findByOid(oid);
-            return o.isParent();
+            return o == null ? false : o.isParent();
         } catch (Exception e) {
             logger.error("Error finding parent attribute for oid={}", oid, e.getMessage());
             throw e;
