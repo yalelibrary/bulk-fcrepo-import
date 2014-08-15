@@ -46,7 +46,7 @@ public class F5ProcessorIT extends AbstractDBTest {
 
     private final Logger logger = getLogger(F5ProcessorIT.class);
 
-    private static final String IMPORT_FILE = "F5-test.xlsx";
+    private static final String IMPORT_FILE = "F5.xlsx";
 
     private static final String EXPORT_FILE_NAME = "test_export.xlsx";
 
