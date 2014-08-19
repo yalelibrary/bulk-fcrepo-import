@@ -29,8 +29,8 @@ public class AssignProjectView extends AbstractView implements Serializable {
     private final Logger logger = LoggerFactory.getLogger(AssignProjectView.class);
 
     private ProjectRoles projectRole;
-    private Project defaultProject = new Project();
-    private User defaultUser = new User();
+    private Project defaultProject = new Project(); //TODO rename
+    private User defaultUser = new User(); //TODO rename
 
     @Inject
     private UserProjectDAO userProjectDAO;
@@ -59,7 +59,7 @@ public class AssignProjectView extends AbstractView implements Serializable {
                 setProjectId(defaultProject.getProjectId()).
                 setUserId(defaultUser.getUserId()).
                 setRole(projectRole.name()).
-                setDate(new Date(System.currentTimeMillis())).
+                setDate(new Date()).
                 createUserProject();
         try {
             userProjectDAO.save(userProject);

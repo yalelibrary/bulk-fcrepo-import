@@ -93,7 +93,7 @@ public class ImportWriter {
      * @param importEntityValue helper data structure representing list<rows>
      */
     @SuppressWarnings("unchecked")
-    public void writeContents(final int importId, final ImportEntityValue importEntityValue) throws Exception{   //TODO Exception
+    public void writeContents(final int importId, final ImportEntityValue importEntityValue) throws Exception {   //TODO Exception
         try {
             //Write import source data
             importSourceProcessor.process(importId, oaiProvider, importEntityValue);

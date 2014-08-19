@@ -1,6 +1,8 @@
 package edu.yale.library.ladybird.engine.model;
 
 import edu.yale.library.ladybird.engine.imports.ImportEntityValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +12,8 @@ import java.util.List;
  * @param <T>
  */
 public class LocalIdentifier<T> {
+
+    private static Logger logger = LoggerFactory.getLogger(LocalIdentifier.class);
 
     private T id;
 
@@ -40,6 +44,10 @@ public class LocalIdentifier<T> {
         List<LocalIdentifier<String>> listLocalIds = new ArrayList<>();
 
         for (String s: list) {
+            if (s == null || s.isEmpty()) { //TODO regex
+                logger.debug("Ignoring={}", s);
+                continue;
+            }
             LocalIdentifier localIdentifier = new LocalIdentifier(s);
             listLocalIds.add(localIdentifier);
         }

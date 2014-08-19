@@ -84,6 +84,7 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.UserProjectFieldExpor
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserProjectFieldHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserProjectHibernateDAO;
 import edu.yale.library.ladybird.web.http.CollectionHttpService;
+import edu.yale.library.ladybird.web.http.CronScheduleHttpService;
 import edu.yale.library.ladybird.web.http.FieldDefinitionHttpService;
 import edu.yale.library.ladybird.web.http.ImportSourcerHttpService;
 import edu.yale.library.ladybird.web.http.ProjectHttpService;
@@ -145,6 +146,7 @@ public class DaoHibernateModule extends AbstractModule {
         bind(ProjectHttpService.class);
         bind(CollectionHttpService.class);
         bind(FieldDefinitionHttpService.class);
+        bind(CronScheduleHttpService.class);
 
         bind(ImportScheduler.class);
         bind(ExportScheduler.class);

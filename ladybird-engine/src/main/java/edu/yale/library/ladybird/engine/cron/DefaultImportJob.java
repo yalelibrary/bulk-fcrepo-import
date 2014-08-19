@@ -100,9 +100,8 @@ public class DefaultImportJob implements Job, ImportJob {
             logger.error("Error executing job", e.getMessage());
             throw new ImportEngineException(e);
         } catch (Exception e) {
-            logger.error("Generic exception in import job.", e);
+            logger.error("Generic exception in import job number={}.", importRequestedEvent.getMonitor().getId(), e);
             throw new ImportEngineException(e);
-            //throw new JobExecutionException(new ImportEngineException(e));
         }
     }
 

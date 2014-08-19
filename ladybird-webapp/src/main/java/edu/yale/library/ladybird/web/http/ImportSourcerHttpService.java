@@ -7,11 +7,11 @@ import edu.yale.library.ladybird.persistence.dao.ImportSourceDAO;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.util.Date;
 import java.util.List;
@@ -38,8 +38,8 @@ public class ImportSourcerHttpService {
 
     @POST
     @Produces(APPLICATION_JSON)
-    public Response save(@QueryParam("url") String url,
-                         @QueryParam("prefix") String prefix) {
+    public Response save(@FormParam("url") String url,
+                         @FormParam("prefix") String prefix) {
         final ImportSource item = new ImportSourceBuilder().setUrl(url)
                 .setXmlType(0).setGetPrefix(prefix).createImportSource();
 

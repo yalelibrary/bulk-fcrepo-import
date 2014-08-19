@@ -1,16 +1,18 @@
 package edu.yale.library.ladybird.web.http;
 
 import edu.yale.library.ladybird.entity.Project;
+import edu.yale.library.ladybird.entity.ProjectBuilder;
 import edu.yale.library.ladybird.persistence.dao.ProjectDAO;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import java.util.Date;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -34,13 +36,10 @@ public class ProjectHttpService {
 
     @POST
     @Produces(APPLICATION_JSON)
-    public Response save(@QueryParam("label") String label,
-        @QueryParam("url") String url,
-        @QueryParam("address") String address) {
-        final Project item = new Project();
-        item.setLabel(label);
-        item.setUrl(url);
-        item.setAdd1(address);
+    public Response save(@FormParam("label") String label,
+        @FormParam("url") String url,
+        @FormParam("address") String address) {
+        final Project item = new ProjectBuilder().setLabel(label).setUrl(url).setAdd1(address).setUserId(0).setDate(new Date()).createProject(); //TODO userId = 0 means system
 
         try {
             dao.save(item);

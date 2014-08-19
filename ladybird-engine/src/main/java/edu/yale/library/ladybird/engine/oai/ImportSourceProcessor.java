@@ -15,7 +15,7 @@ import java.util.List;
 public class ImportSourceProcessor {
     private Logger logger = LoggerFactory.getLogger(ImportSourceProcessor.class);
 
-    public void process(final int importId, final OaiProvider oaiProvider, final ImportEntityValue importEntityValue) throws IOException, MarcReadingException{
+    public void process(final int importId, final OaiProvider oaiProvider, final ImportEntityValue importEntityValue) throws IOException, MarcReadingException {
         try {
             final List<LocalIdentifier<String>> bibIdList = LocalIdentifier.getLocalIdList(importEntityValue);
             final ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();

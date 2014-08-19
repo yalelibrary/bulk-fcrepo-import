@@ -5,6 +5,7 @@ import edu.yale.library.ladybird.persistence.dao.FieldDefinitionDAO;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -34,7 +35,7 @@ public class FieldDefinitionHttpService {
 
     @POST
     @Produces(APPLICATION_JSON)
-    public Response save(@QueryParam("fdid") int fdid,
+    public Response save(@FormParam("fdid") int fdid,
         @QueryParam("handle") String handle) {
         final FieldDefinition item = new FieldDefinition(fdid, handle);
         try {
