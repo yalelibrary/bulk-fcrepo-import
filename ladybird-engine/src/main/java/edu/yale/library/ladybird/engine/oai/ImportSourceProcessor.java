@@ -6,6 +6,7 @@ import edu.yale.library.ladybird.engine.model.LocalIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ import java.util.List;
 public class ImportSourceProcessor {
     private Logger logger = LoggerFactory.getLogger(ImportSourceProcessor.class);
 
-    public void process(final int importId, final OaiProvider oaiProvider, final ImportEntityValue importEntityValue) {
+    public void process(final int importId, final OaiProvider oaiProvider, final ImportEntityValue importEntityValue) throws IOException, MarcReadingException{
         try {
             final List<LocalIdentifier<String>> bibIdList = LocalIdentifier.getLocalIdList(importEntityValue);
             final ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
@@ -23,7 +24,8 @@ public class ImportSourceProcessor {
             ImportSourceDataWriter importSourceDataWriter = new ImportSourceDataWriter();
             importSourceDataWriter.write(importSourceLocalIdList, importId);
         } catch (Exception e) {
-            logger.error("Error import source processing", e); //ignore
+            logger.error("Error import source processing.");
+            throw e;
         }
     }
 }

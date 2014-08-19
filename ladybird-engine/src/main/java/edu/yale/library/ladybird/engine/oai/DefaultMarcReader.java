@@ -18,7 +18,7 @@ public class DefaultMarcReader implements MarcReader {
         try {
             return readContents(arg);
         } catch (JAXBException e) {
-            logger.error("Exception reading marc record", e);
+            logger.error("Exception reading marc record");
             throw new MarcReadingException(e);
         }
     }

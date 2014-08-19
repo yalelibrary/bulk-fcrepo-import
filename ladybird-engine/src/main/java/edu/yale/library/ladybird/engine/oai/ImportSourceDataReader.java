@@ -42,7 +42,7 @@ public class ImportSourceDataReader {
      */
     public List<LocalIdMarcImportSource> readMarc(final OaiProvider oaiProvider,
                                                   final List<LocalIdentifier<String>> localIdentifierList,
-                                                  final int importId) {
+                                                  final int importId) throws IOException, MarcReadingException {
         final List<LocalIdMarcImportSource> list = new ArrayList<>();
 
         for (final LocalIdentifier<String> localId : localIdentifierList) {
@@ -51,14 +51,16 @@ public class ImportSourceDataReader {
                 logger.trace("Reading marc feed for local identifier={}", localId.getId());
 
                 final Record record = oaiClient.readMarc(localId.getId()); //Read OAI feed
+
                 final Multimap<Marc21Field, ImportSourceData> marc21Values = buildMultiMap(localId, record, importId);
 
                 LocalIdMarcImportSource localIdMarcImportSource = new LocalIdMarcImportSource();
                 localIdMarcImportSource.setBibId(localId);
                 localIdMarcImportSource.setValueMap(marc21Values);
                 list.add(localIdMarcImportSource);
-            } catch (IOException|MarcReadingException e) {
-                logger.error("Error reading source", e); //ignore
+            } catch (IOException|MarcReadingException|IllegalArgumentException e) {
+                logger.error("Error reading import source");
+                throw e;
             }
         }
         return list;

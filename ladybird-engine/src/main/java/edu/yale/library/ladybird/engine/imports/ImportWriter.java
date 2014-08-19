@@ -52,7 +52,7 @@ public class ImportWriter {
             writeContents(importId, importEntityValue);
             return importId;
         } catch (Exception e) {
-            logger.error("Error writing.", e);
+            logger.error("Error writing.");
             throw e;
         }
     }
@@ -93,7 +93,7 @@ public class ImportWriter {
      * @param importEntityValue helper data structure representing list<rows>
      */
     @SuppressWarnings("unchecked")
-    public void writeContents(final int importId, final ImportEntityValue importEntityValue) {
+    public void writeContents(final int importId, final ImportEntityValue importEntityValue) throws Exception{   //TODO Exception
         try {
             //Write import source data
             importSourceProcessor.process(importId, oaiProvider, importEntityValue);
@@ -166,7 +166,8 @@ public class ImportWriter {
                 }
             }
         } catch (Exception e) {
-            logger.error("Error writing contents", e); //ignore
+            logger.error("Error writing contents");
+            throw e;
         }
     }
 

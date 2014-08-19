@@ -57,7 +57,12 @@ public class OaiHttpClient {
      * @param bibId
      */
     public Record readMarc(final String bibId) throws IOException, MarcReadingException {
-        logger.debug("Reading marc for doc={}", bibId);
+        logger.trace("Reading marc for doc={}", bibId);
+
+        if (bibId == null || bibId.isEmpty()) { //TODO regex check
+            throw new IllegalArgumentException("Invalid barcode or bibId");
+        }
+
         try {
             final Node node = extractMarcXml(harvest(OaiUrlHelper.urlForMarcGetRecord(oaiProvider, bibId)));
             return marcReader.readMarc(node);
@@ -67,6 +72,9 @@ public class OaiHttpClient {
         } catch (MarcReadingException m) {
             logger.error("Error reading marc document.", m);
             throw m;
+        } catch (IllegalArgumentException e) {
+            logger.error("Error reading document with specified identifier={}", bibId);
+            throw e;
         }
     }
 

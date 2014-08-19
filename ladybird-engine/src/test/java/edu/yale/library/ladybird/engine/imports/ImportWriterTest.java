@@ -44,7 +44,7 @@ public class ImportWriterTest {
     }
 
     @Test
-    public void shouldContainBibIdMarcTags() {
+    public void shouldContainBibIdMarcTags() throws Exception {
         final ImportWriter importWriter = new ImportWriter();
         final Util util = new Util();
         final OaiProvider provider = new OaiProvider("id",
