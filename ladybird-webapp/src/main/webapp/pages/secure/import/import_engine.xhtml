@@ -80,6 +80,29 @@
                                     update="progressOutputText"/>
                         </p:column>
 
+                        <p:column headerText="Status">
+                            <!-- TODO re-design -->
+                            <h:outputText id="status1" styleClass="alert alert-danger"
+                                          value="#{importProgressView.status(monitorItem.id)}" rendered="#{importProgressView.status(monitorItem.id) eq 'EXCEPTION'}"/>
+
+                            <h:link id="exceptionLink"
+                                    value="Link"
+                                    outcome="exception"
+                                    rendered="#{importProgressView.status(monitorItem.id) eq 'EXCEPTION'}">
+                                <f:param name="id" value="#{monitorItem.id}"/>
+                            </h:link>
+
+                            <h:outputText id="status2" styleClass="alert alert-info"
+                                          value="IN PROGRESS" rendered="#{importProgressView.status(monitorItem.id) ne 'EXCEPTION'}"/>
+
+                            <h:outputText id="status3" styleClass="alert alert-success"
+                                          value="OK" rendered="#{importProgressView.count(monitorItem.id) eq importProgressView.STEPS_TO_COMPLETE}"/>
+
+                            <p:poll id="statusPoll" interval="5"
+                                    listener="#{importProgressView.status(monitorItem.id)}"
+                                    update="@form"/>
+                        </p:column>
+
                     </p:dataTable>
                 </div>
             </div>
