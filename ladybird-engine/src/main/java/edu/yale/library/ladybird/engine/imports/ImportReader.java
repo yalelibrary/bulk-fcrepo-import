@@ -39,7 +39,6 @@ public final class ImportReader {
      *
      * @return data structure containing all the data from the spreadsheet
      * @throws ImportReaderValidationException
-     *
      * @throws IOException
      */
     public List<ImportEntity.Row> read() throws ImportReaderValidationException, IOException {
@@ -110,9 +109,34 @@ public final class ImportReader {
 
                     final ImportEntity.Row contentsSheetRow = importEntity.new Row();
                     final Row row = it.next();
+                    int lastColumn = Math.max(row.getLastCellNum(), exHeadRowCellCount);
+
+                    logger.trace("Last column={}", lastColumn);
+
+                    for (int cn = 0; cn < lastColumn && cn < exHeadRowCellCount; cn++) {
+                        Cell cell = row.getCell(cn, Row.RETURN_BLANK_AS_NULL);
+
+                        //handle null fields, otherwise values will get mushed
+                        if (cell == null) {
+                            logger.trace("Null field.");
+
+                            contentsSheetRow.getColumns().add(ImportEntityValue.getBlankColumn(valueMap.get(cn)));
+                            cellCount++;
+
+                            logger.trace("Added row");
+                        } else {
+                            final ImportEntity.Column<String> column = importEntity.new Column<>(valueMap.get(cellCount),
+                                    String.valueOf(SpreadsheetUtil.getCellValue(cell)));
+                            logger.trace("Column={}", column.toString());
+                            contentsSheetRow.getColumns().add(column);
+                            cellCount++;
+                        }
+                    }
+                    /* Remove:
                     final Iterator<Cell> cellIterator = row.cellIterator();
                     while (cellIterator.hasNext() && cellCount < exHeadRowCellCount) {
                         final Cell cell = cellIterator.next();
+                        logger.debug("Got cell={}", cell.toString());
                         final ImportEntity.Column<String> column = importEntity.new Column<>(valueMap.get(cellCount),
                                 String.valueOf(SpreadsheetUtil.getCellValue(cell)));
                         logger.trace("Column={}", column.toString());
@@ -120,12 +144,14 @@ public final class ImportReader {
                         cellCount++;
                     }
                     logger.trace("Added content row={}", contentsSheetRow.toString());
+                    */
 
                     ImportEntity.Row evalRow = new ImportEntity().new Row(Collections.unmodifiableList(contentsSheetRow.getColumns()));
 
                     if (!allFieldsNull(evalRow)) {
                         sheetRows.add(contentsSheetRow);
                     }
+
                     cellCount = 0;
                 }
                 logger.trace("Content row index={}", debugRowCount);

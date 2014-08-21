@@ -2,6 +2,7 @@ package edu.yale.library.ladybird.engine.imports;
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
 import edu.yale.library.ladybird.engine.DefaultFieldDataValidator;
+import edu.yale.library.ladybird.engine.ExportBus;
 import edu.yale.library.ladybird.engine.TestModule;
 import edu.yale.library.ladybird.engine.Util;
 import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
@@ -49,6 +50,9 @@ public class MarcBarcodeImportEngineIT extends AbstractDBTest {
             //start the engine
             KernelBootstrap kernelBootstrap = new KernelBootstrap();
             kernelBootstrap.setAbstractModule(new TestModule());
+
+            ExportBus exportBus = new ExportBus();
+            exportBus.setAbstractModule(new TestModule());
 
             initFdids(); //TODO tmp. Inst app. rules for test (since db state is cleaned)
 

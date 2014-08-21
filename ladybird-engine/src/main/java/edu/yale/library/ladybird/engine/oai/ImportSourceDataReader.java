@@ -47,24 +47,29 @@ public class ImportSourceDataReader {
         final List<LocalIdMarcImportSource> list = new ArrayList<>();
         final OaiHttpClient oaiClient = new OaiHttpClient(oaiProvider);
 
+        //TODO test for null and integer
         for (final LocalIdentifier<String> localId : localIdentifierList) {
+            LocalIdMarcImportSource localIdMarcImportSource = new LocalIdMarcImportSource();
+            localIdMarcImportSource.setBibId(localId);
+
             try {
                 logger.debug("Reading marc feed for local identifier={}", localId.getId());
 
                 final Record record = oaiClient.readMarc(localId.getId()); //Read OAI feed
 
                 final Multimap<Marc21Field, ImportSourceData> marc21Values = buildMultiMap(localId, record, importId);
-
-                LocalIdMarcImportSource localIdMarcImportSource = new LocalIdMarcImportSource();
-                localIdMarcImportSource.setBibId(localId);
                 localIdMarcImportSource.setValueMap(marc21Values);
+
                 list.add(localIdMarcImportSource);
             } catch (IOException|MarcReadingException|IllegalArgumentException e) {
-                logger.error("Error reading import source.");
+                logger.error("Error reading marc.");
                 ContextedRuntimeException cre = new ContextedRuntimeException("Error reading or processing MARC record. " + e.getMessage(), e)
+                        .addContextValue("BibId", localId.getId())
                         .addContextValue("Row", localId.getRow())
                         .addContextValue("Column", localId.getColumn());
-                throw cre;
+                localIdMarcImportSource.setException(cre); //no value, just exception. Don't throw, add it to id for later retrieval
+                localIdMarcImportSource.setValueMap(HashMultimap.create()); //empty map
+                list.add(localIdMarcImportSource);
             }
         }
         return list;

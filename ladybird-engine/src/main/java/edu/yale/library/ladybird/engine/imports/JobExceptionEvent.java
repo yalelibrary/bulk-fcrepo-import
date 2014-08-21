@@ -1,7 +1,9 @@
 package edu.yale.library.ladybird.engine.imports;
 
-import edu.yale.library.ladybird.entity.Monitor;
 import edu.yale.library.ladybird.kernel.events.imports.ImportEvent;
+import org.apache.commons.lang3.exception.ContextedRuntimeException;
+
+import java.util.List;
 
 /**
  *  In memory representation of an import job execution exception
@@ -9,45 +11,35 @@ import edu.yale.library.ladybird.kernel.events.imports.ImportEvent;
  */
 public class JobExceptionEvent extends ImportEvent {
 
-    private SpreadsheetFile spreadsheetFile;
-    private Monitor monitor;
-    private Exception exception;
+    private Integer importId;
+    private List<ContextedRuntimeException> exception;
 
-    public SpreadsheetFile getSpreadsheetFile() {
-        return spreadsheetFile;
-    }
-
-    public void setSpreadsheetFile(SpreadsheetFile spreadsheetFile) {
-        this.spreadsheetFile = spreadsheetFile;
-    }
-
-    public Monitor getMonitor() {
-        return monitor;
-    }
-
-    public void setMonitor(Monitor monitor) {
-        this.monitor = monitor;
-    }
-
-    public Exception getException() {
-        return exception;
-    }
-
-    public void setException(Exception exception) {
+    public JobExceptionEvent(Integer importId, List<ContextedRuntimeException> exception) {
+        this.importId = importId;
         this.exception = exception;
     }
 
-    public JobExceptionEvent(SpreadsheetFile spreadsheetFile, Monitor monitor, Exception exception) {
-        this.spreadsheetFile = spreadsheetFile;
-        this.monitor = monitor;
+    public Integer getImportId() {
+        return importId;
+    }
+
+    public void setImportId(Integer importId) {
+        this.importId = importId;
+    }
+
+    public List<ContextedRuntimeException> getException() {
+        return exception;
+    }
+
+    public void setException(List<ContextedRuntimeException> exception) {
         this.exception = exception;
     }
 
     @Override
     public String toString() {
         return "JobExceptionEvent{"
-                +"spreadsheetFile=" + spreadsheetFile
-                +", monitor=" + monitor
-                +'}';
+                + "importId=" + importId
+                + ", exception=" + exception
+                + '}';
     }
 }

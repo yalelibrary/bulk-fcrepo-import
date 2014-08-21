@@ -33,6 +33,7 @@ import java.util.Map;
  * Reads from import job tables and data structures.
  */
 public class ExportReader {
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     final ImportJobContentsDAO importJobContentsDAO = new ImportJobContentsHibernateDAO(); //TODO
@@ -44,7 +45,6 @@ public class ExportReader {
      * @return ImportEntityContext
      */
     public ImportEntityContext read() {
-
         final ExportRequestEvent exportRequestEvent = ExportEngineQueue.getJob(); //from Queue
         final int importId = exportRequestEvent.getImportId();
 
@@ -53,7 +53,7 @@ public class ExportReader {
         int numRowsToWrite = getExpectedNumRowsToWrite(importId);
 
         if (numRowsToWrite == 0) {
-            logger.debug("No rows to write.");
+            logger.debug("No rows to write!");
             ImportEntityContext empty = ImportEntityContext.newInstance();
             empty.setImportId(importId);
             return empty;
@@ -100,41 +100,70 @@ public class ExportReader {
         }
 
         for (int i = 0; i < numRowsToWrite; i++) {
+            logger.trace("Eval={}", i);
+
             final Row row = regularRows.get(i);
             final Row rowToWrite = new ImportEntity().new Row();
             final List<Column> cols = row.getColumns();
 
             // for each field constant (NOT for each column):
-
             for (final FieldConstant fieldConst : globalFConstantsList) {
-
-                logger.trace("Evaluating FieldConstant={} num={} ", fieldConst.getTitle(), fieldConst.getName());
-
-                final String regularValue = ImportEntityValue.findColValueFromRow(fieldConst, cols);
-                String oaiVal = "";
-
-                //merge only if bibId col exists, and if not a function constant (like f104 itself)
-                if (localIdentifierColumnNum != -1 && !FunctionConstants.isFunction(fieldConst.getName()) && !fieldConst.getTitle().equalsIgnoreCase("Handle")) { //TODO chk via fdid marc mapping
-                    final Column<String> bibIdColumn = cols.get(localIdentifierColumnNum);
-                    LocalIdMarcValue localIdMarcValue = LocalIdMarcValue.findMatch(bibIdValueList, bibIdColumn.getValue());
-                    oaiVal = getMultimapMarc21Field(new FdidMarcMappingUtil().toMarc21Field(fieldConst), localIdMarcValue.getValueMap());
-                }
-
-                final String mergedValue = regularValue + oaiVal;
-                logger.trace("Merged value={} from regular value={}", mergedValue, regularValue);
-
+                final String mergedValue = getColumnValue(fieldConst, localIdentifierColumnNum, cols, bibIdValueList);
                 final ImportEntity importEntity = new ImportEntity();
                 rowToWrite.getColumns().add(importEntity.new Column<>(fieldConst, mergedValue));
             }
             resultRowList.add(rowToWrite);
+            logger.trace("Result row list size={}", resultRowList.size());
         }
 
-        final ImportEntityContext importEntityContext = new ImportEntityContext();
-        importEntityContext.setImportJobList(resultRowList);
-        importEntityContext.setMonitor(exportRequestEvent.getMonitor());
-        importEntityContext.setImportId(importId);
-        return importEntityContext;
+        final ImportEntityContext iContext = new ImportEntityContext();
+        iContext.setImportJobList(resultRowList);
+        iContext.setMonitor(exportRequestEvent.getMonitor());
+        iContext.setImportId(importId);
+        return iContext;
     }
+
+    private String getColumnValue(FieldConstant fieldConst, int localIdentifierColumnNum, List<Column> cols, List<LocalIdMarcValue> bibIdValueList) {
+        logger.trace("Evaluating FieldConstant={} num={} ", fieldConst.getTitle(), fieldConst.getName());
+
+        String regularValue = ImportEntityValue.findColValueFromRow(fieldConst, cols);
+
+        logger.trace("Regular Value={}", regularValue);
+
+        if (regularValue == null || regularValue.isEmpty()) {
+            logger.trace("Empty regular value");
+            regularValue = "";
+        }
+
+        String oaiVal = "";
+
+        //merge only if bibId col exists, and if not a function constant (like f104 itself)
+        if (localIdentifierColumnNum != -1 && !FunctionConstants.isFunction(fieldConst.getName()) && !fieldConst.getTitle().equalsIgnoreCase("Handle")) { //TODO chk via fdid marc mapping
+            final Column<String> bibIdColumn = cols.get(localIdentifierColumnNum);
+
+            logger.trace("bibIdcolum={}", bibIdColumn);
+
+            LocalIdMarcValue localIdMarcValue = LocalIdMarcValue.findMatch(bibIdValueList, bibIdColumn.getValue());
+
+            logger.trace("localIdMarcValue={}", localIdMarcValue);
+
+            if (localIdMarcValue == null) {
+                logger.trace("OAI value cannot be determined. DS null");
+                return oaiVal;
+            }
+
+            oaiVal = getMultimapMarc21Field(new FdidMarcMappingUtil().toMarc21Field(fieldConst), localIdMarcValue.getValueMap());
+            logger.trace("Oai value={}", oaiVal);
+        }
+
+        final String mergedValue = regularValue + oaiVal;
+
+        logger.trace("Merged value={}", mergedValue);
+
+        return mergedValue;
+    }
+
+
 
     /**
      * Returns rows of import job tables
@@ -142,17 +171,14 @@ public class ExportReader {
      * @return list of ImportEntity.Row or empty list
      */
     public List<Row> readImportRows(final int importId) {
-
         final List<Row> resultList = new ArrayList<>();
         final ImportJobExheadDAO importJobExheadDAO = new ImportJobExheadHibernateDAO();
         List<ImportJobExhead> importJobExheads;
 
         try {
             importJobExheads = importJobExheadDAO.findByImportId(importId);
-            logger.debug("ImportJobExheads size={}", importJobExheads.size());
-            //logger.debug("ImportJobExheads content={}", importJobExheads.toString());
+            logger.trace("ImportJobExheads size={}", importJobExheads.size());
 
-            //final ImportJobContentsDAO importJobContentsDAO = new ImportJobContentsHibernateDAO();
             int numRowsPerImportJob = importJobContentsDAO.getNumRowsPerImportJob(importId);
             numRowsPerImportJob = numRowsPerImportJob + 1;
 
@@ -160,7 +186,9 @@ public class ExportReader {
 
             for (int i = 0; i < numRowsPerImportJob; i++) {
                 final List<ImportJobContents> rowJobContentsList = importJobContentsDAO.findByRow(importId, i); //note
-                //logger.debug("Job contents for row={}" + rowJobContentsList.toString());
+
+                logger.trace("Job contents for row={}" + rowJobContentsList.toString());
+
                 final Row row = new ImportEntity().new Row();
 
                 //Warning: Gets all columns (including F104/F105 COLUMN)
@@ -174,11 +202,13 @@ public class ExportReader {
                             logger.trace("Field Constant null for headerValue={}", headerValue);
                         }
                         final ImportJobContents jobContents = rowJobContentsList.get(j);
+
                         logger.trace("JobContents={}", jobContents.toString());
+
                         row.getColumns().add(new ImportEntity().new Column<>(fieldConstant, jobContents.getValue()));
                         //logger.debug("Added value={}", jobContents.getValueMap());
                     } catch (Exception e) {
-                        //logger.error("Error retrieving value", e.getMessage());
+                        logger.error("Error retrieving value", e.getMessage());
                         continue;
                     }
                 }
@@ -186,9 +216,9 @@ public class ExportReader {
             }
             return resultList;
         } catch (Exception e) {
-            logger.error("Error={}", e);
-
+            logger.error("Error", e);
         }
+
         return Collections.emptyList();
     }
 
@@ -199,6 +229,11 @@ public class ExportReader {
      * @return string value
      */
     public String getMultimapMarc21Field(Marc21Field marc21Field, Multimap<Marc21Field, Map<String, String>> multimap) {
+        if (multimap.isEmpty()) {
+            logger.debug("Empty multimap. Returning blank value.");
+            return "";
+        }
+
         Collection<Map<String, String>> attrCollection = multimap.get(marc21Field);
         Iterator<Map<String, String>> it = attrCollection.iterator();
         String val = "";

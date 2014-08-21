@@ -1,8 +1,7 @@
 package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.engine.ProgressEventChangeRecorder;
-import org.apache.commons.lang3.exception.ExceptionContext;
-import org.omnifaces.util.Faces;
+import org.apache.commons.lang3.exception.ContextedRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,10 +11,8 @@ import javax.faces.bean.SessionScoped;
 import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-//TODO Re-design
 @ManagedBean
 @SessionScoped
 public class ImportProgressView extends AbstractView implements Serializable {
@@ -26,7 +23,9 @@ public class ImportProgressView extends AbstractView implements Serializable {
     ProgressEventChangeRecorder progressEventChangeRecorder;
 
     private int STEPS_TO_COMPLETE;
+
     private int count = 0;
+
     private String status = "";
 
     @PostConstruct
@@ -52,60 +51,17 @@ public class ImportProgressView extends AbstractView implements Serializable {
         return STEPS_TO_COMPLETE;
     }
 
-    public String rawExceptionMessage() {
-        if (isParamNull("id") || isParamEmpty("id")) {
-            logger.debug("No param");
-        }
-
-        int id = Integer.parseInt(Faces.getRequestParameter("id"));
-        Exception e = progressEventChangeRecorder.getRawException(id);
-        String msg = e.getMessage();
-
-        if (msg.isEmpty()) {
-            return "N/A";
-        }
-
-        try { //TODO remove
-            //strip context info since it's reported in a different method
-            if (e instanceof ExceptionContext) {
-                String[] s = msg.split("Exception Context");
-                return s[0];
-            } else {
-                return msg;
-            }
-        } catch (Exception e1) {
-            return msg;
-        }
-
+    public int numberExceptions(int importId) {
+        return progressEventChangeRecorder.getRawException(importId).size();
     }
 
-    public List<String> getExceptionContext() {
-        if (isParamNull("id") || isParamEmpty("id")) {
-            return Collections.emptyList();
-        }
-
-        final List<String> list = new ArrayList<>();
-
-        final int id = Integer.parseInt(Faces.getRequestParameter("id"));
-        final Exception e = progressEventChangeRecorder.getRawException(id);
-
-        if (e instanceof ExceptionContext) { //TODO abstraction, format printing
-            list.add(String.format("%nRow : " + ((ExceptionContext) e).getFirstContextValue("Row"))
-                    + ", Column : " + ((ExceptionContext) e).getFirstContextValue("Column"));
-        }
-
-        return list;
+    public String getExceptionContext(ContextedRuntimeException e) {
+        return String.format("%nRow : " + (e).getFirstContextValue("Row"))
+                    + ", Column : " + (e).getFirstContextValue("Column");
     }
 
-
-    public List<String> rawexception() {
-        if (isParamNull("id") || isParamEmpty("id")) {
-            return Collections.emptyList();
-        }
-
+    public List<String> getExceptionStackTrace(ContextedRuntimeException e) {
         final List<String> list = new ArrayList<>();
-        final int id = Integer.parseInt(Faces.getRequestParameter("id"));
-        Exception e = progressEventChangeRecorder.getRawException(id);
         final StackTraceElement[] ste = e.getStackTrace();
 
         for (final StackTraceElement s : ste) {
@@ -115,23 +71,53 @@ public class ImportProgressView extends AbstractView implements Serializable {
         return list;
     }
 
-    //gets first cause
-    public List<String> getCause() {
+    public List<ContextTrace> getContextTrace(final int importId) {
+        logger.trace("Getting stack trace info for ={} from Event bean", importId);
 
-        if (isParamNull("id") || isParamEmpty("id")) {
-            return Collections.emptyList();
-        }
+        final List<ContextTrace> list = new ArrayList<>();
+        List<ContextedRuntimeException> e = progressEventChangeRecorder.getRawException(importId);
 
-        final List<String> list = new ArrayList<>();
-        final int id = Integer.parseInt(Faces.getRequestParameter("id"));
-        Exception e = progressEventChangeRecorder.getRawException(id);
-        Throwable throwable = e.getCause();
-        final StackTraceElement[] ste = throwable.getStackTrace();
+        for (final ContextedRuntimeException ie: e) {
+            ContextTrace contextTrace = new ContextTrace();
+            contextTrace.setContext(getExceptionContext(ie));
+            contextTrace.setTrace(getExceptionStackTrace(ie));
+            contextTrace.setMessage(ie.getMessage());
 
-        for (final StackTraceElement s : ste) {
-            list.add(String.format("%n at " + s.getClassName() + "." + s.getMethodName() + ":" + s.getLineNumber()));
+            list.add(contextTrace);
         }
 
         return list;
     }
+
+    public class ContextTrace {
+
+        private String context;
+        private String message;
+        private List<String> trace;
+
+        public String getContext() {
+            return context;
+        }
+
+        public void setContext(String context) {
+            this.context = context;
+        }
+
+        public List<String> getTrace() {
+            return trace;
+        }
+
+        public void setTrace(List<String> trace) {
+            this.trace = trace;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+    }
+
 }

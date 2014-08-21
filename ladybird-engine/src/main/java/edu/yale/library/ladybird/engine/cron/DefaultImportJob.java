@@ -11,7 +11,6 @@ import edu.yale.library.ladybird.engine.imports.ImportEngineException;
 import edu.yale.library.ladybird.engine.imports.ImportEntity;
 import edu.yale.library.ladybird.engine.imports.ImportReaderValidationException;
 import edu.yale.library.ladybird.engine.imports.ImportRequestEvent;
-import edu.yale.library.ladybird.engine.imports.JobExceptionEvent;
 import edu.yale.library.ladybird.engine.imports.MediaFunctionProcessor;
 import edu.yale.library.ladybird.engine.imports.ReadMode;
 import edu.yale.library.ladybird.engine.imports.SpreadsheetFile;
@@ -23,7 +22,6 @@ import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
 import edu.yale.library.ladybird.kernel.events.Event;
 import edu.yale.library.ladybird.kernel.events.NotificationEventQueue;
-import edu.yale.library.ladybird.kernel.events.imports.ImportEvent;
 import edu.yale.library.ladybird.persistence.dao.ImportSourceDAO;
 import edu.yale.library.ladybird.persistence.dao.SettingsDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceHibernateDAO;
@@ -103,13 +101,9 @@ public class DefaultImportJob implements Job, ImportJob {
             throw new ImportEngineException(e);
         } catch (final ImportEngineException cre) {
             logger.error("Exception in import job number={}.", importRequestedEvent.getMonitor().getId(), cre);
-            final ImportEvent failedEvent = new JobExceptionEvent(spreadsheetFile, importRequestedEvent.getMonitor(), cre);
-            ExportBus.postEvent(failedEvent);
             throw cre;
         } catch (Exception e) {
             logger.error("Exception in import job number={}.", importRequestedEvent.getMonitor().getId(), e);
-            final ImportEvent failedEvent = new JobExceptionEvent(spreadsheetFile, importRequestedEvent.getMonitor(), e);
-            ExportBus.postEvent(failedEvent);
             throw new ImportEngineException(e);
         }
     }

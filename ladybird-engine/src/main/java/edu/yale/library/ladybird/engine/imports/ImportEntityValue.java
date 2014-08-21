@@ -39,6 +39,12 @@ public class ImportEntityValue {
         this.rowList = rowList;
     }
 
+    public static Column<String> getBlankColumn(FieldConstant f) {
+        ImportEntity.Column<String> column = new ImportEntity().new Column<>(f, "");
+        return column;
+    }
+
+
     /**
      * Get all specific column values.
      * @param columnNum column number
@@ -265,6 +271,10 @@ public class ImportEntityValue {
 
         for (ImportEntity.Column c : bibIdColumn) {
             values.add(c.getValue().toString());
+        }
+
+        if (functionConstants == FunctionConstants.F104) {
+            logger.debug("Column values for F104={}", values.toString());
         }
 
         return values;

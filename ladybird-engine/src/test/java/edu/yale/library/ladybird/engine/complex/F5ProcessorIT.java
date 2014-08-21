@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.engine.complex;
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
+import edu.yale.library.ladybird.engine.ExportBus;
 import edu.yale.library.ladybird.engine.TestModule;
 import edu.yale.library.ladybird.engine.TestUtil;
 import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
@@ -74,6 +75,9 @@ public class F5ProcessorIT extends AbstractDBTest {
         kernelBoot.setAbstractModule(new TestModule());
         initFdids(); //TODO tmp. Inst app. rules for test (since db state is cleaned)
         final int userId = 0, projectId = 1;
+
+        ExportBus exportBus = new ExportBus();
+        exportBus.setAbstractModule(new TestModule());
 
         try {
             final ImportEngine importEngine = new DefaultImportEngine(userId, projectId);

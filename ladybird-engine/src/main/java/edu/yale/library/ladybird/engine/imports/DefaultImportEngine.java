@@ -32,6 +32,7 @@ public class DefaultImportEngine extends AbstractImportEngine {
         importWriter.setImportSourceProcessor(importSourceProcessor); //TODO
 
         ImportEntityValue importEntityValue = new ImportEntityValue(list);
+
         try {
             return importWriter.write(importEntityValue,
                     new ImportJobRequestBuilder().userId(USER_ID).file("").dir("").projectId(PROJECT_ID).build());

@@ -79,14 +79,18 @@ public class LocalIdentifier<T> {
         }
 
         List<LocalIdentifier<String>> listLocalIds = new ArrayList<>();
+        int rowNum = 0;
 
         for (final String s: list) {
+            rowNum++;
+
             if (s == null || s.isEmpty()) { //TODO regex
-                logger.debug("Ignoring={}", s);
+                logger.trace("Ignoring={}", s);
                 continue;
             }
+
             LocalIdentifier localIdentifier = new LocalIdentifier(s);
-            localIdentifier.setRow(list.indexOf(s));
+            localIdentifier.setRow(rowNum);
             localIdentifier.setColumn(importSourceColumn);
 
             listLocalIds.add(localIdentifier);

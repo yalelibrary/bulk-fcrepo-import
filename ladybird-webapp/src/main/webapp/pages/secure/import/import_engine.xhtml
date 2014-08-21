@@ -41,7 +41,6 @@
 
             <div>
                 <div>
-
                     <!-- Data Table -->
 
                     <p:dataTable id="DirDatatable"
@@ -82,11 +81,13 @@
 
                         <p:column headerText="Status">
                             <!-- TODO re-design -->
-                            <h:outputText id="status1" styleClass="alert alert-danger"
-                                          value="#{importProgressView.status(monitorItem.id)}" rendered="#{importProgressView.status(monitorItem.id) eq 'EXCEPTION'}"/>
+                            <h:outputText id="status1"
+                                          styleClass="alert alert-danger"
+                                          value="#{importProgressView.status(monitorItem.id)}"
+                                          rendered="#{importProgressView.status(monitorItem.id) eq 'EXCEPTION'}"/>
 
                             <h:link id="exceptionLink"
-                                    value="Link"
+                                    value="Link( #{importProgressView.numberExceptions(monitorItem.id)} )"
                                     outcome="exception"
                                     rendered="#{importProgressView.status(monitorItem.id) eq 'EXCEPTION'}">
                                 <f:param name="id" value="#{monitorItem.id}"/>

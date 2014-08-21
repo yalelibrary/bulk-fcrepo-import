@@ -8,32 +8,38 @@
 <ui:composition template="../../../templates/template_yul.xhtml">
 
     <ui:define name="content">
-        <h4>Exception</h4>
+        <h4>Exceptions</h4>
 
         <h:form id="ExceptionForm" enctype="multipart/form-data">
-            <div>
-                <h4>Context</h4>
-                <ui:repeat value="#{importProgressView.exceptionContext}" var="entry0">
-                    <h:outputText value="#{entry0}"/>
-                    <br/>
-                </ui:repeat>
 
-                <h4> Message</h4>
-                #{importProgressView.rawExceptionMessage()}
+            <p:dataTable id="Exceptions"
+                         value="#{importProgressView.getContextTrace(param['id'])}"
+                         var="item"
+                         paginator="false"
+                         editable="false">
 
-                <h4>Trace</h4>
-                <ui:repeat value="#{importProgressView.rawexception()}" var="entry">
-                    <h:outputText value="#{entry}"/>
-                    <br/>
-                </ui:repeat>
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="Context"/>
+                    </f:facet>
+                    <h:outputText value="#{item.context}"/>
+                </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="Message"/>
+                    </f:facet>
+                    <h:outputText value="#{item.message}"/>
+                </p:column>
+                <p:column>
+                    <f:facet name="header">
+                        <h:outputText value="Trace"/>
+                    </f:facet>
+                    <ui:repeat varStatus="loop" value="#{item.trace}">
+                        <h:outputText value="#{item.trace[loop.index]}" />
+                    </ui:repeat>
+                </p:column>
+            </p:dataTable>
 
-                <h4>Cause</h4>
-                <ui:repeat value="#{importProgressView.cause}" var="entry2">
-                    <h:outputText value="#{entry2}"/>
-                    <br/>
-                </ui:repeat>
-
-            </div>
         </h:form>
     </ui:define>
 </ui:composition>

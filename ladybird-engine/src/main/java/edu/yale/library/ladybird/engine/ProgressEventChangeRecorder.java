@@ -3,12 +3,13 @@ package edu.yale.library.ladybird.engine;
 import com.google.common.eventbus.Subscribe;
 import edu.yale.library.ladybird.engine.cron.ExportProgressEvent;
 import edu.yale.library.ladybird.engine.imports.JobExceptionEvent;
+import org.apache.commons.lang3.exception.ContextedRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class ProgressEventChangeRecorder {
     private static final Logger logger = LoggerFactory.getLogger(ProgressEventChangeRecorder.class);
@@ -18,7 +19,7 @@ public class ProgressEventChangeRecorder {
 
     private static final Map<Integer, JobStatus> jobStatusMap = new HashMap<>();
 
-    private static final Map<Integer, Exception> exceptionMap = new HashMap<>();
+    private static final Map<Integer, List<ContextedRuntimeException>> exceptionMap = new HashMap<>();
 
     //TODO number of steps
     public static final int expectedSteps = 2;
@@ -26,8 +27,8 @@ public class ProgressEventChangeRecorder {
     @Subscribe
     public void recordEvent(ExportProgressEvent event) {
         logger.debug("Recording event={} for jobId={}", event.toString(), event.getJobId());
-        try {
 
+        try {
             if (event.getJobId() == null) {
                 throw new NullPointerException("Job Id null");
             }
@@ -37,7 +38,6 @@ public class ProgressEventChangeRecorder {
                 progressMap.put(event.getJobId(), original + 1);
             } else {
                 progressMap.put(event.getJobId(), 1); //TODO
-
             }
         } catch (Exception e) {
             throw new RuntimeException("Error saving event=" + event.toString(), e);
@@ -50,17 +50,20 @@ public class ProgressEventChangeRecorder {
     @Subscribe
     public void recordEvent(JobExceptionEvent event) {
         logger.trace("Recording job exception event={}", event.toString());
-        int eventId;
-        try {
 
-            if (event.getMonitor().getId() == null) {
+        int importId;
+
+        try {
+            if (event.getImportId() == null) {
                 throw new NullPointerException("Job Id null");
             }
 
-            eventId = event.getMonitor().getId();
+            importId = event.getImportId();
 
-            jobStatusMap.put(eventId, JobStatus.EXCEPTION);
-            exceptionMap.put(eventId, event.getException());
+            jobStatusMap.put(importId, JobStatus.EXCEPTION);
+            exceptionMap.put(importId, event.getException());
+
+            logger.trace("Event exception size={}", event.getException().size());
         } catch (Exception e) {
             throw new RuntimeException("Error saving event=" + event.toString(), e);
         }
@@ -79,14 +82,13 @@ public class ProgressEventChangeRecorder {
 
     public String getJobStatus(int jobId) {
         if (jobStatusMap.get(jobId) == null) {
-            Set<Integer> keys = jobStatusMap.keySet();
             return "N/A";
         }
 
         return jobStatusMap.get(jobId).toString();
     }
 
-    public Exception getRawException(int jobId) {
+    public List<ContextedRuntimeException> getRawException(int jobId) {
         if (exceptionMap.get(jobId) == null) {
             logger.debug("No exception for job={}", jobId);
             return null;

@@ -53,8 +53,6 @@ public class OaiHttpClient {
 
     /**
      * Reads Marc stream (assumes marc connection w/ bibId)
-     *
-     * @param bibId
      */
     public Record readMarc(final String bibId) throws IOException, MarcReadingException {
         logger.trace("Reading marc for doc={}", bibId);

@@ -2,6 +2,8 @@ package edu.yale.library.ladybird.engine.imports;
 
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
+import edu.yale.library.ladybird.engine.ExportBus;
+import edu.yale.library.ladybird.engine.TestModule;
 import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.AuthorityControl;
@@ -34,6 +36,10 @@ public class ObjectWriterIT extends AbstractDBTest {
      */
     @Test
     public void shouldWriteToObjectMetadataTabes() {
+
+        ExportBus exportBus = new ExportBus();
+        exportBus.setAbstractModule(new TestModule());
+
         Monitor monitor = new Monitor();
         User user = new User();
         user.setUserId(0);
