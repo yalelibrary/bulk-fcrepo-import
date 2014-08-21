@@ -45,9 +45,9 @@ public class JobExceptionEvent extends ImportEvent {
 
     @Override
     public String toString() {
-        return "JobExceptionEvent{" +
-                "spreadsheetFile=" + spreadsheetFile +
-                ", monitor=" + monitor +
-                '}';
+        return "JobExceptionEvent{"
+                +"spreadsheetFile=" + spreadsheetFile
+                +", monitor=" + monitor
+                +'}';
     }
 }

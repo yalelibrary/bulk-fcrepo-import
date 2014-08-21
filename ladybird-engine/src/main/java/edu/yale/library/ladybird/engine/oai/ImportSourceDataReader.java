@@ -10,6 +10,7 @@ import edu.yale.library.ladybird.entity.ImportSourceData;
 import edu.yale.library.ladybird.entity.ImportSourceDataBuilder;
 import edu.yale.library.ladybird.persistence.dao.ImportSourceDataDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceDataHibernateDAO;
+import org.apache.commons.lang3.exception.ContextedRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
@@ -42,13 +43,13 @@ public class ImportSourceDataReader {
      */
     public List<LocalIdMarcImportSource> readMarc(final OaiProvider oaiProvider,
                                                   final List<LocalIdentifier<String>> localIdentifierList,
-                                                  final int importId) throws IOException, MarcReadingException {
+                                                  final int importId) {
         final List<LocalIdMarcImportSource> list = new ArrayList<>();
+        final OaiHttpClient oaiClient = new OaiHttpClient(oaiProvider);
 
         for (final LocalIdentifier<String> localId : localIdentifierList) {
-            final OaiHttpClient oaiClient = new OaiHttpClient(oaiProvider);
             try {
-                logger.trace("Reading marc feed for local identifier={}", localId.getId());
+                logger.debug("Reading marc feed for local identifier={}", localId.getId());
 
                 final Record record = oaiClient.readMarc(localId.getId()); //Read OAI feed
 
@@ -59,8 +60,11 @@ public class ImportSourceDataReader {
                 localIdMarcImportSource.setValueMap(marc21Values);
                 list.add(localIdMarcImportSource);
             } catch (IOException|MarcReadingException|IllegalArgumentException e) {
-                logger.error("Error reading import source");
-                throw e;
+                logger.error("Error reading import source.");
+                ContextedRuntimeException cre = new ContextedRuntimeException("Error reading or processing MARC record. " + e.getMessage(), e)
+                        .addContextValue("Row", localId.getRow())
+                        .addContextValue("Column", localId.getColumn());
+                throw cre;
             }
         }
         return list;

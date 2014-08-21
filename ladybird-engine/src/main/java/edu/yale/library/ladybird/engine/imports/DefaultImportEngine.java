@@ -1,5 +1,6 @@
 package edu.yale.library.ladybird.engine.imports;
 
+import org.apache.commons.lang3.exception.ContextedRuntimeException;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class DefaultImportEngine extends AbstractImportEngine {
 
     @Override
     public int doWrite(final List<ImportEntity.Row> list) {
-        logger.debug("Initiating write, userId={} projectId={} list size={}", USER_ID, PROJECT_ID, list.size());
+        logger.debug("Initiating write, userId={} projectId={} row list size={}", USER_ID, PROJECT_ID, list.size());
 
         ImportWriter importWriter = new ImportWriter();
         importWriter.setOaiProvider(oaiProvider);  //TODO
@@ -54,6 +55,11 @@ public class DefaultImportEngine extends AbstractImportEngine {
             return importWriter.write(importEntityValue,
                     new ImportJobRequestBuilder().userId(USER_ID).file(spreadsheetFile.getFileName())
                             .dir("").projectId(PROJECT_ID).build());
+        } catch (ContextedRuntimeException cre) {
+            ImportEngineException importEngineException = new ImportEngineException(cre);
+            importEngineException.setContextValue("Row", cre.getFirstContextValue("Row"));
+            importEngineException.setContextValue("Column", cre.getFirstContextValue("Column"));
+            throw importEngineException;
         } catch (Exception e) {
             throw new ImportEngineException(e);
         }

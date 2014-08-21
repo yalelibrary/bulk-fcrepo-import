@@ -12,6 +12,12 @@
 
         <h:form id="ExceptionForm" enctype="multipart/form-data">
             <div>
+                <h4>Context</h4>
+                <ui:repeat value="#{importProgressView.exceptionContext}" var="entry0">
+                    <h:outputText value="#{entry0}"/>
+                    <br/>
+                </ui:repeat>
+
                 <h4> Message</h4>
                 #{importProgressView.rawExceptionMessage()}
 
@@ -20,6 +26,13 @@
                     <h:outputText value="#{entry}"/>
                     <br/>
                 </ui:repeat>
+
+                <h4>Cause</h4>
+                <ui:repeat value="#{importProgressView.cause}" var="entry2">
+                    <h:outputText value="#{entry2}"/>
+                    <br/>
+                </ui:repeat>
+
             </div>
         </h:form>
     </ui:define>

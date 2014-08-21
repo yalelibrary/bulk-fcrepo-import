@@ -63,7 +63,7 @@ public class DefaultImportJob implements Job, ImportJob {
             final ImportEngine importEngine = new DefaultImportEngine(userId, projectId);
 
             final DefaultFieldDataValidator fieldDataValidator = new DefaultFieldDataValidator();
-            final List<ImportEntity.Row>  rowList = importEngine.read(spreadsheetFile, ReadMode.FULL, fieldDataValidator);
+            final List<ImportEntity.Row> rowList = importEngine.read(spreadsheetFile, ReadMode.FULL, fieldDataValidator);
 
             logger.debug("Read rows. list size={}", rowList.size());
 
@@ -101,8 +101,13 @@ public class DefaultImportJob implements Job, ImportJob {
         } catch (IOException e) {
             logger.error("Error executing job", e.getMessage());
             throw new ImportEngineException(e);
+        } catch (final ImportEngineException cre) {
+            logger.error("Exception in import job number={}.", importRequestedEvent.getMonitor().getId(), cre);
+            final ImportEvent failedEvent = new JobExceptionEvent(spreadsheetFile, importRequestedEvent.getMonitor(), cre);
+            ExportBus.postEvent(failedEvent);
+            throw cre;
         } catch (Exception e) {
-            logger.error("Generic exception in import job number={}.", importRequestedEvent.getMonitor().getId(), e);
+            logger.error("Exception in import job number={}.", importRequestedEvent.getMonitor().getId(), e);
             final ImportEvent failedEvent = new JobExceptionEvent(spreadsheetFile, importRequestedEvent.getMonitor(), e);
             ExportBus.postEvent(failedEvent);
             throw new ImportEngineException(e);
@@ -116,21 +121,24 @@ public class DefaultImportJob implements Job, ImportJob {
     /**
      * Returns OAI provider. Subject to removal (when oai provider is avaialable via some sort of context).
      * Note: returns the 1st provider with status active.
+     *
      * @return
      */
     private OaiProvider getCtxOaiProvider() {
         final ImportSourceDAO importSourceDAO = new ImportSourceHibernateDAO();
         final List<ImportSource> importSourceList = importSourceDAO.findAll();
 
-        for (ImportSource importSource: importSourceList) {
+        for (ImportSource importSource : importSourceList) {
             if (importSource.isActive()) {
-                return  new OaiProvider("id", importSource.getUrl(), importSource.getGetPrefix());
+                return new OaiProvider("id", importSource.getUrl(), importSource.getGetPrefix());
             }
         }
         return null;
     }
 
-    /** Returns a MediaFunctionProcessor if db state is found */
+    /**
+     * Returns a MediaFunctionProcessor if db state is found
+     */
     private MediaFunctionProcessor getCtxMediaFunctionProcessor(final String path) {
         SettingsDAO settingsDAO = new SettingsHibernateDAO();
         final Settings settings = settingsDAO.findByProperty(ApplicationProperties.IMPORT_ROOT_PATH_ID);

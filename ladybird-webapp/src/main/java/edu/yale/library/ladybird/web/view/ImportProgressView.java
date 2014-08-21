@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.engine.ProgressEventChangeRecorder;
+import org.apache.commons.lang3.exception.ExceptionContext;
 import org.omnifaces.util.Faces;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import javax.faces.bean.SessionScoped;
 import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 //TODO Re-design
@@ -57,24 +59,76 @@ public class ImportProgressView extends AbstractView implements Serializable {
 
         int id = Integer.parseInt(Faces.getRequestParameter("id"));
         Exception e = progressEventChangeRecorder.getRawException(id);
+        String msg = e.getMessage();
 
-        return e.getMessage();
+        if (msg.isEmpty()) {
+            return "N/A";
+        }
+
+        try { //TODO remove
+            //strip context info since it's reported in a different method
+            if (e instanceof ExceptionContext) {
+                String[] s = msg.split("Exception Context");
+                return s[0];
+            } else {
+                return msg;
+            }
+        } catch (Exception e1) {
+            return msg;
+        }
+
+    }
+
+    public List<String> getExceptionContext() {
+        if (isParamNull("id") || isParamEmpty("id")) {
+            return Collections.emptyList();
+        }
+
+        final List<String> list = new ArrayList<>();
+
+        final int id = Integer.parseInt(Faces.getRequestParameter("id"));
+        final Exception e = progressEventChangeRecorder.getRawException(id);
+
+        if (e instanceof ExceptionContext) { //TODO abstraction, format printing
+            list.add(String.format("%nRow : " + ((ExceptionContext) e).getFirstContextValue("Row"))
+                    + ", Column : " + ((ExceptionContext) e).getFirstContextValue("Column"));
+        }
+
+        return list;
     }
 
 
     public List<String> rawexception() {
-        List<String> list = new ArrayList<>();
-
         if (isParamNull("id") || isParamEmpty("id")) {
-            logger.debug("No param");
+            return Collections.emptyList();
         }
 
-        int id = Integer.parseInt(Faces.getRequestParameter("id"));
+        final List<String> list = new ArrayList<>();
+        final int id = Integer.parseInt(Faces.getRequestParameter("id"));
         Exception e = progressEventChangeRecorder.getRawException(id);
+        final StackTraceElement[] ste = e.getStackTrace();
 
-        StackTraceElement[] ste = e.getStackTrace();
+        for (final StackTraceElement s : ste) {
+            list.add(String.format("%n at " + s.getClassName() + "." + s.getMethodName() + ":" + s.getLineNumber()));
+        }
 
-        for (StackTraceElement s : ste) {
+        return list;
+    }
+
+    //gets first cause
+    public List<String> getCause() {
+
+        if (isParamNull("id") || isParamEmpty("id")) {
+            return Collections.emptyList();
+        }
+
+        final List<String> list = new ArrayList<>();
+        final int id = Integer.parseInt(Faces.getRequestParameter("id"));
+        Exception e = progressEventChangeRecorder.getRawException(id);
+        Throwable throwable = e.getCause();
+        final StackTraceElement[] ste = throwable.getStackTrace();
+
+        for (final StackTraceElement s : ste) {
             list.add(String.format("%n at " + s.getClassName() + "." + s.getMethodName() + ":" + s.getLineNumber()));
         }
 
