@@ -9,12 +9,12 @@ import edu.yale.library.ladybird.kernel.events.exports.ExportEvent;
  */
 public final class ExportCompleteEvent extends ExportEvent {
 
-    int rowsProcessed;
-    int passCount;
-    int failCount;
-    int failedValidations;
-
+    private int rowsProcessed;
+    private int passCount;
+    private int failCount;
+    private int failedValidations;
     private SpreadsheetFile spreadsheetFile;
+    private int importId;
 
     public ExportCompleteEvent(User user, SpreadsheetFile spreadsheetFile, int rowsProcessed, int passCount,
                                int failedValidations, int failCount) {
@@ -23,6 +23,54 @@ public final class ExportCompleteEvent extends ExportEvent {
         this.passCount = passCount;
         this.failedValidations = failedValidations;
         this.failCount = failCount;
+    }
+
+    public int getRowsProcessed() {
+        return rowsProcessed;
+    }
+
+    public int getPassCount() {
+        return passCount;
+    }
+
+    public int getFailCount() {
+        return failCount;
+    }
+
+    public int getFailedValidations() {
+        return failedValidations;
+    }
+
+    public SpreadsheetFile getSpreadsheetFile() {
+        return spreadsheetFile;
+    }
+
+    public void setRowsProcessed(int rowsProcessed) {
+        this.rowsProcessed = rowsProcessed;
+    }
+
+    public void setPassCount(int passCount) {
+        this.passCount = passCount;
+    }
+
+    public void setFailCount(int failCount) {
+        this.failCount = failCount;
+    }
+
+    public void setFailedValidations(int failedValidations) {
+        this.failedValidations = failedValidations;
+    }
+
+    public void setSpreadsheetFile(SpreadsheetFile spreadsheetFile) {
+        this.spreadsheetFile = spreadsheetFile;
+    }
+
+    public int getImportId() {
+        return importId;
+    }
+
+    public void setImportId(int importId) {
+        this.importId = importId;
     }
 
     @Override

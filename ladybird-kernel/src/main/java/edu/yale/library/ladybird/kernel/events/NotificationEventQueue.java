@@ -23,20 +23,38 @@ public class NotificationEventQueue {
 
     public class NotificationItem {
 
-        public NotificationItem(Event e, List<User> users) {
-            this.e = e;
+        @Deprecated
+        public NotificationItem(Event event, List<User> users) {
+            this.event = event;
             this.users = users;
         }
 
-        private Event e;
-        private List<User> users;
+        public NotificationItem(Event event, List<User> users, String message, String subject) {
+            this.event = event;
+            this.users = users;
+            this.message = message;
+            this.subject = subject;
+        }
 
-        public Event getE() {
-            return e;
+        private Event event;
+        private List<User> users;
+        private String message;
+        private String subject;
+
+        public Event getEvent() {
+            return event;
         }
 
         public List<User> getUsers() {
             return users;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public String getSubject() {
+            return subject;
         }
     }
 

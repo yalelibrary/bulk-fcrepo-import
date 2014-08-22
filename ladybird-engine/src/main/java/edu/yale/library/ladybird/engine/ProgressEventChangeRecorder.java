@@ -51,11 +51,11 @@ public class ProgressEventChangeRecorder {
     @Subscribe
     public void recordEvent(JobExceptionEvent event) {
         try {
-            if (event.getImportId() == null) {
+            if (event.getJobId() == null) {
                 throw new NullPointerException("Job Id null");
             }
 
-            int importId = event.getImportId();
+            int importId = event.getJobId();
             jobStatusMap.put(importId, JobStatus.EXCEPTION);
 
             //Update exceptions for this job:
@@ -93,7 +93,6 @@ public class ProgressEventChangeRecorder {
 
     public List<ContextedRuntimeException> getRawException(int jobId) {
         if (exceptionMap.get(jobId) == null) {
-            logger.debug("No exception for job={}", jobId);
             return null;
         }
 

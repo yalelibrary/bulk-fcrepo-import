@@ -12,9 +12,6 @@ import java.util.Collections;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-/**
- *
- */
 public class NotificationSchedulerTest {
 
     /**
@@ -32,10 +29,9 @@ public class NotificationSchedulerTest {
             KernelBootstrap.initNotificationScheduler();
             //Add dummy event:
             NotificationEventQueue.addEvent(new NotificationEventQueue().
-                    new NotificationItem(new ImportEvent(), Collections.singletonList(new UserBuilder().createUser())));
+                    new NotificationItem(new ImportEvent(), Collections.singletonList(new UserBuilder().createUser()), "message", "sujet"));
             Thread.sleep(6000); //TODO
         } catch (Exception e) {
-            e.printStackTrace();
             fail("Exception= " + e);
         } finally {
             try {

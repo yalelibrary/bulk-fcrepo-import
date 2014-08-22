@@ -3,6 +3,7 @@ package edu.yale.library.ladybird.engine.cron;
 
 import edu.yale.library.ladybird.engine.ExportBus;
 import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
+import edu.yale.library.ladybird.engine.exports.ExportCompleteEvent;
 import edu.yale.library.ladybird.engine.exports.ExportCompleteEventBuilder;
 import edu.yale.library.ladybird.engine.exports.ExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportSheet;
@@ -20,7 +21,6 @@ import edu.yale.library.ladybird.entity.Settings;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.entity.UserProjectFieldExportOptions;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
-import edu.yale.library.ladybird.kernel.events.Event;
 import edu.yale.library.ladybird.kernel.events.NotificationEventQueue;
 import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobNotificationsDAO;
@@ -101,8 +101,9 @@ public class DefaultExportJob implements Job, ExportJob {
             //logger.debug("[end] Wrote to object metadata tables");
 
             /* Add params as desired */
-            final Event exportEvent = new ExportCompleteEventBuilder()
+            final ExportCompleteEvent exportEvent = new ExportCompleteEventBuilder()
                     .setRowsProcessed(importEntityContext.getImportJobList().size()).createExportCompleteEvent();
+            exportEvent.setImportId(importEntityContext.getImportId());
 
             //Post progress
             ExportBus.postEvent(new ExportProgressEvent(exportEvent, importEntityContext.getMonitor().getId())); //TODO consolidate
@@ -148,8 +149,11 @@ public class DefaultExportJob implements Job, ExportJob {
         }
     }
 
-    private void sendNotification(final Event exportEvent, final List<User> u) {
-        NotificationEventQueue.addEvent(new NotificationEventQueue().new NotificationItem(exportEvent, u));
+    private void sendNotification(final ExportCompleteEvent exportEvent, final List<User> u) {
+        //TODO construct message and subject
+        String message = "Exported number of rows was" + exportEvent.getRowsProcessed();
+        String subject = "Export for job # " + exportEvent.getImportId() + " is complete.";
+        NotificationEventQueue.addEvent(new NotificationEventQueue().new NotificationItem(exportEvent, u, message, subject));
     }
 
     private String exportFile(final String folder) {

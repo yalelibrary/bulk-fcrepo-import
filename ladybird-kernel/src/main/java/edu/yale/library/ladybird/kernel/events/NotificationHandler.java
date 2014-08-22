@@ -10,7 +10,7 @@ import java.io.File;
  * @see EMailNotificationHandler for an example
  */
 public interface NotificationHandler {
-    void notifyUser(User user, Event event);
+    void notifyUser(User user, Event event, String message, String subject);
 
     void notifyUserWithFile(User user, Event event, File file);
 

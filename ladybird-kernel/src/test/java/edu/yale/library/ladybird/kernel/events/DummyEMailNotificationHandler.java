@@ -14,14 +14,15 @@ public class DummyEMailNotificationHandler implements NotificationHandler {
 
     private final Logger logger = LoggerFactory.getLogger(DummyEMailNotificationHandler.class);
 
-    public void notifyUser(final User user, final Event event) {
+    @Override
+    public void notifyUser(User user, Event event, String message, String subject) {
         final Email email = new SimpleEmail();
         try {
             email.setHostName(ApplicationProperties.CONFIG_STATE.EMAIL_HOST);
             email.setSmtpPort(ApplicationProperties.CONFIG_STATE.EMAIL_PORT);
             email.setFrom(ApplicationProperties.CONFIG_STATE.EMAIL_ADMIN);
-            email.setSubject("Test");
-            email.setMsg("Test Message");
+            email.setSubject(subject);
+            email.setMsg(message);
             email.addTo(ApplicationProperties.CONFIG_STATE.EMAIL_ADMIN);
             email.send();
         } catch (EmailException e) {
@@ -32,8 +33,7 @@ public class DummyEMailNotificationHandler implements NotificationHandler {
 
     @Override
     public void notifyUserWithFile(User user, Event event, File file) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        //TODO
     }
-
 
 }

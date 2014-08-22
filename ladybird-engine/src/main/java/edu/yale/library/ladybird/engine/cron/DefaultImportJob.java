@@ -5,6 +5,7 @@ import edu.yale.library.ladybird.engine.DefaultFieldDataValidator;
 import edu.yale.library.ladybird.engine.ExportBus;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
 import edu.yale.library.ladybird.engine.imports.DefaultImportEngine;
+import edu.yale.library.ladybird.engine.imports.ImportCompleteEvent;
 import edu.yale.library.ladybird.engine.imports.ImportCompleteEventBuilder;
 import edu.yale.library.ladybird.engine.imports.ImportEngine;
 import edu.yale.library.ladybird.engine.imports.ImportEngineException;
@@ -20,7 +21,6 @@ import edu.yale.library.ladybird.entity.ImportSource;
 import edu.yale.library.ladybird.entity.Settings;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
-import edu.yale.library.ladybird.kernel.events.Event;
 import edu.yale.library.ladybird.kernel.events.NotificationEventQueue;
 import edu.yale.library.ladybird.persistence.dao.ImportSourceDAO;
 import edu.yale.library.ladybird.persistence.dao.SettingsDAO;
@@ -52,7 +52,7 @@ public class DefaultImportJob implements Job, ImportJob {
         final ImportRequestEvent importRequestedEvent = ImportEngineQueue.getJob();
         final SpreadsheetFile spreadsheetFile = importRequestedEvent.getSpreadsheetFile();
 
-        logger.debug("[start] import job. File name={}", spreadsheetFile);
+        logger.debug("Starting import job for file={}", spreadsheetFile);
 
         try {
             final int userId = importRequestedEvent.getMonitor().getUser().getUserId();
@@ -77,9 +77,10 @@ public class DefaultImportJob implements Job, ImportJob {
 
             final int imid = importEngine.write(rowList, spreadsheetFile);
 
-            logger.debug("[end] Completed import (writing) job in {}", DurationFormatUtils.formatDuration(System.currentTimeMillis() - startTime, "HH:mm:ss:SS"));
+            logger.debug("Completed import job in={}", DurationFormatUtils.formatDuration(System.currentTimeMillis() - startTime, "HH:mm:ss:SS"));
 
-            final Event importEvent = new ImportCompleteEventBuilder().setRowsProcessed(rowList.size()).createImportDoneEvent();
+            final ImportCompleteEvent importEvent = new ImportCompleteEventBuilder().setRowsProcessed(rowList.size()).createImportDoneEvent();
+            importEvent.setImportId(imid);
 
             //Post progress
             ExportBus.postEvent(new ExportProgressEvent(importEvent, importRequestedEvent.getMonitor().getId())); //TODO consolidate
@@ -92,9 +93,9 @@ public class DefaultImportJob implements Job, ImportJob {
             final ExportRequestEvent exportEvent = new ExportRequestEvent(imid, importRequestedEvent.getMonitor());
             ExportEngineQueue.addJob(exportEvent);
 
-            logger.debug("Added event to ExportEngineQueue=" + exportEvent.toString());
+            logger.trace("Added event to ExportEngineQueue=" + exportEvent.toString());
         } catch (ImportReaderValidationException e) {
-            logger.error("validation exception", e);
+            logger.error("Validation exception", e);
             throw new ImportEngineException(e);
         } catch (IOException e) {
             logger.error("Error executing job", e.getMessage());
@@ -108,8 +109,10 @@ public class DefaultImportJob implements Job, ImportJob {
         }
     }
 
-    private void sendNotification(final Event importEvent, final List<User> userList) {
-        NotificationEventQueue.addEvent(new NotificationEventQueue().new NotificationItem(importEvent, userList));
+    private void sendNotification(final ImportCompleteEvent importEvent, final List<User> userList) {
+        String message = "Rows imported" + importEvent.getRowsProcessed();
+        String subject = "Import Complete for Job #" + importEvent.getImportId();
+        NotificationEventQueue.addEvent(new NotificationEventQueue().new NotificationItem(importEvent, userList, message, subject));
     }
 
     /**

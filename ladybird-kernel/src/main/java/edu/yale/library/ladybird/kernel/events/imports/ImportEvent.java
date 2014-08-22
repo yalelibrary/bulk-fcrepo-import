@@ -20,6 +20,8 @@ public class ImportEvent implements UserGeneratedEvent {
 
     private final String eventName = "Ladybird ImportEvent";
 
+    private int importId;
+
     @Override
     public String getEventName() {
         return eventName;
@@ -33,5 +35,13 @@ public class ImportEvent implements UserGeneratedEvent {
     @Override
     public String getValue() {
         return null;
+    }
+
+    public int getImportId() {
+        return importId;
+    }
+
+    public void setImportId(int importId) {
+        this.importId = importId;
     }
 }

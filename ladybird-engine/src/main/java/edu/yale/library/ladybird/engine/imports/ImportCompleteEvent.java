@@ -23,6 +23,26 @@ public final class ImportCompleteEvent extends ImportEvent {
         this.failCount = failCount;
     }
 
+    public int getRowsProcessed() {
+        return rowsProcessed;
+    }
+
+    public int getPassCount() {
+        return passCount;
+    }
+
+    public int getFailCount() {
+        return failCount;
+    }
+
+    public int getFailedValidations() {
+        return failedValidations;
+    }
+
+    public SpreadsheetFile getSpreadsheetFile() {
+        return spreadsheetFile;
+    }
+
     @Override
     public String toString() {
         return "ImportCompleteEvent{"

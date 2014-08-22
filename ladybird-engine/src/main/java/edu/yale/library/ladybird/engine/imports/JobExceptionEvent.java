@@ -7,20 +7,21 @@ import org.apache.commons.lang3.exception.ContextedRuntimeException;
  */
 public class JobExceptionEvent extends edu.yale.library.ladybird.kernel.events.imports.ImportEvent {
 
-    private Integer importId;
+    /** import id */
+    private Integer jobId;
     private ContextedRuntimeException exception;
 
-    public JobExceptionEvent(Integer importId, ContextedRuntimeException exception) {
-        this.importId = importId;
+    public JobExceptionEvent(Integer jobId, ContextedRuntimeException exception) {
+        this.jobId = jobId;
         this.exception = exception;
     }
 
-    public Integer getImportId() {
-        return importId;
+    public Integer getJobId() {
+        return jobId;
     }
 
-    public void setImportId(Integer importId) {
-        this.importId = importId;
+    public void setJobId(Integer jobId) {
+        this.jobId = jobId;
     }
 
     public ContextedRuntimeException getException() {
@@ -34,7 +35,7 @@ public class JobExceptionEvent extends edu.yale.library.ladybird.kernel.events.i
     @Override
     public String toString() {
         return "JobExceptionEvent{"
-                + "importId=" + importId
+                + "jobId=" + jobId
                 + ", exception=" + exception
                 + '}';
     }

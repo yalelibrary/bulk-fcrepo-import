@@ -12,7 +12,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Polls the queue.
- * <p/>
  * TODO Subject to modification because the current impl. will fail silently
  * (remove the job from the queue,but fail sending it).
  */
@@ -31,9 +30,8 @@ public class NotificationJob extends AbstractNotificationJob implements Job {
         Event event = null;  //FIXME  see javadoc comment
         User user = null;
         try {
-            event = notificationItem.getE();
+            event = notificationItem.getEvent();
             user = notificationItem.getUsers().get(0); //TODO could be multimpe users
-
         } catch (Exception e) {
             logger.trace(e.getMessage());
         }
@@ -44,7 +42,7 @@ public class NotificationJob extends AbstractNotificationJob implements Job {
 
         try {
             logger.debug("Notifying user=" + user.toString());
-            notificationHandler.notifyUser(user, event); //todo actual/more params
+            notificationHandler.notifyUser(user, event, notificationItem.getMessage(), notificationItem.getSubject());
             logger.trace("Notification sent.");
         } catch (Exception e) {
             logger.error(e.getMessage());

@@ -20,26 +20,23 @@ public class EMailNotificationHandler implements NotificationHandler {
 
     private final Logger logger = LoggerFactory.getLogger(EMailNotificationHandler.class);
 
-    public void notifyUser(final User user, final Event event) {
+    public void notifyUser(final User user, final Event event, String message, String subject) {
+        logger.debug("Sending e-mail notification to user email={} with subject={}", user.getEmail(), event.getEventName());
+
         final Email email = new SimpleEmail();
         try {
             email.setHostName(ApplicationProperties.CONFIG_STATE.EMAIL_HOST);
             email.setSmtpPort(ApplicationProperties.CONFIG_STATE.EMAIL_PORT);
             email.setFrom(ApplicationProperties.CONFIG_STATE.EMAIL_ADMIN);
-            email.setSubject(event.getEventName());
-            email.setMsg(event.toString()); //TODO
+            email.setSubject(subject);
+            email.setMsg(message); //TODO
             email.addTo(user.getEmail());
-
-            logger.debug("Sending e-mail notification to user email={} with subject={}", user.getEmail(), event.getEventName());
-
             email.send();
-
         } catch (EmailException e) {
             logger.error("Exception sending notification", e.getMessage()); //TODO
         }
     }
 
-    //TODO test @see EMailNotificationHandlerTest
     @Override
     public void notifyUserWithFile(User user, Event event, File file) {
 

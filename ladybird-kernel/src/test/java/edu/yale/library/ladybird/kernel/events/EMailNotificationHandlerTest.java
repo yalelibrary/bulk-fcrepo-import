@@ -15,9 +15,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.junit.Assert.assertTrue;
 
-/**
- *
- */
 public class EMailNotificationHandlerTest {
     private Logger logger = LoggerFactory.getLogger(EMailNotificationHandler.class);
 
@@ -33,7 +30,7 @@ public class EMailNotificationHandlerTest {
             final EMailNotificationHandler notificationHandler = new EMailNotificationHandler();
             final User user = new UserBuilder().createUser();
             user.setEmail("test@test.edu");
-            notificationHandler.notifyUser(user, testEvent);
+            notificationHandler.notifyUser(user, testEvent, "empty message", "Subject");
         } catch (Exception e) {
             e.printStackTrace();
             fail("Exception= " + e);
@@ -48,7 +45,7 @@ public class EMailNotificationHandlerTest {
         assertTrue(server.getReceivedEmailSize() == 1);
         final Iterator emailIter = server.getReceivedEmail();
         final SmtpMessage email = (SmtpMessage) emailIter.next();
-        assertEquals("Wrong subject", email.getHeaderValue("Subject"), testEvent.getEventName());
+        assertEquals("Wrong subject", email.getHeaderValue("Subject"), "Subject");
         assertEquals("Wrong address", email.getHeaderValue("To"), "\"test@test.edu\" <test@test.edu>");
     }
 }
