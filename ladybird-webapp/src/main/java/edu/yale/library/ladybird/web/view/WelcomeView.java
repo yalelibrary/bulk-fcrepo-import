@@ -2,6 +2,7 @@ package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.entity.ImportJob;
 import edu.yale.library.ladybird.entity.ImportJobNotifications;
+import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.entity.UserProject;
 import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobNotificationsDAO;
@@ -104,5 +105,32 @@ public class WelcomeView extends AbstractView {
             return false;
         }
     }
+
+    //TODO move
+    public String getCurrentUsername() {
+        User user;
+
+        try {
+            user = authUtil.getCurrentUser();
+        } catch (Exception e) {
+            return "N/A";
+        }
+
+        String name = user.getName();
+
+        if (name != null && !name.isEmpty()) {
+            return name;
+        }
+
+        String userName = user.getUsername();
+
+        if (userName != null && !userName.isEmpty()) {
+            return userName;
+        }
+
+        return "N/A";
+    }
+
+
 
 }

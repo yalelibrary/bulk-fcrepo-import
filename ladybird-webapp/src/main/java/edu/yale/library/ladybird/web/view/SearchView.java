@@ -15,6 +15,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,17 +68,28 @@ public class SearchView extends AbstractView {
     //TODO
     public String search() {
         try {
-            //Post search event
             final String netid = getCurrentUser(); //TODO authUtil
             postSearchEvent(netid, oid);
-            //final Object o = objectDAO.findByOid(oid);
-            //itemList = Collections.singletonList(o);
             itemList = getItems(oid);
             return NavigationCase.OK.toString();
         } catch (Exception e) {
             logger.error(e.getMessage());
             itemList = new ArrayList<>();
             return NavigationCase.OK.toString();
+        }
+    }
+
+    public void searchAjax(AjaxBehaviorEvent event) {
+        try {
+            //Post search event
+            final String netid = getCurrentUser(); //TODO authUtil
+            postSearchEvent(netid, oid);
+            itemList = getItems(oid);
+            logger.debug("Re-diecting to page");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("search_results.xhtml");
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            itemList = new ArrayList<>();
         }
     }
 
