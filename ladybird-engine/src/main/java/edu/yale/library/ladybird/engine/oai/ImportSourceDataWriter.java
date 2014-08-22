@@ -12,7 +12,7 @@ import java.util.Set;
 
 /**
  * Persists MARC related data to import source data tables
- * @see edu.yale.library.ladybird.engine.oai.ImportSourceDataReader
+ * @see ImportSourceDataReader
  */
 public class ImportSourceDataWriter {
 

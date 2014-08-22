@@ -3,6 +3,9 @@ package edu.yale.library.ladybird.engine.oai;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import edu.yale.library.ladybird.engine.ExportBus;
+import edu.yale.library.ladybird.engine.JobExceptionEventPoster;
+import edu.yale.library.ladybird.engine.imports.JobExceptionEvent;
 import edu.yale.library.ladybird.engine.model.LocalIdMarcImportSource;
 import edu.yale.library.ladybird.engine.model.LocalIdMarcValue;
 import edu.yale.library.ladybird.engine.model.LocalIdentifier;
@@ -25,7 +28,7 @@ import java.util.Map;
  * Utility methods for manipulating (serialization and de-serialization of) import source data.
  * @see ImportSourceDataWriter
  */
-public class ImportSourceDataReader {
+public class ImportSourceDataReader implements JobExceptionEventPoster {
 
     private Logger logger = LoggerFactory.getLogger(ImportSourceDataReader.class);
 
@@ -35,41 +38,50 @@ public class ImportSourceDataReader {
     // Used by ImportWriter
     //---------------------------------------------------------------
 
+    public void post(JobExceptionEvent event) {
+        ExportBus.postEvent(event);
+    }
+
     /**
      * Hits OAI feed and gets a Record. A multimap is then used to relate the record's data to the local identifier.
      *
      * @param localIdentifierList list of LocalIdentifier (bibids or barcodes)
      * @return List<LocalIdMarcImportSource> a list of data structures containing the mappings. Ignores exception.
      */
-    public List<LocalIdMarcImportSource> readMarc(final OaiProvider oaiProvider,
+    public List<LocalIdMarcImportSource> readMarc(final OaiProvider provider,
                                                   final List<LocalIdentifier<String>> localIdentifierList,
                                                   final int importId) {
         final List<LocalIdMarcImportSource> list = new ArrayList<>();
-        final OaiHttpClient oaiClient = new OaiHttpClient(oaiProvider);
+        final OaiHttpClient oaiClient = new OaiHttpClient(provider);
 
         //TODO test for null and integer
         for (final LocalIdentifier<String> localId : localIdentifierList) {
-            LocalIdMarcImportSource localIdMarcImportSource = new LocalIdMarcImportSource();
-            localIdMarcImportSource.setBibId(localId);
+            final LocalIdMarcImportSource localIdMarcImpSrc = new LocalIdMarcImportSource();
+            localIdMarcImpSrc.setBibId(localId);
 
             try {
-                logger.debug("Reading marc feed for local identifier={}", localId.getId());
+                logger.trace("Reading marc feed for local identifier={}", localId.getId());
 
                 final Record record = oaiClient.readMarc(localId.getId()); //Read OAI feed
 
                 final Multimap<Marc21Field, ImportSourceData> marc21Values = buildMultiMap(localId, record, importId);
-                localIdMarcImportSource.setValueMap(marc21Values);
+                localIdMarcImpSrc.setValueMap(marc21Values);
 
-                list.add(localIdMarcImportSource);
-            } catch (IOException|MarcReadingException|IllegalArgumentException e) {
-                logger.error("Error reading marc.");
-                ContextedRuntimeException cre = new ContextedRuntimeException("Error reading or processing MARC record. " + e.getMessage(), e)
-                        .addContextValue("BibId", localId.getId())
-                        .addContextValue("Row", localId.getRow())
-                        .addContextValue("Column", localId.getColumn());
-                localIdMarcImportSource.setException(cre); //no value, just exception. Don't throw, add it to id for later retrieval
-                localIdMarcImportSource.setValueMap(HashMultimap.create()); //empty map
-                list.add(localIdMarcImportSource);
+                list.add(localIdMarcImpSrc);
+            } catch (final IOException|MarcReadingException|IllegalArgumentException e) {
+                //Store and post this exception:
+                final ContextedRuntimeException cre = new ContextedRuntimeException("Error reading or processing MARC record. "
+                        + e.getMessage(), e).addContextValue("BibId", localId.getId())
+                        .addContextValue("Row", localId.getRow()).addContextValue("Column", localId.getColumn());
+
+                localIdMarcImpSrc.setValueMap(HashMultimap.create()); //store empty map
+                localIdMarcImpSrc.setException(cre); //store corresponding exception. TODO evaluate usecase
+
+                list.add(localIdMarcImpSrc);
+
+                post(new JobExceptionEvent(importId, cre));
+
+                logger.error("Error reading marc feed for={}", localId.getId());
             }
         }
         return list;

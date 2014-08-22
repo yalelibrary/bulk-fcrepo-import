@@ -7,6 +7,7 @@ import org.apache.commons.lang3.exception.ContextedRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,7 @@ public class ProgressEventChangeRecorder {
                 progressMap.put(event.getJobId(), 1); //TODO
             }
         } catch (Exception e) {
-            throw new RuntimeException("Error saving event=" + event.toString(), e);
+            throw new RuntimeException("Error saving event={}" + event.toString(), e);
         }
     }
 
@@ -49,23 +50,25 @@ public class ProgressEventChangeRecorder {
      */
     @Subscribe
     public void recordEvent(JobExceptionEvent event) {
-        logger.trace("Recording job exception event={}", event.toString());
-
-        int importId;
-
         try {
             if (event.getImportId() == null) {
                 throw new NullPointerException("Job Id null");
             }
 
-            importId = event.getImportId();
-
+            int importId = event.getImportId();
             jobStatusMap.put(importId, JobStatus.EXCEPTION);
-            exceptionMap.put(importId, event.getException());
 
-            logger.trace("Event exception size={}", event.getException().size());
+            //Update exceptions for this job:
+            List<ContextedRuntimeException> list = exceptionMap.get(importId);
+
+            if (list == null || list.isEmpty()) {
+                list = new ArrayList<>();
+            }
+
+            list.add(event.getException());
+            exceptionMap.put(importId, list);
         } catch (Exception e) {
-            throw new RuntimeException("Error saving event=" + event.toString(), e);
+            throw new RuntimeException("Error saving event={}" + event.toString(), e);
         }
     }
 

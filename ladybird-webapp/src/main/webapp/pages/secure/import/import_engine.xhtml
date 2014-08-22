@@ -13,9 +13,7 @@
         <br/>
 
         <div>
-
             <span>
-
                 <h:outputLink value="/ladybird-webapp/web/pages/secure/import/import_engine_file.xhtml"
                               styleClass="btn btn-primary btn-primary">
                     Add Import Job
@@ -23,10 +21,10 @@
             </span>
 
         </div>
+
         <br/>
 
         <div>
-
               <span>
                 <h:outputText styleClass="alert alert-warning"
                               value="No import jobs exist yet."
@@ -38,7 +36,6 @@
 
 
         <h:form id="SchedulerForm" enctype="multipart/form-data" rendered="#{not empty monitorView.itemList}">
-
             <div>
                 <div>
                     <!-- Data Table -->
@@ -51,55 +48,66 @@
                                  value="#{monitorView.itemList}"
                                  var="monitorItem">
 
-                        <p:column headerText="Import Directory">
+                        <p:column headerText="Import Directory" width="10%" rendered="false">
                             <h:outputText value="#{monitorItem.dirPath}"/>
                             <h:outputText value="local" rendered="#{empty monitorItem.dirPath}"/>
                         </p:column>
 
-                        <p:column headerText="Export Directory">
+                        <p:column headerText="Export Directory" width="12%">
                             <h:outputText value="#{monitorItem.exportPath}"/>
                         </p:column>
 
-                        <p:column headerText="User">
+                        <p:column headerText="User" width="14%">
                             <h:outputText value="#{monitorItem.notificationEmail}"/>
                         </p:column>
 
-                        <p:column headerText="Time Scheduled">
+                        <p:column headerText="Time Scheduled" width="12%">
                             <h:outputText value="#{monitorItem.date}">
                                 <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
                             </h:outputText>
                         </p:column>
 
-                        <p:column headerText="Progress">
+                        <p:column headerText="Progress" width="12%">
                             <h:outputText id="progressOutputText"
-                                          value="#{importProgressView.count(monitorItem.id)} out of #{importProgressView.STEPS_TO_COMPLETE} steps"/>
+                                          value="#{importProgressView.count(monitorItem.id)} / #{importProgressView.STEPS_TO_COMPLETE} step(s)"/>
 
                             <p:poll id="progressPoll" interval="5"
                                     listener="#{importProgressView.progress(monitorItem.id)}"
                                     update="progressOutputText"/>
                         </p:column>
 
-                        <p:column headerText="Status">
-                            <!-- TODO re-design -->
+                        <p:column headerText="Status" width="50%">
+                            <!-- TODO clean up -->
+
+                            <!--
                             <h:outputText id="status1"
                                           styleClass="alert alert-danger"
                                           value="#{importProgressView.status(monitorItem.id)}"
                                           rendered="#{importProgressView.status(monitorItem.id) eq 'EXCEPTION'}"/>
+                                          -->
 
                             <h:link id="exceptionLink"
-                                    value="Link( #{importProgressView.numberExceptions(monitorItem.id)} )"
+                                    value="Exceptions ( #{importProgressView.numberExceptions(monitorItem.id)} )"
                                     outcome="exception"
-                                    rendered="#{importProgressView.status(monitorItem.id) eq 'EXCEPTION'}">
+                                    rendered="#{importProgressView.status(monitorItem.id) eq 'EXCEPTION'}"
+                                    style="color:red">
                                 <f:param name="id" value="#{monitorItem.id}"/>
                             </h:link>
 
-                            <h:outputText id="status2" styleClass="alert alert-info"
-                                          value="IN PROGRESS" rendered="#{importProgressView.status(monitorItem.id) ne 'EXCEPTION'}"/>
+                            <h:outputText id="status2"
+                                          styleClass="alert alert-info"
+                                          value="IN PROGRESS"
+                                          rendered="#{importProgressView.status(monitorItem.id) ne 'EXCEPTION'}"/>
 
-                            <h:outputText id="status3" styleClass="alert alert-success"
-                                          value="OK" rendered="#{importProgressView.count(monitorItem.id) eq importProgressView.STEPS_TO_COMPLETE}"/>
+                            &nbsp;
 
-                            <p:poll id="statusPoll" interval="5"
+                            <h:outputText id="status3"
+                                          styleClass="alert alert-success"
+                                          value="Task Complete"
+                                          rendered="#{importProgressView.count(monitorItem.id) eq importProgressView.STEPS_TO_COMPLETE}"/>
+
+                            <p:poll id="statusPoll"
+                                    interval="3"
                                     listener="#{importProgressView.status(monitorItem.id)}"
                                     update="@form"/>
                         </p:column>

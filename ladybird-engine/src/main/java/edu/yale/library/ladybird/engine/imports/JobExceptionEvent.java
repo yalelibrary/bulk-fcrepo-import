@@ -1,20 +1,16 @@
 package edu.yale.library.ladybird.engine.imports;
 
-import edu.yale.library.ladybird.kernel.events.imports.ImportEvent;
 import org.apache.commons.lang3.exception.ContextedRuntimeException;
 
-import java.util.List;
-
 /**
- *  In memory representation of an import job execution exception
- *  TODO re-design
+ *  Reprsents a runtime exception corresponding to an import job
  */
-public class JobExceptionEvent extends ImportEvent {
+public class JobExceptionEvent extends edu.yale.library.ladybird.kernel.events.imports.ImportEvent {
 
     private Integer importId;
-    private List<ContextedRuntimeException> exception;
+    private ContextedRuntimeException exception;
 
-    public JobExceptionEvent(Integer importId, List<ContextedRuntimeException> exception) {
+    public JobExceptionEvent(Integer importId, ContextedRuntimeException exception) {
         this.importId = importId;
         this.exception = exception;
     }
@@ -27,11 +23,11 @@ public class JobExceptionEvent extends ImportEvent {
         this.importId = importId;
     }
 
-    public List<ContextedRuntimeException> getException() {
+    public ContextedRuntimeException getException() {
         return exception;
     }
 
-    public void setException(List<ContextedRuntimeException> exception) {
+    public void setException(ContextedRuntimeException exception) {
         this.exception = exception;
     }
 
