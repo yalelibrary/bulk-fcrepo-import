@@ -4,7 +4,7 @@ package edu.yale.library.ladybird.entity;
 import java.util.Date;
 
 /**
- * ObjectFile
+ * ObjectFile represents a file (normally an image) corresponding to an oid
  */
 public class ObjectFile implements java.io.Serializable {
 
@@ -22,6 +22,7 @@ public class ObjectFile implements java.io.Serializable {
     private String sha256;
     private Integer hydraPublishId;
     private String status;
+    private byte[] thumbnail;
 
     public ObjectFile() {
     }
@@ -130,6 +131,18 @@ public class ObjectFile implements java.io.Serializable {
         this.status = status;
     }
 
+    public byte[] getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(byte[] thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public int getThumbnailSize() {
+        return (thumbnail == null) ? 0 : thumbnail.length;
+    }
+
     @Override
     public String toString() {
         return "ObjectFile{"
@@ -146,6 +159,7 @@ public class ObjectFile implements java.io.Serializable {
                 + ", sha256='" + sha256 + '\''
                 + ", hydraPublishId=" + hydraPublishId
                 + ", status='" + status + '\''
+                + ", thumbnail byte size='" + getThumbnailSize() + '\''
                 + '}';
     }
 }

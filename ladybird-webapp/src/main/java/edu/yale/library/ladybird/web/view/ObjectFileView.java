@@ -25,6 +25,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 @ViewScoped
 @SuppressWarnings("unchecked")
 public class ObjectFileView extends AbstractView {
+
     private final Logger logger = getLogger(this.getClass());
 
     private List<ObjectFile> itemList = new ArrayList<>();

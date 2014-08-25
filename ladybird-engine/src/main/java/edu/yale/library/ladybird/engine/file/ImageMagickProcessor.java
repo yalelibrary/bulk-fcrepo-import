@@ -25,7 +25,6 @@ public class ImageMagickProcessor implements ImageProcessor {
     public static final String IM_4_JAVA_TOOPATH = "IM4JAVA_TOOPATH";
 
     public void toFormat(final String src, final String dest) {
-
         String sourceImage;
         String destImage;
 
@@ -53,6 +52,42 @@ public class ImageMagickProcessor implements ImageProcessor {
             logger.trace("Converting file={}", src);
             final IMOperation op = new IMOperation();
             op.addImage(sourceImage);
+            op.addImage(destImage);
+            cmd.run(op);
+        } catch (IOException | InterruptedException | IM4JavaException e) {
+            throw new RuntimeException("Error processing image", e);
+        }
+    }
+
+    public void toThumbnailFormat(final String src, final String dest) {
+        String sourceImage;
+        String destImage;
+
+        try {
+            sourceImage = Preconditions.checkNotNull(src);
+            destImage = Preconditions.checkNotNull(dest);
+        } catch (NullPointerException e) {
+            return; //ignore
+        }
+
+        final ConvertCmd cmd = new ConvertCmd();
+
+        String imageMagickPath = getImgMagickPath();
+
+        logger.trace("Image magick path={}", imageMagickPath);
+
+        if (!imageMagickPath.isEmpty()) {
+            cmd.setSearchPath(imageMagickPath);
+        } else {
+            logger.warn("ImageMagick program path property not found in .properties, db, or as IM4JAVA_TOOLPATH. "
+                    + "Assuming it exists on path anyway");
+        }
+
+        try {
+            logger.trace("Converting file={}", src);
+            final IMOperation op = new IMOperation();
+            op.addImage(sourceImage);
+            op.thumbnail(200);
             op.addImage(destImage);
             cmd.run(op);
         } catch (IOException | InterruptedException | IM4JavaException e) {

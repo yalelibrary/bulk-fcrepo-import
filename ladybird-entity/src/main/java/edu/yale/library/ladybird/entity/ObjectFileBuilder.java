@@ -16,6 +16,7 @@ public class ObjectFileBuilder {
     private String sha256;
     private Integer hydraPublishId;
     private String status;
+    private byte[] thumbnail;
 
     public ObjectFileBuilder setDataId(final Integer dataId) {
         this.dataId = dataId;
@@ -82,6 +83,11 @@ public class ObjectFileBuilder {
         return this;
     }
 
+    public ObjectFileBuilder setThumbnail(final byte[] bytes) {
+        this.thumbnail = bytes;
+        return this;
+    }
+
     public ObjectFile createObjectFile() {
         final ObjectFile objectFile = new ObjectFile();
         objectFile.setDataId(dataId);
@@ -97,6 +103,7 @@ public class ObjectFileBuilder {
         objectFile.setSha256(sha256);
         objectFile.setHydraPublishId(hydraPublishId);
         objectFile.setStatus(status);
+        objectFile.setThumbnail(thumbnail);
         return objectFile;
     }
 }

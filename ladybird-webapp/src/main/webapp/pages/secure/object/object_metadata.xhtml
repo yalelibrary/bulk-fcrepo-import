@@ -22,7 +22,7 @@
             <div>
                 <div class="row">
                     <div class="col-md-4">
-                        <h:graphicImage value="/images/#{objectMetadataView.image}" height="300" width="300"/>
+                        <h:graphicImage value="/images/#{objectMetadataView.objectFile.oid}" height="300" width="300"/>
                         #{objectMetadataView.objectFile.fileName}
                     </div>
                     <div class="col-md-8"> Object ID <h4> #{param['oid']} </h4>

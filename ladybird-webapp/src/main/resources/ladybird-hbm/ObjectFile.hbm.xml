@@ -43,5 +43,8 @@
         <property name="status" type="string">
             <column name="status" length="10" />
         </property>
+        <property name="thumbnail" type="byte[]">
+            <column name="thumbnail" />
+        </property>
     </class>
 </hibernate-mapping>
