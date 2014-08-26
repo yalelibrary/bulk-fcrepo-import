@@ -17,14 +17,15 @@
             <div>
                 <div>
                     <div>
+
                         <!-- Data Grid -->
-                        <p:dataGrid var="item" value="#{searchView.itemList}" columns="5"
-                                    rows="6" paginator="true" id="ObjectFileDatagrid" paginatorPostion="bottom"
+                        <p:dataGrid var="item" value="#{searchView.itemList}"
+                                    columns="5" rows="6" paginator="false" id="ObjectFileDatagrid" paginatorPosition="bottom"
                                     rendered="#{not empty searchView.itemList}">
 
-                            <p:panel header="#{item.oid}" style="text-align:center">
+                            <p:panel header="#{item.oid}" style="text-align:center" rendered="#{not empty searchView.itemList}">
                                 <h:panelGrid columns="1" style="width:100%">
-                                    <h:graphicImage value="/images/#{item.filePath}" height="151" width="170"/>
+                                    <h:graphicImage value="/images/#{item.oid}" height="151" width="170"/>
                                     <h:outputText value="#{item.fileName}"/>
                                     <h:link outcome="object/object_metadata?oid=#{item.oid}" value="View"/>
                                 </h:panelGrid>

@@ -20,7 +20,13 @@ public class ImageServlet extends HttpServlet {
     private Logger logger = LoggerFactory.getLogger(ImageServlet.class);
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int oid = Integer.parseInt(request.getPathInfo().substring(1));
+        String oidStr = request.getPathInfo().substring(1);
+
+        if (oidStr.isEmpty()) {
+            return;
+        }
+
+        int oid = Integer.parseInt(oidStr);
 
         final ObjectFile objectFile = getObjectFile(oid);
 

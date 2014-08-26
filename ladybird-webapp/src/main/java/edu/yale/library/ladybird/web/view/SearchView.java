@@ -85,7 +85,6 @@ public class SearchView extends AbstractView {
             final String netid = getCurrentUser(); //TODO authUtil
             postSearchEvent(netid, oid);
             itemList = getItems(oid);
-            logger.debug("Re-diecting to page");
             FacesContext.getCurrentInstance().getExternalContext().redirect("search_results.xhtml");
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -96,10 +95,13 @@ public class SearchView extends AbstractView {
     public List<ObjectFile> getItems(int oid) {
         try {
             //Find objects for only current project
-            //int currentProjectId = authUtil.getDefaultProjectForCurrentUser().getProjectId();
-            itemList = Collections.singletonList(objectFileDAO.findByOid(oid)); //TODO list, project
-            logger.trace("Item list size={}", itemList.size());
+            ObjectFile o = objectFileDAO.findByOid(oid);
 
+            if (o == null) {
+                return Collections.emptyList();
+            }
+
+            itemList = Collections.singletonList(objectFileDAO.findByOid(oid)); //TODO list, project
         } catch (Exception e) {
             logger.trace("Error finding items", e); //ignore
             return Collections.emptyList();
