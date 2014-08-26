@@ -7,13 +7,16 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../templates/template_yul.xhtml">
     <ui:define name="content">
-        <h4>Crons</h4>
+        <h4>Crons Manager</h4>
         <h:form id="UserForm" enctype="multipart/form-data">
+
+            <a href="import/cron_schedule_form.xhtml"> Schedule New Cron </a>
+
+            <br/>
 
             <div>
                 <div>
-
-                    The following cron jobs are scheduled.
+                    The following cron jobs are scheduled. Right click for more options.
                     <br/>
 
                     <p:contextMenu for="CronViewDatatable">
@@ -24,9 +27,7 @@
 
                     <p:dataTable id="CronViewDatatable"
                                  editable="false"
-                                 paginator="true"
-                                 paginatorPosition="bottom"
-                                 rows="10"
+                                 paginator="false"
                                  value="#{cronView.jobs}"
                                  var="jobitem"
                                  selection="#{cronView.selectedItem}"

@@ -32,21 +32,15 @@
                         <p:submenu label="Dashboard">
                             <p:menuitem value="Workspace" url="/pages/secure/welcome.xhtml"/>
                             <p:menuitem value="Schedule Import" url="/pages/secure/import/import_engine_file.xhtml"/>
-                            <p:menuitem value="Project Manager" url="/pages/secure/projects.xhtml"/>
-                            <p:menuitem value="Schedule cron" url="/pages/secure/import/cron_schedule_form.xhtml"/>
-                            <p:menuitem value="Field marc mappings"
-                                        url="/pages/secure/import/field_marc_mapping.xhtml"/>
-                            <p:menuitem value="OAI-PMH source" url="/pages/secure/import/import_source.xhtml"/>
-                            <p:menuitem value="Crons Manager" url="/pages/secure/crons.xhtml"/>
-                            <p:menuitem value="Session History" url="/pages/secure/user_event.xhtml?id=1"/>
-                            <p:menuitem value="Export Options" url="/pages/secure/import/user_export.xhtml"/>
                             <p:menuitem value="User Manager" url="/pages/secure/user_manager.xhtml"/>
+                            <p:menuitem value="Project Manager" url="/pages/secure/projects.xhtml"/>
+                            <p:menuitem value="Export Options" url="/pages/secure/import/user_export.xhtml"/>
                         </p:submenu>
 
                         <p:submenu label="New Object">
+                            <p:menuitem value="New Object" url="/pages/secure/object/object_new_metadata.xhtml"/>
                             <p:menuitem value="Versions History" url="/pages/secure/object/object_version.xhtml"/>
                             <p:menuitem value="Audit" url="/pages/secure/audit.xhtml"/>
-                            <p:menuitem value="New Object" url="/pages/secure/object/object_new_metadata.xhtml"/>
                         </p:submenu>
 
                         <p:submenu label="Search">
@@ -59,37 +53,35 @@
                             <p:menuitem value="Authority Lists" url="/pages/secure/acid_home.xhtml"/>
                         </p:submenu>
 
+                        <p:submenu label="Field Definitions">
+                            <p:menuitem value="Field Definitions" url="/pages/secure/import/field_definition.xhtml"/>
+                            <p:menuitem value="Field-Marc Mappings"
+                                        url="/pages/secure/import/field_marc_mapping.xhtml"/>
+                        </p:submenu>
+
                         <p:submenu label="Project Settings">
                             <p:menuitem value="Project Authorization" url="/pages/secure/users_projects.xhtml"/>
-                            <p:menuitem value="Assign Project Access" url="/pages/secure/assign_project_access.xhtml"/>
-                            <p:menuitem value="Field Definitions" url="/pages/secure/import/field_definition.xhtml"/>
-                            <p:menuitem value="Metadata Authorization" url="/pages/secure/user_project_field.xhtml"/>
-                            <p:menuitem value="Copy Metadata Access" url="/pages/secure/copy_metadata_access.xhtml"/>
-                            <p:menuitem value="Project Access Conditions"
-                                        url="/pages/secure/access_condition_project.xhtml"/>
                             <p:menuitem value="Project Templates" url="/pages/secure/project_template.xhtml"/>
+                            <p:menuitem value="Metadata Access" url="/pages/secure/user_project_field.xhtml"/>
+                            <p:menuitem value="Copy Metadata Access" url="/pages/secure/copy_metadata_access.xhtml"/>
                         </p:submenu>
 
                         <p:submenu label="Authorization">
-                            <p:menuitem value="Add Role" url="/pages/secure/authz/roles_form.xhtml"/>
-                            <p:menuitem value="View Roles" url="/pages/secure/authz/roles.xhtml"/>
-                            <p:menuitem value="Add Permission" url="/pages/secure/authz/permissions_form.xhtml"/>
-                            <p:menuitem value="View Permissions" url="/pages/secure/authz/permissions.xhtml"/>
-                            <p:menuitem value="Change Role Permissions"
-                                        url="/pages/secure/authz/roles_permissions_change.xhtml"/>
                             <p:menuitem value="View Role Permissions"
                                         url="/pages/secure/authz/roles_permissions.xhtml"/>
-                            <p:menuitem value="View Default Roles" url="/pages/secure/authz/initial_roles.xhtml"/>
                         </p:submenu>
 
                         <p:submenu label="Stats">
                             <p:menuitem value="Stats" url="/pages/secure/stats.xhtml"/>
                             <p:menuitem value="Imports" url="/pages/secure/import/import_engine.xhtml"/>
                             <p:menuitem value="Publish" url="/pages/secure/stats_publish.xhtml"/>
+                            <p:menuitem value="Session History" url="/pages/secure/user_event.xhtml?id=1"/>
                         </p:submenu>
 
                         <p:submenu label="System Settings">
                             <p:menuitem value="Application Settings" url="/pages/secure/settings.xhtml"/>
+                            <p:menuitem value="OAI-PMH" url="/pages/secure/import/import_source.xhtml"/>
+                            <p:menuitem value="Crons Manager" url="/pages/secure/crons.xhtml"/>
                         </p:submenu>
 
                         <p:submenu label="#{welcomeView.currentUsername}">

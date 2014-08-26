@@ -16,9 +16,13 @@
         <h:outputText styleClass="alert-warning" value=" No project assignment for you yet. "
                       rendered="#{userPreferencesView.noAssignments()}"/>
 
+        <h:link rendered="#{userPreferencesView.noAssignments()}" outcome="assign_project_access" value="Assign Project Access"/>
+
         <h:form id="UserPreferencesForm" enctype="multipart/form-data"
                 rendered="#{not userPreferencesView.noAssignments()}"
                 styleClass="form-horizontal" role="form">
+
+
 
 
             <div class="form-group">
