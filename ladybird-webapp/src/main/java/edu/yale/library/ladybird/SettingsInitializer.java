@@ -30,6 +30,10 @@ public class SettingsInitializer {
             t.setValue(ApplicationProperties.CONFIG_STATE.IMPORT_ROOT_PATH);
             settingsDAO.save(t);
 
+            Settings u = new Settings();
+            u.setProperty(ApplicationProperties.NO_IMAGE_FOUND_PATH);
+            u.setValue(ApplicationProperties.CONFIG_STATE.NO_IMAGE_FOUND_FILE);
+            settingsDAO.save(u);
         } catch (Exception e) {
             logger.error("Error setting settings", e);
         }

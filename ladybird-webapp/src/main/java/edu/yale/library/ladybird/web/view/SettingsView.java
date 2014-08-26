@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.entity.Settings;
+import edu.yale.library.ladybird.persistence.dao.SettingsDAO;
 import org.primefaces.event.CellEditEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +16,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- *
- */
 @ManagedBean
 @ApplicationScoped
 public class SettingsView extends AbstractView {
@@ -27,7 +25,7 @@ public class SettingsView extends AbstractView {
     private List<Settings> itemList = new ArrayList<>();
 
     @Inject
-    private edu.yale.library.ladybird.persistence.dao.SettingsDAO settingsDAO;
+    private SettingsDAO settingsDAO;
 
     @PostConstruct
     public void init() {
@@ -52,14 +50,12 @@ public class SettingsView extends AbstractView {
 
         try {
             if (newValue != null && !newValue.equals(oldValue)) {
-                //logger.debug("Old value={}, new value={} row index={}", oldValue, newValue, event.getRowIndex());
-
                 Settings settings = settingsDAO.findById(event.getRowIndex()); //TODO check if table row id matches db row Id
                 settings.setValue((String) newValue);
 
                 settingsDAO.saveOrUpdateList(Collections.singletonList(settings));
 
-                logger.debug("Saved={}", settingsDAO.findByProperty(settings.getProperty()).toString());
+                logger.debug("Saved setting={}", settingsDAO.findByProperty(settings.getProperty()).toString());
 
                 FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Saved", "");
                 FacesContext.getCurrentInstance().addMessage(null, msg);

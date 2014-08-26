@@ -118,6 +118,18 @@ public class ImageMagickProcessor implements ImageProcessor {
         return "";
     }
 
+    public static String getBlankImagePath() {
+        try {
+            final SettingsDAO settingsDAO = new SettingsHibernateDAO();
+            final Settings s = settingsDAO.findByProperty(ApplicationProperties.NO_IMAGE_FOUND_PATH);
+            String value = s.getValue();
+            return value;
+        } catch (Exception e) {
+            logger.error("Error getting blank image path", e);
+            throw new NullPointerException("No image found");
+        }
+    }
+
     public static boolean pathContains(final String path) {
         final String PROGRAM = "convert";
         File file = new File(path + File.separator + PROGRAM);
