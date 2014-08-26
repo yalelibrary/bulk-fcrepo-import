@@ -15,10 +15,7 @@ import javax.faces.bean.RequestScoped;
 import javax.inject.Inject;
 import java.util.List;
 
-/**
- *
- */
-
+//TODO rename
 @ManagedBean
 @RequestScoped
 public class RolesPermissionsSiteView extends AbstractView {
@@ -53,6 +50,40 @@ public class RolesPermissionsSiteView extends AbstractView {
         permissionsList = permissionsDAO.findAll();
         itemList = rolesPermissionsDAO.findAll();
     }
+
+    public String save() {
+        logger.debug("Updating permssion={} for role={} with value={}",
+                permissions.getPermissionsId(), roles.getRoleId(), enabled);
+        try {
+            RolesPermissions rolesPermissions = rolesPermissionsDAO.findByRolesPermissionsId(roles.getRoleId(), permissions.getPermissionsId());
+
+            logger.debug("Entity={}", rolesPermissions);
+
+            if (enabled) {
+                rolesPermissions.setValue('y');
+            } else {
+                rolesPermissions.setValue('n');
+            }
+
+            rolesPermissionsDAO.updateItem(rolesPermissions);
+            logger.debug("New entity={}", rolesPermissionsDAO.findByRolesPermissionsId(roles.getRoleId(), permissions.getPermissionsId()));
+            return ok();
+        } catch (Exception e) {
+            logger.error("Error updating roles permissions pair", e);
+            return fail();
+        }
+    }
+
+    public String getRoleName(int roleId) {
+        return rolesDAO.findById(roleId).getRoleName();
+
+    }
+
+    public String getPermissionsName(int permissionsId) {
+        return permissionsDAO.findById(permissionsId).getPermissionsName();
+    }
+
+    //getters and setters ---------------------------------------------------------------
 
     public Roles getRoles() {
         return roles;
@@ -102,44 +133,4 @@ public class RolesPermissionsSiteView extends AbstractView {
         this.itemList = itemList;
     }
 
-    //todo
-    public String getRoleName(int roleId) {
-        return rolesDAO.findById(roleId).getRoleName();
-
-    }
-
-    public String getPermissionsName(int permissionsId) {
-        return permissionsDAO.findById(permissionsId).getPermissionsName();
-
-    }
-
-    public String save() {
-
-        logger.debug("Updating permssion={} for role={} with value={}",
-                permissions.getPermissionsId(), roles.getRoleId(), enabled);
-        try {
-            //TODO auto conversion
-            RolesPermissions rolesPermissions = new RolesPermissions();
-            rolesPermissions.setRoleId(roles.getRoleId());
-            rolesPermissions.setPermissiosnId(permissions.getPermissionsId());
-
-            if (enabled) {
-                rolesPermissions.setValue('y');
-            } else {
-                rolesPermissions.setValue('n');
-            }
-
-            RolesPermissions id = rolesPermissionsDAO.findByRolesPermissionsId(roles.getRoleId(), permissions.getPermissionsId());
-
-            if (id == null) {
-                rolesPermissionsDAO.save(rolesPermissions);
-            } //else {
-                //TODO update
-            //}
-            return NavigationCase.OK.toString();
-        } catch (Exception e) {
-            logger.error("Error updating or saving roles permissions pair", e);
-        }
-        return NavigationCase.FAIL.toString();
-    }
 }

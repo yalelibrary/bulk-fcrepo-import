@@ -7,5 +7,7 @@ public interface PermissionsDAO extends GenericDAO<Permissions, Integer> {
 
     Permissions findById(int permissionsId);
 
+    Permissions findByName(String label);
+
 }
 

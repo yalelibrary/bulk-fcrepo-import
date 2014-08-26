@@ -7,5 +7,7 @@ public interface RolesDAO extends GenericDAO<Roles, Integer> {
 
     Roles findById(int roleId);
 
+    Roles findByName(String roleName);
+
 }
 

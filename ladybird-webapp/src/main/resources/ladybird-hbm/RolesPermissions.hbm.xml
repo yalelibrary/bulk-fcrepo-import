@@ -10,7 +10,7 @@
         <property name="roleId" type="int">
             <column name="role_id" not-null="true" />
         </property>
-        <property name="permissiosnId" type="int">
+        <property name="permissionsId" type="int">
             <column name="permissiosn_id" not-null="true" />
         </property>
         <property name="value" type="java.lang.Character">

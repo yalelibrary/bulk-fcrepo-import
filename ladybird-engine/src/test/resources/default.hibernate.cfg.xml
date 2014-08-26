@@ -34,5 +34,10 @@
         <mapping resource="test-hbm/ObjectVersion.hbm.xml"/>
         <mapping resource="test-hbm/ObjectAcidVersion.hbm.xml"/>
         <mapping resource="test-hbm/ObjectStringVersion.hbm.xml"/>
+        <!-- for authz load permissions and roles. remove when moved -->
+        <mapping resource="test-hbm/Permissions.hbm.xml"/>
+        <mapping resource="test-hbm/Roles.hbm.xml"/>
+        <mapping resource="test-hbm/RolesPermissions.hbm.xml"/>
+
     </session-factory>
 </hibernate-configuration>

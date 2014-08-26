@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Initial roleas and permissions for roles
+ * Roles and initial permissions for roles.
+ * (Permissions should be allowed to change dynamically.)
  */
 public enum Roles {
 
@@ -12,12 +13,13 @@ public enum Roles {
 
         @Override
         public List<PermissionsValue> getPermissions() {
-
             List<PermissionsValue> permissions = new ArrayList<>();
             permissions.add(getValue(Permissions.USER_ADD, true));
             permissions.add(getValue(Permissions.USER_LIST, true));
             permissions.add(getValue(Permissions.IMPORTSOURCE_ADD, true));
             permissions.add(getValue(Permissions.PROJECT_ADD, true));
+            permissions.add(getValue(Permissions.ACID_ADD, true));
+            permissions.add(getValue(Permissions.FDID_ADD, true));
             return permissions;
         }
     },
@@ -25,37 +27,40 @@ public enum Roles {
 
         @Override
         public List<PermissionsValue> getPermissions() {
-
             List<PermissionsValue> permissions = new ArrayList<>();
             permissions.add(getValue(Permissions.USER_ADD, false));
             permissions.add(getValue(Permissions.USER_LIST, true));
             permissions.add(getValue(Permissions.IMPORTSOURCE_ADD, false));
             permissions.add(getValue(Permissions.PROJECT_ADD, false));
+            permissions.add(getValue(Permissions.ACID_ADD, false));
+            permissions.add(getValue(Permissions.FDID_ADD, false));
             return permissions;
         }
     },
     PROJECT_ADMIN("projectadmin") {
 
         public List<PermissionsValue> getPermissions() {
-
             List<PermissionsValue> permissions = new ArrayList<>();
             permissions.add(getValue(Permissions.USER_ADD, true));
             permissions.add(getValue(Permissions.USER_LIST, true));
             permissions.add(getValue(Permissions.IMPORTSOURCE_ADD, false));
             permissions.add(getValue(Permissions.PROJECT_ADD, false));
+            permissions.add(getValue(Permissions.ACID_ADD, true));
+            permissions.add(getValue(Permissions.FDID_ADD, true));
             return permissions;
         }
     },
     PROJECT_USER("projectuser") {
 
         public List<PermissionsValue> getPermissions() {
-
             List<PermissionsValue> permissions = new ArrayList<>();
             permissions.add(getValue(Permissions.USER_ADD, false));
             permissions.add(getValue(Permissions.USER_LIST, true));
             permissions.add(getValue(Permissions.IMPORTSOURCE_ADD, false));
             permissions.add(getValue(Permissions.PROJECT_ADD, false));
             permissions.add(getValue(Permissions.PROJECT_DELETE, false));
+            permissions.add(getValue(Permissions.ACID_ADD, false));
+            permissions.add(getValue(Permissions.FDID_ADD, false));
             return permissions;
         }
     },
@@ -108,6 +113,15 @@ public enum Roles {
             }
         }
         return null;
+    }
+
+    public static int getRolesPermissionsSize() {
+        int count = 0;
+        Roles[] roles =  Roles.values();
+        for (Roles r: roles) {
+            count += r.getPermissions().size();
+        }
+        return count;
     }
 
     @Override

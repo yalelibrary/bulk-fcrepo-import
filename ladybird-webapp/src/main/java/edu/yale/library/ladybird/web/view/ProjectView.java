@@ -2,11 +2,14 @@ package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.auth.Permissions;
 import edu.yale.library.ladybird.auth.PermissionsValue;
-import edu.yale.library.ladybird.auth.Roles;
 import edu.yale.library.ladybird.entity.Project;
 import edu.yale.library.ladybird.entity.ProjectBuilder;
+import edu.yale.library.ladybird.entity.RolesPermissions;
 import edu.yale.library.ladybird.entity.User;
+import edu.yale.library.ladybird.persistence.dao.PermissionsDAO;
 import edu.yale.library.ladybird.persistence.dao.ProjectDAO;
+import edu.yale.library.ladybird.persistence.dao.RolesDAO;
+import edu.yale.library.ladybird.persistence.dao.RolesPermissionsDAO;
 import edu.yale.library.ladybird.persistence.dao.UserDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserHibernateDAO;
 import org.slf4j.Logger;
@@ -40,6 +43,15 @@ public class ProjectView extends AbstractView {
 
     @Inject
     private AuthUtil authUtil;
+
+    @Inject
+    private RolesDAO rolesDAO;
+
+    @Inject
+    private PermissionsDAO permissionsDAO;
+
+    @Inject
+    private RolesPermissionsDAO rolesPermissionsDAO;
 
     @PostConstruct
     public void init() {
@@ -129,21 +141,19 @@ public class ProjectView extends AbstractView {
      * @return whether the action has permissions. false if action not found or permissions false.
      */
     public boolean checkAddProjectPermission() {
-
         try {
-            //1. Get user
             final User user = authUtil.getCurrentUser();
+            final String userRoleStr = user.getRole();
+            RolesPermissions rolesPerm = authUtil.getRolePermission(userRoleStr, Permissions.PROJECT_ADD);
 
-            // 2. Get permissions associated with this role
-            final Roles roles = Roles.fromString(user.getRole());
-
-            //3. Does the action have permissions
-            final List<PermissionsValue> permissionsList = roles.getPermissions();
-            for (final PermissionsValue p: permissionsList) {
-                if (p.getPermissions().equals(Permissions.PROJECT_ADD)) {
-                    return p.isEnabled();
-                }
+            if (rolesPerm == null) {
+                logger.error("Role permisison not found for user={}", user);
+                return false;
             }
+
+            char permission = rolesPerm.getValue();
+            return permission == 'y';
+
         } catch (Exception e) {
             logger.error("Error getting permissions", e);
         }

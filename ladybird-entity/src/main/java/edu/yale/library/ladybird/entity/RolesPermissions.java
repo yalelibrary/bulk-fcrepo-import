@@ -7,16 +7,16 @@ public class RolesPermissions implements java.io.Serializable {
 
     private int id;
     private int roleId;
-    private int permissiosnId;
+    private int permissionsId;
     private Character value;
     private Date createdDate;
 
     public RolesPermissions() {
     }
 
-    public RolesPermissions(int roleId, int permissiosnId, Character value) {
+    public RolesPermissions(int roleId, int permissionsId, Character value) {
         this.roleId = roleId;
-        this.permissiosnId = permissiosnId;
+        this.permissionsId = permissionsId;
         this.value = value;
     }
 
@@ -32,16 +32,16 @@ public class RolesPermissions implements java.io.Serializable {
         this.roleId = roleId;
     }
 
-    public void setPermissiosnId(int permissiosnId) {
-        this.permissiosnId = permissiosnId;
+    public void setPermissionsId(int permissionsId) {
+        this.permissionsId = permissionsId;
     }
 
     public int getRoleId() {
         return roleId;
     }
 
-    public int getPermissiosnId() {
-        return permissiosnId;
+    public int getPermissionsId() {
+        return permissionsId;
     }
 
 
@@ -65,7 +65,7 @@ public class RolesPermissions implements java.io.Serializable {
     public String toString() {
         return "RolesPermissions{"
                 + "roleId=" + roleId
-                + ", permissiosnId=" + permissiosnId
+                + ", permissionsId=" + permissionsId
                 + ", value=" + value
                 + ", createdDate=" + createdDate
                 + '}';

@@ -33,13 +33,14 @@ public class RolesPermissionsDaoTest extends AbstractPersistenceTest {
     private RolesPermissionsDAO dao;
 
     @Test
-    public void testSave() {
+    public void shouldSave() {
         final RolesPermissions item = new RolesPermissions((short) 1, (short) 1, 'y');
         List list = null;
+        RolesPermissions rolesPermissions = null;
         try {
             dao.save(item);
             list = dao.findAll();
-
+             rolesPermissions = dao.findByRolesPermissionsId(1, 1);
         } catch (Throwable e) {
             e.printStackTrace();
             fail("Error testing saving or finding item");
@@ -49,5 +50,6 @@ public class RolesPermissionsDaoTest extends AbstractPersistenceTest {
         final RolesPermissions permissions = (RolesPermissions) list.get(0);
         assertEquals("Value mismatch", permissions.getRoleId(), 1);
         assertEquals("Value mismatch", (char) permissions.getValue(), 'y');
+        assertEquals((char) rolesPermissions.getValue(), 'y');
     }
 }

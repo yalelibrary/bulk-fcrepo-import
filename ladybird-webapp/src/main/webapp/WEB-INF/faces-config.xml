@@ -53,22 +53,6 @@
         </navigation-case>
     </navigation-rule>
     <navigation-rule>
-        <from-view-id>/pages/secure/authz/roles_form.xhtml</from-view-id>
-        <navigation-case>
-            <from-outcome>ok</from-outcome>
-            <to-view-id>/pages/secure/authz/roles.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>
-        <from-view-id>/pages/secure/authz/permissions_form.xhtml</from-view-id>
-        <navigation-case>
-            <from-outcome>ok</from-outcome>
-            <to-view-id>/pages/secure/authz/permissions.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-    </navigation-rule>
-    <navigation-rule>
         <from-view-id>/pages/secure/authz/roles_permissions_change.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>ok</from-outcome>

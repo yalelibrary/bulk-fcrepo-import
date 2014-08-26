@@ -1,5 +1,6 @@
 package edu.yale.library.ladybird;
 
+import edu.yale.library.ladybird.engine.RolesPermissionsLoader;
 import edu.yale.library.ladybird.engine.ExportBus;
 import edu.yale.library.ladybird.engine.oai.FdidMarcMappingUtil;
 import edu.yale.library.ladybird.entity.event.RollbackEventType;
@@ -67,6 +68,14 @@ public class AppContextListener implements ServletContextListener {
             logger.debug("Event types are={}", eventTypeDAO.findAll().toString());
         } catch (Exception e) {
             logger.error("Error setting event types", e);
+        }
+
+        //Add role permissions
+        try {
+            RolesPermissionsLoader rolesPermissionsLoader = new RolesPermissionsLoader();
+            rolesPermissionsLoader.load(); //TODO remove or check functionality since this will override
+        } catch (Exception e) {
+            logger.error("Error init to db role permissions");
         }
     }
 

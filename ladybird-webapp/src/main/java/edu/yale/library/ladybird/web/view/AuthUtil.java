@@ -1,9 +1,15 @@
 package edu.yale.library.ladybird.web.view;
 
+import edu.yale.library.ladybird.auth.Permissions;
+import edu.yale.library.ladybird.auth.Roles;
 import edu.yale.library.ladybird.entity.Project;
+import edu.yale.library.ladybird.entity.RolesPermissions;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.entity.UserPreferences;
+import edu.yale.library.ladybird.persistence.dao.PermissionsDAO;
 import edu.yale.library.ladybird.persistence.dao.ProjectDAO;
+import edu.yale.library.ladybird.persistence.dao.RolesDAO;
+import edu.yale.library.ladybird.persistence.dao.RolesPermissionsDAO;
 import edu.yale.library.ladybird.persistence.dao.UserDAO;
 import edu.yale.library.ladybird.persistence.dao.UserPreferencesDAO;
 import org.slf4j.Logger;
@@ -25,6 +31,15 @@ public class AuthUtil extends AbstractView {
 
     @Inject
     private ProjectDAO projectDAO;
+
+    @Inject
+    private RolesDAO rolesDAO;
+
+    @Inject
+    private PermissionsDAO permissionsDAO;
+
+    @Inject
+    private RolesPermissionsDAO rolesPermissionsDAO;
 
     public AuthUtil() {
         initFields();
@@ -117,6 +132,18 @@ public class AuthUtil extends AbstractView {
 
     private String getNetid() {
         return FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("netid").toString();
+    }
+
+    public RolesPermissions getRolePermission(String userRoleStr, Permissions requiredPermission) {
+        try {
+            final Roles role = Roles.fromString(userRoleStr);
+            final int roleId = rolesDAO.findByName(role.getName()).getRoleId();
+            final int permissionsId = permissionsDAO.findByName(requiredPermission.getName()).getPermissionsId();
+            return rolesPermissionsDAO.findByRolesPermissionsId(roleId, permissionsId);
+        } catch (Exception e) {
+            logger.error("Error gettig role permission", e);
+            return null; //TODO
+        }
     }
 
 }

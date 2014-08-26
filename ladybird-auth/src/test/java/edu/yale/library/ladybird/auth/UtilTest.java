@@ -9,8 +9,8 @@ public class UtilTest {
 
     @Test
     public void shouldFindProperty() {
-        assertNotNull(Util.getProperty("cas_server_url"));
-        assertEquals("Value mismatch", Util.getProperty("cas_server_validate_url"),
+        assertNotNull(PropUtil.getProperty("cas_server_url"));
+        assertEquals("Value mismatch", PropUtil.getProperty("cas_server_validate_url"),
                 "https://secure.its.yale.edu/cas/validate");
     }
 }

@@ -22,17 +22,15 @@
             </span>
         </div>
 
+        <br/>
 
         <h:form id="RolesPermissionsForm" enctype="multipart/form-data" rendered="#{(not empty roleSiteView.itemList)
             and (not empty permissionsSiteView.itemList)}">
-            <br/>
-
-            <h3> Add Role Permissions</h3>
-
             <div>
                 <div>
                     <div>
                         <label>Role</label>
+
                         <div>
                             <p:selectOneMenu id="roleSelectBox"
                                              value="#{rolesPermissionsSiteView.roles.roleId}">
@@ -40,15 +38,16 @@
                                 <f:selectItems value="#{rolesPermissionsSiteView.rolesList}"
                                                var="select_role_var"
                                                itemLabel="#{select_role_var.roleName}"
-                                               itemValue="#{select_role_var.roleId}" />
+                                               itemValue="#{select_role_var.roleId}"/>
 
                             </p:selectOneMenu>
-                            <h:message for="roleSelectBox" style="color:red" />
+                            <h:message for="roleSelectBox" style="color:red"/>
                         </div>
                     </div>
 
                     <div>
                         <label>Permission</label>
+
                         <div>
                             <p:selectOneMenu id="permissionsSelectBox"
                                              value="#{rolesPermissionsSiteView.permissions.permissionsId}">
@@ -56,15 +55,16 @@
                                 <f:selectItems value="#{rolesPermissionsSiteView.permissionsList}"
                                                var="select_per_var"
                                                itemLabel="#{select_per_var.permissionsName}"
-                                               itemValue="#{select_per_var.permissionsId}" />
+                                               itemValue="#{select_per_var.permissionsId}"/>
 
                             </p:selectOneMenu>
-                            <h:message for="permissionsSelectBox" style="color:red" />
+                            <h:message for="permissionsSelectBox" style="color:red"/>
                         </div>
                     </div>
 
                     <div>
                         <label>Enable</label>
+
                         <div>
                             <h:selectBooleanCheckbox value="#{rolesPermissionsSiteView.enabled}"/>
                         </div>

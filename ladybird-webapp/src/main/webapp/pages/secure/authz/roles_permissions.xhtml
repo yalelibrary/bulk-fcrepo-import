@@ -7,34 +7,41 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../../templates/template_yul.xhtml">
 
-
     <ui:define name="content">
-        <h4>Roles and Permissions </h4>
+        <h4>Roles and Associated Permissions </h4>
+
+        <a href="initial_roles.xhtml"> View Initial System Default Configuration </a>
+
+        <br/>
+
         <h:form id="RolesPermissionsForm" enctype="multipart/form-data">
             <br/>
 
-            <p:dataTable id="RolesPermissionsDatatable" value="#{rolesPermissionsSiteView.itemList}"
-                         var="item" paginator="true" rows="10"
-                         tableStyle="" paginatorPosition="bottom"
+            <p:dataTable id="RolesPermissionsDatatable"
+                         value="#{rolesPermissionsSiteView.itemList}"
+                         var="item"
+                         paginator="false"
                          editable="false">
 
+                <!--
                 <p:column>
                     <f:facet name="header">
                         <h:outputText value="Id" />
                     </f:facet>
                     <h:outputText value="#{item.id}" />
                 </p:column>
+                -->
                 <p:column>
                     <f:facet name="header">
-                        <h:outputText value="Roles" />
+                        <h:outputText value="Role" />
                     </f:facet>
                     <h:outputText value="#{rolesPermissionsSiteView.getRoleName(item.roleId)}" />
                 </p:column>
                 <p:column>
                     <f:facet name="header">
-                        <h:outputText value="Permissions" />
+                        <h:outputText value="Permission" />
                     </f:facet>
-                    <h:outputText value="#{rolesPermissionsSiteView.getPermissionsName(item.permissiosnId)}" />
+                    <h:outputText value="#{rolesPermissionsSiteView.getPermissionsName(item.permissionsId)}" />
                 </p:column>
                 <p:column>
                     <f:facet name="header">
@@ -44,9 +51,11 @@
                 </p:column>
                 <p:column>
                     <f:facet name="header">
-                        <h:outputText value="Created Date" />
+                        <h:outputText value="Created" />
                     </f:facet>
-                    <h:outputText value="#{item.createdDate}" />
+                    <h:outputText value="#{item.createdDate}">
+                        <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                    </h:outputText>
                 </p:column>
              
             </p:dataTable>
