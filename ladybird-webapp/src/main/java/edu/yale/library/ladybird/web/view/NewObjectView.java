@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.web.view;
 
 import com.google.common.collect.Lists;
+import edu.yale.library.ladybird.engine.file.ImageMagickProcessor;
 import edu.yale.library.ladybird.engine.imports.ObjectWriter;
 import edu.yale.library.ladybird.entity.AuthorityControlBuilder;
 import edu.yale.library.ladybird.entity.FieldDefinition;
@@ -22,6 +23,7 @@ import edu.yale.library.ladybird.persistence.dao.ObjectFileDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectStringDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectStringVersionDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectVersionDAO;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +31,8 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.inject.Inject;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -145,10 +149,12 @@ public class NewObjectView extends AbstractView implements Serializable {
     /**
      * Add new oid metadata
      * TODO tx - should fail the addition if one of the values fails to happen.
-     * TODO need FDV to object* converter
+     * TODO need FDV to object* converter. or at least write a test.
      */
     public String editOidMetadata() {
         try {
+            final Date date = new Date(); //same date for all values
+
             final int userId = auth.getCurrentUserId();
             final Project project = auth.getDefaultProjectForCurrentUser();
 
@@ -157,7 +163,14 @@ public class NewObjectView extends AbstractView implements Serializable {
                 return fail();
             }
 
-            final Date date = new Date(); //same date for all values
+            //get thumbnail:
+            byte[] thumbnail = getThumbnail();
+
+            if (thumbnail == null || thumbnail.length == 0) {
+                logger.error("Thumbnail null. Cannot save object");
+                return fail();
+            }
+
 
             final Object newObject = new ObjectBuilder().setDate(new Date()).setParent(false)
                     .setUserId(auth.getCurrentUserId())
@@ -167,7 +180,7 @@ public class NewObjectView extends AbstractView implements Serializable {
             logger.debug("Saved oid={}", oid);
 
             //save object file:
-            final ObjectFile objectFile = new ObjectFileBuilder().setDate(date).setOid(oid).setUserId(userId).createObjectFile();
+            final ObjectFile objectFile = new ObjectFileBuilder().setDate(date).setOid(oid).setUserId(userId).setThumbnail(thumbnail).createObjectFile();
             objectFileDAO.save(objectFile);
 
             //save object string:
@@ -201,6 +214,26 @@ public class NewObjectView extends AbstractView implements Serializable {
             logger.error("Error creating new object={}", e); //TODO this is a mass exception
             return fail();
         }
+    }
+
+    private byte[] getThumbnail() {
+        try {
+            return getBytes(ImageMagickProcessor.getBlankImagePath());
+        } catch (IOException e) {
+            logger.error("Error getting thumbnail", e);
+            return null;
+        }
+    }
+
+    private byte[] getBytes(String filePath) throws IOException {
+        byte[] bytes;
+        try {
+            bytes = FileUtils.readFileToByteArray(new File(filePath));
+        } catch (IOException e) {
+            logger.error("Error getting bytes for path={}", filePath, e);
+            throw e;
+        }
+        return bytes;
     }
 
     //TODO see if it can be replaced with engine's FDV
@@ -237,6 +270,9 @@ public class NewObjectView extends AbstractView implements Serializable {
                     + '}';
         }
     }
+
+
+
 
     //Getters and setters -------------------------------------------------------------------
     public List<FieldDefinitionValue> getFieldDefinitionvalueList() {
