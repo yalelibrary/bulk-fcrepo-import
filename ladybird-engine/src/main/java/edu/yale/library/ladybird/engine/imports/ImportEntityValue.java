@@ -21,7 +21,7 @@ import java.util.NoSuchElementException;
  */
 public class ImportEntityValue {
 
-    private Logger logger = LoggerFactory.getLogger(ImportEntityValue.class);
+    private static Logger logger = LoggerFactory.getLogger(ImportEntityValue.class);
 
     private List<ImportEntity.Row> rowList;
     private static int HEADER_ROW = 0;
@@ -43,7 +43,6 @@ public class ImportEntityValue {
         ImportEntity.Column<String> column = new ImportEntity().new Column<>(f, "");
         return column;
     }
-
 
     /**
      * Get all specific column values.
@@ -288,6 +287,12 @@ public class ImportEntityValue {
      */
     public static String findColValueFromRow(final FieldConstant f, final List<Column> column) {
         for (final Column<String> col: column) {
+
+            if (col.getField() == null) {
+                logger.warn("Returning empty string for null col field={}", col);
+                return "";
+            }
+
             if (col.getField().getName().equals(f.getName())) {
                 return col.getValue();
             }

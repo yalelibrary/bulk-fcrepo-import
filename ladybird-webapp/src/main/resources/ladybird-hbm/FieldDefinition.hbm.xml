@@ -25,7 +25,7 @@
         <property name="tooltip" type="string">
             <column name="tooltip" length="500" />
         </property>
-        <property name="multivalue" type="int">
+        <property name="multivalue" type="boolean">
             <column name="multivalue" />
         </property>
         <property name="display" type="int">

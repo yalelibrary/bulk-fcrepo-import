@@ -8,75 +8,85 @@
 <ui:composition template="../../../templates/template_yul.xhtml">
     <ui:define name="content">
 
+        <br/>
         <h:outputText value="Your role does not have permissions to add an fdid."
                       styleClass="alert alert-warning"
                       rendered="#{not FieldDefinitionView.checkAddFdidPermission()}"/>
 
-        <!-- FORM -->
         <h:form id="FieldDefinitionForm" enctype="multipart/form-data"
-                rendered="#{FieldDefinitionView.checkAddFdidPermission()}">
+                rendered="#{FieldDefinitionView.checkAddFdidPermission()}"
+                styleClass="form-horizontal" role="form">
 
-            <h4>Add Field Definition</h4>
+            <h4>Add Fdid</h4>
 
-            <div>
-                <label>Fdid</label>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Fdid</label>
 
-                <div>
+                <div class="col-sm-10">
                     <p:inputText id="fdidInput" value="#{FieldDefinitionView.item.fdid}">
-                        <f:validateLongRange minimum="1" maximum="1000" />
+                        <f:validateLongRange minimum="1" maximum="1000"/>
                     </p:inputText>
-                    <h:message for="fdidInput" style="color:red" />
+                    <h:message for="fdidInput" style="color:red"/>
                 </div>
             </div>
 
-            <div>
-                <label>Acid</label>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">ACID</label>
 
-                <div>
+                <div class="col-sm-10">
                     <p:inputText id="acidInput" value="#{FieldDefinitionView.item.acid}">
-                        <f:validateLongRange minimum="1" maximum="1000" />
+                        <f:validateLongRange minimum="0" maximum="1000"/>
                     </p:inputText>
-                    <h:message for="acidInput" style="color:red" />
+                    <h:message for="acidInput" style="color:red"/>
                 </div>
             </div>
 
-            <div>
-                <label>Handle</label>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Handle</label>
 
-                <div>
-                    <p:inputText value="#{FieldDefinitionView.item.handle}"/>
+                <div class="col-sm-10">
+                    <div>
+                        <p:inputText id="handleInput" value="#{FieldDefinitionView.item.handle}">
+                            <f:validateLength minimum="1" maximum="50"/>
+                        </p:inputText>
+                        <h:message for="handleInput" style="color:red"/>
+                    </div>
                 </div>
             </div>
 
-            <div>
-                <label>Tooltip</label>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Multi-Valued</label>
 
-                <div>
-                    <p:inputText value="#{FieldDefinitionView.item.tooltip}"/>
+                <div class="col-sm-10">
+                    <div>
+                        <p:selectBooleanCheckbox value="#{FieldDefinitionView.item.multivalue}"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Type</label>
+
+                <div class="col-sm-10">
+                    <div>
+                        <p:selectOneMenu value="#{FieldDefinitionView.item.type}">
+                            <f:selectItems value="#{FieldDefinitionView.fieldDefintionTypes}"
+                                           var="type_var"
+                                           itemLabel="#{type_var}"
+                                           itemValue="#{type_var}"/>
+                        </p:selectOneMenu>
+                    </div>
                 </div>
             </div>
 
             <!--
-            <div>
-                <label>Locked</label>
+                <p:inputText value="#{FieldDefinitionView.item.tooltip}"/>
 
-                <div>
-                    <h:selectBooleanCheckbox value="#{FieldDefinitionView.item.locked}"/>
+                <h:selectBooleanCheckbox value="#{FieldDefinitionView.item.locked}"/>
 
-                </div>
-            </div>
-
-            <div>
-                <label>Required</label>
-
-                <div>
-                    <h:selectBooleanCheckbox value="#{FieldDefinitionView.item.required}"/>
-                </div>
-            </div>
-
+                <h:selectBooleanCheckbox value="#{FieldDefinitionView.item.required}"/>
             -->
 
-            <!-- Submit Button -->
             <h:commandButton value="Submit" styleClass="btn" action="#{FieldDefinitionView.save()}"/>
 
         </h:form>

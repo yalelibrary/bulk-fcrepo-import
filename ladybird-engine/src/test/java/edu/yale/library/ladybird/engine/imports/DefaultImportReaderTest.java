@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
 
 public class DefaultImportReaderTest extends AbstractDBTest {
@@ -23,13 +22,6 @@ public class DefaultImportReaderTest extends AbstractDBTest {
 
     @Test
     public void execute() throws Exception {
-        try {
-            FieldDefinitionInitializer fieldDefinitionInitializer = new FieldDefinitionInitializer();
-            fieldDefinitionInitializer.setInitialFieldDefinitionDb();
-        } catch (IOException e) {
-            fail("Failed");
-        }
-
         AbstractImportEngine abstractImportProcessor = new DefaultImportEngine(0, 1); //TODO chk params logic
         List<ImportEntity.Row> rows = abstractImportProcessor.read(getTestSpreadsheeet(), ReadMode.FULL,
                 new DefaultFieldDataValidator());

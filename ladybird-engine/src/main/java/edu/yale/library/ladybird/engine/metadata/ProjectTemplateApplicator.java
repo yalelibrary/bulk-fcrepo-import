@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.engine.metadata;
 
 
-import edu.yale.library.ladybird.engine.imports.ObjectWriter;
+import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
 import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.AuthorityControlBuilder;
 import edu.yale.library.ladybird.entity.FieldDefinition;
@@ -73,7 +73,7 @@ public class ProjectTemplateApplicator {
                     final int fdid = fieldDef.getFdid();
 
                     //1. string
-                    if (ObjectWriter.isString(fdid)) {
+                    if (FieldConstantUtil.isString(fdid)) {
                         final ProjectTemplateStrings pString = templateStringsDAO.findByFdidAndTemplateId(fieldDef.getFdid(), templateId);
                         final String templateValue = pString.getValue();
 

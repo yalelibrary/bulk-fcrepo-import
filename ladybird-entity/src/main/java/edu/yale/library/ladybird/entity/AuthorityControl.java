@@ -7,7 +7,6 @@ import java.util.Date;
  */
 public class AuthorityControl implements java.io.Serializable {
 
-
     private Integer acid;
     private Date date;
     private int fdid;

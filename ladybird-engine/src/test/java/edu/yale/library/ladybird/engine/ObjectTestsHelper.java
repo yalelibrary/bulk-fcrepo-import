@@ -15,15 +15,20 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.AuthorityControlHiber
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectAcidHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectStringHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectVersionHibernateDAO;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 /**
  * Test util helper
  */
 public class ObjectTestsHelper {
+
+    private static final Logger logger = getLogger(ObjectTestsHelper.class);
 
     public static int writeDummyObjString(int oid, int fdid, String value) {
         ObjectString objectString = new ObjectStringBuilder().setOid(oid).setFdid(fdid).setValue(value)
@@ -53,8 +58,14 @@ public class ObjectTestsHelper {
     }
 
     public static String fdidAcidValue(int oid, int fdid) {
+        logger.debug("Eval oid={} fdid={}", oid, fdid);
         ObjectAcidDAO objectAcidDAO = new ObjectAcidHibernateDAO();
-        ObjectAcid oa  = objectAcidDAO.findByOidAndFdid(oid, fdid);
+        ObjectAcid oa = objectAcidDAO.findByOidAndFdid(oid, fdid);
+
+        if (oa == null) {
+            logger.error("Object acid null");
+        }
+
         int acid = oa.getValue();
 
         return new AuthorityControlHibernateDAO().findByAcid(acid).getValue();

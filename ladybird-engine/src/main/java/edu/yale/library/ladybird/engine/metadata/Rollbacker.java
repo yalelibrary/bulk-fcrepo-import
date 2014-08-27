@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.engine.metadata;
 
-import edu.yale.library.ladybird.engine.imports.ObjectWriter;
+import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
 import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.ObjectAcid;
 import edu.yale.library.ladybird.entity.ObjectAcidBuilder;
@@ -145,6 +145,6 @@ public class Rollbacker {
     }
 
     public boolean isString(int fdid) {
-        return ObjectWriter.isString(fdid);
+        return FieldConstantUtil.isString(fdid);
     }
 }

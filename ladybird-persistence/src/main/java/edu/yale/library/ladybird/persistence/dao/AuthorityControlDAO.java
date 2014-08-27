@@ -12,5 +12,7 @@ public interface AuthorityControlDAO extends GenericDAO<AuthorityControl, Intege
 
     int countByFdid(int fdid);
 
+    List<AuthorityControl> findByFdidAndStringValue(int fdid, String value);
+
 }
 

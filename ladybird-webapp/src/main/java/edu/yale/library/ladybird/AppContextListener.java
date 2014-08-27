@@ -12,7 +12,6 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.FieldMarcMappingHiber
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.io.IOException;
 
 /**
  * Not meant to be used directly. Subject to modification.
@@ -35,12 +34,14 @@ public class AppContextListener implements ServletContextListener {
 
         // Load initial fdid
         // TODO revisit concept/logic for init fdid for spreadsheet and db
+        /*
         try {
             FieldDefinitionInitializer fieldDefinitionInitializer = new FieldDefinitionInitializer();
             fieldDefinitionInitializer.setInitialFieldDefinitionDb();
         } catch (IOException e) {
             logger.error("Error in fdid init", e); //ignore
         }
+        */
 
         // Load initial fdid marc mappings
         try {

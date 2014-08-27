@@ -16,7 +16,7 @@ public class ImportReaderTest {
     @Test
     public void shouldEqualFuncContant() {
         try {
-            final FieldConstant f = FieldConstantRules.getFieldConstant("f104");
+            final FieldConstant f = FieldConstantUtil.getFieldConstant("f104");
             assertEquals("Function constant name mismatch", f.getName(), "F104");
         } catch (UnknownFieldConstantException e) {
             fail(e.getMessage());

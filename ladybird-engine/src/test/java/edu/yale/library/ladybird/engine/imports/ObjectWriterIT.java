@@ -37,6 +37,10 @@ public class ObjectWriterIT extends AbstractDBTest {
     @Test
     public void shouldWriteToObjectMetadataTabes() {
 
+        final int fdid1 = 59;
+        final int fdid2 = 70;
+
+
         ExportBus exportBus = new ExportBus();
         exportBus.setAbstractModule(new TestModule());
 
@@ -56,10 +60,10 @@ public class ObjectWriterIT extends AbstractDBTest {
         ImportEntity.Column oidExHeadColumn = new ImportEntity().new Column(FunctionConstants.F1, "");
         exHeadColumns.add(oidExHeadColumn);
 
-        FieldDefinition fieldDefinition = new FieldDefinition(69, "69");
+        FieldDefinition fieldDefinition = new FieldDefinition(fdid1, "69");
         ImportEntity.Column fieldExHeadColumn = new ImportEntity().new Column<>(fieldDefinition, "");
 
-        FieldDefinition fieldDefinition2 = new FieldDefinition(58, "58");
+        FieldDefinition fieldDefinition2 = new FieldDefinition(fdid2, "58");
         ImportEntity.Column fieldExHeadColumn2 = new ImportEntity().new Column<>(fieldDefinition2, "");
 
         exHeadColumns.add(fieldExHeadColumn);
@@ -77,11 +81,11 @@ public class ObjectWriterIT extends AbstractDBTest {
         ImportEntity.Column oidContentColumn = new ImportEntity().new Column(FunctionConstants.F1, "777");
         contentColumns.add(oidContentColumn);
 
-        FieldDefinition fieldDefinitionContent = new FieldDefinition(69, "69");
+        FieldDefinition fieldDefinitionContent = new FieldDefinition(fdid1, "69");
         ImportEntity.Column fieldContentColumn = new ImportEntity().new Column<>(fieldDefinitionContent, "Name of the rose");
         contentColumns.add(fieldContentColumn);
 
-        FieldDefinition fieldDefinitionContent2 = new FieldDefinition(58, "58");
+        FieldDefinition fieldDefinitionContent2 = new FieldDefinition(fdid2, "58");
         ImportEntity.Column fieldContentColumn2 = new ImportEntity().new Column<>(fieldDefinitionContent2, "Name of the rose");
         contentColumns.add(fieldContentColumn2);
 
@@ -112,7 +116,7 @@ public class ObjectWriterIT extends AbstractDBTest {
 
         ObjectAcid objectAcid = objectAcidList.get(0);
 
-        assertEquals("Value mismatch", objectAcid.getFdid(), 69);
+        assertEquals("Value mismatch", objectAcid.getFdid(), fdid1);
         assertEquals("Value mismatch", objectAcid.getValue(), 1);
 
         //Verify the value of this acid:

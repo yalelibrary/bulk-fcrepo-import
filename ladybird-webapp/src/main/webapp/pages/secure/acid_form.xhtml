@@ -27,9 +27,15 @@
                         <div class="col-sm-10">
                             <p:selectOneMenu id="fdidSelectBox" value="#{authorityControlView.item.fdid}">
 
+                                <!--
                                 <f:selectItems value="#{FieldDefinitionView.itemList}"
                                                var="select_user_var"
                                                itemLabel="#{select_user_var.fdid}"
+                                               itemValue="#{select_user_var.fdid}"/>
+                                               -->
+                                <f:selectItems value="#{authorityControlView.acids}"
+                                               var="select_user_var"
+                                               itemLabel="#{authorityControlView.getLabel(select_user_var)}"
                                                itemValue="#{select_user_var.fdid}"/>
 
                             </p:selectOneMenu>

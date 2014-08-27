@@ -20,14 +20,12 @@ import edu.yale.library.ladybird.persistence.dao.ImportJobExheadDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobContentsHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobExheadHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobHibernateDAO;
-import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -56,7 +54,7 @@ public class ImportEngineIT extends AbstractDBTest {
         ExportBus exportBus = new ExportBus();
         exportBus.setAbstractModule(new TestModule());
 
-        initFdids(); //TODO tmp. Inst app. rules for test (since db state is cleaned)
+        //initFdids(); //TODO tmp. Inst app. rules for test (since db state is cleaned)
 
         final ImportEngine importEngine = new DefaultImportEngine(0, 1); //TODO chek params logic
         importEngine.setImportSourceProcessor(new ImportSourceProcessor()); //TODO
@@ -136,18 +134,7 @@ public class ImportEngineIT extends AbstractDBTest {
                 .create();
     }
 
-
-    private void initFdids() {
-        try {
-            FieldDefinitionInitializer fieldDefinitionInitializer = new FieldDefinitionInitializer();
-            fieldDefinitionInitializer.setInitialFieldDefinitionDb();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Assert.fail("Failed");
-        }
-    }
-
-     /**
+    /**
      * Test file constants
      */
     private class FileConstants {
@@ -168,7 +155,7 @@ public class ImportEngineIT extends AbstractDBTest {
 
     @After
     public void stopDB() throws SQLException {
-       super.stop();
+        super.stop();
     }
 
 }

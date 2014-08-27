@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.engine.imports;
 
+import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
 import edu.yale.library.ladybird.entity.FieldConstant;
-import edu.yale.library.ladybird.engine.model.FieldConstantRules;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.engine.model.UnknownFieldConstantException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -63,7 +63,7 @@ public final class ImportReader {
 
                 // Reader Header value.
                 try {
-                    FieldConstant f = FieldConstantRules.getFieldConstant(String.valueOf(SpreadsheetUtil.getCellValue(cell)));
+                    FieldConstant f = FieldConstantUtil.getFieldConstant(String.valueOf(SpreadsheetUtil.getCellValue(cell)));
                     valueMap.add(f);
 
                     final ImportEntity.Column<String> column = new ImportEntity().new Column<>(f, String.valueOf(SpreadsheetUtil.getCellValue(cell)));

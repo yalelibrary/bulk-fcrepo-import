@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.engine.metadata;
 
-import edu.yale.library.ladybird.engine.imports.ObjectWriter;
+import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
 import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.AuthorityControlBuilder;
 import edu.yale.library.ladybird.entity.ObjectAcid;
@@ -39,14 +39,14 @@ public class MetadataEditor {
         final List<ObjectAcid> objectAcidVersions = new ArrayList<>();
 
         try {
-            for (FieldDefinitionValue field: fieldDefinitionvalueList) {
+            for (FieldDefinitionValue field : fieldDefinitionvalueList) {
 
                 int fdid = field.getFdid().getFdid();
 
                 if (isString(fdid)) {
                     final List<ObjectString> objectStrings = objectStringDAO.findListByOidAndFdid(oid, fdid);
 
-                    for (ObjectString os: objectStrings) {
+                    for (ObjectString os : objectStrings) {
                         stringsVersions.add(new ObjectStringBuilder().setCopy(os).createObjectString2());
                     }
 
@@ -67,7 +67,7 @@ public class MetadataEditor {
                     final List<ObjectAcid> objectAcids = objectAcidDAO.findListByOidAndFdid(oid, fdid);
 
                     //version it:
-                    for (ObjectAcid objectAcid: objectAcids) {
+                    for (ObjectAcid objectAcid : objectAcids) {
                         objectAcidVersions.add(new ObjectAcidBuilder().setO(objectAcid).createObjectAcid2());
                     }
 
@@ -118,7 +118,7 @@ public class MetadataEditor {
     }
 
     public boolean isString(int fdid) {
-        return ObjectWriter.isString(fdid);
+        return FieldConstantUtil.isString(fdid);
     }
 
 }

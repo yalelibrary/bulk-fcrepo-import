@@ -16,6 +16,7 @@ public class ApplicationProperties {
     public static final String ALREADY_RUNNING = "Driver already RUNNING.";
     public static final String ALREADY_STOPPED = "Driver already STOPPED.";
     public static final String SCHEMA_PROPS_FILE = "/derby.schema.properties";
+    public static final String FDID_PROPS_FILE = "/fdid.schema.properties";
     public static final String KILL_SCHEMA_PROPS_FILE = "/derby.kill.schema.properties";
     private static final String EMAIL_PORT_IDENTIFIER = "mail_port";
     private static final String HOST_NAME_IDENTIFIER = "mail_host";

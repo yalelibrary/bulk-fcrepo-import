@@ -2,11 +2,14 @@ package edu.yale.library.ladybird.web.view;
 
 
 import edu.yale.library.ladybird.auth.Permissions;
+import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
 import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.AuthorityControlBuilder;
+import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.RolesPermissions;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.persistence.dao.AuthorityControlDAO;
+import edu.yale.library.ladybird.persistence.dao.FieldDefinitionDAO;
 import org.omnifaces.util.Faces;
 import org.slf4j.Logger;
 
@@ -17,6 +20,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.ListIterator;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -42,6 +46,9 @@ public class AuthorityControlView extends AbstractView {
 
     @Inject
     private AuthUtil authUtil;
+
+    @Inject
+    private FieldDefinitionDAO fieldDefinitionDAO;
 
     @PostConstruct
     public void init() {
@@ -71,11 +78,32 @@ public class AuthorityControlView extends AbstractView {
      */
     public int countForFdid(int fdid) {
         try {
-            return authControlDao.countByFdid(fdid);
+            int count = authControlDao.countByFdid(fdid);
+            logger.debug("Fdid={} acid count={}", fdid, count);
+            return count;
         } catch (Exception e) {
             logger.error("Error", e);
             return 0;
         }
+    }
+
+    /**
+     * Get all acid values
+     */
+    public List<FieldDefinition> getAcids() {
+        List<FieldDefinition> list = fieldDefinitionDAO.findAll();
+
+        logger.debug("Original Fdid size={}", list.size());
+
+        list.removeIf(p -> FieldConstantUtil.isString(p.getFdid()));
+
+        logger.debug("New fdid size={}", list.size());
+        return list;
+    }
+
+    //TODO
+    public String getLabel(final FieldDefinition f) {
+        return f.getFdid() + " ( " + f.getHandle() + " ) ";
     }
 
     /**

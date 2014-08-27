@@ -10,7 +10,6 @@ import edu.yale.library.ladybird.engine.exports.ExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
 import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
 import edu.yale.library.ladybird.engine.imports.DefaultImportEngine;
-import edu.yale.library.ladybird.engine.imports.FieldDefinitionInitializer;
 import edu.yale.library.ladybird.engine.imports.ImportEngine;
 import edu.yale.library.ladybird.engine.imports.ImportEntity;
 import edu.yale.library.ladybird.engine.imports.SpreadsheetUtil;
@@ -31,7 +30,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -60,7 +58,6 @@ public class F5ProcessorIT extends AbstractDBTest {
 
     final KernelBootstrap kernelBoot = new KernelBootstrap();
     final ExportEngine exportEngine = new DefaultExportEngine();
-    final FieldDefinitionInitializer fieldDefinitionInitializer = new FieldDefinitionInitializer();
     final ImportJobDAO importJobHibernateDAO = new ImportJobHibernateDAO();
     final ImportJobExheadDAO importJobExheadDAO = new ImportJobExheadHibernateDAO();
     final ObjectDAO objectDAO = new ObjectHibernateDAO();
@@ -73,7 +70,6 @@ public class F5ProcessorIT extends AbstractDBTest {
     @Test
     public void shouldRunFullCycleForComplex() throws Exception {
         kernelBoot.setAbstractModule(new TestModule());
-        initFdids(); //TODO tmp. Inst app. rules for test (since db state is cleaned)
         final int userId = 0, projectId = 1;
 
         ExportBus exportBus = new ExportBus();
@@ -148,15 +144,6 @@ public class F5ProcessorIT extends AbstractDBTest {
             return SpreadsheetUtil.getColumnValues(TestUtil.getExportFileInuptStream(file), f.getName(), sheetNum);
         } catch (Exception e) {
             throw e;
-        }
-    }
-
-    private void initFdids() {
-        try {
-            fieldDefinitionInitializer.setInitialFieldDefinitionDb();
-        } catch (IOException e) {
-            logger.error("Error", e);
-            fail("Failed");
         }
     }
 

@@ -34,5 +34,14 @@ public class AuthorityControlHibernateDAO extends GenericHibernateDAO<AuthorityC
         return ((Long) q.uniqueResult()).intValue();
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<AuthorityControl> findByFdidAndStringValue(int fd, String val) {
+        final Query q = getSession().createQuery("from edu.yale.library.ladybird.entity.AuthorityControl where fdid = :param1 and value =:param2");
+        q.setParameter("param1", fd);
+        q.setParameter("param2", val);
+        return q.list();
+    }
+
 }
 

@@ -1,26 +1,51 @@
 package edu.yale.library.ladybird.entity;
 
 
+import java.lang.Object;
 import java.util.Date;
 
 /**
  * FieldDefinition
  */
-public class FieldDefinition implements java.io.Serializable, FieldConstant {
+public class FieldDefinition implements java.io.Serializable, FieldConstant, Comparable {
 
     private int fdid;
+
+    //TODO date changed?
     private Date date;
+
+    /** TODO probably ftid (string, longstring, dropdown) */
     private String type;
+
+    /** TODO for matching with other acid?*/
     private int acid;
+
+    //TODO?
     private int faid;
+
+    /** TODO Assuming name */
     private String handle;
+
+    //TODO remove?
     private String tooltip;
-    private int multivalue;
+
+    //TODO helper
+    private boolean multivalue;
+
+    //TODO remove?
     private int display;
+
+    //TODO remove?
     private int technical;
+
+    //TODO purpose?
     private int export;
+
+    //TODO
     //private boolean locked;
     //private boolean required;
+
+    //TODO remove?
     private String style;
 
     public FieldDefinition() {
@@ -96,11 +121,11 @@ public class FieldDefinition implements java.io.Serializable, FieldConstant {
         this.tooltip = tooltip;
     }
 
-    public int getMultivalue() {
-        return this.multivalue;
+    public boolean isMultivalue() {
+        return multivalue;
     }
 
-    public void setMultivalue(int multivalue) {
+    public void setMultivalue(boolean multivalue) {
         this.multivalue = multivalue;
     }
 
@@ -175,6 +200,35 @@ public class FieldDefinition implements java.io.Serializable, FieldConstant {
     public void setTitle(final String s) {
         throw new UnsupportedOperationException("Cannot set this value for FieldDefintion");
     }
+
+    //todo
+    @Override
+    public int compareTo(Object o) {
+        FieldDefinition f = (FieldDefinition) o;
+
+        if (f.fdid == this.fdid) {
+            return 0;
+        }
+
+        return f.fdid < this.fdid ? 1 : -1;
+    }
+
+    /**
+     * converter helper
+     * FIXME this depends on the the fdids are loaded (currently through a file fdid.test.propeties at webapp start up)
+     *
+     * @param s string e.g. from Host, note{fdid=68}
+     * @return integer value
+     */
+    public static Integer fdidAsInt(String s) {
+        try {
+            return Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            String[] parsedString = s.split("fdid=");
+            return Integer.parseInt(parsedString[1].replace("}", ""));
+        }
+    }
+
 }
 
 

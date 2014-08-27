@@ -11,7 +11,6 @@ import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
 import edu.yale.library.ladybird.engine.imports.ImportEngineException;
 import edu.yale.library.ladybird.engine.imports.ImportEntity;
 import edu.yale.library.ladybird.engine.imports.ObjectWriter;
-import edu.yale.library.ladybird.engine.model.FieldConstantRules;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.ImportJob;
@@ -216,7 +215,7 @@ public class DefaultExportJob implements Job, ExportJob {
                     continue;
                 }
 
-                int fdid = FieldConstantRules.fdidAsInt(c.getValue());
+                int fdid = FieldDefinition.fdidAsInt(c.getValue());
                 UserProjectFieldExportOptions u = dao.findByUserAndProjectAndFdid(userId, projectId, fdid);
                 if (u == null) { //not found = should not be exported
                     columnsToExclude.add(i);

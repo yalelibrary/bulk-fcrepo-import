@@ -2,11 +2,11 @@ package edu.yale.library.ladybird.engine.exports;
 
 import com.google.common.collect.Multimap;
 import edu.yale.library.ladybird.engine.AbstractDBTest;
+import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
 import edu.yale.library.ladybird.engine.oai.FdidMarcMappingUtil;
 import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
 import edu.yale.library.ladybird.engine.oai.ImportSourceDataReader;
 import edu.yale.library.ladybird.entity.FieldConstant;
-import edu.yale.library.ladybird.engine.model.FieldConstantRules;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.engine.oai.Marc21Field;
 import edu.yale.library.ladybird.entity.FieldDefinition;
@@ -50,7 +50,7 @@ public class ExportReaderIT extends AbstractDBTest {
 
     @Test
     public void shouldConvertFunctionStringToFieldConst() {
-        final FieldConstant f = FieldConstantRules.convertStringToFieldConstant("F1");
+        final FieldConstant f = FieldConstantUtil.convertStringToFieldConstant("F1");
         assert (f != null);
         assertEquals("Value mismatch", f.getName(), "F1");
 

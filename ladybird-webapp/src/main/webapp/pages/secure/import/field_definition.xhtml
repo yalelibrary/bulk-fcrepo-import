@@ -41,7 +41,10 @@
                             <f:facet name="header">
                                 <h:outputText value="Acid"/>
                             </f:facet>
-                            <h:outputText value="#{item.acid}"/>
+                            <h:outputText styleClass="ui-icon ui-icon-check"
+                                          value="#{item.acid}"
+                                          rendered="#{FieldDefinitionView.isAcid(item.fdid)}"/>
+                            <h:outputText value="#{item.acid}" rendered="#{item.acid ne 0}"/>
                         </p:column>
                         <p:column>
                             <f:facet name="header">
@@ -61,11 +64,14 @@
                             </f:facet>
                             <h:outputText value="#{item.tooltip}"/>
                         </p:column>
-                        <p:column rendered="false">
+                        <p:column>
                             <f:facet name="header">
                                 <h:outputText value="Multivalue"/>
                             </f:facet>
-                            <h:outputText value="#{item.multivalue}"/>
+                            <!--<h:outputText value="#{item.multivalue}"/> -->
+                            <h:outputText styleClass="ui-icon ui-icon-check"
+                                          value="#{item.multivalue}"
+                                          rendered="#{item.multivalue}"/>
                         </p:column>
                         <p:column rendered="false">
                             <f:facet name="header">

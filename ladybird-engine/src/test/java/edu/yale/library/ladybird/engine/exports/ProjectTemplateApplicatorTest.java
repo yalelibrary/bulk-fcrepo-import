@@ -74,9 +74,9 @@ public class ProjectTemplateApplicatorTest extends AbstractDBTest {
         final int templateId = 0;
         try {
             //1. save sample object with 2 fields (for object_acid and object_string)
-            saveFdids();
+            //saveFdids();
             //we assume fdid 70 is string and fdid 71 is an acid
-            assert (new FieldDefinitionHibernateDAO().findAll().size() == 2);
+           // assert (new FieldDefinitionHibernateDAO().findAll().size() == 2);
 
             saveTestObject();
 
@@ -134,7 +134,7 @@ public class ProjectTemplateApplicatorTest extends AbstractDBTest {
         final int templateId = 0;
         try {
             //1. save sample object with 2 fields (for object_acid and object_string)
-            saveFdids();
+            //saveFdids();
             //we assume fdid 70 is string and fdid 71 is an acid
             assert (new FieldDefinitionHibernateDAO().findAll().size() == 2);
 
@@ -233,7 +233,7 @@ public class ProjectTemplateApplicatorTest extends AbstractDBTest {
     private void saveFdids() {
         final Date d = new Date();
         try {
-            FieldDefinition fdid = new FieldDefinitionBuilder().setFdid(70).setDate(d).createFieldDefinition();
+            FieldDefinition fdid = new FieldDefinitionBuilder().setFdid(STRING_FDID).setDate(d).createFieldDefinition();
             fieldDefinitionDAO.save(fdid);
 
             FieldDefinition fdid2 = new FieldDefinitionBuilder().setFdid(ACID_FDID).setDate(d).createFieldDefinition();

@@ -49,6 +49,22 @@ public final class DerbySchemaUtil {
             }
             conn.commit();
             logger.debug("Created table(s)");
+
+
+            final Map<String, String> fdidSchema = schemaBean.getFdidSchema();
+
+            if (fdidSchema == null || 0 == m.size()) {
+                throw new AppConfigException("Schema empty");
+            }
+            Iterator it1 = fdidSchema.entrySet().iterator();
+
+            while (it1.hasNext()) {
+                final Map.Entry p = (Map.Entry) it1.next();
+                logger.trace("Executing create statement for table={}", p.getKey());
+                statement.execute(p.getValue().toString());
+            }
+            conn.commit();
+            logger.debug("Init fdids(s)");
         } catch (SQLException e) {
             throw new AppConfigException(e);
         }

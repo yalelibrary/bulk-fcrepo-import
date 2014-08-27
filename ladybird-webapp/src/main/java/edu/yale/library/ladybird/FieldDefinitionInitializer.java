@@ -24,7 +24,7 @@ public class FieldDefinitionInitializer {
      * Initializes fdids.
      */
     public void setInitialFieldDefinitionDb() throws IOException {
-        logger.debug("Init db with fdid from file={}", FDID_INITIAL_PROPS_FILE);
+        logger.debug("Initializing fdids from file={}", FDID_INITIAL_PROPS_FILE);
 
         FieldDefinitionDAO fieldDefinitionDAO = new FieldDefinitionHibernateDAO();
 
@@ -39,6 +39,7 @@ public class FieldDefinitionInitializer {
                 logger.error("Error saving fdid", e);  //ignore
             }
         }
+        logger.debug("fdid size={}", fieldDefinitionDAO.count());
     }
 
     private FieldDefinition getFdid(final int fdid, final String s) {

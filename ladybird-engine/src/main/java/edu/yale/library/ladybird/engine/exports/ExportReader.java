@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.engine.exports;
 
 import com.google.common.collect.Multimap;
+import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
 import edu.yale.library.ladybird.engine.oai.FdidMarcMappingUtil;
 import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
 import edu.yale.library.ladybird.engine.imports.ImportEntity;
@@ -11,7 +12,6 @@ import edu.yale.library.ladybird.engine.oai.ImportSourceDataReader;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.engine.model.LocalIdMarcValue;
 import edu.yale.library.ladybird.entity.FieldConstant;
-import edu.yale.library.ladybird.engine.model.FieldConstantRules;
 import edu.yale.library.ladybird.engine.oai.Marc21Field;
 import edu.yale.library.ladybird.entity.ImportJobContents;
 import edu.yale.library.ladybird.entity.ImportJobExhead;
@@ -64,7 +64,7 @@ public class ExportReader {
         final List<LocalIdMarcValue> bibIdValueList = importSourceDataReader.readImportSourceData(importId);
 
         //Get all FieldConstant. Each should have a column in the output.
-        final List<FieldConstant> globalFConstantsList = FieldConstantRules.getApplicationFieldConstants();
+        final List<FieldConstant> globalFConstantsList = FieldConstantUtil.getApplicationFieldConstants();
 
         //Write exhead
         final Row exheadRow = new ImportEntity().new Row();
@@ -197,7 +197,8 @@ public class ExportReader {
                         final ImportJobExhead importJobExhead = importJobExheads.get(j);
                         String headerValue = importJobExhead.getValue();
                         logger.trace("Header val={}", headerValue);
-                        final FieldConstant fieldConstant = FieldConstantRules.convertStringToFieldConstant(headerValue);
+                        final FieldConstant fieldConstant = FieldConstantUtil.convertStringToFieldConstant(headerValue);
+
                         if (fieldConstant == null) {
                             logger.trace("Field Constant null for headerValue={}", headerValue);
                         }

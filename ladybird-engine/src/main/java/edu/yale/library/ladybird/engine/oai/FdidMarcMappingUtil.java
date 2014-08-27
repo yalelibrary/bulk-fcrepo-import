@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.engine.oai;
 
-import edu.yale.library.ladybird.engine.model.FieldConstantRules;
 import edu.yale.library.ladybird.entity.FieldConstant;
+import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.FieldMarcMapping;
 import edu.yale.library.ladybird.entity.FieldMarcMappingBuilder;
 import edu.yale.library.ladybird.persistence.dao.FieldMarcMappingDAO;
@@ -57,7 +57,7 @@ public class FdidMarcMappingUtil {
     public Marc21Field toMarc21Field(FieldConstant fieldConstant) {
         try {
             //Try converting to (integer) fdid:
-            int fdid = FieldConstantRules.fdidAsInt(fieldConstant.getName());
+            int fdid = FieldDefinition.fdidAsInt(fieldConstant.getName());
 
             if (fieldMarcMappingDAO == null) { //TODO
                 fieldMarcMappingDAO = new FieldMarcMappingHibernateDAO();

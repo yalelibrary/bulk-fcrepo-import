@@ -1,10 +1,10 @@
 package edu.yale.library.ladybird.web.view;
 
 
-import edu.yale.library.ladybird.engine.imports.ObjectWriter;
 import edu.yale.library.ladybird.engine.metadata.FieldDefinitionValue;
 import edu.yale.library.ladybird.engine.metadata.MetadataEditor;
 import edu.yale.library.ladybird.engine.metadata.Rollbacker;
+import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
 import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.EventType;
 import edu.yale.library.ladybird.entity.FieldDefinition;
@@ -92,7 +92,9 @@ public class ObjectMetadataView extends AbstractView {
     @Inject
     private AuthUtil auth;
 
-    /**Making versioned items uneditable */
+    /**
+     * Making versioned items uneditable
+     */
     private boolean readOnly = false;
 
     @PostConstruct
@@ -163,11 +165,11 @@ public class ObjectMetadataView extends AbstractView {
         List<String> values = new ArrayList();
 
         try {
-            if (!ObjectWriter.isString(fdid)) { //not a string:
+            if (!FieldConstantUtil.isString(fdid)) { //not a string:
                 //1. Find acid value for this oid
                 final List<ObjectAcid> objectAcid = objectAcidDAO.findListByOidAndFdid(oid, fdid);
 
-                for (ObjectAcid oa: objectAcid) {
+                for (ObjectAcid oa : objectAcid) {
                     int acid = oa.getValue();
 
                     //2. Get string value corresponding to this acid
@@ -177,7 +179,7 @@ public class ObjectMetadataView extends AbstractView {
             } else { //a string:
                 final List<ObjectString> objectStringList = objectStringDAO.findListByOidAndFdid(oid, fdid);
 
-                for (ObjectString obs: objectStringList) {
+                for (ObjectString obs : objectStringList) {
                     values.add(obs.getValue());
                 }
             }
@@ -189,7 +191,7 @@ public class ObjectMetadataView extends AbstractView {
         return new ArrayList<>();
     }
 
-       /**
+    /**
      * Populates object metadata. Pulls rom object_acid and object_string table(s).
      * If an exception occures during retreival, an unknown error is thrown.
      *
@@ -201,7 +203,7 @@ public class ObjectMetadataView extends AbstractView {
         List<String> values = new ArrayList();
 
         try {
-            if (!ObjectWriter.isString(fdid)) {
+            if (!FieldConstantUtil.isString(fdid)) {
                 final List<ObjectAcidVersion> objectAcidVersions = objectAcidVersionDAO.findListByOidAndFdidAndVersion(oid, fdid, version);
 
                 //logger.debug("Object Acid Versions size={}", objectAcidVersions.size());
@@ -210,7 +212,7 @@ public class ObjectMetadataView extends AbstractView {
                     logger.debug("Acid version empty");
                 }
 
-                for (ObjectAcidVersion oav: objectAcidVersions) {
+                for (ObjectAcidVersion oav : objectAcidVersions) {
                     int acid = oav.getValue();
                     final AuthorityControl authorityControl = authorityControlDAO.findByAcid(acid);
                     values.add(authorityControl.getValue());
@@ -225,7 +227,7 @@ public class ObjectMetadataView extends AbstractView {
                     logger.debug("Full list={}", objectStringVersionDAO.findAll());
                 }
 
-                for (ObjectStringVersion osv: objStr) {
+                for (ObjectStringVersion osv : objStr) {
                     values.add(osv.getValue());
                 }
             }
@@ -238,7 +240,8 @@ public class ObjectMetadataView extends AbstractView {
 
     /**
      * Saves audit events
-     * @param oid oid
+     *
+     * @param oid    oid
      * @param userId userid
      */
     private void saveAuditEvent(int oid, int userId) {
@@ -325,6 +328,7 @@ public class ObjectMetadataView extends AbstractView {
     /**
      * Returns false if prop not set or the acutal value.
      * That's ok since it's called directly by JSF (javax.el)
+     *
      * @param oid
      * @return
      */
@@ -339,6 +343,7 @@ public class ObjectMetadataView extends AbstractView {
     }
 
     //Getters and setters -------------------------------------------------------------------
+
     /**
      * converts request parameter to file path
      */

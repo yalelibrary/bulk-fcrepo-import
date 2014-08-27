@@ -31,7 +31,10 @@ import static org.junit.Assert.assertEquals;
 public class RollbackTest extends AbstractDBTest {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    final int fdid = 70, acidFdid = 93;
+    final int fdid = 70, acidFdid = 59;
+
+    //final int acidFdid = 59;
+    //final int stringFdid = 70;
 
     @Test
     public void shouldRollback() {
@@ -108,9 +111,9 @@ public class RollbackTest extends AbstractDBTest {
         //1. persist field definitons:
         FieldDefinition fieldDefintion = new FieldDefinition(fdid);
         FieldDefinition fieldDefinition2 = new FieldDefinition(acidFdid);
-        new FieldDefinitionHibernateDAO().saveOrUpdateList(Arrays.asList(fieldDefintion, fieldDefinition2));
+        //new FieldDefinitionHibernateDAO().saveOrUpdateList(Arrays.asList(fieldDefintion, fieldDefinition2));
 
-        assert (new FieldDefinitionHibernateDAO().findAll().size() == 2);
+        //assert (new FieldDefinitionHibernateDAO().findAll().size() == 2);
 
         Date date = new Date();
         Object object = new ObjectBuilder().setDate(date).setProjectId(0).setUserId(0).createObject();
@@ -150,8 +153,8 @@ public class RollbackTest extends AbstractDBTest {
     //The update to be applied
     private List<FieldDefinitionValue> getUpdateFdidValueList() {
         List<FieldDefinitionValue> fdidList = new ArrayList<>();
-        fdidList.add(getFdidValue(70, Arrays.asList("New Value")));
-        fdidList.add(getFdidValue(93, Arrays.asList("New Acid Value")));
+        fdidList.add(getFdidValue(fdid, Arrays.asList("New Value")));
+        fdidList.add(getFdidValue(acidFdid, Arrays.asList("New Acid Value")));
         return fdidList;
     }
 

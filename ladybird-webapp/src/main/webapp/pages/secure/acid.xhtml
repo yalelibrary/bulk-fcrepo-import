@@ -7,10 +7,6 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../templates/template_yul.xhtml">
 
-    <ui:define name="offcanvas">
-        <a href="/ladybird-webapp/pages/secure/acid_form.xhtml" class="list-group-item">Add Single Item to Acid List</a>
-    </ui:define>
-
     <ui:define name="content">
         <h4>Viewing ACID list: #{param['handle']}</h4>
         <h:form id="AuthorityControlForm" enctype="multipart/form-data">
@@ -23,9 +19,10 @@
                     <!-- Data Table -->
 
                     <p:dataTable id="AuthorityControlDatatable" value="#{authorityControlView.itemList}"
-                                 var="item" paginator="true" rows="10"
-                                 tableStyle="" paginatorPosition="bottom"
-                                 editable="false">
+                                 var="item" paginator="false"
+                                 rows="10"
+                                 editable="false"
+                                 rendered="#{not empty authorityControlView.itemList}">
                         <!--
                         <p:column>
                             <f:facet name="header">

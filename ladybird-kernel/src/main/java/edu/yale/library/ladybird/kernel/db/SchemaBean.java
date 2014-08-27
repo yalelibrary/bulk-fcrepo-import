@@ -15,6 +15,7 @@ public class SchemaBean {
     private static final Logger logger = LoggerFactory.getLogger(SchemaBean.class);
 
     final PropertyReader reader = new PropertyReader(ApplicationProperties.SCHEMA_PROPS_FILE);
+    final PropertyReader fdidReader = new PropertyReader(ApplicationProperties.FDID_PROPS_FILE);
     final PropertyReader killReader = new PropertyReader(ApplicationProperties.KILL_SCHEMA_PROPS_FILE);
 
     private Map<String,String> build(PropertyReader reader) throws IOException {
@@ -31,6 +32,16 @@ public class SchemaBean {
             final Map<String,String> map = new SchemaBean().build(reader);
             return Collections.unmodifiableMap(map);
         } catch (IOException e) {
+            return Collections.emptyMap(); //ignore exception
+        }
+    }
+
+    public Map<String,String> getFdidSchema() {
+        try {
+            final Map<String,String> map = new SchemaBean().build(fdidReader);
+            return Collections.unmodifiableMap(map);
+        } catch (IOException e) {
+            logger.error("Error reading properties for init fdid", e);
             return Collections.emptyMap(); //ignore exception
         }
     }

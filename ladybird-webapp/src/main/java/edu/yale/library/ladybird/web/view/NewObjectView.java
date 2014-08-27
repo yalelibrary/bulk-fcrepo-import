@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.web.view;
 
 import com.google.common.collect.Lists;
 import edu.yale.library.ladybird.engine.file.ImageMagickProcessor;
-import edu.yale.library.ladybird.engine.imports.ObjectWriter;
+import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
 import edu.yale.library.ladybird.entity.AuthorityControlBuilder;
 import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.Object;
@@ -192,7 +192,7 @@ public class NewObjectView extends AbstractView implements Serializable {
                 final String[] values = f.getValues();
 
                 for (final String value : values) {
-                    if (ObjectWriter.isString(fdid)) {
+                    if (FieldConstantUtil.isString(fdid)) {
                         objectStringDAO.save(osb.setDate(date).setFdid(fdid).setUserId(userId).setOid(oid).setValue(value).createObjectString());
                     } else {
                         int acid = authorityControlDAO.save(new AuthorityControlBuilder().setValue(value).setDate(date)

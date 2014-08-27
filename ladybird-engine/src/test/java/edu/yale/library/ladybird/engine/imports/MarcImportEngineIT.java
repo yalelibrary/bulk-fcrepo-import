@@ -12,8 +12,8 @@ import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
 import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
 import edu.yale.library.ladybird.engine.oai.FdidMarcMappingUtil;
 import edu.yale.library.ladybird.engine.oai.ImportSourceProcessor;
-import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
+import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.FieldMarcMapping;
 import edu.yale.library.ladybird.entity.ImportJob;
@@ -27,12 +27,14 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobHibernateDAO
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 
-import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
 
 
@@ -41,100 +43,97 @@ import static org.junit.Assert.assertEquals;
  */
 public class MarcImportEngineIT extends AbstractDBTest {
 
+    private Logger logger = LoggerFactory.getLogger(MarcImportEngineIT.class);
+
     /**
      * Full cycle read write
      */
     @Test
     public void shouldRunFullCycle() {
+        //start the engine
+        KernelBootstrap kernelBootstrap = new KernelBootstrap();
+        kernelBootstrap.setAbstractModule(new TestModule());
+
+        ExportBus exportBus = new ExportBus();
+        exportBus.setAbstractModule(new TestModule());
+
+        /* 1. read the marc fdid mapping */
+        FdidMarcMappingUtil fdidMarcMappingUtil = new FdidMarcMappingUtil();
+        fdidMarcMappingUtil.setFieldMarcMappingDAO(new FieldMarcMappingHibernateDAO());
         try {
-            //start the engine
-            KernelBootstrap kernelBootstrap = new KernelBootstrap();
-            kernelBootstrap.setAbstractModule(new TestModule());
-
-            ExportBus exportBus = new ExportBus();
-            exportBus.setAbstractModule(new TestModule());
-
-            initFdids(); //TODO tmp. Inst app. rules for test (since db state is cleaned)
-
-            /* 1. read the marc fdid mapping */
-            FdidMarcMappingUtil fdidMarcMappingUtil = new FdidMarcMappingUtil();
-            fdidMarcMappingUtil.setFieldMarcMappingDAO(new FieldMarcMappingHibernateDAO());
             fdidMarcMappingUtil.setInitialFieldMarcDb();
-            final List<FieldMarcMapping> fieldMarcMappingList = new FieldMarcMappingHibernateDAO().findAll();
+        } catch (Exception e) {
+            e.printStackTrace();  //TODO
+        }
+        final List<FieldMarcMapping> fieldMarcMappingList = new FieldMarcMappingHibernateDAO().findAll();
 
-            assertEquals("FieldMarcMapping size mismatch", fieldMarcMappingList.size(), 86);
+        assertEquals("FieldMarcMapping size mismatch", fieldMarcMappingList.size(), 86);
 
             /* 2. read the F104 or F105 spreadsheet */
-            final ImportEngine importEngine = new DefaultImportEngine(0, 1); //chk params logic
+        final ImportEngine importEngine = new DefaultImportEngine(0, 1); //chk params logic
 
-            importEngine.setImportSourceProcessor(new ImportSourceProcessor()); //TODO
+        importEngine.setImportSourceProcessor(new ImportSourceProcessor()); //TODO
 
-            final List<ImportEntity.Row> rows = importEngine.read(getImportSpreadsheeet(), ReadMode.FULL,
+        List<ImportEntity.Row> rows = Collections.emptyList();
+        try {
+            rows = importEngine.read(getImportSpreadsheeet(), ReadMode.FULL,
                     new DefaultFieldDataValidator());
+        } catch (ImportReaderValidationException e) {
+            e.printStackTrace();  //TODO
+        } catch (IOException e) {
+            e.printStackTrace();  //TODO
+        }
 
-            assertEquals("Rows size mismatch", rows.size(), ExportFileConstants.ROW_COUNT);
-            assertEquals("Columns size mismatch", rows.get(0).getColumns().size(), ExportFileConstants.ROW_COUNT);
+        assertEquals("Rows size mismatch", rows.size(), ExportFileConstants.ROW_COUNT);
+        assertEquals("Columns size mismatch", rows.get(0).getColumns().size(), ExportFileConstants.ROW_COUNT);
 
-            //kick off import writer
-            OaiProvider provider = new OaiProvider("id", getProp("oai_test_url_prefix"), getProp("oai_url_id"));
-            importEngine.setOaiProvider(provider);
+        //kick off import writer
+        OaiProvider provider = new OaiProvider("id", getProp("oai_test_url_prefix"), getProp("oai_url_id"));
+        importEngine.setOaiProvider(provider);
 
-            int imid = importEngine.write(rows);
+        int imid = importEngine.write(rows);
 
             /* Add request for export */
-            final ExportRequestEvent exportEvent = new ExportRequestEvent(imid);
-            ExportEngineQueue.addJob(exportEvent);
+        final ExportRequestEvent exportEvent = new ExportRequestEvent(imid);
+        ExportEngineQueue.addJob(exportEvent);
 
-            //Now read back:
+        //Now read back:
 
-            //The job itself:
-            final ImportJobDAO importJobHibernateDAO = new ImportJobHibernateDAO();
-            final List<ImportJob> importJobList = importJobHibernateDAO.findAll();
-            assert (importJobList.size() == 1);
+        //The job itself:
+        final ImportJobDAO importJobHibernateDAO = new ImportJobHibernateDAO();
+        final List<ImportJob> importJobList = importJobHibernateDAO.findAll();
+        assert (importJobList.size() == 1);
 
-            //Headers (aka exhead):
-            final ImportJobExheadDAO importJobExheadDAO = new ImportJobExheadHibernateDAO();
-            final List<ImportJobExhead> jobExheads = importJobExheadDAO.findAll();
+        //Headers (aka exhead):
+        final ImportJobExheadDAO importJobExheadDAO = new ImportJobExheadHibernateDAO();
+        final List<ImportJobExhead> jobExheads = importJobExheadDAO.findAll();
 
-            assertEquals(jobExheads.size(), 7);
+        assertEquals(jobExheads.size(), 7);
 
             /* Test Export */
-            final ExportEngine exportEngine = new DefaultExportEngine();
+        final ExportEngine exportEngine = new DefaultExportEngine();
 
-            final ImportEntityContext importEntityContext = exportEngine.read();
+        final ImportEntityContext importEntityContext = exportEngine.read();
 
-            final List<ImportEntity.Row> listExportRows = importEntityContext.getImportJobList();
+        final List<ImportEntity.Row> listExportRows = importEntityContext.getImportJobList();
 
-            assertEquals("Export rows don't equal import expected rows", listExportRows.size(), 5);
+        assertEquals("Export rows don't equal import expected rows", listExportRows.size(), 5);
 
-            ImportEntityValue importEntityValue = new ImportEntityValue(listExportRows); //to analyze this
-            FieldConstant fieldConstant = new FieldDefinition(70, "");
-            List<ImportEntity.Column> col = importEntityValue.getColumnValues(fieldConstant);
+        ImportEntityValue importEntityValue = new ImportEntityValue(listExportRows); //to analyze this
+        FieldConstant fieldConstant = new FieldDefinition(70, "");
+        List<ImportEntity.Column> col = importEntityValue.getColumnValues(fieldConstant);
 
-            //(Compare against an expected spreadhseet?)
+        //(Compare against an expected spreadhseet?)
 
-            assert (col.size() == 4);
-            assertEquals(col.get(0).getValue(), "1981-2005 :");
-            assertEquals(col.get(1).getValue(), "Kitāb Fawāʼid ʻaẓīmah li-rabṭ al-ḥāḍir ʻalá al-māḍī,");
-            assertEquals(col.get(2).getValue(), "Primavera silenziosa /");
-            assertEquals(col.get(3).getValue(), "Programming with VisiBroker");
+        assert (col.size() == 4);
+        assertEquals(col.get(0).getValue(), "1981-2005 :");
+        assertEquals(col.get(1).getValue(), "Kitāb Fawāʼid ʻaẓīmah li-rabṭ al-ḥāḍir ʻalá al-māḍī,");
+        assertEquals(col.get(2).getValue(), "Primavera silenziosa /");
+        assertEquals(col.get(3).getValue(), "Programming with VisiBroker");
 
-            //and so forth. . .
+        //and so forth. . .
 
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
-
-
-    private void initFdids() {
-        try {
-            FieldDefinitionInitializer fieldDefinitionInitializer = new FieldDefinitionInitializer();
-            fieldDefinitionInitializer.setInitialFieldDefinitionDb();
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("Failed");
-        }
+        logger.info("DONE");
     }
 
 

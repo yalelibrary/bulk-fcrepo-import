@@ -28,7 +28,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -53,8 +52,6 @@ public class MarcBarcodeImportEngineIT extends AbstractDBTest {
 
             ExportBus exportBus = new ExportBus();
             exportBus.setAbstractModule(new TestModule());
-
-            initFdids(); //TODO tmp. Inst app. rules for test (since db state is cleaned)
 
             /* 1. read the marc fdid mapping */
             FdidMarcMappingUtil fdidMarcMappingUtil = new FdidMarcMappingUtil();
@@ -121,18 +118,6 @@ public class MarcBarcodeImportEngineIT extends AbstractDBTest {
             fail(e.getMessage());
         }
     }
-
-
-    private void initFdids() {
-        try {
-            FieldDefinitionInitializer fieldDefinitionInitializer = new FieldDefinitionInitializer();
-            fieldDefinitionInitializer.setInitialFieldDefinitionDb();
-        } catch (IOException e) {
-            e.printStackTrace();
-            fail("Failed");
-        }
-    }
-
 
     private SpreadsheetFile getImportSpreadsheeet() {
         return new SpreadsheetFileBuilder().filename(ExportFileConstants.TEST_XLS_FILE)

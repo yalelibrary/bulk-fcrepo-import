@@ -2,8 +2,8 @@ package edu.yale.library.ladybird.engine.imports;
 
 import com.google.common.collect.Multimap;
 import edu.yale.library.ladybird.engine.Util;
+import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
 import edu.yale.library.ladybird.engine.oai.FdidMarcMappingUtil;
-import edu.yale.library.ladybird.engine.model.FieldConstantRules;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.engine.model.LocalIdMarcImportSource;
 import edu.yale.library.ladybird.engine.model.LocalIdentifier;
@@ -31,16 +31,16 @@ public class ImportWriterTest {
 
     @Test
     public void shoudEqualOAIFunction() {
-        final FieldConstantRules fieldConstantRules = new FieldConstantRules();
+        final FieldConstantUtil fieldConstantUtil = new FieldConstantUtil();
         final FieldConstant f104 = FunctionConstants.F104;
         final ImportEntity.Column<String> column1 = new ImportEntity().new Column<>(f104, String.valueOf("2222"));
 
-        assert (fieldConstantRules.isOAIFunction(column1));
+        assert (fieldConstantUtil.isOAIFunction(column1));
 
         final FieldConstant f1 = FunctionConstants.F1;
         final ImportEntity.Column<String> column2 = new ImportEntity().new Column<>(f1, String.valueOf("2222"));
 
-        assert (!fieldConstantRules.isOAIFunction(column2));
+        assert (!fieldConstantUtil.isOAIFunction(column2));
     }
 
     @Test

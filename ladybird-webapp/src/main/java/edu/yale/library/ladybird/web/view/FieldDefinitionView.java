@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.auth.Permissions;
+import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
 import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.FieldDefinitionBuilder;
 import edu.yale.library.ladybird.entity.RolesPermissions;
@@ -12,6 +13,8 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -51,7 +54,12 @@ public class FieldDefinitionView extends AbstractView {
 
     public List<FieldDefinition> getItemList() {
         List<FieldDefinition> list = dao.findAll();
+        Collections.sort(list);
         return list;
+    }
+
+    public boolean isAcid(int f) {
+        return !FieldConstantUtil.isString(f);
     }
 
     @Deprecated
@@ -66,6 +74,14 @@ public class FieldDefinitionView extends AbstractView {
 
     public void setItem(FieldDefinition item) {
         this.item = item;
+    }
+
+    //TODO
+    public List<String> getFieldDefintionTypes() {
+        List<String> list = new ArrayList<>();
+        list.add("String");
+        list.add("DropDown");
+        return list;
     }
 
     /**
@@ -90,6 +106,10 @@ public class FieldDefinitionView extends AbstractView {
             logger.error("Error getting permissions", e);
         }
         return false;
+    }
+
+    public boolean isEnabled(FieldDefinition f) {
+        return f.isMultivalue();
     }
 }
 

@@ -39,12 +39,16 @@ public class MetadataEditorTest extends AbstractDBTest {
 
     private Logger logger = LoggerFactory.getLogger(MetadataEditorTest.class);
 
+    final int acidFdid = 59;
+    final int stringFdid = 70;
+
     /**
      * Tests handling of multiple fdid metadata.
      * Makes an edit and tests whether edit was applied and the metadata items were versioned.
      */
     @Test
     public void shouldUpdateMultipleMetadata() {
+
         MetadataEditor metadataEditor = new MetadataEditor();
         int testOid = 1;
         int testUserId = 1;
@@ -54,13 +58,13 @@ public class MetadataEditorTest extends AbstractDBTest {
         int oid = writeDummyObject(); // write object values
 
         //Let us write 2 strings and 2 acids for 2 fdids:
-        ObjectTestsHelper.writeDummyObjAcid(oid, 69, "String Acid value");
-        ObjectTestsHelper.writeDummyObjAcid(oid, 69, "String Acid value 2");
-        ObjectTestsHelper.writeDummyObjString(oid, 71, "String Value");
-        ObjectTestsHelper.writeDummyObjString(oid, 71, "Another String Value");
+        ObjectTestsHelper.writeDummyObjAcid(oid, acidFdid, "String Acid value");
+        ObjectTestsHelper.writeDummyObjAcid(oid, acidFdid, "String Acid value 2");
+        ObjectTestsHelper.writeDummyObjString(oid, stringFdid, "String Value");
+        ObjectTestsHelper.writeDummyObjString(oid, stringFdid, "Another String Value");
 
-        assert (ObjectTestsHelper.fdidValue(oid, 71).size() == 2);
-        assert (ObjectTestsHelper.fdidAcidValueList(oid, 69).size() == 2);
+        assert (ObjectTestsHelper.fdidValue(oid, stringFdid).size() == 2);
+        assert (ObjectTestsHelper.fdidAcidValueList(oid, acidFdid).size() == 2);
 
         metadataEditor.updateOidMetadata(testOid, testUserId, fieldDefinitionValueList);
 
@@ -70,12 +74,12 @@ public class MetadataEditorTest extends AbstractDBTest {
         assert (new ObjectAcidHibernateDAO().findAll().size() == 2);
 
         //2. make sure object string edits were applied
-        List<ObjectString> objectStrings = ObjectTestsHelper.fdidValue(oid, 71);
+        List<ObjectString> objectStrings = ObjectTestsHelper.fdidValue(oid, stringFdid);
         assert (objectStrings.get(0).getValue().equalsIgnoreCase("New string value 1"));
         assert (objectStrings.get(1).getValue().equalsIgnoreCase("New string value 2"));
 
         //3. make sure object acid edits were applied
-        List<AuthorityControl> acList = ObjectTestsHelper.fdidAcidValueList(oid, 69);
+        List<AuthorityControl> acList = ObjectTestsHelper.fdidAcidValueList(oid, acidFdid);
         logger.debug(acList.toString());
 
         assert (acList.get(0).getValue().equalsIgnoreCase("WHATEVER 1"));
@@ -85,13 +89,13 @@ public class MetadataEditorTest extends AbstractDBTest {
         assert (new ObjectVersionHibernateDAO().findByOid(oid).size() == 1);
 
         ObjectStringVersionDAO osvDAO = new ObjectStringVersionHibernateDAO();
-        List<ObjectStringVersion> osvList = osvDAO.findListByOidAndFdidAndVersion(oid, 71, 1);
+        List<ObjectStringVersion> osvList = osvDAO.findListByOidAndFdidAndVersion(oid, stringFdid, 1);
         assert (osvList.size() == 2);
         assert (osvList.get(0).getValue().equalsIgnoreCase("String value"));
         assert (osvList.get(1).getValue().equalsIgnoreCase("Another String value"));
 
         ObjectAcidVersionDAO oavDAO = new ObjectAcidVersionHibernateDAO();
-        List<ObjectAcidVersion> oavList = oavDAO.findListByOidAndFdidAndVersion(oid, 69, 1);
+        List<ObjectAcidVersion> oavList = oavDAO.findListByOidAndFdidAndVersion(oid, acidFdid, 1);
         assert (oavList.size() == 2);
 
         AuthorityControlDAO authDAO = new AuthorityControlHibernateDAO();
@@ -115,8 +119,8 @@ public class MetadataEditorTest extends AbstractDBTest {
      */
     private List<FieldDefinitionValue> getFdidValueList() {
         List<FieldDefinitionValue> fdidList = new ArrayList<>();
-        fdidList.add(getFdidValue(69, Arrays.asList("WHATEVER 1", "WHATEVER 2")));
-        fdidList.add(getFdidValue(71, Arrays.asList("New String value 1", "New String value 2")));
+        fdidList.add(getFdidValue(acidFdid, Arrays.asList("WHATEVER 1", "WHATEVER 2")));
+        fdidList.add(getFdidValue(stringFdid, Arrays.asList("New String value 1", "New String value 2")));
         return fdidList;
     }
 
