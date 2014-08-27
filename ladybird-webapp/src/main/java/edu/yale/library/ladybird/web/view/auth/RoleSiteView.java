@@ -1,9 +1,8 @@
-package edu.yale.library.ladybird.web.view;
+package edu.yale.library.ladybird.web.view.auth;
 
 import edu.yale.library.ladybird.entity.Roles;
 import edu.yale.library.ladybird.persistence.dao.RolesDAO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import edu.yale.library.ladybird.web.view.AbstractView;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -11,19 +10,11 @@ import javax.faces.bean.RequestScoped;
 import javax.inject.Inject;
 import java.util.List;
 
-/**
- *
- */
-
 @ManagedBean
 @RequestScoped
 public class RoleSiteView extends AbstractView {
 
-    private Logger logger = LoggerFactory.getLogger(PermissionsSiteView.class);
-
     private Roles item = new Roles();
-
-    private List<Roles> itemList;
 
     @Inject
     RolesDAO rolesDAO;
@@ -43,20 +34,7 @@ public class RoleSiteView extends AbstractView {
     }
 
     public List<Roles> getItemList() {
-        return dao.findAll();
+        return rolesDAO.findAll();
     }
 
-    public void setItemList(List<Roles> itemList) {
-        this.itemList = itemList;
-    }
-
-    public String save() {
-        try {
-            dao.save(item);
-            return NavigationCase.OK.toString();
-        } catch (Exception e) {
-            logger.error("Error persisting item", e);
-            return NavigationCase.FAIL.toString();
-        }
-    }
 }

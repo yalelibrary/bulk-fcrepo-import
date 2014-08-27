@@ -1,21 +1,20 @@
-package edu.yale.library.ladybird.web.view;
+package edu.yale.library.ladybird.web.view.auth;
 
 import edu.yale.library.ladybird.auth.PermissionsValue;
 import edu.yale.library.ladybird.auth.Roles;
+import org.omnifaces.util.Faces;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * Helper for default/intial roles and permissions
  */
-
 @ManagedBean
 @ViewScoped
 public class PermsisionsView implements Serializable {
@@ -23,15 +22,13 @@ public class PermsisionsView implements Serializable {
     private Logger logger = LoggerFactory.getLogger(PermsisionsView.class);
 
     private String role = "";
+
     private List<PermissionsValue> itemList;
 
     @PostConstruct
     public void init() {
         try {
-            role = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("role");
-
-            logger.debug("Getting permissiosn for role={}", role);
-
+            role = Faces.getRequestParameterMap().get("role");
             itemList = getPermissionsValueForRole(role);
         } catch (Exception e) {
             logger.error(e.getMessage());

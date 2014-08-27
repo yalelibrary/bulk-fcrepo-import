@@ -8,20 +8,33 @@
 <ui:composition template="../../../templates/template_yul.xhtml">
 
     <ui:define name="content">
-        <h4>Roles and Associated Permissions </h4>
 
-        <a href="initial_roles.xhtml"> View Initial System Default Configuration </a>
+        <h4>Roles and Associated Permissions</h4>
+
+        <a href="initial_roles.xhtml">View Initial Settings</a>
+
+        <br/>
+
+        Right-click to change permissions.
 
         <br/>
 
         <h:form id="RolesPermissionsForm" enctype="multipart/form-data">
             <br/>
 
+            <p:contextMenu for="RolesPermissionsDatatable">
+                <p:menuitem value="Change" actionListener="#{rolesPermissionsSiteView.updateSelectedItem()}"
+                            update="RolesPermissionsDatatable"/>
+            </p:contextMenu>
+
             <p:dataTable id="RolesPermissionsDatatable"
                          value="#{rolesPermissionsSiteView.itemList}"
                          var="item"
                          paginator="false"
-                         editable="false">
+                         editable="false"
+                         selection="#{rolesPermissionsSiteView.selectedItem}"
+                         selectionMode="single"
+                         rowKey="#{item.id}">
 
                 <!--
                 <p:column>
@@ -47,14 +60,15 @@
                     <f:facet name="header">
                         <h:outputText value="Enabled" />
                     </f:facet>                    
-                    <h:outputText value="#{item.value}"/>
+                    <h:outputText styleClass="ui-icon ui-icon-check" value="#{item.value}" rendered="#{rolesPermissionsSiteView.isEnabled(item)}"/>
+                    <h:outputText rendered="#{not rolesPermissionsSiteView.isEnabled(item)}"/>
                 </p:column>
                 <p:column>
                     <f:facet name="header">
-                        <h:outputText value="Created" />
+                        <h:outputText value="Updated" />
                     </f:facet>
                     <h:outputText value="#{item.createdDate}">
-                        <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                        <f:converter converterId="org.ocpsoft.PrettyTimeConverter"/>
                     </h:outputText>
                 </p:column>
              

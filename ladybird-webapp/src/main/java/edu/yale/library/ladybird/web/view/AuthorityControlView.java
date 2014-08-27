@@ -2,7 +2,6 @@ package edu.yale.library.ladybird.web.view;
 
 
 import edu.yale.library.ladybird.auth.Permissions;
-import edu.yale.library.ladybird.auth.PermissionsValue;
 import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.AuthorityControlBuilder;
 import edu.yale.library.ladybird.entity.RolesPermissions;
@@ -97,7 +96,7 @@ public class AuthorityControlView extends AbstractView {
     }
 
     /**
-     * @see PermissionsValue change Permissions to map if feasible
+     * see PermissionsValue change Permissions to map if feasible
      * @return whether the action has permissions. false if action not found or permissions false.
      */
     public boolean checkAddAcidPermission() {
@@ -121,6 +120,7 @@ public class AuthorityControlView extends AbstractView {
     }
 
     //getters setters -------------------------------------------
+
     public List<AuthorityControl> getItemList() {
         return itemList;
     }
