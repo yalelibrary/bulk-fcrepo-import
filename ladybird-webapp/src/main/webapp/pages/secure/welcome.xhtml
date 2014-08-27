@@ -8,7 +8,6 @@
 <ui:composition template="../../templates/template_yul.xhtml">
     <ui:define name="content">
         <div>
-
             <div>
                 <h4>Activity</h4>
                 Last login session activity
@@ -20,14 +19,10 @@
             <br/>
 
             <div>
-                <h4>Current Project</h4>
-            <span>
-                <h:outputText value="No project assignments yet."
-                          rendered="#{userPreferencesView.noAssignments()}"/>
-            </span>
+
             <span>
                 <h:outputText value="No default project yet."
-                          rendered="#{userPreferencesView.defaultProjectForCurrentUser eq null}"/>
+                              rendered="#{userPreferencesView.defaultProjectForCurrentUser eq null}"/>
             </span>
                 <h:outputText value="#{userPreferencesView.defaultProjectForCurrentUser.label}"/>
             </div>
@@ -35,25 +30,6 @@
             <br/>
 
             <h4>Projects</h4>
-
-            <!--
-            <p:dataTable id="ProjectsDatatable"
-                         editable="false"
-                         paginator="true"
-                         paginatorPosition="bottom"
-                         rows="10"
-                         value="#{welcomeView.projectsForCurrentUser()}"
-                         var="item"
-                         rendered="false">
-
-                <p:column headerText="Project">
-                    <h:outputText value="#{ProjectView.getProjectLabel(item.projectId)}"/>
-                </p:column>
-                <p:column headerText="Role">
-                    <h:outputText value="#{item.role}"/>
-                </p:column>
-            </p:dataTable>
-            -->
 
             <table class="table table-striped">
                 <thead>
@@ -81,40 +57,6 @@
             <h:form id="DownloadForm" enctype="multipart/form-data">
 
                 <h4>Jobs For User</h4>
-
-                <!--
-                <p:dataTable id="JobViewDatatable"
-                             editable="false"
-                             paginator="true"
-                             paginatorPosition="bottom"
-                             rows="10"
-                             value="#{welcomeView.jobsForCurrentUser()}"
-                             var="jobitem"
-                             rendered="false">
-
-                    <p:column headerText="File Name">
-                        <h:outputText value="#{jobitem.jobFile}"/>
-                    </p:column>
-                    <p:column headerText="Date">
-                        <h:outputText value="#{jobitem.date}">
-                            <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
-                        </h:outputText>
-                    </p:column>
-                    <p:column headerText="Notified?">
-                        <h:outputText value="#{welcomeView.notificationSentForCurrentUser(jobitem.importId)}"/>
-                    </p:column>
-                    <p:column>
-                        <h:commandButton id="downloadLink" value="Download" ajax="false">
-                            <p:fileDownload value="#{fileDownloadController.file}">
-                                <f:param name="id" value="#{jobitem.importId}"/>
-                            </p:fileDownload>
-                            <f:param name="id" value="#{jobitem.importId}"/>
-                        </h:commandButton>
-                    </p:column>
-                </p:dataTable>
-
-                -->
-
 
                 <table class="table table-striped">
                     <thead>

@@ -44,15 +44,19 @@
 
                 <ui:repeat value="#{newObjectView.fieldDefinitionvalueList}" var="entry">
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">
-                            <h:outputText value="#{newObjectView.getFdidHandle(entry.fdid.fdid)}"/>
-                            <p:commandButton value="Add" action="#{newObjectView.newFdid(entry.fdid.fdid)}" update="@form"/>
-                        </label>
 
                         <div class="col-sm-10">
+                            <label class="col-sm-2 control-label">
+                                <h:outputText value="#{newObjectView.getFdidHandle(entry.fdid.fdid)}"/>
+                            </label>
                             <ui:repeat varStatus="loop" value="#{entry.values}">
                                 <h:inputText value="#{entry.values[loop.index]}"/>
+                                &nbsp;
                             </ui:repeat>
+                        </div>
+
+                        <div class="col-sm-2">
+                            <p:commandButton action="#{newObjectView.newFdid(entry.fdid.fdid)}" update="@form" icon="ui-icon-plus"/>
                         </div>
 
                     </div>

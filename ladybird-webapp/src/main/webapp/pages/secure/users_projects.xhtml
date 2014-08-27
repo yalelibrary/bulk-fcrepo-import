@@ -6,15 +6,20 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../templates/template_yul.xhtml">
-
     <ui:define name="content">
 
         <f:metadata/>
-
         <h4>Project Authorization</h4>
 
-        <h:outputText value="Users and their roles in project: #{userProjectView.projectName}" rendered="#{not empty userProjectView.projectName}" />
-        <h:outputText value="Users and roles across all projects" rendered="#{empty userProjectView.projectName}" />
+        <a href="assign_project_access.xhtml"> Assign Project Access</a>
+
+        <br/>
+
+        <h:outputText value="Users and their roles in project: #{userProjectView.projectName}"
+                      rendered="#{not empty userProjectView.projectName}"/>
+        <h:outputText value="Users and roles across all projects" rendered="#{empty userProjectView.projectName}"/>
+
+        <br/>
 
         <!-- FORM -->
         <h:form id="UserProjectForm" enctype="multipart/form-data">
@@ -22,14 +27,12 @@
 
             <div>
                 <div>
-
-
                     <!-- Data Table -->
 
                     <p:dataTable id="UserProjectDatatable"
                                  value="#{userProjectView.itemList}"
                                  var="item"
-                                 paginator="true" rows="10" paginatorPosition="bottom"
+                                 paginator="false"
                                  editable="false">
 
                         <p:column>
@@ -58,28 +61,27 @@
                                 <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
                             </h:outputText>
                         </p:column>
-
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="Assign Metadata Access"/>
+                                <h:outputText value="Metadata Access"/>
                             </f:facet>
                             <span>
                             <h:commandLink value="Add" action="#{assignProjectFieldView.assign}">
-                                <f:param name="userId" value="#{item.userId}" />
-                                <f:param name="projectId" value="#{param['project_id']}" />
-                                <f:param name="dataTableProjectId" value="#{item.projectId}" />
+                                <f:param name="userId" value="#{item.userId}"/>
+                                <f:param name="projectId" value="#{param['project_id']}"/>
+                                <f:param name="dataTableProjectId" value="#{item.projectId}"/>
                             </h:commandLink>
                             </span>
                             <span>
                             <h:commandLink value="Edit" action="#{assignProjectFieldView.redirectEdit}">
-                                <f:param name="userId" value="#{item.userId}" />
-                                <f:param name="projectId" value="#{param['project_id']}" />
-                                <f:param name="dataTableProjectId" value="#{item.projectId}" />
+                                <f:param name="userId" value="#{item.userId}"/>
+                                <f:param name="projectId" value="#{param['project_id']}"/>
+                                <f:param name="dataTableProjectId" value="#{item.projectId}"/>
                             </h:commandLink>
                             </span>
                         </p:column>
 
-                </p:dataTable>
+                    </p:dataTable>
 
                 </div>
             </div>
