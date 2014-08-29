@@ -20,10 +20,12 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Views current values for a specific template
+ *
  * @see ProjectTemplateView for addition of this template
  * @see TemplatePopulateView for initial populating of values
  * @see TemplateUpdateView for changing values
@@ -60,6 +62,7 @@ public class TemplateEditView extends AbstractView {
     /**
      * Loads by project template id.
      * N.B. Needs project template id.
+     *
      * @return field definition list.
      */
     private List<FieldDefinitionValue> loadFieldDefinitions() {
@@ -78,7 +81,13 @@ public class TemplateEditView extends AbstractView {
 
             for (FieldDefinition f : list) {
                 ProjectTemplateStrings projectTemplateString = projectTemplateStringsDAO.findByFdidAndTemplateId(f.getFdid(), templateId);
-                fieldDefinitionvalueList.add(new FieldDefinitionValue(f, projectTemplateString.getValue()));
+
+                if (projectTemplateString == null) {
+                    fieldDefinitionvalueList.add(new FieldDefinitionValue(f, ""));
+                } else {
+                    checkNotNull(projectTemplateString.getValue());
+                    fieldDefinitionvalueList.add(new FieldDefinitionValue(f, projectTemplateString.getValue()));
+                }
             }
         } catch (Exception e) {
             logger.debug("Error loading fdid value list. {}", e);

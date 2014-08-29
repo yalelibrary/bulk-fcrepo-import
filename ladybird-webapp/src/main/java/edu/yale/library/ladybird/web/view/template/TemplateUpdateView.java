@@ -1,6 +1,7 @@
 
 package edu.yale.library.ladybird.web.view.template;
 
+import com.google.common.base.Preconditions;
 import edu.yale.library.ladybird.entity.ProjectTemplate;
 import edu.yale.library.ladybird.entity.ProjectTemplateBuilder;
 import edu.yale.library.ladybird.entity.ProjectTemplateStrings;
@@ -44,7 +45,6 @@ public class TemplateUpdateView extends AbstractView {
 
     @PostConstruct
     public void init() {
-        logger.trace("Init ProjectTemplate Metadata Update View");
         initFields();
         dao = projectTemplateDAO;
     }
@@ -62,14 +62,26 @@ public class TemplateUpdateView extends AbstractView {
             for (FieldDefinitionValue fieldDefinitions: fieldDefinitionvalueList) {
                 ProjectTemplateStrings projectTemplateStrings = projectTemplateStringsDAO
                         .findByFdidAndTemplateId(fieldDefinitions.getFdid().getFdid(), templateProjectId);
-                projectTemplateStrings.setValue(fieldDefinitions.getValue());
+
+                //accomodate for 2 page submit button. User can create an empty template which has no projecttemplatestring associated.
+                if (projectTemplateStrings == null) {
+                    projectTemplateStrings = new ProjectTemplateStrings();
+                    projectTemplateStrings.setFdid(fieldDefinitions.getFdid().getFdid());
+                    projectTemplateStrings.setTemplateId(templateProjectId);
+                    //projectTemplateStrings.setValue("");
+                    projectTemplateStrings.setValue(fieldDefinitions.getValue());
+                } else {
+                    projectTemplateStrings.setValue(fieldDefinitions.getValue());
+                }
+
+                Preconditions.checkNotNull(projectTemplateStrings);
                 projectTemplateStringsList.add(projectTemplateStrings);
             }
 
             projectTemplateStringsDAO.saveOrUpdateList(projectTemplateStringsList);
             return ok();
         } catch (Exception e) {
-            logger.debug("Error updating={}", e);
+            logger.debug("Error updating project template values", e);
             return fail();
         }
     }
