@@ -1,5 +1,6 @@
 package edu.yale.library.ladybird.engine.metadata;
 
+import com.google.common.base.Preconditions;
 import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
 import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.AuthorityControlBuilder;
@@ -40,6 +41,7 @@ public class MetadataEditor {
 
         try {
             for (FieldDefinitionValue field : fieldDefinitionvalueList) {
+                logger.debug("Eval={}", field);
 
                 int fdid = field.getFdid().getFdid();
 
@@ -85,11 +87,31 @@ public class MetadataEditor {
                         AuthorityControl oldAcid = authorityControlDAO.findByAcid(objectAcids.get(i).getValue());
 
                         if (!oldAcid.getValue().equalsIgnoreCase(multiFieldsValues.get(i))) {
-                            final AuthorityControl newAuthorityControl = new AuthorityControlBuilder().setAc(oldAcid)
-                                    .createAuthorityControl2();
-                            newAuthorityControl.setValue(multiFieldsValues.get(i));
-                            int newAcidInt = authorityControlDAO.save(newAuthorityControl);
-                            objectAcids.get(i).setValue(newAcidInt);
+
+                            if (multiFieldsValues.get(i) == null) {
+                                logger.debug("Null value supplied");
+                            }
+
+                            List<AuthorityControl> existingAcid = authorityControlDAO.findByFdidAndStringValue(fdid, multiFieldsValues.get(i));
+
+                            //don't add a new acid if the field is dropdown. This means that that object acid merely needs to be switched
+
+                            if (FieldConstantUtil.isDropDown(field.getFdid()) && !existingAcid.isEmpty()) {
+                                logger.debug("Switching, not adding new authority control for drop down acid");
+
+                                logger.debug("Existing acid size={}", existingAcid.size());
+
+                                Preconditions.checkState(existingAcid.size() == 1, "Only once acid should exist at this point for" + fdid + "and val" + multiFieldsValues.get(i));
+
+                                objectAcids.get(i).setValue(existingAcid.get(0).getAcid());
+                            } else {
+                                final AuthorityControl newAuthorityControl = new AuthorityControlBuilder().setAc(oldAcid)
+                                        .createAuthorityControl2();
+                                newAuthorityControl.setValue(multiFieldsValues.get(i));
+                                int newAcidInt = authorityControlDAO.save(newAuthorityControl);
+                                objectAcids.get(i).setValue(newAcidInt);
+                            }
+
                             //1. make sure to write this object acid:
                             objectAcidsToUpdate.add(objectAcids.get(i));
                         }

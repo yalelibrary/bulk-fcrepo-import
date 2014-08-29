@@ -48,10 +48,20 @@
                         <div class="col-sm-10">
                             <ui:repeat varStatus="loop" value="#{entry.value}">
                                 <h:inputText value="#{entry.value[loop.index]}"
-                                             rendered="#{not objectMetadataView.isReadOnly()}"/>
+                                             rendered="#{not objectMetadataView.isReadOnly() and not newObjectView.fdidDropdown(entry.fdid.fdid)}"/>
+
+                                <p:selectOneMenu value="#{entry.value[loop.index]}" rendered="#{newObjectView.fdidDropdown(entry.fdid.fdid)}">
+                                    <f:selectItems value="#{newObjectView.acidValuesForFdid(entry.fdid.fdid)}"
+                                                   var="select_var"
+                                                   itemLabel="#{select_var}"
+                                                   itemValue="#{select_var}"/>
+                                </p:selectOneMenu>
+
+                                <!-- read only version -->
                                 <h:outputText value="#{entry.value[loop.index]}"
                                               rendered="#{objectMetadataView.isReadOnly()}"/> <!-- TODO should move this to FDV as a property or read version param-->
                                 &nbsp;
+
                             </ui:repeat>
                         </div>
 

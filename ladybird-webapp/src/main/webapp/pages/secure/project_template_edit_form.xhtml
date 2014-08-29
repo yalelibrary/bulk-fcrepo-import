@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 <ui:composition template="../../templates/template_yul.xhtml">
     <ui:define name="content">
 
@@ -16,7 +17,31 @@
                 <ui:repeat value="#{templateEditView.fieldDefinitionvalueList}" var="entry">
                     <div class="form-group">
                         <label class="col-sm-2 control-label"> Field #{entry.fdid.handle} </label>
-                        <div class="col-sm-10"><h:inputText value="#{entry.value}" styleClass="form-control"/></div>
+
+                        <div class="col-sm-10">
+                            <h:inputText value="#{entry.value}" styleClass="form-control" rendered="#{not newObjectView.fdidDropdown(entry.fdid.fdid)}"/>
+
+                            <p:selectOneMenu value="#{entry.value}" rendered="#{newObjectView.fdidDropdown(entry.fdid.fdid)}">
+                                <f:selectItems value="#{newObjectView.acidValuesForFdid(entry.fdid.fdid)}"
+                                               var="select_var"
+                                               itemLabel="#{select_var}"
+                                               itemValue="#{select_var}"/>
+                            </p:selectOneMenu>
+                        </div>
+
+                        <!--
+                            <h:inputText value="#{entry.value}" styleClass="form-control" rendered="#{not newObjectView.fdidDropdown(entry.fdid.fdid)}"/>
+
+                            <p:selectOneMenu value="#{entry.value}" rendered="#{newObjectView.fdidDropdown(entry.fdid.fdid)}">
+                                <f:selectItems value="#{newObjectView.acidValuesForFdid(entry.fdid.fdid)}"
+                                               var="select_var"
+                                               itemLabel="#{select_var}"
+                                               itemValue="#{select_var}"/>
+                            </p:selectOneMenu>
+
+                        -->
+
+
                     </div>
                 </ui:repeat>
             </div>

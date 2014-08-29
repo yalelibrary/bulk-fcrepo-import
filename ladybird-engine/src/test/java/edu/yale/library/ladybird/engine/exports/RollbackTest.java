@@ -28,6 +28,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+//TODO Might have to write tets for MVF and DD fdids
 public class RollbackTest extends AbstractDBTest {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -160,6 +161,7 @@ public class RollbackTest extends AbstractDBTest {
 
     private FieldDefinitionValue getFdidValue(int fdid, List<String> value) {
         FieldDefinition fieldDefinition = new FieldDefinition(fdid);
+        fieldDefinition.setType("string");
         return  new FieldDefinitionValue(fieldDefinition, value);
     }
 

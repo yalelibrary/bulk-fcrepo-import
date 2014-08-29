@@ -11,7 +11,7 @@ import java.util.List;
 public class ProjectTemplateStringsHibernateDAO extends GenericHibernateDAO<ProjectTemplateStrings, Integer>
         implements ProjectTemplateStringsDAO {
 
-    private final static Logger logger = LoggerFactory.getLogger(ProjectTemplateStringsHibernateDAO.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProjectTemplateStringsHibernateDAO.class);
 
     @SuppressWarnings("unchecked")
     @Override

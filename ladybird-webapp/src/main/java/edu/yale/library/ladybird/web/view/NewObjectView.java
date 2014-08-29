@@ -3,6 +3,7 @@ package edu.yale.library.ladybird.web.view;
 import com.google.common.collect.Lists;
 import edu.yale.library.ladybird.engine.file.ImageMagickProcessor;
 import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
+import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.AuthorityControlBuilder;
 import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.Object;
@@ -36,6 +37,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -130,12 +132,36 @@ public class NewObjectView extends AbstractView implements Serializable {
         }
     }
 
+    public boolean fdidDropdown(final int fdid) {
+        try {
+            return fdidDAO.findByFdid(fdid).getType().equalsIgnoreCase("dropdown");
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public boolean fdidMultiValued(final int fdid) {
         try {
             return fdidDAO.findByFdid(fdid).isMultivalue();
         } catch (Exception e) {
             return false;
         }
+    }
+
+    /* Converts to string for drop down */
+    public List<String> acidValuesForFdid(int fdid) {
+        List<String> stringVals = new ArrayList<>();
+        List<AuthorityControl> list = authorityControlDAO.findByFdid(fdid);
+
+        if (list.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        for (AuthorityControl a: list) {
+            stringVals.add(a.getValue());
+        }
+
+        return stringVals;
     }
 
     public void newFdid(int fdid) {
@@ -278,9 +304,6 @@ public class NewObjectView extends AbstractView implements Serializable {
                     + '}';
         }
     }
-
-
-
 
     //Getters and setters -------------------------------------------------------------------
     public List<FieldDefinitionValue> getFieldDefinitionvalueList() {

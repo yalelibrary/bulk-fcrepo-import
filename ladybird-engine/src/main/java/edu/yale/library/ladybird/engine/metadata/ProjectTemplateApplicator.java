@@ -105,12 +105,25 @@ public class ProjectTemplateApplicator {
 
                         //Add a new acid:
                         if (templateValue != null && !templateValue.isEmpty()) {
-                            final AuthorityControl newAcid = new AuthorityControlBuilder().setFdid(fdid).setDate(new Date())
-                                    .setValue(templateValue).createAuthorityControl();
-                            int newAcidInt = authorityControlDAO.save(newAcid);
+
+                            //N.B. Don't add an acid if an acid exists:
+
+                            List<AuthorityControl> existingAcid = authorityControlDAO.findByFdidAndStringValue(fdid, templateValue);
+                            logger.debug("existing acids={}", existingAcid.toString());
+
+                            int acid;
+
+                            if (existingAcid.isEmpty()) {
+                                final AuthorityControl newAcid = new AuthorityControlBuilder().setFdid(fdid).setDate(new Date())
+                                        .setValue(templateValue).createAuthorityControl();
+                                acid = authorityControlDAO.save(newAcid);
+                            } else {
+                                Preconditions.checkState(existingAcid.size() == 1, "More than one acid found. Acids are supposed to be unique for fdid=" + fdid + " and value=" + templateValue);
+                                acid = existingAcid.get(0).getAcid();
+                            }
 
                             final ObjectAcid objAcid = new ObjectAcidBuilder().setDate(new Date()).setUserId(userId)
-                                    .setValue(newAcidInt).setObjectId(oid).setFdid(fdid).createObjectAcid();
+                                    .setValue(acid).setObjectId(oid).setFdid(fdid).createObjectAcid();
                             objectAcidDAO.save(objAcid);
 
                             //Remove old object acid if the fdid is not multi-valued:

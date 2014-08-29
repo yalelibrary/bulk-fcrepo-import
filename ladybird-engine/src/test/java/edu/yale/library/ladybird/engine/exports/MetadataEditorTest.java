@@ -5,6 +5,7 @@ import edu.yale.library.ladybird.engine.ObjectTestsHelper;
 import edu.yale.library.ladybird.engine.metadata.FieldDefinitionValue;
 import edu.yale.library.ladybird.engine.metadata.MetadataEditor;
 import edu.yale.library.ladybird.entity.AuthorityControl;
+import edu.yale.library.ladybird.entity.AuthorityControlBuilder;
 import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.ObjectAcidVersion;
 import edu.yale.library.ladybird.entity.ObjectBuilder;
@@ -32,6 +33,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import static junit.framework.Assert.assertEquals;
+
 /**
  * Tests metadata editing. Multiple values are tested.
  */
@@ -41,6 +44,9 @@ public class MetadataEditorTest extends AbstractDBTest {
 
     final int acidFdid = 59;
     final int stringFdid = 70;
+
+    AuthorityControlDAO authDAO = new AuthorityControlHibernateDAO();
+
 
     /**
      * Tests handling of multiple fdid metadata.
@@ -108,6 +114,46 @@ public class MetadataEditorTest extends AbstractDBTest {
         assert (authDAO.findAll().size() == 4);
     }
 
+    /**
+     * Tests handling of multiple fdid metadata.
+     * Makes an edit and tests whether edit was applied and the metadata items were versioned.
+     */
+    @Test
+    public void shouldUpdateMultipleDropdownMetadata() {
+        MetadataEditor metadataEditor = new MetadataEditor();
+        int testOid = 1;
+        int testUserId = 1;
+        List<FieldDefinitionValue> fieldDefinitionValueList = getDropDownFdidValueList();
+        assertEquals(fieldDefinitionValueList.size(), 1);
+
+        //1. Create an acid that should be shared since it's a drop down:
+        AuthorityControl sharedAcid = new AuthorityControlBuilder().setFdid(acidFdid).setDate(new Date()).setValue("WHATEVER 1").createAuthorityControl();
+        authDAO.save(sharedAcid);
+        assert (authDAO.findAll().size() == 1);
+
+        //create object and acid values
+        int oid = writeDummyObject(); // write object, not acid or string values
+        ObjectTestsHelper.writeDummyObjAcid(oid, acidFdid, "String Acid value");
+        ObjectTestsHelper.writeDummyObjAcid(oid, acidFdid, "String Acid value 2");
+
+        assert (ObjectTestsHelper.fdidAcidValueList(oid, acidFdid).size() == 2);
+
+        metadataEditor.updateOidMetadata(testOid, testUserId, fieldDefinitionValueList);
+
+        //read back metadata:
+        //1. make sure only the same number of fields exist
+        assert (new ObjectAcidHibernateDAO().findAll().size() == 2);
+
+        //3. make sure object acid edits were applied
+        List<AuthorityControl> acList = ObjectTestsHelper.fdidAcidValueList(oid, acidFdid);
+        logger.debug(acList.toString());
+
+        assert (acList.get(0).getValue().equalsIgnoreCase("WHATEVER 1"));
+        assert (acList.get(1).getValue().equalsIgnoreCase("Whatever 2"));
+
+        assertEquals(authDAO.findAll().size(), 4);
+    }
+
     private int writeDummyObject() {
         Date d = new Date();
         edu.yale.library.ladybird.entity.Object object = new ObjectBuilder().setUserId(0).setProjectId(0).setDate(d).createObject();
@@ -119,14 +165,30 @@ public class MetadataEditorTest extends AbstractDBTest {
      */
     private List<FieldDefinitionValue> getFdidValueList() {
         List<FieldDefinitionValue> fdidList = new ArrayList<>();
-        fdidList.add(getFdidValue(acidFdid, Arrays.asList("WHATEVER 1", "WHATEVER 2")));
-        fdidList.add(getFdidValue(stringFdid, Arrays.asList("New String value 1", "New String value 2")));
+        fdidList.add(getAcidFdidValue(acidFdid, Arrays.asList("WHATEVER 1", "WHATEVER 2")));
+        fdidList.add(getStringFdidValue(stringFdid, Arrays.asList("New String value 1", "New String value 2")));
         return fdidList;
     }
 
-    private FieldDefinitionValue getFdidValue(int fdid, List<String> value) {
+    /**
+     * @return The update to be applied
+     */
+    private List<FieldDefinitionValue> getDropDownFdidValueList() {
+        List<FieldDefinitionValue> fdidList = new ArrayList<>();
+        fdidList.add(getAcidFdidValue(acidFdid, Arrays.asList("WHATEVER 1", "WHATEVER 2")));
+        return fdidList;
+    }
+
+    private FieldDefinitionValue getAcidFdidValue(int fdid, List<String> value) {
         FieldDefinition fieldDefinition = new FieldDefinition(fdid);
-        return  new FieldDefinitionValue(fieldDefinition, value);
+        fieldDefinition.setType("dropdown");
+        return new FieldDefinitionValue(fieldDefinition, value);
+    }
+
+    private FieldDefinitionValue getStringFdidValue(int fdid, List<String> value) {
+        FieldDefinition fieldDefinition = new FieldDefinition(fdid);
+        fieldDefinition.setType("string");
+        return new FieldDefinitionValue(fieldDefinition, value);
     }
 
     @Before

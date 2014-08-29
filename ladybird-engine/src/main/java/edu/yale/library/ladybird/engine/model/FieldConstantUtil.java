@@ -113,5 +113,12 @@ public class FieldConstantUtil {
         return new FieldDefinitionHibernateDAO().findByFdid(f).getAcid() == 0;
     }
 
+    //FIXME
+    public static boolean isDropDown(final FieldDefinition fieldDefinition) {
+        return fieldDefinition.getType().equalsIgnoreCase("dropdown");
+
+    }
+
+
 
 }

@@ -264,7 +264,7 @@ public class ObjectMetadataView extends AbstractView {
      */
     public String updateOidMetadata() {
         final int oid = Integer.parseInt(Faces.getRequestParameter("oid"));
-        //logger.debug("Updating oid metadata for oid={} with values={}", oid, fieldDefinitionvalueList);
+        logger.debug("Updating oid metadata for oid={} with values={}", oid, fieldDefinitionvalueList);
 
         MetadataEditor metadataEditor = new MetadataEditor();
         try {

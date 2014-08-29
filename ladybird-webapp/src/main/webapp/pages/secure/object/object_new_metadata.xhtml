@@ -9,36 +9,6 @@
     <ui:define name="content">
         <h:form id="ObjectMetadataForm" enctype="multipart/form-data" styleClass="form-horizontal" role="form">
 
-            <!--
-            <div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h:outputText
-                                value="Parent Object with child objects #{objectMetadataView.getChildCount(param['oid'])}"
-                                rendered="#{objectMetadataView.isParent(param['oid'])}"> </h:outputText>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <h:graphicImage value="/images/#{objectMetadataView.image}" height="300" width="300"/>
-                        #{objectMetadataView.objectFile.fileName}
-                    </div>
-                    <div class="col-md-8"> Object ID <h4> #{param['oid']} </h4>
-
-                        <p> Created <h:outputText value="#{objectMetadataView.objectFile.date}">
-                            <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
-                        </h:outputText>
-                        </p>
-
-                        <p> Created by #{userView.getUserName(objectMetadataView.objectFile.userId)} </p>
-                    </div>
-                </div>
-            </div>
-            -->
-
             <div>
                 <h4>New Object Metadata</h4>
 
@@ -50,7 +20,14 @@
                                 <h:outputText value="#{newObjectView.getFdidHandle(entry.fdid.fdid)}"/>
                             </label>
                             <ui:repeat varStatus="loop" value="#{entry.values}">
-                                <h:inputText value="#{entry.values[loop.index]}"/>
+                                <h:inputText value="#{entry.values[loop.index]}" rendered="#{not newObjectView.fdidDropdown(entry.fdid.fdid)}"/>
+                                <p:selectOneMenu value="#{entry.values[loop.index]}" rendered="#{newObjectView.fdidDropdown(entry.fdid.fdid)}">
+                                    <f:selectItems value="#{newObjectView.acidValuesForFdid(entry.fdid.fdid)}"
+                                                   var="select_var"
+                                                   itemLabel="#{select_var}"
+                                                   itemValue="#{select_var}"/>
+
+                                </p:selectOneMenu>
                                 &nbsp;
                             </ui:repeat>
                         </div>
