@@ -110,8 +110,6 @@ public class FieldConstantUtil {
      * @return whether a value is a string
      */
     public static boolean isString(int f) {
-        logger.debug("Eval fdid={}", f);
-        FieldDefinitionDAO fieldDefinitionDAO = new FieldDefinitionHibernateDAO();
         return new FieldDefinitionHibernateDAO().findByFdid(f).getAcid() == 0;
     }
 

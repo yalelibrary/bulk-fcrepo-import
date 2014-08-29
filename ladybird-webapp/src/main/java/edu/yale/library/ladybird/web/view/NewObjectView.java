@@ -130,6 +130,14 @@ public class NewObjectView extends AbstractView implements Serializable {
         }
     }
 
+    public boolean fdidMultiValued(final int fdid) {
+        try {
+            return fdidDAO.findByFdid(fdid).isMultivalue();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public void newFdid(int fdid) {
         addFdidtoFDV(fdid);
     }
