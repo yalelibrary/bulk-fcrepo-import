@@ -30,7 +30,6 @@ public class MetadataEditor {
 
     /**
      * Updates and versions metadata
-     * TODO acid size check
      */
     public void updateOidMetadata(int oid, int userId, List<FieldDefinitionValue> fieldDefinitionvalueList) {
         final List<ObjectString> stringsToUpdate = new ArrayList<>();
@@ -84,6 +83,12 @@ public class MetadataEditor {
 
                     //look up authority control, and add a new acid
                     for (int i = 0; i < objectAcids.size(); i++) {
+
+                        if (multiFieldsValues.get(i) == null) {
+                            logger.debug("Skipping fdid={} due to null value", fdid);
+                            continue;
+                        }
+
                         AuthorityControl oldAcid = authorityControlDAO.findByAcid(objectAcids.get(i).getValue());
 
                         if (!oldAcid.getValue().equalsIgnoreCase(multiFieldsValues.get(i))) {
