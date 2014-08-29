@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.engine.metadata;
 
 
+import com.google.common.base.Preconditions;
 import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
 import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.AuthorityControlBuilder;
@@ -26,6 +27,7 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ProjectTemplateString
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -72,6 +74,8 @@ public class ProjectTemplateApplicator {
                 for (final FieldDefinition fieldDef : fieldDefinitions) {
                     final int fdid = fieldDef.getFdid();
 
+                    final boolean isMultivalued = fieldDef.isMultivalue();
+
                     //1. string
                     if (FieldConstantUtil.isString(fdid)) {
                         final ProjectTemplateStrings pString = templateStringsDAO.findByFdidAndTemplateId(fieldDef.getFdid(), templateId);
@@ -85,6 +89,15 @@ public class ProjectTemplateApplicator {
                             objectStringDAO.updateItem(objectString);
                         }
                     } else { //2. acid
+                        ObjectAcid existingObjectAcid = null;
+
+                        if (!isMultivalued) {
+                            List<ObjectAcid> list = objectAcidDAO.findListByOidAndFdid(oid, fdid);
+                            Preconditions.checkState(list.size() < 2);
+                            existingObjectAcid = list.get(0);
+                        }
+
+
                         final ProjectTemplateStrings pString = templateStringsDAO.findByFdidAndTemplateId(fdid, templateId);
                         final String templateValue = pString.getValue();
 
@@ -99,6 +112,14 @@ public class ProjectTemplateApplicator {
                             final ObjectAcid objAcid = new ObjectAcidBuilder().setDate(new Date()).setUserId(userId)
                                     .setValue(newAcidInt).setObjectId(oid).setFdid(fdid).createObjectAcid();
                             objectAcidDAO.save(objAcid);
+
+                            //Remove old object acid if the fdid is not multi-valued:
+                            if (!isMultivalued) {
+                                objectAcidDAO.delete(Collections.singletonList(existingObjectAcid));
+                                Preconditions.checkState(objectAcidDAO.findListByOidAndFdid(oid, fdid).size() == 1, "Only one object acid should exist at this point!");
+                            } else {
+                                Preconditions.checkState(objectAcidDAO.findListByOidAndFdid(oid, fdid).size() > 1, "Only one object acid found. Expecting more.");
+                            }
                         }
                     }
                 }

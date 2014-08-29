@@ -83,6 +83,9 @@ public class ObjectFileView extends AbstractView {
 
         try {
             final int userId = authUtil.getCurrentUserId();
+
+            logger.debug("UserId={} applying template={}", userId, templateToApply);
+
             ProjectTemplateApplicator projectTemplateApplicator = new ProjectTemplateApplicator(); //TODO
             projectTemplateApplicator.applyTemplate(templateToApply, userId);
             return ok();
