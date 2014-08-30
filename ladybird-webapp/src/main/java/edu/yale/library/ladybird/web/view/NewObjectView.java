@@ -1,5 +1,6 @@
 package edu.yale.library.ladybird.web.view;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import edu.yale.library.ladybird.engine.file.ImageMagickProcessor;
 import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
@@ -188,7 +189,6 @@ public class NewObjectView extends AbstractView implements Serializable {
     public String editOidMetadata() {
         try {
             final Date date = new Date(); //same date for all values
-
             final int userId = auth.getCurrentUserId();
             final Project project = auth.getDefaultProjectForCurrentUser();
 
@@ -214,23 +214,45 @@ public class NewObjectView extends AbstractView implements Serializable {
             logger.debug("Saved oid={}", oid);
 
             //save object file:
-            final ObjectFile objectFile = new ObjectFileBuilder().setDate(date).setOid(oid).setUserId(userId).setThumbnail(thumbnail).createObjectFile();
+            final ObjectFile objectFile = new ObjectFileBuilder().setDate(date).setOid(oid).setUserId(userId)
+                    .setThumbnail(thumbnail).createObjectFile();
             objectFileDAO.save(objectFile);
 
             //save object string:
             ObjectStringBuilder osb = new ObjectStringBuilder();
             ObjectAcidBuilder oab = new ObjectAcidBuilder();
 
-            for (FieldDefinitionValue f : fieldDefinitionvalueList) {
+            for (final FieldDefinitionValue f : fieldDefinitionvalueList) {
                 final int fdid = f.getFdid().getFdid();
                 final String[] values = f.getValues();
 
                 for (final String value : values) {
+
+                    Preconditions.checkNotNull(value, "null for fdid=" + fdid);
+
+                    //TODO need to check for empty value as well. The issue is that some value must be saved for an object.
+                    //But this makes an empty ACID value for each of the fdids. Not a big deal, though:
+                    if (value.isEmpty()) {
+                        logger.debug("Empty value for fdid={}", fdid);
+                    }
+
                     if (FieldConstantUtil.isString(fdid)) {
-                        objectStringDAO.save(osb.setDate(date).setFdid(fdid).setUserId(userId).setOid(oid).setValue(value).createObjectString());
+                        objectStringDAO.save(osb.setDate(date).setFdid(fdid).setUserId(userId).setOid(oid)
+                                .setValue(value).createObjectString());
                     } else {
-                        int acid = authorityControlDAO.save(new AuthorityControlBuilder().setValue(value).setDate(date)
-                                .setUserId(userId).setFdid(fdid).createAuthorityControl());
+                        int acid;
+
+                        //see if acid already exists
+                        final List<AuthorityControl> existingAcids = authorityControlDAO.findByFdidAndStringValue(fdid, value);
+                        Preconditions.checkState(existingAcids.size() < 2, "Acids should be unique" + existingAcids.size()
+                                + "for fdid=" + fdid);
+
+                        if (!existingAcids.isEmpty()) {
+                            acid = existingAcids.get(0).getAcid();
+                        } else {
+                            acid = authorityControlDAO.save(new AuthorityControlBuilder().setValue(value).setDate(date)
+                                    .setUserId(userId).setFdid(fdid).createAuthorityControl());
+                        }
                         objectAcidDAO.save(oab.setDate(date).setFdid(fdid).setUserId(userId).setObjectId(oid)
                                 .setValue(acid).createObjectAcid());
                     }

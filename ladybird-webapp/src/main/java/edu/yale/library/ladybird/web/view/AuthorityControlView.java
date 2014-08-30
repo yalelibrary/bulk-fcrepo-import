@@ -79,7 +79,7 @@ public class AuthorityControlView extends AbstractView {
     public int countForFdid(int fdid) {
         try {
             int count = authControlDao.countByFdid(fdid);
-            logger.debug("Fdid={} acid count={}", fdid, count);
+            logger.trace("Fdid={} acid count={}", fdid, count);
             return count;
         } catch (Exception e) {
             logger.error("Error", e);
@@ -92,12 +92,9 @@ public class AuthorityControlView extends AbstractView {
      */
     public List<FieldDefinition> getAcids() {
         List<FieldDefinition> list = fieldDefinitionDAO.findAll();
-
-        logger.debug("Original Fdid size={}", list.size());
-
+        logger.trace("Original Fdid size={}", list.size());
         list.removeIf(p -> FieldConstantUtil.isString(p.getFdid()));
-
-        logger.debug("New fdid size={}", list.size());
+        logger.trace("New fdid size={}", list.size());
         return list;
     }
 
