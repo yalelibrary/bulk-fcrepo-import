@@ -58,7 +58,7 @@ public class UserEventViewIT extends AbstractWarTest {
 
         final HtmlPage page = webClient.getPage(PAGE_TO_TEST);
         final String pageAsText = page.asXml();
-        assertTrue(pageAsText.contains("Event Type"));
+        assertTrue(pageAsText.contains("Event"));
         final HtmlElement htmlElement = page.getElementById("UserEventForm:UserEventDatatable:0:event_type");
         assertEquals("Value mismatch", htmlElement.getTextContent(), "user.create");
     }

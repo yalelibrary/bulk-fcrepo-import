@@ -32,56 +32,51 @@
                         <p:submenu label="Dashboard">
                             <p:menuitem value="Workspace" url="/pages/secure/welcome.xhtml"/>
                             <p:menuitem value="Schedule Import" url="/pages/secure/import/import_engine_file.xhtml"/>
+                            <p:menuitem value="Add New Object" url="/pages/secure/object/object_new_metadata.xhtml"/>
                             <p:menuitem value="User Manager" url="/pages/secure/user_manager.xhtml"/>
                             <p:menuitem value="Project Manager" url="/pages/secure/projects.xhtml"/>
                             <p:menuitem value="Export Options" url="/pages/secure/import/user_export.xhtml"/>
                         </p:submenu>
 
+                        <!--
                         <p:submenu label="New Object">
-                            <p:menuitem value="New Object" url="/pages/secure/object/object_new_metadata.xhtml"/>
-                            <p:menuitem value="Versions History" url="/pages/secure/object/object_version.xhtml"/>
-                            <p:menuitem value="Audit" url="/pages/secure/audit.xhtml"/>
                         </p:submenu>
+                        -->
 
                         <p:submenu label="Search">
                             <p:menuitem value="General Search" url="/pages/secure/search_oid.xhtml"/>
                             <p:menuitem value="Browse Project" url="/pages/secure/object/object_import.xhtml"/>
                             <p:menuitem value="Search History" url="/pages/secure/data_history.xhtml"/>
+                            <p:menuitem value="Versions History" url="/pages/secure/object/object_version.xhtml"/>
+                            <p:menuitem value="Audit" url="/pages/secure/audit.xhtml"/>
                         </p:submenu>
 
                         <p:submenu label="Authority Control">
                             <p:menuitem value="Authority Lists" url="/pages/secure/acid_home.xhtml"/>
                         </p:submenu>
 
-                        <p:submenu label="Field Definitions">
-                            <p:menuitem value="Field Definitions" url="/pages/secure/import/field_definition.xhtml"/>
-                            <p:menuitem value="Field-Marc Mappings"
-                                        url="/pages/secure/import/field_marc_mapping.xhtml"/>
-                        </p:submenu>
-
                         <p:submenu label="Project Settings">
                             <p:menuitem value="Project Authorization" url="/pages/secure/users_projects.xhtml"/>
-                            <p:menuitem value="Project Templates" url="/pages/secure/project_template.xhtml"/>
+                            <p:menuitem value="Templates" url="/pages/secure/project_template.xhtml"/>
                             <p:menuitem value="Metadata Access" url="/pages/secure/user_project_field.xhtml"/>
                             <p:menuitem value="Copy Metadata Access" url="/pages/secure/copy_metadata_access.xhtml"/>
-                        </p:submenu>
-
-                        <p:submenu label="Authorization">
-                            <p:menuitem value="View Role Permissions"
-                                        url="/pages/secure/authz/roles_permissions.xhtml"/>
+                            <p:menuitem value="Field Definitions" url="/pages/secure/import/field_definition.xhtml"/>
+                            <p:menuitem value="MARC xwalk" url="/pages/secure/import/field_marc_mapping.xhtml"/>
                         </p:submenu>
 
                         <p:submenu label="Stats">
-                            <p:menuitem value="Stats" url="/pages/secure/stats.xhtml"/>
-                            <p:menuitem value="Imports" url="/pages/secure/import/import_engine.xhtml"/>
-                            <p:menuitem value="Publish" url="/pages/secure/stats_publish.xhtml"/>
+                            <p:menuitem value="Dashboard" url="/pages/secure/stats.xhtml"/>
+                            <p:menuitem value="Imports Status" url="/pages/secure/import/import_engine.xhtml"/>
+                            <!-- <p:menuitem value="Publish" url="/pages/secure/stats_publish.xhtml"/> -->
                             <p:menuitem value="Session History" url="/pages/secure/user_event.xhtml?id=1"/>
                         </p:submenu>
 
-                        <p:submenu label="System Settings">
+                        <p:submenu label="Admin Settings">
                             <p:menuitem value="Application Settings" url="/pages/secure/settings.xhtml"/>
-                            <p:menuitem value="OAI-PMH" url="/pages/secure/import/import_source.xhtml"/>
                             <p:menuitem value="Crons Manager" url="/pages/secure/crons.xhtml"/>
+                            <p:menuitem value="OAI-PMH Settings" url="/pages/secure/import/import_source.xhtml"/>
+                            <p:menuitem value="Roles Authorization"
+                                        url="/pages/secure/authz/roles_permissions.xhtml"/>
                         </p:submenu>
 
                         <p:submenu label="#{welcomeView.currentUsername}">

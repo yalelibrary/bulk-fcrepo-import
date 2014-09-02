@@ -35,19 +35,25 @@
                         </p:column>
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="Event Type"/>
+                                <h:outputText value="Event"/>
                             </f:facet>
                             <h:outputText id="event_type" value="#{item.eventType}"/>
                         </p:column>
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="Creation"/>
+                                <h:outputText value="Value"/>
+                            </f:facet>
+                            <h:outputText id="event_value" name="event_value" value="#{item.value}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Time"/>
                             </f:facet>
                             <h:outputText id="event_createddate" value="#{item.createdDate}">
                                 <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
                             </h:outputText>
                         </p:column>
-                        <p:column>
+                        <p:column rendered="false">
                             <f:facet name="header">
                                 <h:outputText value="Start"/>
                             </f:facet>
@@ -55,19 +61,13 @@
                                 <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
                             </h:outputText>
                         </p:column>
-                        <p:column>
+                        <p:column rendered="false">
                             <f:facet name="header">
                                 <h:outputText value="End"/>
                             </f:facet>
                             <h:outputText id="event_enddate" value="#{item.endDate}">
                                 <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
                             </h:outputText>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="Event Value"/>
-                            </f:facet>
-                            <h:outputText id="event_value" name="event_value" value="#{item.value}"/>
                         </p:column>
 
                     </p:dataTable>
