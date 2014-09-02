@@ -15,23 +15,25 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.AuthorityControlHiber
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectAcidHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectStringHibernateDAO;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MetadataEditor {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+import static org.slf4j.LoggerFactory.getLogger;
 
-    private ObjectStringDAO objectStringDAO = new ObjectStringHibernateDAO();
-    private ObjectAcidDAO objectAcidDAO = new ObjectAcidHibernateDAO();
-    private AuthorityControlDAO authorityControlDAO = new AuthorityControlHibernateDAO();
-    ObjectVersioner metadataEditor = new ObjectVersioner();
+public class MetadataEditor {
+    private final Logger logger = getLogger(this.getClass());
+
+    private final ObjectStringDAO objectStringDAO = new ObjectStringHibernateDAO();
+    private final ObjectAcidDAO objectAcidDAO = new ObjectAcidHibernateDAO();
+    private final AuthorityControlDAO acidDAO = new AuthorityControlHibernateDAO();
+    private final ObjectVersioner metadataEditor = new ObjectVersioner();
 
     /**
      * Updates and versions metadata
      */
-    public void updateOidMetadata(int oid, int userId, List<FieldDefinitionValue> fieldDefinitionvalueList) {
+    public void updateOidMetadata(final int oid, final int userId,
+                                  final List<FieldDefinitionValue> fieldDefinitionvalueList) {
         final List<ObjectString> stringsToUpdate = new ArrayList<>();
         final List<ObjectAcid> objectAcidsToUpdate = new ArrayList<>();
         final List<AuthorityControl> acidsToUpdate = new ArrayList<>();
@@ -39,100 +41,97 @@ public class MetadataEditor {
         final List<ObjectAcid> objectAcidVersions = new ArrayList<>();
 
         try {
-            for (FieldDefinitionValue field : fieldDefinitionvalueList) {
-                logger.debug("Eval={}", field);
+            for (final FieldDefinitionValue field : fieldDefinitionvalueList) {
+                final int fdid = field.getFdid().getFdid();
 
-                int fdid = field.getFdid().getFdid();
+                logger.trace("Eval={}", fdid);
 
                 if (isString(fdid)) {
                     final List<ObjectString> objectStrings = objectStringDAO.findListByOidAndFdid(oid, fdid);
 
-                    for (ObjectString os : objectStrings) {
+                    for (final ObjectString os : objectStrings) {
                         stringsVersions.add(new ObjectStringBuilder().setCopy(os).createObjectString2());
                     }
 
                     //N.B. assuming order is preserved. Perhaps the fields should have a zindex or something.
-                    List<String> multiFieldValues = field.getValue();
+                    final List<String> multiFdidValue = field.getValue();
 
-                    if (multiFieldValues.size() != objectStrings.size()) {
+                    if (multiFdidValue.size() != objectStrings.size()) {
                         logger.error("Size mismatch! Skipping oid={} fdid={}. Multi field values size={} obj str size={}",
-                                oid, fdid, multiFieldValues.size(), objectStrings.size());
+                                oid, fdid, multiFdidValue.size(), objectStrings.size());
                         continue;
                     }
 
                     for (int i = 0; i < objectStrings.size(); i++) {
-                        objectStrings.get(i).setValue(multiFieldValues.get(i));
+                        objectStrings.get(i).setValue(multiFdidValue.get(i));
                         stringsToUpdate.add(objectStrings.get(i));
                     }
                 } else { //an acid:
                     final List<ObjectAcid> objectAcids = objectAcidDAO.findListByOidAndFdid(oid, fdid);
 
                     //version it:
-                    for (ObjectAcid objectAcid : objectAcids) {
+                    for (final ObjectAcid objectAcid : objectAcids) {
                         objectAcidVersions.add(new ObjectAcidBuilder().setO(objectAcid).createObjectAcid2());
                     }
 
                     //assuming order is preserved
-                    List<String> multiFieldsValues = field.getValue();
+                    final List<String> multiFdidValue = field.getValue();
 
-                    if (multiFieldsValues.size() != objectAcids.size()) {
+                    if (multiFdidValue.size() != objectAcids.size()) {
                         logger.debug("Size mismatch! Skipping oid={}  fdid={}.  Multi field values size={} obj str size={}",
-                                oid, fdid, multiFieldsValues.size(), objectAcids.size());
+                                oid, fdid, multiFdidValue.size(), objectAcids.size());
                         continue;
                     }
 
                     //look up authority control, and add a new acid
                     for (int i = 0; i < objectAcids.size(); i++) {
-
-                        if (multiFieldsValues.get(i) == null) {
+                        if (multiFdidValue.get(i) == null) {
                             logger.debug("Skipping fdid={} due to null value", fdid);
                             continue;
                         }
 
-                        AuthorityControl oldAcid = authorityControlDAO.findByAcid(objectAcids.get(i).getValue());
+                        final AuthorityControl oldAcid = acidDAO.findByAcid(objectAcids.get(i).getValue());
 
-                        if (!oldAcid.getValue().equalsIgnoreCase(multiFieldsValues.get(i))) {
-
-                            if (multiFieldsValues.get(i) == null) {
+                        if (!oldAcid.getValue().equalsIgnoreCase(multiFdidValue.get(i))) {
+                            if (multiFdidValue.get(i) == null) {
                                 logger.debug("Null value supplied");
                             }
 
-                            List<AuthorityControl> existingAcid = authorityControlDAO.findByFdidAndStringValue(fdid, multiFieldsValues.get(i));
+                            final List<AuthorityControl> exAcids = acidDAO.findByFdidAndStringValue(fdid, multiFdidValue.get(i));
 
-                            //don't add a new acid if the field is dropdown. This means that that object acid merely needs to be switched
+                            //don't add a new acid if the field is dropdown. This means that object acid merely needs to be switched
 
-                            if (FieldConstantUtil.isDropDown(field.getFdid()) && !existingAcid.isEmpty()) {
+                            if (FieldConstantUtil.isDropDown(field.getFdid()) && !exAcids.isEmpty()) {
                                 logger.debug("Switching, not adding new authority control for drop down acid");
 
-                                logger.debug("Existing acid size={}", existingAcid.size());
+                                logger.debug("Existing acid size={}", exAcids.size());
 
-                                Preconditions.checkState(existingAcid.size() == 1, "Only once acid should exist at this point for" + fdid + "and val" + multiFieldsValues.get(i));
+                                Preconditions.checkState(exAcids.size() == 1,
+                                        "Only once acid should exist at this point for" + fdid + "and val" + multiFdidValue.get(i));
 
-                                objectAcids.get(i).setValue(existingAcid.get(0).getAcid());
+                                objectAcids.get(i).setValue(exAcids.get(0).getAcid());
                             } else {
-                                final AuthorityControl newAuthorityControl = new AuthorityControlBuilder().setAc(oldAcid)
+                                final AuthorityControl newAcid = new AuthorityControlBuilder().setAc(oldAcid)
                                         .createAuthorityControl2();
-                                newAuthorityControl.setValue(multiFieldsValues.get(i));
-                                int newAcidInt = authorityControlDAO.save(newAuthorityControl);
+                                newAcid.setValue(multiFdidValue.get(i));
+                                final int newAcidInt = acidDAO.save(newAcid);
                                 objectAcids.get(i).setValue(newAcidInt);
                             }
 
-                            //1. make sure to write this object acid:
+                            //make sure to write this object acid:
                             objectAcidsToUpdate.add(objectAcids.get(i));
                         }
                     }
                 }
             }
 
-            logger.debug("Updating oid metadata for oid={}", oid);
+            logger.trace("Updating oid metadata for oid={}", oid);
+            logger.trace("Acid List to be updated={}", acidsToUpdate);
+            logger.trace("Object String to be updated={}", stringsToUpdate);
+            logger.trace("Should save list={}", stringsToUpdate);
 
-            logger.debug("Acid List to be updated={}", acidsToUpdate);
-            authorityControlDAO.saveOrUpdateList(acidsToUpdate);
-
-            logger.debug("Object String to be updated={}", stringsToUpdate);
+            acidDAO.saveOrUpdateList(acidsToUpdate);
             objectStringDAO.saveOrUpdateList(stringsToUpdate);
-
-            logger.debug("Should save list={}", stringsToUpdate);
             objectAcidDAO.saveOrUpdateList(objectAcidsToUpdate);
 
             metadataEditor.versionObjectAcid(objectAcidVersions);
@@ -144,7 +143,7 @@ public class MetadataEditor {
         }
     }
 
-    public boolean isString(int fdid) {
+    private boolean isString(int fdid) {
         return FieldConstantUtil.isString(fdid);
     }
 

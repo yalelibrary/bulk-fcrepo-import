@@ -35,6 +35,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -269,7 +270,8 @@ public class ObjectMetadataView extends AbstractView {
         MetadataEditor metadataEditor = new MetadataEditor();
         try {
             //Save and update list
-            metadataEditor.updateOidMetadata(oid, auth.getCurrentUserId(), fieldDefinitionvalueList);
+            metadataEditor.updateOidMetadata(oid, auth.getCurrentUserId(),
+                    Collections.unmodifiableList(fieldDefinitionvalueList));
             //Audit event (creates direct db entry, doesn't post it):
             saveAuditEvent(oid, auth.getCurrentUserId());
         } catch (Exception e) {
