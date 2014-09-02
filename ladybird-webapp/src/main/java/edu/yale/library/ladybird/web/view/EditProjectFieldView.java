@@ -1,5 +1,6 @@
 package edu.yale.library.ladybird.web.view;
 
+import edu.yale.library.ladybird.entity.MetadataRoles;
 import edu.yale.library.ladybird.entity.ProjectRoles;
 import edu.yale.library.ladybird.entity.UserProjectField;
 import edu.yale.library.ladybird.persistence.dao.UserProjectFieldDAO;
@@ -82,7 +83,7 @@ public class EditProjectFieldView extends AbstractView implements Serializable {
         this.itemList = itemList;
     }
 
-    public ProjectRoles[] getRoles() {
-        return ProjectRoles.values();
+    public MetadataRoles[] getRoles() {
+        return MetadataRoles.values();
     }
 }

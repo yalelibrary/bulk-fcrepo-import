@@ -1,5 +1,6 @@
 package edu.yale.library.ladybird.web.view;
 
+import edu.yale.library.ladybird.entity.MetadataRoles;
 import edu.yale.library.ladybird.entity.ProjectRoles;
 import edu.yale.library.ladybird.entity.UserProjectField;
 import edu.yale.library.ladybird.entity.UserProjectFieldBuilder;
@@ -27,7 +28,7 @@ public class AssignProjectFieldView extends AbstractView implements Serializable
     private final Logger logger = LoggerFactory.getLogger(AssignProjectFieldView.class);
 
     //TODO distinguish between project role and field role?
-    private ProjectRoles projectRole;
+    private MetadataRoles metadataRoles;
 
     private int fieldDefintion;
 
@@ -39,16 +40,16 @@ public class AssignProjectFieldView extends AbstractView implements Serializable
         initFields();
     }
 
-    public ProjectRoles[] getRoles() {
-        return ProjectRoles.values();
+    public MetadataRoles[] getRoles() {
+        return MetadataRoles.values();
     }
 
-    public ProjectRoles getProjectRole() {
-        return projectRole;
+    public MetadataRoles getMetadataRoles() {
+        return metadataRoles;
     }
 
-    public void setProjectRole(ProjectRoles projectRole) {
-        this.projectRole = projectRole;
+    public void setMetadataRoles(MetadataRoles metadataRoles) {
+        this.metadataRoles = metadataRoles;
     }
 
     //TODO use a converter (for fdid)
@@ -58,13 +59,13 @@ public class AssignProjectFieldView extends AbstractView implements Serializable
         int projectId = Integer.parseInt(Faces.getRequestParameter("projectId"));
 
         logger.debug("Saving project id={} with field={} with role={} for user={}", projectId, fieldDefintion,
-                projectRole.name(), userId);
+               metadataRoles.name(), userId);
 
         final UserProjectField userProjectField = new UserProjectFieldBuilder().
                 setProjectId(projectId).
                 setUserId(userId).
                 setFdid(fieldDefintion).
-                setRole(projectRole.name()).
+                setRole(metadataRoles.name()).
                 setDate(new Date()).
                 createUserProjectField();
         try {
