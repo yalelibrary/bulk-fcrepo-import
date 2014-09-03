@@ -10,6 +10,7 @@ import edu.yale.library.ladybird.entity.Object;
 import edu.yale.library.ladybird.entity.ObjectAcid;
 import edu.yale.library.ladybird.entity.ObjectAcidBuilder;
 import edu.yale.library.ladybird.entity.ObjectString;
+import edu.yale.library.ladybird.entity.ObjectStringBuilder;
 import edu.yale.library.ladybird.entity.ProjectTemplate;
 import edu.yale.library.ladybird.entity.ProjectTemplateStrings;
 import edu.yale.library.ladybird.persistence.dao.AuthorityControlDAO;
@@ -31,6 +32,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkState;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ProjectTemplateApplicator {
@@ -79,24 +81,27 @@ public class ProjectTemplateApplicator {
                     //1. string
                     if (FieldConstantUtil.isString(fdid)) {
                         final ProjectTemplateStrings pString = templateStringsDAO.findByFdidAndTemplateId(fieldDef.getFdid(), templateId);
-                        final String templateValue = pString.getValue();
+                        final String templateStr = pString.getValue();
 
                         ObjectString objectString = objectStringDAO.findByOidAndFdid(oid, fdid);
                         stringsVersions.add(new ObjectString(objectString)); //add for versioning
 
-                        if (templateValue != null && !templateValue.isEmpty()) {
-                            objectString.setValue(objectString.getValue() + templateValue); //wrong because a new value should be added?
-                            objectStringDAO.updateItem(objectString);
+                        if (templateStr != null && !templateStr.isEmpty()) {
+
+                            ObjectString newObjectString = new ObjectStringBuilder().setValue(templateStr).setDate(new Date()).setFdid(fdid).setOid(oid).createObjectString();
+                            //objectString.setValue(objectString.getValue() + templateStr); //wrong because a new value should be added?
+                            //objectStringDAO.updateItem(objectString);
+                            objectStringDAO.saveOrUpdateItem(newObjectString);
+                            logger.debug("Object strings for oid={} fdid={} are={}", oid, fdid, objectStringDAO.findByOidAndFdid(oid, fdid));
                         }
                     } else { //2. acid
                         ObjectAcid existingObjectAcid = null;
 
                         if (!isMultivalued) {
                             List<ObjectAcid> list = objectAcidDAO.findListByOidAndFdid(oid, fdid);
-                            Preconditions.checkState(list.size() < 2);
+                            checkState(list.size() < 2);
                             existingObjectAcid = list.get(0);
                         }
-
 
                         final ProjectTemplateStrings pString = templateStringsDAO.findByFdidAndTemplateId(fdid, templateId);
                         final String templateValue = pString.getValue();
@@ -118,7 +123,7 @@ public class ProjectTemplateApplicator {
                                         .setValue(templateValue).createAuthorityControl();
                                 acid = authorityControlDAO.save(newAcid);
                             } else {
-                                Preconditions.checkState(existingAcid.size() == 1, "More than one acid found. Acids are supposed to be unique for fdid=" + fdid + " and value=" + templateValue);
+                                checkState(existingAcid.size() == 1, "More than one acid found. Acids are supposed to be unique for fdid=" + fdid + " and value=" + templateValue);
                                 acid = existingAcid.get(0).getAcid();
                             }
 
@@ -129,9 +134,9 @@ public class ProjectTemplateApplicator {
                             //Remove old object acid if the fdid is not multi-valued:
                             if (!isMultivalued) {
                                 objectAcidDAO.delete(Collections.singletonList(existingObjectAcid));
-                                Preconditions.checkState(objectAcidDAO.findListByOidAndFdid(oid, fdid).size() == 1, "Only one object acid should exist at this point!");
+                                checkState(objectAcidDAO.findListByOidAndFdid(oid, fdid).size() == 1, "Only one object acid should exist at this point!");
                             } else {
-                                Preconditions.checkState(objectAcidDAO.findListByOidAndFdid(oid, fdid).size() > 1, "Only one object acid found. Expecting more.");
+                                checkState(objectAcidDAO.findListByOidAndFdid(oid, fdid).size() > 1, "Only one object acid found. Expecting more.");
                             }
                         }
                     }

@@ -66,7 +66,7 @@ public class ProjectTemplateApplicatorTest extends AbstractDBTest {
         super.stop();
     }
 
-    //TODO save an acid which is mvf
+    //TODO save an acid which is mutlivalued fdid
     @Test
     public void shouldApplyTemplate() {
         final int userId = 1;
@@ -98,7 +98,10 @@ public class ProjectTemplateApplicatorTest extends AbstractDBTest {
 
             //3. confirm template application:
             ObjectString objectString = objectStringDAO.findAll().get(0);
-            assertEquals(objectString.getValue(), "test--S");
+            assertEquals(objectString.getValue(), "test");
+
+            ObjectString objectString2 = objectStringDAO.findAll().get(1);
+            assertEquals(objectString2.getValue(), "--S");
 
             List<ObjectAcid> objectAcidList = objectAcidDAO.findAll(); //should've saved 2 acids
 
@@ -172,8 +175,9 @@ public class ProjectTemplateApplicatorTest extends AbstractDBTest {
             projectTemplateApplicator.applyTemplate(projectTemplate, testUserId);
 
             //3. confirm template application:
-            ObjectString objectString = objectStringDAO.findAll().get(0);
-            assertEquals(objectString.getValue(), "test--S");
+            List<ObjectString> objectStrs = objectStringDAO.findAll();
+            assertEquals(objectStrs.get(0).getValue(), "test");
+            assertEquals(objectStrs.get(1).getValue(), "--S");
 
             List<ObjectAcid> objectAcidList = objectAcidDAO.findAll(); //should've saved 2 acids
 
@@ -210,6 +214,8 @@ public class ProjectTemplateApplicatorTest extends AbstractDBTest {
             rollbacker.rollback(oid, version, 0);
 
             assert (ObjectTestsHelper.getMaxVersion(oid) == 2);
+
+            logger.debug("All object strings={}", objectStringDAO.findAll().toString());
 
             List<ObjectString> objectStrings = objectStringDAO.findByOid(oid);
 

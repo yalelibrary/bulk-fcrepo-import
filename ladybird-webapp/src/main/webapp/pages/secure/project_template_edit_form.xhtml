@@ -16,7 +16,7 @@
 
                 <ui:repeat value="#{templateEditView.fieldDefinitionvalueList}" var="entry">
                     <div class="form-group">
-                        <label class="col-sm-2 control-label"> Field #{entry.fdid.handle} </label>
+                        <label class="col-sm-2 control-label"> #{entry.fdid.handle} </label>
 
                         <div class="col-sm-10">
                             <h:inputText value="#{entry.value}" styleClass="form-control" rendered="#{not newObjectView.fdidDropdown(entry.fdid.fdid)}"/>
