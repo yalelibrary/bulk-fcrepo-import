@@ -140,37 +140,57 @@ public class ComplexProcessor {
      */
     public void processF7(ImportEntityValue importEntityValue) {
         final List<ImportEntity.Row> rowList = importEntityValue.getContentRows();
-        final List<Object> changedObjectLit = new ArrayList<>();
+        final List<Object> updateList = new ArrayList<>();
+        final Map<Integer, Integer> parentOidMap = new HashMap<>(); //contains F7, F1 pair to link parent child
 
         for (int i = 0; i < rowList.size(); i++) {
             try {
-                logger.trace("Finding by oid={}", asInt(importEntityValue.getRowFieldValue(FunctionConstants.F1, i)));
+                final Integer f1 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F1, i));
+                final Integer f6 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F6, i));
+                final Integer f7 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F7, i));
+                final Integer f8 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F8, i));
 
-                Object object = objectDAO.findByOid(asInt(importEntityValue.getRowFieldValue(FunctionConstants.F1, i)));
+                checkState (f1 > 0, "F1 must be greater than 0");
+                checkState(f6 > -1, "F6 cannot be negative");
+                checkState(f7 > 0, "F7 must be greather than 0");
+                checkState(f8 > -1, "F8 cannot be negative");
 
-                Integer f1 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F1, i));
-                Integer f6 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F6, i));
-                Integer f7 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F7, i));
-                Integer f8 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F8, i));
+                final Object object = objectDAO.findByOid(asInt(importEntityValue.getRowFieldValue(FunctionConstants.F1, i)));
+                checkNotNull(object, "Object cannot be null in row=" + i);
 
-                //Set parent oid and parent property:
-                if (f7.equals(f8)) {
+                if (parentOidMap.containsKey(f7)) {
+                    logger.error("Already contains key={}. F7 should be unique. Won't process row={}.", f7, i);
+                    continue;
+                }
+
+                if (f6 ==0 && f8 ==0) { //if (f7.equals(f8)) {
                     object.setParent(true);
                     object.setP_oid(0);
                     object.setZindex(f6);
-                    changedObjectLit.add(object);
+                    updateList.add(object);
                 } else {
-                    object.setParent(false);
-                    object.setP_oid(f8); //oid to be looked up, or is f8 written as is?
-                    object.setZindex(f6);
-                    changedObjectLit.add(object);
+                    if (parentOidMap.containsKey(f8)) {
+                        final int parentOid = parentOidMap.get(f8);
+                        object.setP_oid(parentOid);
+                        object.setZindex(f6);
+                        object.setParent(false);
+                        updateList.add(object);
+                    } else {
+                        logger.error("Error case. Parent not found. Won't update this object in row= " + i);
+                    }
                 }
+
+                parentOidMap.put(f7, f1);
+
             } catch (Exception e) {
-                logger.error("Error={}", e);
+                logger.error("Exception in row={}", i, e); //ignore
             }
         }
-        logger.debug(changedObjectLit.toString());
-        objectDAO.saveOrUpdateList(changedObjectLit);
+
+        logger.debug("Update complex object list={}", updateList);
+        logger.debug("Complex parent oid Map size={}", parentOidMap.size());
+
+        objectDAO.saveOrUpdateList(updateList);
     }
 
     private Integer asInt(String s) {

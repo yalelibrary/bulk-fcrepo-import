@@ -223,9 +223,9 @@ public class ComplexProcessorTest extends AbstractDBTest {
         //content row 1 (parent)
         final List<ImportEntity.Column> cols1 = new ArrayList<>();
         cols1.add(getCol(FunctionConstants.F1, "1")); //parent oid
-        cols1.add(getCol(FunctionConstants.F6, "0"));
-        cols1.add(getCol(FunctionConstants.F7, "1")); //parent oid
-        cols1.add(getCol(FunctionConstants.F8, "1")); //parent oid
+        cols1.add(getCol(FunctionConstants.F6, "0")); //parent id
+        cols1.add(getCol(FunctionConstants.F7, "1")); //random id
+        cols1.add(getCol(FunctionConstants.F8, "0")); //parent id
 
         final ImportEntity.Row row1 = getRow(cols1);
 
@@ -243,7 +243,7 @@ public class ComplexProcessorTest extends AbstractDBTest {
         cols3.add(getCol(FunctionConstants.F1, "3")); //parent oid
         cols3.add(getCol(FunctionConstants.F6, "0"));
         cols3.add(getCol(FunctionConstants.F7, "3"));
-        cols3.add(getCol(FunctionConstants.F8, "3"));
+        cols3.add(getCol(FunctionConstants.F8, "0"));
 
         final ImportEntity.Row row3 = getRow(cols3);
 
