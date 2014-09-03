@@ -11,30 +11,44 @@
 
             <div>
                 <div class="row">
-                    <div class="col-md-12">
-                        <h:outputText
-                                value="Parent Object with child objects #{objectMetadataView.getChildCount(param['oid'])}"
-                                rendered="#{objectMetadataView.isParent(param['oid'])}"> </h:outputText>
+                    <div class="col-md-3">
+                        <h:graphicImage value="/images/#{objectMetadataView.objectFile.oid}" height="250" width="250"/>
+                    </div>
+
+                    <div class="col-md-9"><h4> Object ID #{param['oid']} </h4>
+
+                        <p> Created:
+                            <h:outputText value="#{objectMetadataView.objectFile.date}">
+                                <f:converter converterId="org.ocpsoft.PrettyTimeConverter"/>
+                            </h:outputText>
+
+                            at <h:outputText value="#{objectMetadataView.objectFile.date}">
+                                <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                            </h:outputText>
+                        </p>
+
+                        <p> Created by: #{userView.getUserName(objectMetadataView.objectFile.userId)} </p>
+
+                        <p> Parent (immediate) Oid:
+                            <h:link value="#{objectMetadataView.getImmediateParentOid(objectMetadataView.objectFile.oid)} "
+                                    rendered="#{objectMetadataView.getImmediateParentOid(objectMetadataView.objectFile.oid) ne null}"
+                                    outcome="object_metadata">
+                                <f:param id="oid" name="oid"
+                                         value="#{objectMetadataView.getImmediateParentOid(objectMetadataView.objectFile.oid)}"/>
+                            </h:link>
+                        </p>
+
+                        <p>
+                            <h:outputText
+                                    value="Top parent object immediate children count: #{objectMetadataView.getChildCount(param['oid'])}"
+                                    rendered="#{objectMetadataView.isParent(param['oid'])}"> </h:outputText>
+                        </p>
                     </div>
                 </div>
             </div>
 
             <div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <h:graphicImage value="/images/#{objectMetadataView.objectFile.oid}" height="300" width="300"/>
-                        #{objectMetadataView.objectFile.fileName}
-                    </div>
-                    <div class="col-md-8"> Object ID <h4> #{param['oid']} </h4>
-
-                        <p> Created <h:outputText value="#{objectMetadataView.objectFile.date}">
-                            <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
-                        </h:outputText>
-                        </p>
-
-                        <p> Created by #{userView.getUserName(objectMetadataView.objectFile.userId)} </p>
-                    </div>
-                </div>
+                #{objectMetadataView.objectFile.fileName}
             </div>
 
             <div>
@@ -50,7 +64,8 @@
                                 <h:inputText value="#{entry.value[loop.index]}"
                                              rendered="#{not objectMetadataView.isReadOnly() and not newObjectView.fdidDropdown(entry.fdid.fdid)}"/>
 
-                                <p:selectOneMenu value="#{entry.value[loop.index]}" rendered="#{newObjectView.fdidDropdown(entry.fdid.fdid)}">
+                                <p:selectOneMenu value="#{entry.value[loop.index]}"
+                                                 rendered="#{newObjectView.fdidDropdown(entry.fdid.fdid)}">
                                     <f:selectItems value="#{newObjectView.acidValuesForFdid(entry.fdid.fdid)}"
                                                    var="select_var"
                                                    itemLabel="#{select_var}"
@@ -79,7 +94,6 @@
                 <h4>Access</h4>
                 <h4>Image Source</h4>
                 <h4>Administrative</h4>
-                <h4>Metadata</h4>
                 -->
             </div>
         </h:form>
