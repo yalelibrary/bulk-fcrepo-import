@@ -150,7 +150,7 @@ public class ComplexProcessor {
                 final Integer f7 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F7, i));
                 final Integer f8 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F8, i));
 
-                checkState (f1 > 0, "F1 must be greater than 0");
+                checkState(f1 > 0, "F1 must be greater than 0");
                 checkState(f6 > -1, "F6 cannot be negative");
                 checkState(f7 > 0, "F7 must be greather than 0");
                 checkState(f8 > -1, "F8 cannot be negative");
@@ -163,7 +163,7 @@ public class ComplexProcessor {
                     continue;
                 }
 
-                if (f6 ==0 && f8 ==0) { //if (f7.equals(f8)) {
+                if (f6 == 0 && f8 == 0) { //if (f7.equals(f8)) {
                     object.setParent(true);
                     object.setP_oid(0);
                     object.setZindex(f6);

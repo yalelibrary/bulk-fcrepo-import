@@ -1,7 +1,6 @@
 package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.entity.MetadataRoles;
-import edu.yale.library.ladybird.entity.ProjectRoles;
 import edu.yale.library.ladybird.entity.UserProjectField;
 import edu.yale.library.ladybird.entity.UserProjectFieldBuilder;
 import edu.yale.library.ladybird.persistence.dao.UserProjectFieldDAO;
@@ -59,7 +58,7 @@ public class AssignProjectFieldView extends AbstractView implements Serializable
         int projectId = Integer.parseInt(Faces.getRequestParameter("projectId"));
 
         logger.debug("Saving project id={} with field={} with role={} for user={}", projectId, fieldDefintion,
-               metadataRoles.name(), userId);
+                metadataRoles.name(), userId);
 
         final UserProjectField userProjectField = new UserProjectFieldBuilder().
                 setProjectId(projectId).
@@ -80,6 +79,7 @@ public class AssignProjectFieldView extends AbstractView implements Serializable
 
     /**
      * Redirects to save page
+     *
      * @return page to redirect to
      */
     public String assign() {
@@ -97,7 +97,9 @@ public class AssignProjectFieldView extends AbstractView implements Serializable
         return getRedirectWithParam(NavigationUtil.USER_METADATA_ACCESS_PAGE, userId, projectId);
     }
 
-    /** Re-direct to edit page */
+    /**
+     * Re-direct to edit page
+     */
     //TODO clean up params
     public String redirectEdit() {
         final Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();

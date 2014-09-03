@@ -1,7 +1,6 @@
 package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.entity.MetadataRoles;
-import edu.yale.library.ladybird.entity.ProjectRoles;
 import edu.yale.library.ladybird.entity.UserProjectField;
 import edu.yale.library.ladybird.persistence.dao.UserProjectFieldDAO;
 import org.omnifaces.util.Faces;
@@ -25,7 +24,9 @@ public class EditProjectFieldView extends AbstractView implements Serializable {
 
     private final Logger logger = LoggerFactory.getLogger(EditProjectFieldView.class);
 
-    /** List to present and edit */
+    /**
+     * List to present and edit
+     */
     private List<UserProjectField> itemList;
 
     @Inject
@@ -38,6 +39,7 @@ public class EditProjectFieldView extends AbstractView implements Serializable {
 
     /**
      * Find by request params
+     *
      * @return
      */
     private List<UserProjectField> populateItemList() {
@@ -54,7 +56,9 @@ public class EditProjectFieldView extends AbstractView implements Serializable {
         return itemList;
     }
 
-    /** Edits fields */
+    /**
+     * Edits fields
+     */
     public String edit() {
         //logger.debug("Editing entity={}", itemList.toString());
         try {
@@ -68,6 +72,7 @@ public class EditProjectFieldView extends AbstractView implements Serializable {
 
     /**
      * Get list of UserProjectField
+     *
      * @return
      */
     public List<UserProjectField> getItemList() {
