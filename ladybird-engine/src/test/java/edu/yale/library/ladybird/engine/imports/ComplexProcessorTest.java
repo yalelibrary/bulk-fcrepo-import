@@ -54,11 +54,12 @@ public class ComplexProcessorTest extends AbstractDBTest {
 
     @Test
     public void shouldProcessComplexF5() {
-        Object parent = new ObjectBuilder().setDate(new Date()).createObject();
-        Object child = new ObjectBuilder().setDate(new Date()).createObject();
+        final Date date = new Date();
+        Object parent = new ObjectBuilder().setDate(date).createObject();
+        Object child = new ObjectBuilder().setDate(date).createObject();
 
-        Object parent2 = new ObjectBuilder().setDate(new Date()).createObject();
-        Object child2 = new ObjectBuilder().setDate(new Date()).createObject();
+        Object parent2 = new ObjectBuilder().setDate(date).createObject();
+        Object child2 = new ObjectBuilder().setDate(date).createObject();
 
         int p1 = dao.save(parent); //e.g. 0
         int c1p1 = dao.save(child); //e.g. 1
@@ -182,7 +183,7 @@ public class ComplexProcessorTest extends AbstractDBTest {
         //content row 2 (child)
         final List<ImportEntity.Column> cols2 = new ArrayList<>();
         cols2.add(getCol(FunctionConstants.F1, "2")); //parent oid
-        cols2.add(getCol(FunctionConstants.F5, "1")); //parent oid
+        cols2.add(getCol(FunctionConstants.F5, "0")); //parent oid
         cols2.add(getCol(FunctionConstants.F6, "1"));
 
         final ImportEntity.Row contentRow2 = getRow(cols2);
@@ -190,7 +191,7 @@ public class ComplexProcessorTest extends AbstractDBTest {
         //content row 3 (parent 2)
         final List<ImportEntity.Column> cols3 = new ArrayList<>();
         cols3.add(getCol(FunctionConstants.F1, "3")); //parent oid
-        cols3.add(getCol(FunctionConstants.F5, "0")); //parent oid
+        cols3.add(getCol(FunctionConstants.F5, "1")); //parent oid
         cols3.add(getCol(FunctionConstants.F6, "0"));
 
         final ImportEntity.Row contentRow3 = getRow(cols3);
@@ -198,7 +199,7 @@ public class ComplexProcessorTest extends AbstractDBTest {
         //content row 4 (child of parent 2)
         final List<ImportEntity.Column> cols4 = new ArrayList<>();
         cols4.add(getCol(FunctionConstants.F1, "4")); //parent oid
-        cols4.add(getCol(FunctionConstants.F5, "3")); //parent oid
+        cols4.add(getCol(FunctionConstants.F5, "1")); //parent oid
         cols4.add(getCol(FunctionConstants.F6, "1"));
 
         final ImportEntity.Row contentRow4 = getRow(cols4);
