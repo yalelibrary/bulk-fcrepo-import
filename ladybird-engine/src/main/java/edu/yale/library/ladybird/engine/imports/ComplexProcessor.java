@@ -1,6 +1,5 @@
 package edu.yale.library.ladybird.engine.imports;
 
-import com.google.common.base.Preconditions;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.Object;
 import edu.yale.library.ladybird.persistence.dao.ObjectDAO;
@@ -13,6 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
+
 public class ComplexProcessor {
     private Logger logger = LoggerFactory.getLogger(ComplexProcessor.class);
 
@@ -20,35 +22,48 @@ public class ComplexProcessor {
 
     public void processF4(ImportEntityValue importEntityValue) {
         final List<ImportEntity.Row> rows = importEntityValue.getContentRows();
-        final List<Object> changedObjectList = new ArrayList<>();
+        final List<Object> listToUpdate = new ArrayList<>();
 
-        int tmp = 0;
+        //int tmp = 0;
 
         for (int i = 0; i < rows.size(); i++) {
+
             try {
                 Object object = objectDAO.findByOid(asInt(importEntityValue.getRowFieldValue(FunctionConstants.F1, i)));
 
-                Integer f1 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F1, i));
-                Integer f4 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F4, i));
-                //Integer f6 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F6, i));
+                checkNotNull(object, "Object must not be null. Row=" + i);
+
+                final Integer f1 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F1, i));
+                final Integer f4 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F4, i));
+                final Integer f6 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F6, i));
+
+                logger.trace("For oid={} f1={} f4={} f6={}", object.getOid(), f1, f4, f6);
 
                 //Set parent oid and parent property:
                 if (f4 == 0) {
+
+                    checkState(f6 == 0, "Parent in hierachy has F4 and F6 should have set to 0");
+
                     object.setParent(true);
                     object.setP_oid(0);
-                    tmp = f1;
-                    changedObjectList.add(object);
+                    //tmp = f1;
+                    listToUpdate.add(object);
                 } else {
                     object.setParent(false);
-                    object.setP_oid(tmp);
-                    changedObjectList.add(object);
+
+                    //checkState(tmp > 0, "Designated parent must have an oid in row=" + i);
+                    checkNotNull(objectDAO.findByOid(f4), "Designated parent must have an oid in row=" + i);
+
+                    object.setP_oid(f4);
+                    listToUpdate.add(object);
                 }
             } catch (Exception e) {
-                logger.trace(e.getMessage()); //ignore
+                logger.error("Exception in row={}", i, e); //ignore
             }
         }
-        logger.debug(changedObjectList.toString());
-        objectDAO.saveOrUpdateList(changedObjectList);
+        logger.debug("List to update={}", listToUpdate);
+
+        objectDAO.saveOrUpdateList(listToUpdate);
     }
 
     /**
@@ -73,9 +88,9 @@ public class ComplexProcessor {
 
                 logger.trace("Given f1={} f5={} f6={}", f1, f5, f6);
 
-                Preconditions.checkState(f1 > 0, "F1 must be greater than 0");
-                Preconditions.checkState(f5 > -1, "F5 must be greater than 0");
-                Preconditions.checkState(f6 > -1, "F6 must be greater than 0");
+                checkState(f1 > 0, "F1 must be greater than 0");
+                checkState(f5 > -1, "F5 must be greater than 0");
+                checkState(f6 > -1, "F6 must be greater than 0");
 
                 //Set parent oid and parent property:
                 if (f6 == 0) {

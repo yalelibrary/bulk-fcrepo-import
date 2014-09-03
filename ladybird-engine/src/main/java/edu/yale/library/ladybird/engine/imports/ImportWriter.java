@@ -140,6 +140,7 @@ public class ImportWriter {
 
             //Process F4,F6 (check step requirement)
             if (processF4F6(importEntityValue)) {
+                logger.debug("Processing F4, F6");
                 processComplex(importEntityValue);
             }
 
