@@ -20,6 +20,11 @@ public class ObjectString implements java.io.Serializable {
     }
 
     public ObjectString(ObjectString copy) {
+
+        if (copy == null) {
+            System.out.println("Object to be copied from is null");
+        }
+
         this.date = copy.date;
         this.userId = copy.userId;
         this.oid = copy.oid;

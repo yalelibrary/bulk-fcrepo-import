@@ -3,37 +3,76 @@ package edu.yale.library.ladybird.persistence.dao.hibernate;
 
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.persistence.dao.UserDAO;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.hibernate.Session;
+import org.slf4j.Logger;
 
 import java.util.List;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class UserHibernateDAO extends GenericHibernateDAO<User, Integer> implements UserDAO {
 
-    @Override
+    private Logger logger = getLogger(this.getClass());
+
     public List<User> findByEmail(final String email) {
-        final Query q = getSession().createQuery("from User where email = :param");
+        Session s = getSession();
+        final Query q = s.createQuery("from User where email = :param");
         q.setParameter("param", email);
-        return q.list();
+        List l =  q.list();
+
+        try {
+            s.close();
+        } catch (HibernateException e) {
+        }
+
+        return l;
     }
 
     @Override
     public List<User> findByUsername(final String netid) {
-        final Query q = getSession().createQuery("from User where username = :param");
-        q.setParameter("param", netid);
-        return q.list();
+        Session s = getSession();
+        try {
+            final Query q = s.createQuery("from User where username = :param");
+            q.setParameter("param", netid);
+            return q.list();
+        } catch (HibernateException e) {
+            throw e;
+        }  finally {
+            if (s != null) {
+                try {
+                    s.close();
+                } catch (HibernateException e) {
+                }
+            }
+        }
     }
 
     @Override
     public String findUsernameByUserId(int field) {
-        final Query q = getSession().createQuery("from User where userId = :param");
-        q.setParameter("param", field);
-        final List<User> userList = q.list();
-        return userList.get(0).getUsername();
+        Session s = getSession();
+        try {
+            final Query q = s.createQuery("from User where userId = :param");
+            q.setParameter("param", field);
+            final List<User> userList = q.list();
+            return userList.get(0).getUsername();
+        } catch (HibernateException e) {
+            throw e;
+        }  finally {
+            if (s != null) {
+                try {
+                    s.close();
+                } catch (HibernateException e) {
+                }
+            }
+        }
     }
 
     @Override
     public User findByUserId(int field) {
-        final Query q = getSession().createQuery("from User where userId = :param");
+        Session s = getSession();
+        final Query q = s.createQuery("from User where userId = :param");
         q.setParameter("param", field);
         final List<User> userList = q.list();
         return userList.get(0);
@@ -41,14 +80,16 @@ public class UserHibernateDAO extends GenericHibernateDAO<User, Integer> impleme
 
     @Override
     public List<String> getEmails() {
-        final Query q = getSession().createQuery("select u.email from User u");
+        Session s = getSession();
+        final Query q = s.createQuery("select u.email from User u");
         final List<String> userList = q.list();
         return userList;
     }
 
     @Override
     public List<String> getUsernames() {
-        final Query q = getSession().createQuery("select u.username from User u");
+        Session s = getSession();
+        final Query q = s.createQuery("select u.username from User u");
         final List<String> userList = q.list();
         return userList;
     }

@@ -42,7 +42,7 @@ public class RolesPermissionsSiteView extends AbstractView {
     }
 
     public void updateSelectedItem() {
-        logger.info("Updating rolepermission setting={}", selectedItem);
+        logger.info("Updating role permission setting={}", selectedItem);
 
         try {
             int roleId = selectedItem.getRoleId();

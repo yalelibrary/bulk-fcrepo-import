@@ -21,7 +21,7 @@ public class SettingsHibernateDAO extends GenericHibernateDAO<Settings, Integer>
         final Query q = getSession().createQuery("from edu.yale.library.ladybird.entity.Settings where property = :param");
         q.setParameter("param", property);
         final List<Settings> list = q.list();
-        return list.get(0);
+        return list.isEmpty() ? null : list.get(0);
     }
 }
 

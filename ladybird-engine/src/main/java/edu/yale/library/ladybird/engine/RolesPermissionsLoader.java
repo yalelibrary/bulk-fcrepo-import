@@ -51,7 +51,15 @@ public class RolesPermissionsLoader {
                 edu.yale.library.ladybird.entity.Roles role = new edu.yale.library.ladybird.entity.Roles();
                 role.setRoleName(r.getName());
                 role.setRoleDesc("");
-                int roleId = rolesDAO.save(role);
+                int roleId;
+
+                edu.yale.library.ladybird.entity.Roles exRole = rolesDAO.findByName(r.getName());
+
+                if (exRole != null) {
+                    roleId = exRole.getRoleId();
+                } else {
+                    roleId = rolesDAO.save(role);
+                }
 
                 List<PermissionsValue> p = r.getPermissions();
                 // for each of these permissions
@@ -73,7 +81,7 @@ public class RolesPermissionsLoader {
                 }
             }
         } catch (Exception e) {
-            logger.error("Error init to db role permissions");
+            logger.error("Error init to db role permissions", e);
         }
     }
 }

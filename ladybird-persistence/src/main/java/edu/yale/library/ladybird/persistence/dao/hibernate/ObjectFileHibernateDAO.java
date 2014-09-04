@@ -51,7 +51,7 @@ public class ObjectFileHibernateDAO extends GenericHibernateDAO<ObjectFile, Inte
             }
             return objFileList;
         } catch (HibernateException e) {
-            logger.error("Error={}", e);
+            logger.error("Error", e);
             return Collections.emptyList();
         }
     }

@@ -24,7 +24,7 @@ public class RolesHibernateDAO extends GenericHibernateDAO<Roles, Integer> imple
         final Query q = getSession().createQuery("from Roles where roleName = :param");
         q.setParameter("param", roleName);
         final List<Roles> list = q.list();
-        return list.get(0);
+        return list.isEmpty() ? null : list.get(0);
     }
 
 }

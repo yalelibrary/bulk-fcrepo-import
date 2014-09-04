@@ -41,20 +41,41 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
     }
 
     public int count() {
-        Query q = getSession().createQuery("select count(*) from " + persistentClass.getName());
-        return ((Long) q.uniqueResult()).intValue();
+        final Session s = getSession();
+        Query q = s.createQuery("select count(*) from " + persistentClass.getName());
+        int count =  ((Long) q.uniqueResult()).intValue();
+        try {
+            s.close();
+        } catch (HibernateException e) {
+            logger.error("Error closing session", e);
+        }
+        return count;
     }
 
     @SuppressWarnings("unchecked")
     public List<T> find(int startRow, int count) {
-        Query q = getSession().createQuery("from " + persistentClass.getName());
-        return q.list();
+        final Session s = getSession();
+        Query q = s.createQuery("from " + persistentClass.getName());
+        List l =  q.list();
+        try {
+            s.close();
+        } catch (HibernateException e) {
+            logger.error("Error closing session", e);
+        }
+        return l;
     }
 
     @SuppressWarnings("unchecked")
     public List<T> findAll() {
-        final Query q = getSession().createQuery("from " + persistentClass.getName());
-        return q.list();
+        final Session s = getSession();
+        final Query q = s.createQuery("from " + persistentClass.getName());
+        List l =  q.list();
+        try {
+            s.close();
+        } catch (HibernateException e) {
+            logger.error("Error closing session", e);
+        }
+        return l;
     }
 
     public Integer save(T item) {

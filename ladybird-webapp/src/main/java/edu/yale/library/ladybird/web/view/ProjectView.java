@@ -146,7 +146,7 @@ public class ProjectView extends AbstractView {
             RolesPermissions rolesPerm = authUtil.getRolePermission(userRoleStr, Permissions.PROJECT_ADD);
 
             if (rolesPerm == null) {
-                logger.error("Role permisison not found for user={}", user);
+                logger.error("Role permission not found for user={}", user);
                 return false;
             }
 

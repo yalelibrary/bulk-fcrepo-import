@@ -129,7 +129,7 @@ public class DefaultExportJob implements Job, ExportJob {
             logger.debug("Updated entity={}", importJob);
             logger.debug("Updated list={}", importJobDAO.findAll()); //TODO remove
         } catch (Exception e) {
-            logger.error("Error updating import job"); //TODO throw exception
+            logger.error("Error updating import job", e); //TODO throw exception
         }
     }
 
@@ -144,7 +144,7 @@ public class DefaultExportJob implements Job, ExportJob {
             dao.save(importJobNotifications);
             logger.debug("Saved entity={}", importJobNotifications);
         } catch (Exception e) {
-            logger.error("Error updating import job notification"); //TODO throw exception
+            logger.error("Error updating import job notification", e); //TODO throw exception
         }
     }
 

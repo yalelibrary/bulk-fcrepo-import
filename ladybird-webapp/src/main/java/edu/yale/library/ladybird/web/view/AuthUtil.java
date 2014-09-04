@@ -141,7 +141,7 @@ public class AuthUtil extends AbstractView {
             final int permissionsId = permissionsDAO.findByName(requiredPermission.getName()).getPermissionsId();
             return rolesPermissionsDAO.findByRolesPermissionsId(roleId, permissionsId);
         } catch (Exception e) {
-            logger.error("Error gettig role permission", e);
+            logger.error("Error getting role permission", e);
             return null; //TODO
         }
     }

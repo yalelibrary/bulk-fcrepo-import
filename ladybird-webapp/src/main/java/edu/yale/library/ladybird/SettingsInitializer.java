@@ -23,17 +23,27 @@ public class SettingsInitializer {
             Settings s = new Settings();
             s.setProperty(ApplicationProperties.IMAGE_MAGICK_PATH_ID);
             s.setValue(ApplicationProperties.CONFIG_STATE.IMAGE_MAGICK_PATH);
-            settingsDAO.save(s);
+
+            if (settingsDAO.findByProperty(ApplicationProperties.IMAGE_MAGICK_PATH_ID) == null) {
+                settingsDAO.save(s);
+            }
 
             Settings t = new Settings();
             t.setProperty(ApplicationProperties.IMPORT_ROOT_PATH_ID);
             t.setValue(ApplicationProperties.CONFIG_STATE.IMPORT_ROOT_PATH);
-            settingsDAO.save(t);
+
+            if (settingsDAO.findByProperty(ApplicationProperties.IMPORT_ROOT_PATH_ID) == null) {
+                settingsDAO.save(t);
+            }
 
             Settings u = new Settings();
             u.setProperty(ApplicationProperties.NO_IMAGE_FOUND_PATH);
             u.setValue(ApplicationProperties.CONFIG_STATE.NO_IMAGE_FOUND_FILE);
-            settingsDAO.save(u);
+
+            if (settingsDAO.findByProperty(ApplicationProperties.NO_IMAGE_FOUND_PATH) == null) {
+                settingsDAO.save(u);
+            }
+
         } catch (Exception e) {
             logger.error("Error setting settings", e);
         }
