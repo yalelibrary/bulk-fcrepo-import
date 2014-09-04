@@ -13,17 +13,19 @@ public class ImportJob implements java.io.Serializable {
     private String jobDirectory;
     private String exportJobFile;
     private String exportJobDir;
+    private int requestId;
 
     public ImportJob() {
     }
 
-    public ImportJob(Date date, int userId, String jobFile, String jobDirectory, String exportJobFile, String exportJobDir) {
+    public ImportJob(Date date, int userId, String jobFile, String jobDirectory, String exportJobFile, String exportJobDir, int requestId) {
         this.date = date;
         this.userId = userId;
         this.jobFile = jobFile;
         this.jobDirectory = jobDirectory;
         this.exportJobFile = exportJobFile;
         this.exportJobDir = exportJobDir;
+        this.requestId = requestId;
     }
 
     public Integer getImportId() {
@@ -80,6 +82,14 @@ public class ImportJob implements java.io.Serializable {
 
     public void setExportJobFile(String exportJobFile) {
         this.exportJobFile = exportJobFile;
+    }
+
+    public int getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(int requestId) {
+        this.requestId = requestId;
     }
 
     @Override

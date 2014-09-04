@@ -61,10 +61,13 @@ public class DefaultExportMailerJob implements Job, ExportMailerJob {
 
                         final ImportJob importJob = importJobDAO.findByJobId(unsentNotification.getImportJobId()).get(0);
 
-                        logger.trace("Found Import job={}", importJob.toString());
-
                         final String path = importJob.getExportJobDir();
-                        logger.trace("File path of export file={}", path);
+
+                        if (path == null || path.isEmpty()) {
+                            logger.error("Path empty or null for importJob={}", importJob);
+                            logger.error("Skipping notificaion={}", unsentNotification);
+                            throw new Exception("Path null or empty");
+                        }
 
                         File f = new File(path);
 
@@ -91,7 +94,8 @@ public class DefaultExportMailerJob implements Job, ExportMailerJob {
                         importJobNotficationsDAO.updateItem(unsentNotification);
                     }
                 } else {
-                    logger.error("Exhausted maximum number of tries notifiying userId={} for importId={}.", unsentNotification.getUserId(), unsentNotification.getImportJobId());
+                    logger.error("Exhausted maximum number of tries notifiying userId={} for importId={}.",
+                            unsentNotification.getUserId(), unsentNotification.getImportJobId());
                 }
             }
         } catch (Exception e) {

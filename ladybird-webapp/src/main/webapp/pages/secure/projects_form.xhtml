@@ -10,19 +10,13 @@
 
         <h:link value="Add a user before adding project"
                 outcome="user_manager_form"
-                rendered="#{(ProjectView.checkAddProjectPermission())}"/>
+                rendered="#{(empty userView.itemList) and (ProjectView.checkAddProjectPermission())}"/>
 
         <h:outputText value="Your role does not have permissions to add a project."
                       styleClass="alert alert-danger"
                       rendered="#{not ProjectView.checkAddProjectPermission()}"/>
 
         <br/>
-
-        <!--
-        <h:form id="ProjectForm" enctype="multipart/form-data"
-                rendered="#{(not empty userView.itemList) and (ProjectView.checkAddProjectPermission())}"
-                styleClass="form-horizontal" role="form">
-                -->
 
         <h:form id="ProjectForm" enctype="multipart/form-data"
                 rendered="#{(not empty userView.itemList) and (ProjectView.checkAddProjectPermission())}"

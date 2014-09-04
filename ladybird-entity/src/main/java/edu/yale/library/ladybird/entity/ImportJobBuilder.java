@@ -10,6 +10,7 @@ public class ImportJobBuilder {
     private String exportJobDir;
     private String exportJobFile;
     private Integer importId;
+    private Integer requestId;
 
     public ImportJobBuilder setDate(Date date) {
         this.date = date;
@@ -46,7 +47,12 @@ public class ImportJobBuilder {
         return this;
     }
 
+    public ImportJobBuilder setRequestId(Integer id){
+        this.requestId = id;
+        return this;
+    }
+
     public ImportJob createImportJob() {
-        return new ImportJob(date, userId, jobFile, jobDirectory, exportJobFile, exportJobDir);
+        return new ImportJob(date, userId, jobFile, jobDirectory, exportJobFile, exportJobDir, requestId);
     }
 }

@@ -1,6 +1,8 @@
 package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.engine.ProgressEventChangeRecorder;
+import edu.yale.library.ladybird.entity.ImportJob;
+import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
 import org.apache.commons.lang3.exception.ContextedRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,7 @@ import javax.faces.bean.SessionScoped;
 import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @ManagedBean
@@ -21,6 +24,9 @@ public class ImportProgressView extends AbstractView implements Serializable {
 
     @Inject
     ProgressEventChangeRecorder progressEventChangeRecorder;
+
+    @Inject
+    ImportJobDAO importJobDAO;
 
     private int STEPS_TO_COMPLETE;
 
@@ -42,22 +48,73 @@ public class ImportProgressView extends AbstractView implements Serializable {
         count = progressEventChangeRecorder.getSteps(jobId);
     }
 
-    public String status(int jobId) {
-        status = progressEventChangeRecorder.getJobStatus(jobId);
-        return status;
-    }
-
     public int getSTEPS_TO_COMPLETE() {
         return STEPS_TO_COMPLETE;
     }
 
-    public int numberExceptions(int importId) {
-        return progressEventChangeRecorder.getRawException(importId).size();
+    //TODO change SQL lookup since it might be polled frequently
+    public String status(final int monitorId) {
+        try {
+            final int importId = convertToJobId(monitorId);
+            return importId == -1 ? "" : progressEventChangeRecorder.getJobStatus(importId);
+        } catch (Exception e) {
+            logger.error("Error finding status for monitorId={} Problem ={}", monitorId, e);
+            return "ERR";
+        }
     }
+
+    public int numberExceptions(final int monitorId) {
+        try {
+            //convert moinitor id to import job id
+            final int importId = convertToJobId(monitorId);
+            return importId == -1 ? 0 : (progressEventChangeRecorder.getRawException(importId) == null
+                    ? 0 : progressEventChangeRecorder.getRawException(importId).size());
+        } catch (Exception e) {
+            logger.error("Error finding exception trace for item={}", monitorId, e);
+            return 0;
+        }
+    }
+
+    public List<ContextTrace> getContextTrace(final int monitorId) {
+        logger.trace("Getting stack trace info for={} from Event bean", monitorId);
+
+        final int importId = convertToJobId(monitorId);
+
+        if (importId == -1) {
+            return Collections.emptyList();
+        }
+
+        final List<ContextTrace> list = new ArrayList<>();
+        List<ContextedRuntimeException> e = progressEventChangeRecorder.getRawException(importId);
+
+        for (final ContextedRuntimeException ie : e) {
+            ContextTrace contextTrace = new ContextTrace();
+            contextTrace.setContext(getExceptionContext(ie));
+            contextTrace.setTrace(getExceptionStackTrace(ie));
+            contextTrace.setMessage(ie.getMessage());
+            list.add(contextTrace);
+        }
+        return list;
+    }
+
+    private int convertToJobId(final int monitorId) {
+        if (monitorId < 0) {
+            return -1;
+        }
+
+        final List<ImportJob> importJobs = importJobDAO.findByRequestId(monitorId);
+
+        if (importJobs == null || importJobs.isEmpty()) {
+            return -1;
+        }
+
+        return importJobs.get(0).getImportId();
+    }
+
 
     public String getExceptionContext(ContextedRuntimeException e) {
         return String.format("%nRow : " + (e).getFirstContextValue("Row"))
-                    + ", Column : " + (e).getFirstContextValue("Column");
+                + ", Column : " + (e).getFirstContextValue("Column");
     }
 
     public List<String> getExceptionStackTrace(ContextedRuntimeException e) {
@@ -71,23 +128,6 @@ public class ImportProgressView extends AbstractView implements Serializable {
         return list;
     }
 
-    public List<ContextTrace> getContextTrace(final int importId) {
-        logger.trace("Getting stack trace info for ={} from Event bean", importId);
-
-        final List<ContextTrace> list = new ArrayList<>();
-        List<ContextedRuntimeException> e = progressEventChangeRecorder.getRawException(importId);
-
-        for (final ContextedRuntimeException ie: e) {
-            ContextTrace contextTrace = new ContextTrace();
-            contextTrace.setContext(getExceptionContext(ie));
-            contextTrace.setTrace(getExceptionStackTrace(ie));
-            contextTrace.setMessage(ie.getMessage());
-
-            list.add(contextTrace);
-        }
-
-        return list;
-    }
 
     public class ContextTrace {
 

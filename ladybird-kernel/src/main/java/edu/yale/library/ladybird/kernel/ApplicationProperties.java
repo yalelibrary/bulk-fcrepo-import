@@ -24,6 +24,7 @@ public class ApplicationProperties {
     public static final String IMAGE_MAGICK_PATH_ID = "image_magick_path";
     public static final String IMPORT_ROOT_PATH_ID = "import_root_path";
     public static final String NO_IMAGE_FOUND_PATH = "no_image_found_path";
+    public static final String WELCOME_PAGE_id = "welcome_page";
 
     public static boolean runWithIncompleteDBConfig() {
         return ApplicationProperties.RUN_WITH_INCOMPLETE_CONFIG;
@@ -40,6 +41,7 @@ public class ApplicationProperties {
 
         static {
             try {
+                logger.info("Reading props from file={}" + PROPS_FILE);
                 cfg = new PropertiesConfiguration(PROPS_FILE);
             } catch (ConfigurationException t) {
                 logger.error("Error setting up configuration file");
@@ -53,6 +55,7 @@ public class ApplicationProperties {
         public static final String IMAGE_MAGICK_PATH = getImageMagickCommandPath();
         public static final String IMPORT_ROOT_PATH = getImportRootPath();
         public static final String NO_IMAGE_FOUND_FILE = getNoImageFoundFilePath();
+        public static final String WELCOME_PAGE = getWelcomePage();
 
         /**
          * Ignores exception if prop not set and just returns false.
@@ -97,6 +100,10 @@ public class ApplicationProperties {
 
         private static String getNoImageFoundFilePath() {
             return readProperty(NO_IMAGE_FOUND_PATH);
+        }
+
+        private static String getWelcomePage() {
+            return readProperty(WELCOME_PAGE_id);
         }
 
     }

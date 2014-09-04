@@ -19,6 +19,8 @@ public class ImageServlet extends HttpServlet {
 
     private Logger logger = LoggerFactory.getLogger(ImageServlet.class);
 
+    private final ObjectFileDAO objectFileDAO = new ObjectFileHibernateDAO();
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String oidStr = request.getPathInfo().substring(1);
 
@@ -30,10 +32,16 @@ public class ImageServlet extends HttpServlet {
 
         final ObjectFile objectFile = getObjectFile(oid);
 
+        if (objectFile == null) {
+            logger.error("ObjectFile null for oid={}", oid);
+            return;
+        }
+
         final byte[] thumb = objectFile.getThumbnail();
 
         if (thumb == null || thumb.length == 0) {
             logger.error("Null thumb bytes for oid={}", oid);
+            return;
         }
 
         final String filename = objectFile.getFileName();
@@ -71,8 +79,13 @@ public class ImageServlet extends HttpServlet {
     }
 
     public ObjectFile getObjectFile(int thumbId) {
-        ObjectFileDAO objectFileDAO = new ObjectFileHibernateDAO();
         ObjectFile objectFile = objectFileDAO.findByOid(thumbId);
+
+        if (objectFile == null) {
+            logger.debug("Checking again for objectFile for={}", thumbId); //spurious failure
+            objectFile = objectFileDAO.findByOid(thumbId);
+        }
+
         return objectFile;
     }
 

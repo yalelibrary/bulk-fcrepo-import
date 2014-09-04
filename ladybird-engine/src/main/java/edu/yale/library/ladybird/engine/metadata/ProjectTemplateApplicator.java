@@ -73,73 +73,81 @@ public class ProjectTemplateApplicator {
                 final int oid = o.getOid();
 
                 for (final FieldDefinition fieldDef : fieldDefinitions) {
-                    final int fdid = fieldDef.getFdid();
 
-                    final boolean isMultivalued = fieldDef.isMultivalue();
+                    try {
+                        final int fdid = fieldDef.getFdid();
 
-                    //1. string
-                    if (FieldConstantUtil.isString(fdid)) {
-                        final ProjectTemplateStrings pString = templateStringsDAO.findByFdidAndTemplateId(fieldDef.getFdid(), templateId);
-                        final String templateStr = pString.getValue();
+                        logger.debug("Eval oid={} fdid={}", oid, fdid);
 
-                        ObjectString objectString = objectStringDAO.findByOidAndFdid(oid, fdid);
-                        stringsVersions.add(new ObjectString(objectString)); //add for versioning
+                        final boolean isMultivalued = fieldDef.isMultivalue();
 
-                        if (templateStr != null && !templateStr.isEmpty()) {
+                        //1. string
+                        if (FieldConstantUtil.isString(fdid)) {
+                            final ProjectTemplateStrings pString = templateStringsDAO.findByFdidAndTemplateId(fieldDef.getFdid(), templateId);
+                            final String templateStr = pString.getValue();
 
-                            ObjectString newObjectString = new ObjectStringBuilder().setValue(templateStr).setDate(new Date()).setFdid(fdid).setOid(oid).createObjectString();
-                            //objectString.setValue(objectString.getValue() + templateStr); //wrong because a new value should be added?
-                            //objectStringDAO.updateItem(objectString);
-                            objectStringDAO.saveOrUpdateItem(newObjectString);
-                            logger.debug("Object strings for oid={} fdid={} are={}", oid, fdid, objectStringDAO.findByOidAndFdid(oid, fdid));
-                        }
-                    } else { //2. acid
-                        ObjectAcid existingObjectAcid = null;
+                            ObjectString objectString = objectStringDAO.findByOidAndFdid(oid, fdid);
+                            stringsVersions.add(new ObjectString(objectString)); //add for versioning
 
-                        if (!isMultivalued) {
-                            List<ObjectAcid> list = objectAcidDAO.findListByOidAndFdid(oid, fdid);
-                            checkState(list.size() < 2);
-                            existingObjectAcid = list.get(0);
-                        }
+                            if (templateStr != null && !templateStr.isEmpty()) {
 
-                        final ProjectTemplateStrings pString = templateStringsDAO.findByFdidAndTemplateId(fdid, templateId);
-                        final String templateValue = pString.getValue();
-
-                        objectAcidVersions.addAll(getOidObjectAcid(oid, fdid));
-
-                        //Add a new acid:
-                        if (templateValue != null && !templateValue.isEmpty()) {
-
-                            //N.B. Don't add an acid if an acid exists:
-
-                            List<AuthorityControl> existingAcid = authorityControlDAO.findByFdidAndStringValue(fdid, templateValue);
-                            logger.debug("existing acids={}", existingAcid.toString());
-
-                            int acid;
-
-                            if (existingAcid.isEmpty()) {
-                                final AuthorityControl newAcid = new AuthorityControlBuilder().setFdid(fdid).setDate(new Date())
-                                        .setValue(templateValue).createAuthorityControl();
-                                acid = authorityControlDAO.save(newAcid);
-                            } else {
-                                checkState(existingAcid.size() == 1, "More than one acid found. Acids are supposed to be unique for fdid=" + fdid + " and value=" + templateValue);
-                                acid = existingAcid.get(0).getAcid();
+                                ObjectString newObjectString = new ObjectStringBuilder().setValue(templateStr).setDate(new Date()).setFdid(fdid).setOid(oid).createObjectString();
+                                //objectString.setValue(objectString.getValue() + templateStr); //wrong because a new value should be added?
+                                //objectStringDAO.updateItem(objectString);
+                                objectStringDAO.saveOrUpdateItem(newObjectString);
+                                logger.debug("Object strings for oid={} fdid={} are={}", oid, fdid, objectStringDAO.findByOidAndFdid(oid, fdid));
                             }
+                        } else { //2. acid
+                            ObjectAcid existingObjectAcid = null;
 
-                            final ObjectAcid objAcid = new ObjectAcidBuilder().setDate(new Date()).setUserId(userId)
-                                    .setValue(acid).setObjectId(oid).setFdid(fdid).createObjectAcid();
-                            objectAcidDAO.save(objAcid);
-
-                            //Remove old object acid if the fdid is not multi-valued:
                             if (!isMultivalued) {
-                                objectAcidDAO.delete(Collections.singletonList(existingObjectAcid));
-                                checkState(objectAcidDAO.findListByOidAndFdid(oid, fdid).size() == 1, "Only one object acid should exist at this point!");
-                            } else {
-                                checkState(objectAcidDAO.findListByOidAndFdid(oid, fdid).size() > 1, "Only one object acid found. Expecting more.");
+                                List<ObjectAcid> list = objectAcidDAO.findListByOidAndFdid(oid, fdid);
+                                checkState(list.size() < 2);
+                                checkState(!list.isEmpty(), "Existing object acid must not be empty");
+                                existingObjectAcid = list.get(0);
+                            }
+
+                            final ProjectTemplateStrings pString = templateStringsDAO.findByFdidAndTemplateId(fdid, templateId);
+                            final String templateValue = pString.getValue();
+
+                            objectAcidVersions.addAll(getOidObjectAcid(oid, fdid));
+
+                            //Add a new acid:
+                            if (templateValue != null && !templateValue.isEmpty()) {
+
+                                //N.B. Don't add an acid if an acid exists:
+
+                                List<AuthorityControl> existingAcid = authorityControlDAO.findByFdidAndStringValue(fdid, templateValue);
+                                logger.debug("existing acids={}", existingAcid.toString());
+
+                                int acid;
+
+                                if (existingAcid.isEmpty()) {
+                                    final AuthorityControl newAcid = new AuthorityControlBuilder().setFdid(fdid).setDate(new Date())
+                                            .setValue(templateValue).createAuthorityControl();
+                                    acid = authorityControlDAO.save(newAcid);
+                                } else {
+                                    checkState(existingAcid.size() == 1, "More than one acid found. Acids are supposed to be unique for fdid=" + fdid + " and value=" + templateValue);
+                                    acid = existingAcid.get(0).getAcid();
+                                }
+
+                                final ObjectAcid objAcid = new ObjectAcidBuilder().setDate(new Date()).setUserId(userId)
+                                        .setValue(acid).setObjectId(oid).setFdid(fdid).createObjectAcid();
+                                objectAcidDAO.save(objAcid);
+
+                                //Remove old object acid if the fdid is not multi-valued:
+                                if (!isMultivalued) {
+                                    objectAcidDAO.delete(Collections.singletonList(existingObjectAcid));
+                                    checkState(objectAcidDAO.findListByOidAndFdid(oid, fdid).size() == 1, "Only one object acid should exist at this point!");
+                                } else {
+                                    checkState(objectAcidDAO.findListByOidAndFdid(oid, fdid).size() > 1, "Only one object acid found. Expecting more.");
+                                }
                             }
                         }
+                    } catch (Exception e) {
+                        logger.error("Error applying template value for fdid={}. Skipping fdid for oid={}.", fieldDef, oid, e);
                     }
-                }
+                } //end:for
                 oidVersions.add(oid);
             }
             //version objects:

@@ -9,42 +9,39 @@
     <ui:define name="content">
         <h:form id="AuditForm" enctype="multipart/form-data">
 
-                <h:outputLabel for="name" value="oid" style="font-weight:bold" />
-                <p:inputText id="name" value="#{ObjectEventView.oid}" />
-                <p:commandButton value="Submit" update="display, noop" />
+            <h:outputLabel for="name" value="oid" style="font-weight:bold"/>
+            <p:inputText id="name" value="#{ObjectEventView.oid}"/>
+            <!-- <p:commandButton value="Submit" update="display, noop"/> -->
 
+            <br/>
+
+            <h:panelGroup id="display">
+                <h:outputText id="noop" value="No records found." rendered="#{empty ObjectEventView.itemByOid}"/>
                 <br/>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
 
-                <h:panelGroup id="display">
-                    <h:outputText id="noop" value="No records found." rendered="#{empty ObjectEventView.itemByOid}"/>
-                    <br/>
-                    <table class="table table-striped">
-                        <thead>
+                    <ui:repeat var="e" value="#{ObjectEventView.itemByOid}">
                         <tr>
-                            <th>Event</th>
-                            <th>Date</th>
+                            <td>
+                                <h:outputText value="#{e.eventType.label}"/>
+                            </td>
+                            <td>
+                                <h:outputText value="#{e.date}">
+                                    <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                                </h:outputText>
+                            </td>
                         </tr>
-                        </thead>
-                        <tbody>
-
-                        <ui:repeat var="e" value="#{ObjectEventView.itemByOid}">
-                            <tr>
-                                <td>
-                                    <h:outputText value="#{e.eventType.label}"/>
-                                </td>
-                                <td>
-                                    <h:outputText value="#{e.date}">
-                                        <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
-                                    </h:outputText>
-                                </td>
-                            </tr>
-                        </ui:repeat>
-                        </tbody>
-                    </table>
-                </h:panelGroup>
-
-
-
+                    </ui:repeat>
+                    </tbody>
+                </table>
+            </h:panelGroup>
         </h:form>
     </ui:define>
 </ui:composition>

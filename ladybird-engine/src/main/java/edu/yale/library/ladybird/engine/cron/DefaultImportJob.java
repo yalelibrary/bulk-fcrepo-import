@@ -75,7 +75,7 @@ public class DefaultImportJob implements Job, ImportJob {
 
             logger.debug("Writing to import table(s)");
 
-            final int imid = importEngine.write(rowList, spreadsheetFile);
+            final int imid = importEngine.write(rowList, spreadsheetFile, importRequestedEvent.getMonitor().getId());
 
             logger.debug("Completed import job in={}", DurationFormatUtils.formatDuration(System.currentTimeMillis() - startTime, "HH:mm:ss:SS"));
 

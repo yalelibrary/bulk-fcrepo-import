@@ -8,4 +8,8 @@ public class ImportEngineException extends ContextedRuntimeException {
     public ImportEngineException(Throwable cause) {
         super(cause);
     }
+
+    public ImportEngineException(String message) {
+        super(message);
+    }
 }

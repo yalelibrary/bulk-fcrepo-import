@@ -9,16 +9,15 @@ import org.slf4j.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 @ManagedBean(name = "ObjectEventView")
-@RequestScoped
+@ViewScoped
 public class ObjectEventView extends AbstractView {
     private final Logger logger = getLogger(this.getClass());
 
@@ -30,12 +29,15 @@ public class ObjectEventView extends AbstractView {
 
     private List<ObjectEvent> itemList = new ArrayList<>();
 
-    /** For finding items by specified oid */
+    /**
+     * For finding items by specified oid
+     */
     private List<ObjectEvent> itemByOid = new ArrayList<>();
 
 
     int oid = 0;
 
+    //FIXME
     //TODO consolidate itemList and itemByOid
     @PostConstruct
     public void init() {
@@ -49,10 +51,30 @@ public class ObjectEventView extends AbstractView {
             int oid = Integer.parseInt(Faces.getRequestParameter("oid"));
             int userId = auth.getCurrentUserId();
 
-            logger.trace("Finding events for oid={} userid={}", oid, userId);
             itemList = entityDAO.findByUserAndOid(userId, oid);
         } catch (Exception e) {
             logger.error("Error init bean", e);
+        }
+    }
+
+    //FIXME
+    public List<ObjectEvent> getItemByOid() {
+        try {
+            if (oid == 0) {
+                return entityDAO.findAll(); //TODO
+            }
+
+            try {
+                int userId = auth.getCurrentUserId();
+                itemByOid = entityDAO.findByUserAndOid(oid, userId);
+            } catch (Exception e) {
+                logger.error("Error finding by oid", e);
+            }
+
+            return itemByOid;
+        } catch (Exception e) {
+            logger.trace("Error getting items", e);
+            return new ArrayList<>();
         }
     }
 
@@ -70,22 +92,6 @@ public class ObjectEventView extends AbstractView {
 
     public void setOid(int oid) {
         this.oid = oid;
-    }
-
-    public List<ObjectEvent> getItemByOid() {
-        if (oid == 0) {
-            logger.error("No user or oid");
-            return new ArrayList<>();
-        }
-
-        try {
-            int userId = auth.getCurrentUserId();
-            itemByOid = entityDAO.findByUserAndOid(oid, userId);
-        } catch (Exception e) {
-            logger.error("Error finding by oid", e);
-        }
-
-        return itemByOid;
     }
 
     public void setItemByOid(List<ObjectEvent> itemByOid) {

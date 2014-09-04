@@ -64,6 +64,11 @@ public class DefaultExportJob implements Job, ExportJob {
             logger.trace("Looking for export job.");
             final ImportEntityContext importEntityContext = exportEngine.read();
 
+            if (importEntityContext.getImportJobList().isEmpty()) {
+                logger.error("No rows found to export.");
+                throw new JobExecutionException("No rows found to export");
+            }
+
             logger.debug("[start] export job.");
             logger.trace("Read rows from export engine, list size={}, import job context={}",
                     importEntityContext.getImportJobList().size(), importEntityContext.toString());

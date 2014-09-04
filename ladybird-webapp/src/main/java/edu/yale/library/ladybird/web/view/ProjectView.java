@@ -89,7 +89,7 @@ public class ProjectView extends AbstractView {
             Project project = entityDAO.findByProjectId(projectId);
             return project.getLabel();
         } catch (Exception e) {
-            logger.error("Error finding prjoect label");
+            logger.trace("Error finding project label={}", projectId);
             return null;
         }
     }

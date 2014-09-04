@@ -12,6 +12,7 @@ import edu.yale.library.ladybird.persistence.dao.RolesDAO;
 import edu.yale.library.ladybird.persistence.dao.RolesPermissionsDAO;
 import edu.yale.library.ladybird.persistence.dao.UserDAO;
 import edu.yale.library.ladybird.persistence.dao.UserPreferencesDAO;
+import org.omnifaces.util.Faces;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +67,7 @@ public class AuthUtil extends AbstractView {
             int projectId = userPreferences.getProjectId();
             project = projectDAO.findByProjectId(projectId);
         } catch (final Exception e) {
-            logger.error("Error finding default user/project", e.getMessage());
+            logger.trace("Error finding default user/project", e.getMessage());
         }
         return project;
     }
@@ -96,14 +97,13 @@ public class AuthUtil extends AbstractView {
      * @return
      */
     public int getCurrentUserId() {
-
         final String netid = getNetid();
 
         try {
             final List<User> list = userDAO.findByUsername(netid);
 
             if (list.isEmpty()) {
-                throw new NoSuchElementException("No value for param= " + netid);
+                throw new NoSuchElementException("No value for param=" +  netid);
             }
             return list.get(0).getUserId(); //TODO only one
         } catch (Exception e) {
@@ -130,8 +130,25 @@ public class AuthUtil extends AbstractView {
         return user;
     }
 
+    /**
+     * Get current User or null
+     *
+     * @return User or null
+     */
+    public User getCurrentUserOrNull() {
+        try {
+            final String netid = getNetid();
+            final List<User> list = userDAO.findByUsername(netid);
+            return list.isEmpty() ? null : list.get(0);
+        } catch (Exception e) {
+            logger.trace("Error finding current user", e.getMessage());
+            return null;
+        }
+    }
+
     private String getNetid() {
-        return FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("netid").toString();
+        Object netId =  Faces.getSessionMap().get("netid");
+        return (netId == null) ? "" : netId.toString();
     }
 
     public RolesPermissions getRolePermission(String userRoleStr, Permissions requiredPermission) {

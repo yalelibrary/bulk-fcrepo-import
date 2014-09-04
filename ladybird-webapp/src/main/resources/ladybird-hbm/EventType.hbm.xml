@@ -20,7 +20,7 @@
                 <comment>options: system premis</comment>
             </column>
         </property>
-        <set name="objectEvents" table="object_event" inverse="true" lazy="true" fetch="select">
+        <set name="objectEvents" table="object_event" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="event_type_id" not-null="true" />
             </key>

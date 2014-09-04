@@ -19,7 +19,7 @@ public interface ImportEngine {
 
     int write(List<ImportEntity.Row> list);
 
-    int write(List<ImportEntity.Row> list, SpreadsheetFile spreadsheetFile);
+    int write(List<ImportEntity.Row> list, SpreadsheetFile spreadsheetFile, int requestId);
 
     void setOaiProvider(OaiProvider oaiProvider);
 

@@ -42,21 +42,23 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 
     public int count() {
         final Session s = getSession();
-        Query q = s.createQuery("select count(*) from " + persistentClass.getName());
-        int count =  ((Long) q.uniqueResult()).intValue();
+        final Query q = s.createQuery("select count(*) from " + persistentClass.getName());
         try {
-            s.close();
-        } catch (HibernateException e) {
-            logger.error("Error closing session", e);
+            return ((Long) q.uniqueResult()).intValue();
+        } finally {
+            try {
+                s.close();
+            } catch (HibernateException e) {
+                logger.trace("Error", e);
+            }
         }
-        return count;
     }
 
     @SuppressWarnings("unchecked")
     public List<T> find(int startRow, int count) {
         final Session s = getSession();
         Query q = s.createQuery("from " + persistentClass.getName());
-        List l =  q.list();
+        List l = q.list();
         try {
             s.close();
         } catch (HibernateException e) {
@@ -69,9 +71,11 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
     public List<T> findAll() {
         final Session s = getSession();
         final Query q = s.createQuery("from " + persistentClass.getName());
-        List l =  q.list();
+        List l = q.list();
         try {
-            s.close();
+            if (s != null) {
+                s.close();
+            }
         } catch (HibernateException e) {
             logger.error("Error closing session", e);
         }
@@ -111,6 +115,7 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 
     /**
      * Save or update list
+     *
      * @param item entity to save or update
      */
     public void saveOrUpdateItem(T item) {
@@ -144,6 +149,7 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 
     /**
      * Save or update item
+     *
      * @param item entity to save or update
      */
     public void updateItem(T item) {
@@ -178,6 +184,7 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 
     /**
      * Save or update list
+     *
      * @param itemList list of entities
      */
     public void saveOrUpdateList(List<T> itemList) {
@@ -188,7 +195,7 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
             s = getSession();
             tx = s.beginTransaction();
 
-            for (T item: itemList) {
+            for (T item : itemList) {
                 s.saveOrUpdate(item);
                 s.flush();
             }
@@ -213,6 +220,7 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 
     /**
      * Save or udate list
+     *
      * @param itemList list of entities
      */
     public void saveList(List<T> itemList) {
@@ -223,7 +231,7 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
             s = getSession();
             tx = s.beginTransaction();
 
-            for (T item: itemList) {
+            for (T item : itemList) {
                 s.save(item);
                 logger.trace("Saved item={}", item.toString());
 
@@ -250,6 +258,7 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 
     /**
      * Delete list
+     *
      * @param entities list of entites
      */
     @Override

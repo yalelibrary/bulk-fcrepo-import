@@ -8,6 +8,7 @@ public class ImportJobRequestBuilder {
     private String jobFile;
     private String jobDir;
     private int projectId;
+    private int requestId;
 
     public ImportJobRequestBuilder userId(int userId) {
         this.userId = userId;
@@ -34,7 +35,12 @@ public class ImportJobRequestBuilder {
         return this;
     }
 
+    public ImportJobRequestBuilder requestId(int requestId) {
+        this.requestId = requestId;
+        return this;
+    }
+
     public ImportJobRequest build() {
-        return new ImportJobRequest(userId, date, jobFile, jobDir, projectId);
+        return new ImportJobRequest(userId, date, jobFile, jobDir, projectId, requestId);
     }
 }

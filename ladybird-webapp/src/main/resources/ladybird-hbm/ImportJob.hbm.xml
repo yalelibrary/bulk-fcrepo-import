@@ -25,5 +25,8 @@
         <property name="exportJobDir" type="string">
             <column name="export_job_dir" length="500" />
         </property>
+        <property name="requestId" type="int">
+            <column name="request_id" not-null="true" />
+        </property>
     </class>
 </hibernate-mapping>

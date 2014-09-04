@@ -102,7 +102,7 @@ public class UserPreferencesView extends AbstractView {
             int projectId = userPreferences.getProjectId();
             project = projectDAO.findByProjectId(projectId);
         } catch (final Exception e) {
-            logger.error("Error finding default user/project", e.getMessage());
+            logger.trace("Error finding default user/project", e.getMessage());
         }
         return project;
     }

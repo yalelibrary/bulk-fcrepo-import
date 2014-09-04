@@ -61,7 +61,16 @@ public class ObjectEvent implements java.io.Serializable {
         this.oid = oid;
     }
 
-
+    @Override
+    public String toString() {
+        return "ObjectEvent{" +
+                "eventId=" + eventId +
+                ", eventType=" + eventType +
+                ", userId=" + userId +
+                ", date=" + date +
+                ", oid=" + oid +
+                '}';
+    }
 }
 
 

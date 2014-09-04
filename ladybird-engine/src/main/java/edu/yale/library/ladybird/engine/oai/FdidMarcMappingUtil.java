@@ -28,6 +28,11 @@ public class FdidMarcMappingUtil {
     public void setInitialFieldMarcDb() throws Exception {
         InputStream f = this.getClass().getResourceAsStream("/marc-mappings-int.txt");
 
+        if (fieldMarcMappingDAO.count() > 1) {
+            logger.info("Fdid marc mapping init already.");
+            return;
+        }
+
         try {
             Scanner sc = new Scanner(f);
             String s;

@@ -35,7 +35,8 @@ public class DefaultImportEngine extends AbstractImportEngine {
 
         try {
             return importWriter.write(importEntityValue,
-                    new ImportJobRequestBuilder().userId(USER_ID).file("").dir("").projectId(PROJECT_ID).build());
+                    new ImportJobRequestBuilder().userId(USER_ID).file("").dir("").projectId(PROJECT_ID)
+                            .build());
         } catch (Exception e) {
             throw new ImportEngineException(e);
         }
@@ -43,7 +44,7 @@ public class DefaultImportEngine extends AbstractImportEngine {
 
     //TODO consolidate or use different param construct (instead of list of row)
     @Override
-    public int doWrite(final List<ImportEntity.Row> list, SpreadsheetFile spreadsheetFile) {
+    public int doWrite(final List<ImportEntity.Row> list, SpreadsheetFile spreadsheetFile, int requestId) {
         logger.debug("Initiating write, userId={} projectId={} list size={}", USER_ID, PROJECT_ID, list.size());
 
         ImportWriter importWriter = new ImportWriter();
@@ -55,7 +56,7 @@ public class DefaultImportEngine extends AbstractImportEngine {
         try {
             return importWriter.write(importEntityValue,
                     new ImportJobRequestBuilder().userId(USER_ID).file(spreadsheetFile.getFileName())
-                            .dir("").projectId(PROJECT_ID).build());
+                            .dir("").requestId(requestId).projectId(PROJECT_ID).build());
         } catch (ContextedRuntimeException cre) {
             ImportEngineException importEngineException = new ImportEngineException(cre);
             importEngineException.setContextValue("Row", cre.getFirstContextValue("Row"));

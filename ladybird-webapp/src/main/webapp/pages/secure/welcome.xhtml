@@ -24,7 +24,6 @@
                 <h:outputText value="No default project yet."
                               rendered="#{userPreferencesView.defaultProjectForCurrentUser eq null}"/>
             </span>
-                <h:outputText value="#{userPreferencesView.defaultProjectForCurrentUser.label}"/>
             </div>
 
             <br/>
@@ -66,7 +65,6 @@
                         <th>Notified</th>
                         <th>Job Directory</th>
                         <th>Export File</th>
-                        <th>Progress</th>
                         <th>Download</th>
                     </tr>
                     </thead>
@@ -93,22 +91,13 @@
                                 <h:outputText value="#{jobitem.exportJobDir}"/>
                             </td>
 
-                            <td>
-                                <h:outputText id="progressOutputText"
-                                              value="#{importProgressView.count(jobitem.importId)} out of #{importProgressView.STEPS_TO_COMPLETE} steps"/>
-
-                                <p:poll id="progressPoll" interval="5"
-                                        listener="#{importProgressView.progress(jobitem.importId)}"
-                                        update="progressOutputText"/>
-                            </td>
-
-                            <td>
-                                <h:commandButton id="downloadLink" value="Download" ajax="false">
+                             <td>
+                                <h:commandLink id="downloadLink" value="Download" ajax="false" rendered="#{not empty jobitem.exportJobDir}">
                                     <p:fileDownload value="#{fileDownloadController.file}">
                                         <f:param name="id" value="#{jobitem.importId}"/>
                                     </p:fileDownload>
                                     <f:param name="id" value="#{jobitem.importId}"/>
-                                </h:commandButton>
+                                </h:commandLink>
                             </td>
                         </tr>
                     </ui:repeat>

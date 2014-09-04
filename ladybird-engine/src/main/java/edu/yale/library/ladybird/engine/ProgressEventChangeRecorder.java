@@ -7,12 +7,14 @@ import org.apache.commons.lang3.exception.ContextedRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-public class ProgressEventChangeRecorder {
+public class ProgressEventChangeRecorder implements Serializable {
     private static final Logger logger = LoggerFactory.getLogger(ProgressEventChangeRecorder.class);
 
     //TODO static map
@@ -27,7 +29,7 @@ public class ProgressEventChangeRecorder {
 
     @Subscribe
     public void recordEvent(ExportProgressEvent event) {
-        logger.debug("Recording event={} for jobId={}", event.toString(), event.getJobId());
+        logger.trace("Recording event={} for jobId={}", event.toString(), event.getJobId());
 
         try {
             if (event.getJobId() == null) {
@@ -56,8 +58,10 @@ public class ProgressEventChangeRecorder {
             }
 
             int importId = event.getJobId();
-            jobStatusMap.put(importId, JobStatus.EXCEPTION);
 
+            logger.trace("Recording exception event for importId={}", importId);
+
+            jobStatusMap.put(importId, JobStatus.EXCEPTION);
             //Update exceptions for this job:
             List<ContextedRuntimeException> list = exceptionMap.get(importId);
 
@@ -93,6 +97,11 @@ public class ProgressEventChangeRecorder {
 
     public List<ContextedRuntimeException> getRawException(int jobId) {
         if (exceptionMap.get(jobId) == null) {
+            logger.trace("Nothing for this jobId. Existing entries are:");
+            Set<Integer> s = exceptionMap.keySet();
+            for (int i: s) {
+                logger.trace("Key={}", i);
+            }
             return null;
         }
 

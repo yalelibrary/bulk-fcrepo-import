@@ -35,7 +35,7 @@ public class ImageReferenceProcessor {
                 objectFileDAO.saveOrUpdateList(Collections.singletonList(objectFile));
             }
         } catch (Exception e) {
-            logger.error("Error={}", e);
+            logger.error("Error", e);
         }
     }
 

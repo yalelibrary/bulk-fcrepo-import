@@ -20,7 +20,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -30,11 +30,11 @@ import static org.slf4j.LoggerFactory.getLogger;
 @RequestScoped
 @SuppressWarnings("unchecked")
 public class MonitorView extends AbstractView {
+
     private final Logger logger = getLogger(this.getClass());
 
     private List<Monitor> itemList;
     private Monitor monitorItem = new Monitor();
-
     private UploadedFile uploadedFile;
     private String uploadedFileName;
     private InputStream uploadedFileStream;
@@ -55,38 +55,27 @@ public class MonitorView extends AbstractView {
     }
 
     public String process() {
-        logger.debug("Scheduling import, export jobs. Processing file={}", uploadedFileName);
+        logger.info("Scheduling import, export jobs.");
 
         try {
-
-
             monitorItem.setDirPath("local");
             monitorItem.setDate(new Date());
             monitorItem.setCurrentUserId(authUtil.getCurrentUserId());
             monitorItem.setCurrentProjectId(authUtil.getDefaultProjectForCurrentUser().getProjectId());
 
-            int itemId = dao.save(monitorItem);
+            dao.save(monitorItem);
 
+            logger.debug("Saved import/export pair={}", monitorItem);
 
-            logger.debug("Saving import/export pair=" + monitorItem.toString());
-
-            //set user id:
+            //set user id and project id
             try {
                 List<User> userList = userDAO.findByEmail(monitorItem.getNotificationEmail()); //TODO should be only 1
                 monitorItem.setUser(userList.get(0));
-            } catch (Exception e) {
-                logger.error("Error mapping user");
-                fail();
-            }
-
-            //set project id
-            try {
                 monitorItem.setCurrentProject(authUtil.getDefaultProjectForCurrentUser());
             } catch (Exception e) {
-                logger.error("Error mapping current project");
+                logger.error("Error mapping user or project");
                 fail();
             }
-
             final SpreadsheetFile file = new SpreadsheetFileBuilder()
                     .filename(getSessionParam("uploadedFileName").toString())
                     .altname(getSessionParam("uploadedFileName").toString())
@@ -97,25 +86,24 @@ public class MonitorView extends AbstractView {
             final ImportRequestEvent importEvent = new ImportRequestEvent(file, monitorItem);
             ImportEngineQueue.addJob(importEvent);
 
-            logger.debug("Enqueued event=" + importEvent.toString());
+            logger.debug("Enqueued event={}", importEvent.toString());
 
-            return NavigationCase.OK.toString();
+            return ok();
         } catch (HibernateException e) {
             logger.error("Error saving import/export job", e);
-            return NavigationCase.FAIL.toString();
+            return fail();
         }
     }
 
-    //TODO
+    //TODO not sure how many times this may get hit
     public List getItemList() {
-        final List<Monitor> monitorList;
-        try {
-            monitorList = monitorDAO.findByUserAndProject(authUtil.getCurrentUserId(), authUtil.getDefaultProjectForCurrentUser().getProjectId());
-            return monitorList;
+       try {
+           return (userDAO.count() == 0 || authUtil.getCurrentUser() == null) ? Collections.emptyList() :
+                   monitorDAO.findByUserAndProject(authUtil.getCurrentUserId(),
+                           authUtil.getDefaultProjectForCurrentUser().getProjectId());
         } catch (Exception e) {
-            logger.error("Error finding monitor item list={}", e);
-            //throw e; //ignore
-            return new ArrayList<>(); //or return error page when we have one
+            logger.trace("Error finding monitor itemList", e);
+            return Collections.emptyList();
         }
     }
 
@@ -124,7 +112,6 @@ public class MonitorView extends AbstractView {
             this.uploadedFile = event.getFile();
             this.uploadedFileName = uploadedFile.getFileName();
             uploadedFileStream = uploadedFile.getInputstream();
-
             putInSession("uploadedFileName", this.uploadedFileName);
             putInSession("uploadedFileStream", this.uploadedFileStream);
         } catch (Exception e) {

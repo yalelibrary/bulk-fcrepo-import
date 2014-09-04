@@ -7,7 +7,7 @@
             <column name="event_id" />
             <generator class="identity" />
         </id>
-        <many-to-one name="eventType" class="edu.yale.library.ladybird.entity.EventType" fetch="select">
+        <many-to-one name="eventType" class="edu.yale.library.ladybird.entity.EventType" fetch="select" lazy="false">
             <column name="event_type_id" not-null="true" />
         </many-to-one>
         <property name="userId" type="int">

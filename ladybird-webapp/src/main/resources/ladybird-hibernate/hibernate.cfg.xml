@@ -6,11 +6,20 @@
     <session-factory>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
         <property name="hibernate.connection.username">root</property>
-        <property name="hibernate.connection.password">junk</property>
+        <property name="hibernate.connection.password">macshelf</property>
         <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/pamoja</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="hibernate.default_catalog">pamoja</property>
-        <property name="show_sql">false</property>
+        <property name="hibernate.show_sql">false</property>
+
+        <property name="connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
+
+        <property name="hibernate.c3p0.min_size">15</property>
+        <property name="hibernate.c3p0.max_size">100</property>
+        <property name="hibernate.c3p0.timeout">500</property>
+        <property name="hibernate.c3p0.max_statements">100</property>
+        <property name="hibernate.c3p0.idle_test_period">3000</property>
+
         <mapping resource="ladybird-hbm/Collection.hbm.xml"/>
         <mapping resource="ladybird-hbm/FieldDefinition.hbm.xml"/>
         <mapping resource="ladybird-hbm/FieldMarcMapping.hbm.xml"/>

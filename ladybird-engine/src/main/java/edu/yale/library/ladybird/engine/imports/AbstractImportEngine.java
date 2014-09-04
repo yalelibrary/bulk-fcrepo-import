@@ -74,8 +74,8 @@ public abstract class AbstractImportEngine implements ImportEngine {
      *
      * @param list
      */
-    public final int write(List<ImportEntity.Row> list, SpreadsheetFile spreadsheetFile) {
-        return doWrite(list, spreadsheetFile);
+    public final int write(List<ImportEntity.Row> list, SpreadsheetFile spreadsheetFile, int requestId) {
+        return doWrite(list, spreadsheetFile, requestId);
     }
 
     protected SpreadsheetFile getFile() {
@@ -87,6 +87,6 @@ public abstract class AbstractImportEngine implements ImportEngine {
 
     public abstract int doWrite(List<ImportEntity.Row> file);
 
-    public abstract int doWrite(List<ImportEntity.Row> file, SpreadsheetFile spreadsheetFile);
+    public abstract int doWrite(List<ImportEntity.Row> file, SpreadsheetFile spreadsheetFile, int requestId);
 
 }

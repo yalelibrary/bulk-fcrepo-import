@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.engine.imports;
 
 
+import com.google.common.base.Preconditions;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.engine.oai.ImportSourceProcessor;
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
@@ -20,6 +21,8 @@ import org.slf4j.Logger;
 import java.util.Date;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
 import static org.slf4j.LoggerFactory.getLogger;
 
 
@@ -87,14 +90,18 @@ public class ImportWriter {
     }
 
     /**
-     * Writes body to db
+     * Writes body rows to import_job_contents
      *
      * @param importId import id of the job
      * @param importEntityValue helper data structure representing list<rows>
      */
     @SuppressWarnings("unchecked")
-    public void writeContents(final int importId, final ImportEntityValue importEntityValue) throws Exception {   //TODO Exception
+    public synchronized void writeContents(final int importId, final ImportEntityValue importEntityValue) throws Exception {
         try {
+            logger.debug("Writing import job contents for importId={}", importId);
+
+            checkImportIdPreConditions(importId);
+
             //Write import source data
             importSourceProcessor.process(importId, oaiProvider, importEntityValue);
 
@@ -117,6 +124,7 @@ public class ImportWriter {
                 logger.debug("Done media processing.");
             }
 
+            /*
             //Process F300
             if (importEntityValue.hasFunction(FunctionConstants.F300, FunctionConstants.F1))  {
                 processImageReference(importEntityValue);
@@ -129,7 +137,6 @@ public class ImportWriter {
 
             //Process F11
             if (importEntityValue.hasFunction(FunctionConstants.F11, FunctionConstants.F1)) {
-                //TODO check value is oid in this project
                 publishHydraPointer(importEntityValue);
             }
 
@@ -137,6 +144,7 @@ public class ImportWriter {
             if (importEntityValue.hasFunction(FunctionConstants.F00)) {
                 processDelete(importEntityValue);
             }
+            */
 
             //Process F4,F6 (check step requirement)
             if (processF4F6(importEntityValue)) {
@@ -164,12 +172,26 @@ public class ImportWriter {
                     final ImportJobContents entry = imjBuilder.setImportId(importId).setDate(JOB_EXEC_DATE)
                             .setCol(j).setRow(i).setValue(col.getValue()).build();
                     dao.save(entry);
+                    logger.trace("Saved entry={}", entry);
                 }
             }
+
+            //get written count
+            logger.debug("Wrote rows={} for importId={}", dao.findByImportId(importId).size(), importId); //TODO dao count method
+            checkImportIdPostConditions(importId);
         } catch (Exception e) {
-            logger.error("Error writing contents");
+            logger.error("Error writing import job contents.");
             throw e;
         }
+    }
+
+    private void checkImportIdPreConditions(final int importId){
+        checkArgument(importId > -1);
+        checkArgument(dao.findByImportId(importId).size() == 0);  //TODO dao count method
+    }
+
+    private void checkImportIdPostConditions(final int importId) {
+        checkState(dao.findByImportId(importId).size() > 0, "Expected number of rows written must not be 0");
     }
 
     /**
@@ -179,9 +201,10 @@ public class ImportWriter {
      * @return minted job id
      */
     public Integer writeImportJob(final ImportJobRequest ctx) {
-        logger.debug("Saving entity={}", ctx.toString());
+        logger.debug("Saving import job={}", ctx.toString());
+
         return importJobDAO.save(new ImportJobBuilder().setDate(JOB_EXEC_DATE).setJobDirectory(ctx.getJobDir()).
-                setJobFile(ctx.getJobFile()).setUserId(ctx.getUserId()).createImportJob());
+                setJobFile(ctx.getJobFile()).setUserId(ctx.getUserId()).setRequestId(ctx.getRequestId()).createImportJob());
     }
 
     /**

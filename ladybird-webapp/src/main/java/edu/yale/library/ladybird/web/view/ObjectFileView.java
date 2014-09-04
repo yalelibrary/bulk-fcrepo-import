@@ -14,15 +14,18 @@ import org.slf4j.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 @ManagedBean (name = "ObjectFileView")
-@ViewScoped
+//@ViewScoped
+@RequestScoped
 @SuppressWarnings("unchecked")
 public class ObjectFileView extends AbstractView {
 
@@ -55,18 +58,35 @@ public class ObjectFileView extends AbstractView {
     public void init() {
         initFields();
         dao = entityDAO;
-    }
 
-    public List<ObjectFile> getItemList() {
         try {
             if (itemList.isEmpty()) {
                 //Find objects for only current project
-                int currentProjectId = authUtil.getDefaultProjectForCurrentUser().getProjectId();
-                itemList = entityDAO.findByProject(currentProjectId); //TODO need to revisit dao method
+
+                if (authUtil.getCurrentUserOrNull() == null) {
+                    logger.info("Current user not found in session. Can't determine default project"); //should have a filter somehwere
+                }
+
+                itemList = findItems();
             }
         } catch (Exception e) {
-            logger.error("Error finding items", e);
+            logger.error("Error init bean", e);
         }
+    }
+
+    private List<ObjectFile> findItems() {
+        try {
+            int currentProjectId = authUtil.getDefaultProjectForCurrentUser().getProjectId();
+            itemList = entityDAO.findByProject(currentProjectId); //TODO need to revisit dao method
+            return itemList;
+        } catch (Exception e) {
+            logger.error("Error finding items", e);
+            return Collections.emptyList();
+        }
+    }
+
+
+    public List<ObjectFile> getItemList() {
         return itemList;
     }
 
@@ -84,7 +104,7 @@ public class ObjectFileView extends AbstractView {
         try {
             final int userId = authUtil.getCurrentUserId();
 
-            logger.debug("UserId={} applying template={}", userId, templateToApply);
+            logger.debug("User={} applying template={}", userId, templateToApply);
 
             ProjectTemplateApplicator projectTemplateApplicator = new ProjectTemplateApplicator(); //TODO
             projectTemplateApplicator.applyTemplate(templateToApply, userId);

@@ -44,13 +44,34 @@ public class SettingsView extends AbstractView {
         this.itemList = itemList;
     }
 
+    /**
+       Update cell value upon edit.
+       Needs revisiting
+     */
     public void onCellEdit(CellEditEvent event) {
-        Object oldValue = event.getOldValue();
-        Object newValue = event.getNewValue();
+        final Object oldValue = event.getOldValue();
+        final Object newValue = event.getNewValue();
 
         try {
             if (newValue != null && !newValue.equals(oldValue)) {
-                Settings settings = settingsDAO.findById(event.getRowIndex()); //TODO check if table row id matches db row Id
+
+                //find where this events belongs
+                List<Settings> settingsList = settingsDAO.findAll(); //NOTE, just assuming 0 for 1st row is not good, since db might be different
+
+                if (settingsList == null || settingsList.isEmpty()) {
+                    return;
+                }
+
+                Settings settings = settingsList.get(event.getRowIndex());
+
+                //check the values match
+                if (!settings.getValue().equals(oldValue)) {
+                    logger.error("Won't update. False match={}", oldValue);
+                    return;
+                }
+
+                logger.debug("For row index={} settings={}", event.getRowIndex(), settings);
+
                 settings.setValue((String) newValue);
 
                 settingsDAO.saveOrUpdateList(Collections.singletonList(settings));
@@ -61,7 +82,7 @@ public class SettingsView extends AbstractView {
                 FacesContext.getCurrentInstance().addMessage(null, msg);
             }
         } catch (Exception e) {
-            logger.error("Error finding or persisting settings", e);
+            logger.error("Error finding or persisting settings for row id={}", event.getRowIndex(), e);
         }
     }
 

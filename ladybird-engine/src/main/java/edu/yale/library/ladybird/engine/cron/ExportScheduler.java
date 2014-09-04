@@ -1,11 +1,13 @@
 package edu.yale.library.ladybird.engine.cron;
 
 import edu.yale.library.ladybird.engine.CronSchedulingException;
+import edu.yale.library.ladybird.engine.imports.ImportEngineException;
 import edu.yale.library.ladybird.entity.Monitor;
 import edu.yale.library.ladybird.kernel.cron.DefaultJobsManager;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
+import org.quartz.JobExecutionException;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
@@ -29,7 +31,7 @@ public class ExportScheduler {
      * @throws Exception
      */
     public void scheduleJob(String cronExpression) {
-        logger.debug("Scheduling export job");
+        logger.debug("Scheduling export job.");
 
         JobDetail job;
         try {
@@ -42,28 +44,32 @@ public class ExportScheduler {
                     .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
                     .build();
             doScheduleJob(job, trigger);
-        } catch (SchedulerException e) {
-            throw new CronSchedulingException(e);
-        }
 
-        DefaultJobsManager defaultJobsManager = new DefaultJobsManager();
-        defaultJobsManager.addJob(job);
+            DefaultJobsManager defaultJobsManager = new DefaultJobsManager();
+            defaultJobsManager.addJob(job);
+        } catch (SchedulerException e) {
+            logger.error("Error", e);
+            throw new CronSchedulingException(e);
+        } catch (Exception e){
+            logger.error("Error", e);
+        }
     }
 
     @Deprecated
     public void scheduleJob(final Monitor monitorItem, final Trigger trigger) {
-        logger.debug("Scheduling export job");
+        logger.debug("Scheduling export job..");
 
         JobDetail job;
         try {
             job = getJob(DEFAULT_EXPORT_JOB_ID, ExportJobFactory.getInstance().getClass(), monitorItem);
             doScheduleJob(job, trigger);
+
+            DefaultJobsManager defaultJobsManager = new DefaultJobsManager();
+            defaultJobsManager.addJob(job);
         } catch (SchedulerException e) {
+            logger.error("Error", e);
             throw new CronSchedulingException(e);
         }
-
-        DefaultJobsManager defaultJobsManager = new DefaultJobsManager();
-        defaultJobsManager.addJob(job);
     }
 
     private void doScheduleJob(final JobDetail job, final Trigger trigger) throws SchedulerException {

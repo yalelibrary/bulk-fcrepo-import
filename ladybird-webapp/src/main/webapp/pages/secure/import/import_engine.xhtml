@@ -40,9 +40,7 @@
 
                     <p:dataTable id="DirDatatable"
                                  editable="false"
-                                 paginator="true"
-                                 paginatorPosition="bottom"
-                                 rows="10"
+                                 paginator="false"
                                  value="#{monitorView.itemList}"
                                  var="monitorItem">
 
@@ -76,13 +74,6 @@
 
                         <p:column headerText="Status" width="50%">
                             <!-- TODO clean up -->
-
-                            <!--
-                            <h:outputText id="status1"
-                                          styleClass="alert alert-danger"
-                                          value="#{importProgressView.status(monitorItem.id)}"
-                                          rendered="#{importProgressView.status(monitorItem.id) eq 'EXCEPTION'}"/>
-                                          -->
 
                             <h:link id="exceptionLink"
                                     value="Exceptions ( #{importProgressView.numberExceptions(monitorItem.id)} )"

@@ -38,8 +38,9 @@
 
                     <!-- Data Grid -->
                     <p:dataGrid var="item" value="#{ObjectFileView.itemList}" columns="5"
-                                rows="6" paginator="true" id="ObjectFileDatagrid" paginatorPosition="bottom"
-                                emptyMessage="No records found.">
+                                rows="15" paginator="true" id="ObjectFileDatagrid" paginatorPosition="bottom"
+                                emptyMessage="No records found."
+                            >
 
                         <p:panel header="#{item.oid}" style="text-align:center">
                             <h:panelGrid columns="1" style="width:100%">

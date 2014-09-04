@@ -20,7 +20,7 @@ public class UserHibernateDAO extends GenericHibernateDAO<User, Integer> impleme
         Session s = getSession();
         final Query q = s.createQuery("from User where email = :param");
         q.setParameter("param", email);
-        List l =  q.list();
+        List l = q.list();
 
         try {
             s.close();
@@ -39,7 +39,7 @@ public class UserHibernateDAO extends GenericHibernateDAO<User, Integer> impleme
             return q.list();
         } catch (HibernateException e) {
             throw e;
-        }  finally {
+        } finally {
             if (s != null) {
                 try {
                     s.close();
@@ -56,10 +56,10 @@ public class UserHibernateDAO extends GenericHibernateDAO<User, Integer> impleme
             final Query q = s.createQuery("from User where userId = :param");
             q.setParameter("param", field);
             final List<User> userList = q.list();
-            return userList.get(0).getUsername();
+            return userList.isEmpty() ? null : userList.get(0).getUsername();
         } catch (HibernateException e) {
             throw e;
-        }  finally {
+        } finally {
             if (s != null) {
                 try {
                     s.close();
@@ -72,26 +72,44 @@ public class UserHibernateDAO extends GenericHibernateDAO<User, Integer> impleme
     @Override
     public User findByUserId(int field) {
         Session s = getSession();
-        final Query q = s.createQuery("from User where userId = :param");
-        q.setParameter("param", field);
-        final List<User> userList = q.list();
-        return userList.get(0);
+        try {
+            final Query q = s.createQuery("from User where userId = :param");
+            q.setParameter("param", field);
+            final List<User> userList = q.list();
+            return userList.get(0);
+        } finally {
+            if (s != null) {
+                s.close();
+            }
+        }
     }
 
     @Override
     public List<String> getEmails() {
         Session s = getSession();
-        final Query q = s.createQuery("select u.email from User u");
-        final List<String> userList = q.list();
-        return userList;
+        try {
+            final Query q = s.createQuery("select u.email from User u");
+            final List<String> userList = q.list();
+            return userList;
+        } finally {
+            if (s != null) {
+                s.close();
+            }
+        }
     }
 
     @Override
     public List<String> getUsernames() {
         Session s = getSession();
-        final Query q = s.createQuery("select u.username from User u");
-        final List<String> userList = q.list();
-        return userList;
+        try {
+            final Query q = s.createQuery("select u.username from User u");
+            final List<String> userList = q.list();
+            return userList;
+        } finally {
+            if (s != null) {
+                s.close();
+            }
+        }
     }
 
 }

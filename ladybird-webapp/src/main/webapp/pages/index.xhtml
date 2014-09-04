@@ -10,8 +10,9 @@
         <div class="jumbotron">
             <h2>LadyBird 2</h2>
 
-            <p><a class="btn btn-primary btn-lg" role="button"
-                           href="http://localhost:8080/ladybird-webapp/web/pages/secure/welcome.xhtml">Log in</a></p>
+            <h:outputLink class="btn btn-primary btn-lg" value="#{welcomeView.getWelcomeUrl()}">
+                    <h:outputText value="Log in"/>
+            </h:outputLink>
         </div>
     </ui:define>
 </ui:composition>

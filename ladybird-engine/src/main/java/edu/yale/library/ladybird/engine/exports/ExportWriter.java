@@ -70,7 +70,7 @@ public class ExportWriter {
         final XSSFWorkbook workbook = new XSSFWorkbook();
 
         for (ExportSheet exportSheet: exportSheets) {
-            logger.debug("Writing sheet={}", exportSheet.getTitle());
+            logger.trace("Writing sheet={}", exportSheet.getTitle());
 
             final XSSFSheet sheet = workbook.createSheet(exportSheet.getTitle());
             int rowNum = 0;

@@ -4,6 +4,7 @@ import edu.yale.library.ladybird.entity.ImportJob;
 import edu.yale.library.ladybird.entity.ImportJobNotifications;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.entity.UserProject;
+import edu.yale.library.ladybird.kernel.ApplicationProperties;
 import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobNotificationsDAO;
 import edu.yale.library.ladybird.persistence.dao.UserProjectDAO;
@@ -129,6 +130,16 @@ public class WelcomeView extends AbstractView {
         }
 
         return "N/A";
+    }
+
+    public String getWelcomeUrl() {
+        String s = ApplicationProperties.CONFIG_STATE.WELCOME_PAGE;
+        if (s == null || s.isEmpty()) {
+            logger.error("Empty welcome page");
+            throw new IllegalStateException("Cannot proceed");
+        }
+
+        return s;
     }
 
 

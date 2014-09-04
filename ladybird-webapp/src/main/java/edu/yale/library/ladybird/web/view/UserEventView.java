@@ -36,20 +36,25 @@ public class UserEventView extends AbstractView implements Serializable {
     @Inject
     UserDAO userDAO;
 
+    @Inject
+    AuthUtil authUtil;
+
     @PostConstruct
     public void init() {
         initFields();
         dao = entityDAO;
 
-        userId = Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext()
-                .getRequestParameterMap().get("id"));
+        //userId = Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext()
+          //      .getRequestParameterMap().get("id"));
+
+        userId = authUtil.getCurrentUserId();
 
         user = convertUserIdToUserName(userId);
 
         try {
             itemList = entityDAO.findByUserId(user);
         } catch (Exception e) {
-            logger.error("Error ={}", e);
+            logger.error("Error", e);
         }
     }
 
@@ -71,7 +76,7 @@ public class UserEventView extends AbstractView implements Serializable {
         try {
             userName = userDAO.findUsernameByUserId(userId);
         } catch (Exception e) {
-            logger.debug("Error={}", e);
+            logger.debug("Error", e);
         }
         return userName;
     }

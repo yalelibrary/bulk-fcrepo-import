@@ -36,7 +36,7 @@ public class UserProjectView extends AbstractView {
     private ProjectDAO projectDAO;
 
     @Inject
-    private UserDAO userDao;
+    private UserDAO userDAO;
 
     @PostConstruct
     public void init() {
@@ -78,7 +78,17 @@ public class UserProjectView extends AbstractView {
 
     //TODO converter
     public String getUserName(final int userId) {
-        return userDao.findUsernameByUserId(userId);
+        String userName = "";
+
+        try {
+            userName = userDAO.findUsernameByUserId(userId);
+            if (userName == null) {
+                logger.trace("User name null for userId={}. Full list={}", userId, userDAO.findAll());
+            }
+        } catch (Exception e) {
+            logger.debug("Error", e);
+        }
+        return userName;
     }
 
     //TODO converter

@@ -209,7 +209,7 @@ public class ExportReader {
                         row.getColumns().add(new ImportEntity().new Column<>(fieldConstant, jobContents.getValue()));
                         //logger.debug("Added value={}", jobContents.getValueMap());
                     } catch (Exception e) {
-                        logger.error("Error retrieving value", e.getMessage());
+                        logger.error("Error retrieving value={}", e.getMessage());
                         continue;
                     }
                 }
@@ -255,17 +255,17 @@ public class ExportReader {
      * @param importId import id of the job
      * @return number of exact rows or 0 if error
      */
-    private int getExpectedNumRowsToWrite(final int importId) {
-        int expectedNumRowsToWrite = 0;
+    private synchronized int getExpectedNumRowsToWrite(final int importId) {
+        int expNumRowsToWrite = 0;
 
         try {
-            expectedNumRowsToWrite = importJobContentsDAO.getNumRowsPerImportJob(importId); //gets contents count not exhead
-            expectedNumRowsToWrite = expectedNumRowsToWrite + 1; //N.B. to accomodate for row num. starting from 0
+            expNumRowsToWrite = importJobContentsDAO.getNumRowsPerImportJob(importId); //gets contents count not exhead
+            expNumRowsToWrite = expNumRowsToWrite + 1; //N.B. to accomodate for row num. starting from 0
         } catch (Exception e) {
-            logger.error("No rows found");
+            logger.error("Error finding rows in import job contents for importId={}", importId, e);
         }
 
-        return expectedNumRowsToWrite;
+        return expNumRowsToWrite;
     }
 
 }
