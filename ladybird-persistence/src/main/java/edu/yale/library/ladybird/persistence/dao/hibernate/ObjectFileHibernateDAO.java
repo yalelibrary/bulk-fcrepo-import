@@ -71,5 +71,61 @@ public class ObjectFileHibernateDAO extends GenericHibernateDAO<ObjectFile, Inte
             return Collections.emptyList();
         }
     }
+
+
+    /**
+     * Returns by project. Note that the tables are not linked. Ignores exception
+     *
+     * @param projectId project id
+     * @return list of ojbectfile or empty list
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<ObjectFile> findByProjectMax(int projectId, int startRow, int count) {
+        Session s = getSession();
+        try {
+            final Query q = s.createQuery("from edu.yale.library.ladybird.entity.Object where projectId = :param");
+            q.setParameter("param", projectId);
+            q.setFirstResult(startRow);
+            q.setMaxResults(count);
+
+            final List<Object> list = q.list();
+
+            final List<ObjectFile> objFileList = new ArrayList<>();
+
+            for (final Object o : list) {
+                final ObjectFile objectFile = findByOid(o.getOid(), s);
+                if (objectFile == null) {
+                    logger.debug("No object file for oid={}", o.getOid());
+                    continue;
+                }
+                objFileList.add(findByOid(o.getOid()));
+            }
+            return objFileList;
+        } catch (HibernateException e) {
+            logger.error("Error finding paged result", e);
+            return Collections.emptyList();
+        } finally {
+            s.close();
+        }
+    }
+
+    //Keeps the session open
+    private ObjectFile findByOid(final int oid, final Session s) {
+        try {
+            final Query q = s.createQuery("from edu.yale.library.ladybird.entity.ObjectFile where oid = :param");
+            q.setParameter("param", oid);
+            final List<ObjectFile> list = q.list();
+
+            if (list.isEmpty()) {
+                logger.error("Empty list for oid={}", oid);
+            }
+            return list.isEmpty() ? null : list.get(0);
+        } catch (HibernateException e) {
+            logger.error("Error finding by oid={}", oid, e);
+            throw e;
+        }
+    }
+
 }
 

@@ -33,21 +33,28 @@
 
             <br/>
 
+            <!-- Data Grid -->
+
             <div>
                 <div>
 
-                    <!-- Data Grid -->
-                    <p:dataGrid var="item" value="#{ObjectFileView.itemList}" columns="5"
-                                rows="15" paginator="true" id="ObjectFileDatagrid" paginatorPosition="bottom"
-                                emptyMessage="No records found.">
+                    <p:dataGrid var="item"
+                                value="#{ObjectFileView.subItemList}"
+                                columns="5"
+                                rows="15"
+                                paginator="true"
+                                id="ObjectFileDatagrid"
+                                paginatorPosition="bottom"
+                                emptyMessage="No records found."
+                                lazy="true">
 
                         <p:panel header="#{item.oid}" style="text-align:center">
                             <h:panelGrid columns="1" style="width:100%">
-                                <h:graphicImage value="/images/#{item.oid}" height="150" width="150"/>
-                                <h:outputText value="#{item.fileName}"/>
-                                <h:link outcome="object_metadata?oid=#{item.oid}" value="View"/>
-                                <h:link outcome="object_version?oid=#{item.oid}" value="Versions"/>
-                                <h:link outcome="audit?oid=#{item.oid}" value="Audit Events"/>
+                                <h:graphicImage id="image" value="/images/#{item.oid}" height="150" width="150"/>
+                                <h:outputText id="filename" value="#{item.fileName}"/>
+                                <h:link id="view_link" outcome="object_metadata?oid=#{item.oid}" value="View"/>
+                                <h:link id="versions_link" outcome="object_version?oid=#{item.oid}" value="Versions"/>
+                               <!--  <h:link id="events_link" outcome="audit?oid=#{item.oid}" value="Audit Events"/> -->
                             </h:panelGrid>
                         </p:panel>
 
