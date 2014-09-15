@@ -74,8 +74,6 @@ public class ImageMagickProcessor implements ImageProcessor {
 
         String imageMagickPath = getImgMagickPath();
 
-        logger.trace("Image magick path={}", imageMagickPath);
-
         if (!imageMagickPath.isEmpty()) {
             cmd.setSearchPath(imageMagickPath);
         } else {
@@ -87,7 +85,7 @@ public class ImageMagickProcessor implements ImageProcessor {
             logger.trace("Converting file={}", src);
             final IMOperation op = new IMOperation();
             op.addImage(sourceImage);
-            op.thumbnail(200);
+            op.thumbnail(150, 150);
             op.addImage(destImage);
             cmd.run(op);
         } catch (IOException | InterruptedException | IM4JavaException e) {
