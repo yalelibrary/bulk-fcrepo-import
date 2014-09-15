@@ -84,7 +84,7 @@ public class ImportJobDaoTest extends AbstractPersistenceTest {
 
     private ImportJob build() {
         final ImportJob item = new ImportJobBuilder()
-                .setUserId(0).setJobDirectory("dir").setJobFile("file").setExportJobDir("export-dir").setExportJobFile("export-file").createImportJob();
+                .setUserId(0).setJobDirectory("dir").setJobFile("file").setExportJobDir("export-dir").setExportJobFile("export-file").setRequestId(0).createImportJob();
         final Date date = new Date(System.currentTimeMillis());
         item.setDate(date);
         return item;

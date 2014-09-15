@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.Collections;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -71,15 +72,21 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
     public List<T> findAll() {
         final Session s = getSession();
         final Query q = s.createQuery("from " + persistentClass.getName());
-        List l = q.list();
+
         try {
-            if (s != null) {
-                s.close();
-            }
+            List l = q.list();
+            return l;
         } catch (HibernateException e) {
-            logger.error("Error closing session", e);
+            logger.error("Error finding all", e);
+            return Collections.emptyList();
+        } finally {
+            try {
+                s.close();
+            } catch (HibernateException e) {
+                logger.error("Error closing hibernate session");
+            }
+
         }
-        return l;
     }
 
     public Integer save(T item) {
