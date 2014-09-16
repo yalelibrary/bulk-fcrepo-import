@@ -33,8 +33,11 @@
                             <label class="col-sm-2 control-label">Project Label</label>
 
                             <div class="col-sm-10">
-                                <p:inputText value="#{ProjectView.item.label}">
+                                <!-- don't change input id -->
+                                <p:inputText id="projectLabelInput" value="#{ProjectView.item.label}">
+                                    <f:validator validatorId="edu.yale.library.ladybird.web.view.ProjectFormValidator"/>
                                 </p:inputText>
+                                <h:message for="projectLabelInput" style="color:red"/>
                             </div>
                         </div>
 
