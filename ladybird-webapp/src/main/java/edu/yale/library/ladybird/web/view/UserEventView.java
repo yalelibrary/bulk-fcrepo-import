@@ -4,6 +4,7 @@ package edu.yale.library.ladybird.web.view;
 import edu.yale.library.ladybird.entity.UserEvent;
 import edu.yale.library.ladybird.persistence.dao.UserDAO;
 import edu.yale.library.ladybird.persistence.dao.UserEventDAO;
+import org.omnifaces.util.Faces;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +14,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 @ManagedBean
@@ -44,14 +46,16 @@ public class UserEventView extends AbstractView implements Serializable {
         initFields();
         dao = entityDAO;
 
-        //userId = Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext()
-          //      .getRequestParameterMap().get("id"));
+        String userIdStr = Faces.getRequestParameter("id");
 
-        userId = authUtil.getCurrentUserId();
-
-        user = convertUserIdToUserName(userId);
+        if (userIdStr == null || userIdStr.isEmpty()) {
+            logger.error("No user id found in param");
+            itemList = Collections.emptyList();
+        }
 
         try {
+            userId = Integer.parseInt(userIdStr);
+            user = convertUserIdToUserName(userId);
             itemList = entityDAO.findByUserId(user);
         } catch (Exception e) {
             logger.error("Error", e);
