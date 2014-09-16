@@ -4,8 +4,9 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
-<ui:composition template="../../templates/template_yul.xhtml">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui">
+<ui:composition template="../../../templates/template_yul.xhtml">
 
     <ui:define name="content">
         <h:form id="UserForm" enctype="multipart/form-data" styleClass="form-horizontal" role="form">
@@ -21,7 +22,11 @@
                             <label class="col-sm-2 control-label">Username</label>
 
                             <div class="col-sm-10">
-                                <h:inputText id="username" name="username" value="#{userView.item.username}"/>
+                                <h:inputText id="username" name="username" value="#{userView.item.username}">
+                                    <f:validator
+                                            validatorId="edu.yale.library.ladybird.web.view.user.UserManagerFormValidator"/>
+                                </h:inputText>
+                                <h:message for="username" style="color:red"/>
                             </div>
                         </div>
 
@@ -37,7 +42,11 @@
                             <label class="col-sm-2 control-label">E-mail</label>
 
                             <div class="col-sm-10">
-                                <h:inputText id="email" name="email" value="#{userView.item.email}"/>
+                                <h:inputText id="email" name="email" value="#{userView.item.email}">
+                                    <f:validator  validatorId="edu.yale.library.ladybird.web.view.user.UserManagerFormValidator"/>
+                                    <o:validator validatorId="javax.faces.RegularExpression" pattern="^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$" message="Invalid e-mail" />
+                                </h:inputText>
+                                <h:message for="email" style="color:red"/>
                             </div>
                         </div>
 
