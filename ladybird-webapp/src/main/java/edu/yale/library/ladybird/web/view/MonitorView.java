@@ -6,10 +6,11 @@ import edu.yale.library.ladybird.engine.imports.ImportRequestEvent;
 import edu.yale.library.ladybird.engine.imports.SpreadsheetFile;
 import edu.yale.library.ladybird.engine.imports.SpreadsheetFileBuilder;
 import edu.yale.library.ladybird.entity.Monitor;
+import edu.yale.library.ladybird.entity.Project;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.persistence.dao.MonitorDAO;
 import edu.yale.library.ladybird.persistence.dao.UserDAO;
-import org.hibernate.HibernateException;
+import org.omnifaces.util.Faces;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @ManagedBean
@@ -55,27 +57,30 @@ public class MonitorView extends AbstractView {
     }
 
     public String process() {
-        logger.info("Scheduling import, export jobs.");
-
+        logger.trace("Scheduling import, export jobs.");
         try {
-            monitorItem.setDirPath("local");
+            //validate file was uploaded
+            checkNotNull(Faces.getSessionAttribute("uploadedFileName"), "No file provided for session");
+            checkNotNull(Faces.getSessionAttribute("uploadedFileStream"), "No file provided for session");
+
+            final Project currentProject = authUtil.getDefaultProjectForCurrentUser();
+
+            checkNotNull(currentProject, "No default project for current user");
+
+            monitorItem.setDirPath("local"); //TODO
             monitorItem.setDate(new Date());
             monitorItem.setCurrentUserId(authUtil.getCurrentUserId());
-            monitorItem.setCurrentProjectId(authUtil.getDefaultProjectForCurrentUser().getProjectId());
+            monitorItem.setCurrentProjectId(currentProject.getProjectId());
 
             dao.save(monitorItem);
 
             logger.debug("Saved import/export pair={}", monitorItem);
 
             //set user id and project id
-            try {
-                List<User> userList = userDAO.findByEmail(monitorItem.getNotificationEmail()); //TODO should be only 1
-                monitorItem.setUser(userList.get(0));
-                monitorItem.setCurrentProject(authUtil.getDefaultProjectForCurrentUser());
-            } catch (Exception e) {
-                logger.error("Error mapping user or project");
-                fail();
-            }
+            List<User> userList = userDAO.findByEmail(monitorItem.getNotificationEmail()); //TODO should be only 1
+            monitorItem.setUser(userList.get(0));
+            monitorItem.setCurrentProject(currentProject);
+
             final SpreadsheetFile file = new SpreadsheetFileBuilder()
                     .filename(getSessionParam("uploadedFileName").toString())
                     .altname(getSessionParam("uploadedFileName").toString())
@@ -86,21 +91,27 @@ public class MonitorView extends AbstractView {
             final ImportRequestEvent importEvent = new ImportRequestEvent(file, monitorItem);
             ImportEngineQueue.addJob(importEvent);
 
-            logger.debug("Enqueued event={}", importEvent.toString());
-
+            logger.info("Enqueued event={}", importEvent.toString());
             return ok();
-        } catch (HibernateException e) {
-            logger.error("Error saving import/export job", e);
+        } catch (NullPointerException npe) {
+            logger.error("Error={}", npe.getMessage());
             return fail();
+        } catch (Exception e) { //any exception
+            logger.error("Error setting up import/export job", e);
+            return fail();
+        } finally {
+            //clear session for upload files -- otherwise it will run again with the same attributes if uploaded file is null
+            Faces.removeSessionAttribute("uploadedFileName");
+            Faces.removeSessionAttribute("uploadedFileStream");
         }
     }
 
     //TODO not sure how many times this may get hit
     public List getItemList() {
-       try {
-           return (userDAO.count() == 0 || authUtil.getCurrentUser() == null) ? Collections.emptyList() :
-                   monitorDAO.findByUserAndProject(authUtil.getCurrentUserId(),
-                           authUtil.getDefaultProjectForCurrentUser().getProjectId());
+        try {
+            return (userDAO.count() == 0 || authUtil.getCurrentUser() == null) ? Collections.emptyList() :
+                    monitorDAO.findByUserAndProject(authUtil.getCurrentUserId(),
+                            authUtil.getDefaultProjectForCurrentUser().getProjectId());
         } catch (Exception e) {
             logger.trace("Error finding monitor itemList", e);
             return Collections.emptyList();
@@ -112,8 +123,8 @@ public class MonitorView extends AbstractView {
             this.uploadedFile = event.getFile();
             this.uploadedFileName = uploadedFile.getFileName();
             uploadedFileStream = uploadedFile.getInputstream();
-            putInSession("uploadedFileName", this.uploadedFileName);
-            putInSession("uploadedFileStream", this.uploadedFileStream);
+            putSessionAttribute("uploadedFileName", this.uploadedFileName);
+            putSessionAttribute("uploadedFileStream", this.uploadedFileStream);
         } catch (Exception e) {
             logger.error("Input stream null for file={}", event.getFile().getFileName());
         }
@@ -127,7 +138,7 @@ public class MonitorView extends AbstractView {
         this.monitorItem = monitorItem;
     }
 
-    private void putInSession(String s, Object val) {
+    private void putSessionAttribute(String s, Object val) {
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(s, val);
     }
 

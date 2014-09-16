@@ -9,6 +9,7 @@
     <ui:define name="content">
 
         <br/>
+
         <div>
             <h:outputText styleClass="alert alert-warning"
                           value="Missing Configuration"
@@ -80,8 +81,11 @@
                 <label class="col-sm-2 control-label">Export Directory</label>
 
                 <div class="col-sm-10">
-                    <p:inputText
-                            value="#{monitorView.monitorItem.exportPath}"/> (Base directory:#{settingsView.getSettingValueByProperty('import_root_path')})
+                    <p:inputText id="exportDirInupt" value="#{monitorView.monitorItem.exportPath}">
+                        <f:validator validatorId="edu.yale.library.ladybird.web.view.ExportFileValidator"/>
+                    </p:inputText>
+                    <h:message for="exportDirInupt" style="color:red"/>
+                    (Base directory:#{settingsView.getSettingValueByProperty('import_root_path')})
                 </div>
             </div>
 
