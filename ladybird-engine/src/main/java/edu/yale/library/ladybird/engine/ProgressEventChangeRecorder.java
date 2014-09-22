@@ -2,6 +2,7 @@ package edu.yale.library.ladybird.engine;
 
 import com.google.common.eventbus.Subscribe;
 import edu.yale.library.ladybird.engine.cron.ExportProgressEvent;
+import edu.yale.library.ladybird.engine.imports.ImportRequestEvent;
 import edu.yale.library.ladybird.engine.imports.JobExceptionEvent;
 import org.apache.commons.lang3.exception.ContextedRuntimeException;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class ProgressEventChangeRecorder implements Serializable {
+
     private static final Logger logger = LoggerFactory.getLogger(ProgressEventChangeRecorder.class);
 
     //TODO static map
@@ -27,6 +29,7 @@ public class ProgressEventChangeRecorder implements Serializable {
     //TODO number of steps
     public static final int expectedSteps = 2;
 
+    @SuppressWarnings("unused")
     @Subscribe
     public void recordEvent(ExportProgressEvent event) {
         logger.trace("Recording event={} for jobId={}", event.toString(), event.getJobId());
@@ -48,8 +51,32 @@ public class ProgressEventChangeRecorder implements Serializable {
     }
 
     /**
-     * Records statuses and exceptions
+     * Records progress status
+     * Operates on jobStatusMap
      */
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void recordEvent(ImportRequestEvent event) {
+        try {
+            if (event.getMonitor().getId() == null) {
+                throw new NullPointerException("Job Id null");
+            }
+
+            int importId = event.getMonitor().getId();
+
+            logger.debug("Recording in progress event for importId={}", importId);
+
+            jobStatusMap.put(importId, JobStatus.IN_PROGRESS);
+         } catch (Exception e) {
+            throw new RuntimeException("Error saving event={}" + event.toString(), e);
+        }
+    }
+
+    /**
+     * Records statuses and exceptions
+     * Operates on jobStatusMap and exceptionMap
+     */
+    @SuppressWarnings("unused")
     @Subscribe
     public void recordEvent(JobExceptionEvent event) {
         try {
@@ -87,6 +114,11 @@ public class ProgressEventChangeRecorder implements Serializable {
         return progress;
     }
 
+    public boolean jobInMap(int jobId){
+        return progressMap.get(jobId) != null;
+    }
+
+    //Note: jobId is importId not montiorId
     public String getJobStatus(int jobId) {
         if (jobStatusMap.get(jobId) == null) {
             return "N/A";
@@ -113,7 +145,7 @@ public class ProgressEventChangeRecorder implements Serializable {
     }
 
     enum JobStatus {
-        COMPLETE, HANGING, EXCEPTION;
+        COMPLETE, HANGING, EXCEPTION, IN_PROGRESS;
 
         String name;
 

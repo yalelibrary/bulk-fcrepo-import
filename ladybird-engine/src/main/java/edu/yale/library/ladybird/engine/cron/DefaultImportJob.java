@@ -59,8 +59,12 @@ public class DefaultImportJob implements Job, ImportJob {
             final int projectId = importRequestedEvent.getMonitor().getCurrentProject().getProjectId();
 
             final ImportEngine importEngine = new DefaultImportEngine(userId, projectId);
-
             final DefaultFieldDataValidator fieldDataValidator = new DefaultFieldDataValidator();
+
+            //Post init
+            logger.debug("Posting progress event");
+            ExportBus.postEvent(importRequestedEvent);
+
             final List<ImportEntity.Row> rowList = importEngine.read(spreadsheetFile, ReadMode.FULL, fieldDataValidator);
 
             logger.debug("Read rows. list size={}", rowList.size());

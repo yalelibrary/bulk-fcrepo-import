@@ -32,8 +32,6 @@ public class ImportProgressView extends AbstractView implements Serializable {
 
     private int count = 0;
 
-    private String status = "";
-
     @PostConstruct
     public void init() {
         initFields();
@@ -42,6 +40,10 @@ public class ImportProgressView extends AbstractView implements Serializable {
 
     public int count(int jobId) {
         return progressEventChangeRecorder.getSteps(jobId);
+    }
+
+    public boolean jobInMap(int jobId) {
+        return progressEventChangeRecorder.jobInMap(jobId);
     }
 
     public void progress(int jobId) {
@@ -57,6 +59,16 @@ public class ImportProgressView extends AbstractView implements Serializable {
         try {
             final int importId = convertToJobId(monitorId);
             return importId == -1 ? "" : progressEventChangeRecorder.getJobStatus(importId);
+        } catch (Exception e) {
+            logger.error("Error finding status for monitorId={} Problem ={}", monitorId, e);
+            return "ERR";
+        }
+    }
+
+    //TODO change SQL lookup since it might be polled frequently
+    public String statusInProgress(final int monitorId) {
+        try {
+            return progressEventChangeRecorder.getJobStatus(monitorId);
         } catch (Exception e) {
             logger.error("Error finding status for monitorId={} Problem ={}", monitorId, e);
             return "ERR";
