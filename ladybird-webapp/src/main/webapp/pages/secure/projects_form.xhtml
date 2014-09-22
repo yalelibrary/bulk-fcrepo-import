@@ -34,7 +34,7 @@
 
                             <div class="col-sm-10">
                                 <!-- don't change input id -->
-                                <p:inputText id="projectLabelInput" value="#{ProjectView.item.label}">
+                                <p:inputText id="projectLabelInput" value="#{ProjectView.item.label}" required="true" requiredMessage="Must enter project label">
                                     <f:validator validatorId="edu.yale.library.ladybird.web.view.ProjectFormValidator"/>
                                 </p:inputText>
                                 <h:message for="projectLabelInput" style="color:red"/>

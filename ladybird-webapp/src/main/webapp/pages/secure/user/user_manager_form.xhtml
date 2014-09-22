@@ -22,7 +22,7 @@
                             <label class="col-sm-2 control-label">Username</label>
 
                             <div class="col-sm-10">
-                                <h:inputText id="username" name="username" value="#{userView.item.username}">
+                                <h:inputText id="username" name="username" value="#{userView.item.username}" required="true" requiredMessage="Must enter a username">
                                     <f:validator
                                             validatorId="edu.yale.library.ladybird.web.view.user.UserManagerFormValidator"/>
                                 </h:inputText>
@@ -34,7 +34,7 @@
                             <label class="col-sm-2 control-label">Name</label>
 
                             <div class="col-sm-10">
-                                <h:inputText id="name" name="name" value="#{userView.item.name}"/>
+                                <h:inputText id="name" name="name" value="#{userView.item.name}" required="true" requiredMessage="Must enter a name"/>
                             </div>
                         </div>
 
@@ -42,7 +42,7 @@
                             <label class="col-sm-2 control-label">E-mail</label>
 
                             <div class="col-sm-10">
-                                <h:inputText id="email" name="email" value="#{userView.item.email}">
+                                <h:inputText id="email" name="email" value="#{userView.item.email}" required="true" requiredMessage="Must enter an email address">
                                     <f:validator  validatorId="edu.yale.library.ladybird.web.view.user.UserManagerFormValidator"/>
                                     <o:validator validatorId="javax.faces.RegularExpression" pattern="^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$" message="Invalid e-mail" />
                                 </h:inputText>
