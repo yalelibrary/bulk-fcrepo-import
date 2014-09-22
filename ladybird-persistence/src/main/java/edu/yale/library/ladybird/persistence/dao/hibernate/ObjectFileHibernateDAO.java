@@ -28,7 +28,7 @@ public class ObjectFileHibernateDAO extends GenericHibernateDAO<ObjectFile, Inte
             final List<ObjectFile> list = q.list();
 
             if (list.isEmpty()) {
-                logger.error("Empty list for oid={}", oid);
+                logger.trace("Empty list for oid={}", oid);
             }
             return list.isEmpty() ? null : list.get(0);
         } finally {
@@ -60,7 +60,7 @@ public class ObjectFileHibernateDAO extends GenericHibernateDAO<ObjectFile, Inte
             for (final Object o : list) {
                 final ObjectFile objectFile = findByOid(o.getOid());
                 if (objectFile == null) {
-                    logger.debug("No object file for oid={}", o.getOid());
+                    logger.trace("No object file for oid={}", o.getOid());
                     continue;
                 }
                 objFileList.add(findByOid(o.getOid()));
@@ -96,7 +96,7 @@ public class ObjectFileHibernateDAO extends GenericHibernateDAO<ObjectFile, Inte
             for (final Object o : list) {
                 final ObjectFile objectFile = findByOid(o.getOid(), s);
                 if (objectFile == null) {
-                    logger.debug("No object file for oid={}", o.getOid());
+                    logger.trace("No object file for oid={}", o.getOid());
                     continue;
                 }
                 objFileList.add(findByOid(o.getOid()));
@@ -118,7 +118,7 @@ public class ObjectFileHibernateDAO extends GenericHibernateDAO<ObjectFile, Inte
             final List<ObjectFile> list = q.list();
 
             if (list.isEmpty()) {
-                logger.error("Empty list for oid={}", oid);
+                logger.trace("Empty list for oid={}", oid);
             }
             return list.isEmpty() ? null : list.get(0);
         } catch (HibernateException e) {

@@ -2,9 +2,9 @@ package edu.yale.library.ladybird.engine.imports;
 
 import edu.yale.library.ladybird.engine.imports.ImportEntity.Column;
 import edu.yale.library.ladybird.engine.imports.ImportEntity.Row;
-import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.engine.model.FieldOccurrence;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
+import edu.yale.library.ladybird.entity.FieldConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,12 +12,16 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 /**
  * ImportEntityValue represents values and provides helper methods.
+ *
+ * TODO clone
  */
 public class ImportEntityValue {
 
@@ -35,8 +39,10 @@ public class ImportEntityValue {
         return rowList;
     }
 
+    @Deprecated
     public void setRowList(final List<Row> rowList) {
-        this.rowList = rowList;
+        //this.rowList = rowList;
+        throw new UnsupportedOperationException("Does not support setting value");
     }
 
     public static Column<String> getBlankColumn(FieldConstant f) {
@@ -46,12 +52,13 @@ public class ImportEntityValue {
 
     /**
      * Get all specific column values.
+     *
      * @param columnNum column number
      * @return
      */
     public List<Column> getColumnValues(final short columnNum) {
         List<Column> columns = new ArrayList<>();
-        for (ImportEntity.Row r: rowList) {
+        for (ImportEntity.Row r : rowList) {
             Column c = r.getColumns().get(columnNum);
             columns.add(c);
         }
@@ -60,13 +67,14 @@ public class ImportEntityValue {
 
     /**
      * Get all column values for a specific column. Assumes only one occurrence.
+     *
      * @param fieldConstant
      * @return
      */
     public List<Column> getColumnValues(final FieldConstant fieldConstant) {
         List<Column> columns = new ArrayList<>();
-        for (ImportEntity.Row r: getContentRows()) {
-            for (Column c: r.getColumns()) {
+        for (ImportEntity.Row r : getContentRows()) {
+            for (Column c : r.getColumns()) {
                 if (c.getField().getName().equals(fieldConstant.getName())) {
                     columns.add(c);
                 }
@@ -77,13 +85,14 @@ public class ImportEntityValue {
 
     /**
      * Get all indexed column values for a specific FieldConstant. Assumes only one occurrence.
+     *
      * @param fieldConstant
      * @return
      */
     public Map<Integer, Column> getColumnValuesWithIds(final FieldConstant fieldConstant) {
         Map<Integer, Column> rowIdMap = new HashMap<>();
         for (int i = 0; i < rowList.size(); i++) {
-            for (Column c: rowList.get(i).getColumns()) {
+            for (Column c : rowList.get(i).getColumns()) {
                 if (c.getField().getName().equals(fieldConstant.getName())) {
                     rowIdMap.put(i, c);
                 }
@@ -94,15 +103,16 @@ public class ImportEntityValue {
 
     /**
      * Get all indexed by oids column values for a specific FieldConstant. Assumes only one occurrence.
+     *
      * @param fieldConstant
      * @return Map<Column c1, Colun c2> where c1 = oid column, c2 = field column
      */
-    public Map<Column,  Column> getColumnValuesWithOIds(final FieldConstant fieldConstant) {
+    public Map<Column, Column> getColumnValuesWithOIds(final FieldConstant fieldConstant) {
         Map<Column, Column> rowIdMap = new HashMap<>();
         int order = getFunctionPosition(FunctionConstants.F1);
         for (int i = 0; i < rowList.size(); i++) {
             Column o = rowList.get(i).getColumns().get(order);
-            for (Column c: rowList.get(i).getColumns()) {
+            for (Column c : rowList.get(i).getColumns()) {
                 if (c.getField().getName().equals(fieldConstant.getName())) {
                     rowIdMap.put(o, c);
                 }
@@ -113,6 +123,7 @@ public class ImportEntityValue {
 
     /**
      * Get all (Except Exhead) indexed by oids column values for a specific FieldConstant. Assumes only one occurrence.
+     *
      * @param fieldConstant
      * @return Map<Column c1, Colun c2> where c1 = oid column, c2 = field column
      */
@@ -121,7 +132,7 @@ public class ImportEntityValue {
         int order = getFunctionPosition(FunctionConstants.F1);
         for (int i = 1; i < rowList.size(); i++) {
             Column o = rowList.get(i).getColumns().get(order);
-            for (Column c: rowList.get(i).getColumns()) {
+            for (Column c : rowList.get(i).getColumns()) {
                 if (c.getField().getName().equals(fieldConstant.getName())) {
                     logger.trace("Found match={} with value={}", c.getField().getName(), fieldConstant.getName());
                     logger.trace("Values c1={} c2={}", o, c);
@@ -134,6 +145,7 @@ public class ImportEntityValue {
 
     /**
      * Get all columns in a row
+     *
      * @param rowNum
      * @return
      */
@@ -141,8 +153,9 @@ public class ImportEntityValue {
         return rowList.get(rowNum).getColumns();
     }
 
-     /**
+    /**
      * Get all FieldConstants represented. Assumes only one occurrence.
+     *
      * @return
      */
     public List<FieldConstant> getAllFieldConstants() {
@@ -154,20 +167,43 @@ public class ImportEntityValue {
         final Row exHeadRow = rowList.get(HEADER_ROW);
         final List<FieldConstant> fieldConstantsList = new ArrayList<>();
 
-        for (final Column c: exHeadRow.getColumns()) {
+        for (final Column c : exHeadRow.getColumns()) {
             fieldConstantsList.add(c.getField());
         }
         return fieldConstantsList;
     }
 
     /**
+     * Get all FieldConstants represented. Assumes only one occurrence.
+     *
+     * @return All Functions (e.g. F1, F3) in the header row
+     */
+    @SuppressWarnings("unchecked")
+    public Set<FieldConstant> getAllFunctions() {
+        if (rowList.isEmpty()) {
+            return Collections.emptySet();
+        }
+
+        final Row exheadRow = rowList.get(HEADER_ROW);
+        final Set<FieldConstant> set = new HashSet<>();
+
+        for (final Column c : exheadRow.getColumns()) {
+            if (FunctionConstants.isFunction(c.getField().getName())) {
+                set.add(c.getField());
+            }
+        }
+        return set;
+    }
+
+    /**
      * Determines if a FieldConstant exits in the Exhead row
+     *
      * @param f
      * @return
      */
     public boolean fieldConstantsInExhead(final FieldConstant f) {
         final List<Column> columnList = rowList.get(HEADER_ROW).getColumns();
-        for (final Column c: columnList) {
+        for (final Column c : columnList) {
             if (c.getField().equals(f)) {
                 return true;
             }
@@ -177,13 +213,14 @@ public class ImportEntityValue {
 
     /**
      * Get FieldConstant count
+     *
      * @param f
      * @return
      */
     public FieldOccurrence getFieldConstantsCount(final FieldConstant f) {
         short count = 0;
         final List<Column> columnList = rowList.get(HEADER_ROW).getColumns();
-        for (Column c: columnList) {
+        for (Column c : columnList) {
             if (c.getField().equals(f)) {
                 count++;
             }
@@ -199,6 +236,7 @@ public class ImportEntityValue {
 
     /**
      * Get Exhead row
+     *
      * @return
      */
     public ImportEntity.Row getHeaderRow() {
@@ -214,6 +252,7 @@ public class ImportEntityValue {
 
     /**
      * Get all rows except the exhead row
+     *
      * @return
      */
     public List<ImportEntity.Row> getContentRows() {
@@ -228,8 +267,9 @@ public class ImportEntityValue {
         return list;
     }
 
-     /**
+    /**
      * Get (1st) column number of Function
+     *
      * @param f
      * @return
      */
@@ -245,6 +285,7 @@ public class ImportEntityValue {
 
     /**
      * Get value for FieldConstant in a particular Row
+     *
      * @param f FieldConstnat
      * @return string value of field constant for a particular row
      */
@@ -264,6 +305,30 @@ public class ImportEntityValue {
         return getContentRows().get(rowNum).getColumns().get(colPosition).getValue().toString();
     }
 
+    /**
+     * Get value for FieldConstant in a particular Row
+     *
+     * @param f FieldConstnat
+     * @return string value of field constant for a particular row
+     */
+    public Column<String> getRowFieldColumn(final FieldConstant f, int rowNum) {
+        List<Column> columnsList = getContentRows().get(rowNum).getColumns();
+        int colPosition = -1;
+        for (int i = 0; i < columnsList.size(); i++) {
+            if (columnsList.get(i).getField().getName().equals(f.getName())) {
+                colPosition = i;
+            }
+        }
+
+        if (colPosition == -1 || rowNum < 0) {
+            throw new NoSuchElementException(f.getName());
+        }
+
+        return getContentRows().get(rowNum).getColumns().get(colPosition);
+    }
+
+
+
     public List<String> getColumnStrings(FunctionConstants functionConstants) {
         final List<ImportEntity.Column> bibIdColumn = getColumnValues(functionConstants);
         final List<String> values = new ArrayList<>();
@@ -281,12 +346,13 @@ public class ImportEntityValue {
 
     /**
      * Find value from row
-     * @param f FieldConstant
+     *
+     * @param f      FieldConstant
      * @param column row with columns
      * @return first value or empty string
      */
     public static String findColValueFromRow(final FieldConstant f, final List<Column> column) {
-        for (final Column<String> col: column) {
+        for (final Column<String> col : column) {
 
             if (col.getField() == null) {
                 logger.warn("Returning empty string for null col field={}", col);
@@ -313,6 +379,32 @@ public class ImportEntityValue {
 
     public static ImportEntity.Column newColumn(FunctionConstants f, String value) {
         return new ImportEntity().new Column<>(f, value);
+    }
+
+
+    public ImportEntityValue write(final ImportEntityValue importEntityValue, final FunctionConstants func, final String defaultValue) {
+        final List<ImportEntity.Column> exheadList = importEntityValue.getHeaderRow().getColumns();
+
+        logger.debug("Existing exhead cols size={}", exheadList.size());
+
+        final ImportEntity.Column<String> column = newColumn(func, "");
+
+        exheadList.add(column);
+        importEntityValue.setHeaderRow(exheadList);
+
+        logger.debug("New exhead cols size={}", exheadList.size());
+
+        final List<ImportEntity.Row> rowList = importEntityValue.getContentRows();
+
+        for (ImportEntity.Row row : rowList) {
+            //row.getColumns().add(new ImportEntity().new Column<>(FunctionConstants.F1, defaultValue)); //too verbose
+            logger.debug("Ex size={}", row.getColumns().size());
+            row.getColumns().add(newColumn(func, defaultValue));
+            logger.debug("New size={}", row.getColumns().size());
+        }
+
+        importEntityValue.setContentRows(rowList);
+        return importEntityValue;
     }
 
 

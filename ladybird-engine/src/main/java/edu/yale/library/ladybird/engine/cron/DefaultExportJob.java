@@ -180,10 +180,10 @@ public class DefaultExportJob implements Job, ExportJob {
         final Settings settings = settingsDAO.findByProperty(ApplicationProperties.IMPORT_ROOT_PATH_ID);
 
         if (settings == null) {
-            logger.debug("No db configured property={}", ApplicationProperties.IMPORT_ROOT_PATH_ID);
+            logger.trace("No db configured property={}", ApplicationProperties.IMPORT_ROOT_PATH_ID);
             return ApplicationProperties.CONFIG_STATE.IMPORT_ROOT_PATH + File.separator + relativePath;
         } else {
-            logger.debug("Full path as={}", settings.getValue() + File.separator + relativePath);
+            logger.trace("Full path as={}", settings.getValue() + File.separator + relativePath);
             return settings.getValue() + File.separator + relativePath;
         }
     }

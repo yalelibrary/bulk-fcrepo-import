@@ -32,6 +32,8 @@ public class ObjectFileDataModel extends LazyDataModel<ObjectFile> {
             int dataSize = dao.count();
             this.setRowCount(dataSize);
 
+            //logger.trace("Total num. of objects is={}", dao.count());
+
             if (dataSize > pageSize) {
                 return dao.findByProjectMax(currentProjectId, first, first + pageSize);
             } else {

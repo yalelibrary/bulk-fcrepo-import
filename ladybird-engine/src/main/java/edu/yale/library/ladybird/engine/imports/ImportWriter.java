@@ -1,10 +1,10 @@
 package edu.yale.library.ladybird.engine.imports;
 
 
-import com.google.common.base.Preconditions;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.engine.oai.ImportSourceProcessor;
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
+import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.entity.ImportJobBuilder;
 import edu.yale.library.ladybird.entity.ImportJobContents;
 import edu.yale.library.ladybird.entity.ImportJobContentsBuilder;
@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
@@ -42,25 +43,30 @@ public class ImportWriter {
      * Full cycle import writing
      *
      * @param importEntityValue Abstraction on top of List<ImportEntity.Row>
-     * @param importJobRequest Job Context
+     * @param importJobRequest  Job Context
      * @return Import Id
      */
-    public int write(ImportEntityValue importEntityValue, final ImportJobRequest importJobRequest) throws Exception {
+    public synchronized int write(ImportEntityValue importEntityValue, final ImportJobRequest importJobRequest) throws Exception {
         try {
             final int importId = writeImportJob(importJobRequest);
+
+            //save which functions exist
+            Set<FieldConstant> fieldConstants = importEntityValue.getAllFunctions();
+
             //note 2 columns are added:
             importEntityValue = writeF1(importEntityValue, importJobRequest.getProjectId());
             importEntityValue = processFdid111(importEntityValue);
+
             writeExHead(importId, importEntityValue.getHeaderRow().getColumns());
-            writeContents(importId, importEntityValue);
+            writeContents(importId, importEntityValue, fieldConstants);
             return importId;
         } catch (Exception e) {
-            logger.error("Error writing.");
+            logger.error("Error in import writer for request id={}", importJobRequest.getRequestId());
             throw e;
         }
     }
 
-    private ImportEntityValue writeF1(ImportEntityValue importEntityValue, int projectId) {
+    private synchronized ImportEntityValue writeF1(final ImportEntityValue importEntityValue, final int projectId) {
         //Process F1
         if (!importEntityValue.fieldConstantsInExhead(FunctionConstants.F1)) {
             return processF1(importEntityValue, projectId);
@@ -72,9 +78,9 @@ public class ImportWriter {
      * Write header ("ex head")
      *
      * @param importId import id of the job
-     * @param list list of contents
+     * @param list     list of contents
      */
-    public void writeExHead(final int importId, final List<ImportEntity.Column> list) {
+    public synchronized void writeExHead(final int importId, final List<ImportEntity.Column> list) {
         logger.trace("Writing spreadsheet headers. Columns list size={}", list.size());
 
         final ImportJobExheadDAO dao = new ImportJobExheadHibernateDAO();
@@ -92,73 +98,56 @@ public class ImportWriter {
     /**
      * Writes body rows to import_job_contents
      *
-     * @param importId import id of the job
-     * @param importEntityValue helper data structure representing list<rows>
+     * @param importId          import id of the job
+     * @param importEntity helper data structure representing list<rows>
      */
     @SuppressWarnings("unchecked")
-    public synchronized void writeContents(final int importId, final ImportEntityValue importEntityValue) throws Exception {
+    public synchronized void writeContents(final int importId, ImportEntityValue importEntity,
+                                           Set<FieldConstant> sheetFieldConstants) throws Exception {
         try {
             logger.debug("Writing import job contents for importId={}", importId);
+            logger.info("Sheet contains FieldConstants={}", sheetFieldConstants.toString());
 
             checkImportIdPreConditions(importId);
 
             //Write import source data
-            importSourceProcessor.process(importId, oaiProvider, importEntityValue);
+            importSourceProcessor.process(importId, oaiProvider, importEntity);
 
-            final List<ImportEntity.Row> rowList = importEntityValue.getContentRows();
-            logger.trace("Writing spreadsheet body contents. Row list size={}", rowList.size());
+            //final List<ImportEntity.Row> rowList = importEntity.getContentRows();
 
-            //Process F3 without F1 (to keep tests working)
-            if (importEntityValue.fieldConstantsInExhead(FunctionConstants.F3)
-                    && !importEntityValue.fieldConstantsInExhead(FunctionConstants.F1)) {
-                final int f3ColumnNum = importEntityValue.getFunctionPosition(FunctionConstants.F3);
-                mediaFunctionProcessor.process(rowList, f3ColumnNum);
-                logger.debug("Done media processing.");
+            if (sheetFieldConstants.contains(FunctionConstants.F1)) {
+               if (sheetFieldConstants.contains(FunctionConstants.F3)) { //F1 is present -> update oid with attached F3
+                   logger.info("Spreadsheet has col F1, and F3");
+                   mediaFunctionProcessor.process(importId, importEntity);
+               } else { //F1 is present, but no F3. Nothing to do.
+                   logger.info("No F3 column found in spreadsheet. Nothing to do.");
+               }
+            } else {
+                if (sheetFieldConstants.contains(FunctionConstants.F3)) { //no F1 -> genearte oid and attach F3
+                    logger.info("Spreadsheet doesn't have F1, but F3");
+                    mediaFunctionProcessor.process(importId, importEntity);
+                } else { //Neither F1, nor F3 present -> generate blank
+                    logger.info("Spreadsheet doesn't have F1, nor F3");
+                    importEntity = addF3Column(importEntity);
+                    mediaFunctionProcessor.process(importId, importEntity);
+                }
             }
-
-            //Process F3
-            if (importEntityValue.hasFunction(FunctionConstants.F3, FunctionConstants.F1)) {
-                final int f3ColumnNum = importEntityValue.getFunctionPosition(FunctionConstants.F3);
-                final int f1columnNum = importEntityValue.getFunctionPosition(FunctionConstants.F1);
-                mediaFunctionProcessor.process(importId, rowList, f3ColumnNum, f1columnNum);
-                logger.debug("Done media processing.");
-            }
-
-            /*
-            //Process F300
-            if (importEntityValue.hasFunction(FunctionConstants.F300, FunctionConstants.F1))  {
-                processImageReference(importEntityValue);
-            }
-
-            //Process F40 (hydra publishing staging)
-            if (importEntityValue.hasFunction(FunctionConstants.F40, FunctionConstants.F1)) {
-                publishHydra(importEntityValue);
-            }
-
-            //Process F11
-            if (importEntityValue.hasFunction(FunctionConstants.F11, FunctionConstants.F1)) {
-                publishHydraPointer(importEntityValue);
-            }
-
-            //Process F00
-            if (importEntityValue.hasFunction(FunctionConstants.F00)) {
-                processDelete(importEntityValue);
-            }
-            */
 
             //Process F4,F6 (check step requirement)
-            if (processF4F6(importEntityValue)) {
+            if (processF4F6(importEntity)) {
                 logger.debug("Processing F4, F6");
-                processComplex(importEntityValue);
+                processComplex(importEntity);
             }
 
-            if (processF5F6(importEntityValue)) {
-                processComplexF5(importEntityValue);
+            if (processF5F6(importEntity)) {
+                processComplexF5(importEntity);
             }
 
-            if (processF7F8(importEntityValue)) {
-                processComplexF7(importEntityValue);
+            if (processF7F8(importEntity)) {
+                processComplexF7(importEntity);
             }
+
+            final List<ImportEntity.Row> rowList = importEntity.getContentRows();
 
             final ImportJobContentsBuilder imjBuilder = new ImportJobContentsBuilder();
 
@@ -176,8 +165,7 @@ public class ImportWriter {
                 }
             }
 
-            //get written count
-            logger.debug("Wrote rows={} for importId={}", dao.findByImportId(importId).size(), importId); //TODO dao count method
+            //logger.info("Wrote to import job contents num. rows={} for importId={}", dao.findByImportId(importId).size(), importId); //TODO dao count method
             checkImportIdPostConditions(importId);
         } catch (Exception e) {
             logger.error("Error writing import job contents.");
@@ -185,8 +173,8 @@ public class ImportWriter {
         }
     }
 
-    private void checkImportIdPreConditions(final int importId){
-        checkArgument(importId > -1);
+    private void checkImportIdPreConditions(final int importId) {
+        checkArgument(importId > -1, "Import Id must be positive");
         checkArgument(dao.findByImportId(importId).size() == 0);  //TODO dao count method
     }
 
@@ -194,17 +182,25 @@ public class ImportWriter {
         checkState(dao.findByImportId(importId).size() > 0, "Expected number of rows written must not be 0");
     }
 
-    /**
+    private ImportEntityValue addF3Column(final ImportEntityValue importEntityValue) {
+        //checkExheadAndContentColsMatch(importEntityValue); //sanity check
+        //or whatever dummy tif. It won't be found anyways. Should proably pass a stream.
+        // Depends on major refactoring of media function processor.
+        return importEntityValue.write(importEntityValue, FunctionConstants.F3, "test8787.tif");
+    }
+
+     /**
      * Writes to import job table
      *
-     * @param ctx Context containing information about the job
+     * @param importJobRequest Context containing information about the job
      * @return minted job id
      */
-    public Integer writeImportJob(final ImportJobRequest ctx) {
-        logger.debug("Saving import job={}", ctx.toString());
+    public Integer writeImportJob(final ImportJobRequest importJobRequest) {
+        logger.info("Saving import job={}", importJobRequest.toString());
 
-        return importJobDAO.save(new ImportJobBuilder().setDate(JOB_EXEC_DATE).setJobDirectory(ctx.getJobDir()).
-                setJobFile(ctx.getJobFile()).setUserId(ctx.getUserId()).setRequestId(ctx.getRequestId()).createImportJob());
+        return importJobDAO.save(new ImportJobBuilder().setDate(JOB_EXEC_DATE).setJobDirectory(importJobRequest.getJobDir()).
+                setJobFile(importJobRequest.getJobFile()).setUserId(importJobRequest.getUserId())
+                .setRequestId(importJobRequest.getRequestId()).createImportJob());
     }
 
     /**
@@ -225,26 +221,6 @@ public class ImportWriter {
 
     public void setImportSourceProcessor(ImportSourceProcessor importSourceProcessor) {
         this.importSourceProcessor = importSourceProcessor;
-    }
-
-    public void publishHydra(ImportEntityValue importEntityValue) {
-        HydraProcessor hydraProcessor = new HydraProcessor();
-        hydraProcessor.write(importEntityValue);
-    }
-
-    public void publishHydraPointer(ImportEntityValue importEntityValue) {
-        HydraPointerProcessor hydraPointerProcessor = new HydraPointerProcessor();
-        hydraPointerProcessor.write(importEntityValue);
-    }
-
-    public void processDelete(ImportEntityValue importEntityValue) {
-        DeleteProcessor deleteProcessor = new DeleteProcessor();
-        deleteProcessor.process(importEntityValue);
-    }
-
-    public void processImageReference(ImportEntityValue importEntityValue) {
-        ImageReferenceProcessor imageReferenceProcessor = new ImageReferenceProcessor();
-        imageReferenceProcessor.write(importEntityValue);
     }
 
     private ImportEntityValue processF1(ImportEntityValue importEntityValue, int projectId) {
@@ -289,4 +265,5 @@ public class ImportWriter {
                 && importEntityValue.hasFunction(FunctionConstants.F7)
                 && importEntityValue.hasFunction(FunctionConstants.F8);
     }
+
 }

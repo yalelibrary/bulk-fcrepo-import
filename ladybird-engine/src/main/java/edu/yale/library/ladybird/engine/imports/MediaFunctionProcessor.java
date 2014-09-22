@@ -3,6 +3,7 @@ package edu.yale.library.ladybird.engine.imports;
 import edu.yale.library.ladybird.engine.file.ImageMagickProcessor;
 import edu.yale.library.ladybird.engine.imports.ImportEntity.Column;
 import edu.yale.library.ladybird.engine.imports.ImportEntity.Row;
+import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.ImportFile;
 import edu.yale.library.ladybird.entity.ImportFileBuilder;
 import edu.yale.library.ladybird.entity.ObjectFile;
@@ -19,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkState;
 
 public class MediaFunctionProcessor {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -53,38 +56,47 @@ public class MediaFunctionProcessor {
 
     /**
      * Process images and writes to import file and object file
-     * @param rowList      import entity row
-     * @param MEDIA_COLUMN column specifiying image processing column (f3)
-     * @param OID_COLUMN   column with oid (f1)     *
+     * @param importEntityValue import EntityValue
      * @throws IOException if any single conversion fails
      */
     @SuppressWarnings("unchecked")
-    public void process(final int importId, final List<ImportEntity.Row> rowList, final int MEDIA_COLUMN, final int OID_COLUMN) throws IOException {
-        logger.trace("Processing with F1 col num={}, F3 col num={}, list size={}", OID_COLUMN, MEDIA_COLUMN, rowList.size());
+    public void process(final int importId, final ImportEntityValue importEntityValue) throws IOException {
+//        logger.trace("Processing with F1 col num={}, F3 col num={}, list size={}", OID_COLUMN, MEDIA_COLUMN, rowList.size());
 
         final int userId = 1; //TODO check this
 
-        for (Row row : rowList) {
-            final List<ImportEntity.Column> columnsList = row.getColumns();
-            final Column<String> col = columnsList.get(MEDIA_COLUMN);
+        List<Row> rowList = importEntityValue.getContentRows();
+
+        for (int i = 0 ; i < rowList.size(); i++) {
+            //final List<ImportEntity.Column> columnsList = rowList.get(i).getColumns();
+
+            final Column<String> f3 = importEntityValue.getRowFieldColumn(FunctionConstants.F3, i);
+            checkState(f3.getField().getName().equals(FunctionConstants.F3.getName()), "Found wrong F3 col");
+
+            final String f3Col = f3.getValue();
+
+
+            final Column<String> f1 = importEntityValue.getRowFieldColumn(FunctionConstants.F1, i);
+            checkState(f1.getField().getName().equals(FunctionConstants.F1.getName()), "Found wrong F1 col");
+
+            final String oidCol = f1.getValue();
+
+            final Integer oid = Integer.parseInt(oidCol);
 
             try {
                 //1. Update import file
-                final Column<String> o = columnsList.get(OID_COLUMN);
-                final Integer oid = Integer.parseInt(o.getValue());
+                logger.debug("Eval file={}", f3Col);
 
-                logger.debug("Eval file={}", col.getValue());
+                final File file = new File(getPath(f3Col));
 
-                final File file = new File(getPath(col.getValue()));
-
-                if (file.exists()) {
-                    ImportFile importFile = new ImportFileBuilder().setImportId(importId).setFileLocation(col.getValue())
-                            .setDate(new Date()).setOid(oid).createImportFile();
+                if (file.exists() && !file.isDirectory()) {
+                    ImportFile importFile = new ImportFileBuilder().setImportId(importId)
+                            .setFileLocation(f3Col).setDate(new Date()).setOid(oid).createImportFile();
 
                     importFileDAO.save(importFile);
 
                     //2. convert image and add a thumbnail
-                    convertImage(col.getValue(), MediaFormat.TIFF, MediaFormat.JPEG, oid, userId);
+                    convertImage(f3Col, MediaFormat.TIFF, MediaFormat.JPEG, oid, userId);
                 } else { //no image found. update dao with blank image found on project folder & skip image magick. no thumbnail.
                     ImportFile importFile = new ImportFileBuilder().setImportId(importId).setOid(oid)
                             .setFileLocation(getPath("no-image-found.jpg")).setDate(new Date()).createImportFile();
@@ -101,6 +113,7 @@ public class MediaFunctionProcessor {
 
     @Deprecated
     private void convertImage(final String fileName, final MediaFormat fromExt, final MediaFormat toExt) {
+        logger.error("Called deprecated method");
         try {
             final String inputFilePath = getPath(fileName);
             final String outputFilePath = asFormat(getOutPath(fileName), fromExt.toString(), toExt.toString());
