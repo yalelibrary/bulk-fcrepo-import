@@ -23,6 +23,7 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectStringHibernate
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,6 @@ public class ObjectWriter {
 
     //TODO inject
 
-    final ObjectDAO objectDAO = new ObjectHibernateDAO();
     final ObjectStringDAO objectStringDAO = new ObjectStringHibernateDAO();
     final ObjectAcidDAO objectAcidDAO = new ObjectAcidHibernateDAO();
     final AuthorityControlDAO authorityControlDAO = new AuthorityControlHibernateDAO();
@@ -56,7 +56,6 @@ public class ObjectWriter {
         try {
             List<ImportEntity.Row> importRows = importEntityContext.getImportJobList();
             ImportEntityValue importEntityValue = new ImportEntityValue(importRows);
-
             final int userId = getUserId(importEntityContext);
 
             logger.trace("Writing object metadata. Import Row size={}, UserId{}", importRows.size(), userId);
@@ -84,16 +83,14 @@ public class ObjectWriter {
                 logger.trace("Column map key set size={}", keys.size());
 
                 for (ImportEntity.Column c : keys) {
-
-                    String oid = (String) c.getValue();
+                    String oidStr = (String) c.getValue();
                     ImportEntity.Column fdidForOid = columnMap.get(c);
 
-                    logger.trace("Processing (key oid) Oid={}, Field Name={}, Field Value={}", oid,
-                            fdidForOid.getField().getName(), fdidForOid.getValue());
+                    //logger.debug("Processing (key oid) oid={}, field name={}, field value={}", oid,
+                            //fdidForOid.getField().getName(), fdidForOid.getValue());
 
                     //Save object metadata
                     final String value = (String) fdidForOid.getValue();
-
                     final int fdid = FieldDefinition.fdidAsInt(f.getName());
 
                     //Either an acid or a string:
@@ -120,30 +117,49 @@ public class ObjectWriter {
                             throw new Exception("Error with acid fdid multi value for fdid=" + fdid);
                         }
 
+                        //see if an objectacid already exists (this is used to replace the value when a spreadsheet update is done)
+                        ObjectAcid existingObjectAcid = objectAcidDAO.findByOidAndFdid(Integer.parseInt(oidStr), fdid);
+
+                        if (existingObjectAcid != null) {
+                            logger.trace("Warning: An object acid value already exists for oid={} fdid={}", oidStr, fdid);
+                            objectAcidDAO.delete(Collections.singletonList(existingObjectAcid));
+                            logger.trace("Deleted={}", existingObjectAcid);
+                        }
+
                         //1b. persist object acid
                         final ObjectAcid objAcid = new ObjectAcidBuilder().createObjectAcid();
                         objAcid.setFdid(fdid);
 
-                        if (oid != null) { //TODO
-                            objAcid.setObjectId(Integer.parseInt(oid));
+                        if (oidStr != null) { //TODO
+                            objAcid.setObjectId(Integer.parseInt(oidStr));
                         }
 
                         objAcid.setValue(acid); //TODO acid PK
                         objAcid.setUserId(userId);
                         objAcid.setDate(new Date());
                         objectAcidDAO.save(objAcid);
+                        logger.trace("Saved={}", objectAcidDAO);
                     } else {
+
+                        int oid = Integer.parseInt(oidStr);
+
+                        //see if an objectstring already exists (this is used to replace the value when a spreadsheet update is done)
+                        final ObjectString exObjectString = objectStringDAO.findByOidAndFdid(oid, fdid);
+
+                        if (exObjectString != null) {
+                            logger.trace("Warning: A string value already exists for oid={} fdid={}", oid, fdid);
+                            objectStringDAO.delete(Collections.singletonList(exObjectString));
+                            logger.trace("Deleted={}", exObjectString);
+                        }
+
                         final ObjectString objString = new ObjectStringBuilder().createObjectString();
                         objString.setFdid(fdid);
                         objString.setUserId(userId);
                         objString.setDate(new Date());
                         objString.setValue(value);
-
-                        if (oid != null) { //TODO
-                            objString.setOid(Integer.parseInt(oid));
-                        }
-
+                        objString.setOid(oid);
                         objectStringDAO.save(objString);
+                        logger.trace("Saved={}", objString);
                     }
                 }
             }
@@ -160,7 +176,6 @@ public class ObjectWriter {
     public SCHEMA getTableType(int fdid) {
         return FieldConstantUtil.isString(fdid) ? SCHEMA.OBJECT_STRING : SCHEMA.OBJECT_ACID;
     }
-
 
     private enum SCHEMA {
         OBJECT_STRING,
