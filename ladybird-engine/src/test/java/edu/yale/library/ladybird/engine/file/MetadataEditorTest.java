@@ -1,4 +1,4 @@
-package edu.yale.library.ladybird.engine.exports;
+package edu.yale.library.ladybird.engine.file;
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
 import edu.yale.library.ladybird.engine.ObjectTestsHelper;
@@ -12,7 +12,10 @@ import edu.yale.library.ladybird.entity.ObjectBuilder;
 import edu.yale.library.ladybird.entity.ObjectString;
 import edu.yale.library.ladybird.entity.ObjectStringVersion;
 import edu.yale.library.ladybird.persistence.dao.AuthorityControlDAO;
+import edu.yale.library.ladybird.persistence.dao.ObjectAcidDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectAcidVersionDAO;
+import edu.yale.library.ladybird.persistence.dao.ObjectDAO;
+import edu.yale.library.ladybird.persistence.dao.ObjectStringDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectStringVersionDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.AuthorityControlHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectAcidHibernateDAO;
@@ -45,7 +48,6 @@ public class MetadataEditorTest extends AbstractDBTest {
     final int acidFdid = 59;
     final int stringFdid = 70;
 
-    AuthorityControlDAO authDAO = new AuthorityControlHibernateDAO();
 
 
     /**
@@ -54,14 +56,21 @@ public class MetadataEditorTest extends AbstractDBTest {
      */
     @Test
     public void shouldUpdateMultipleMetadata() {
+        AuthorityControlDAO authDAO = new AuthorityControlHibernateDAO();
+        ObjectStringDAO osDAO = new ObjectStringHibernateDAO();
+        ObjectAcidDAO oaDAO = new ObjectAcidHibernateDAO();
+
+        assert (oaDAO.count() == 0);
+        assert (osDAO.count() == 0);
 
         MetadataEditor metadataEditor = new MetadataEditor();
-        int testOid = 1;
+        //int testOid = 1;
         int testUserId = 1;
         List<FieldDefinitionValue> fieldDefinitionValueList = getFdidValueList();
         assert (fieldDefinitionValueList.size() == 2);
 
         int oid = writeDummyObject(); // write object values
+        logger.debug("Created oid={}", oid);
 
         //Let us write 2 strings and 2 acids for 2 fdids:
         ObjectTestsHelper.writeDummyObjAcid(oid, acidFdid, "String Acid value");
@@ -72,21 +81,22 @@ public class MetadataEditorTest extends AbstractDBTest {
         assert (ObjectTestsHelper.fdidValue(oid, stringFdid).size() == 2);
         assert (ObjectTestsHelper.fdidAcidValueList(oid, acidFdid).size() == 2);
 
-        metadataEditor.updateOidMetadata(testOid, testUserId, fieldDefinitionValueList);
+        metadataEditor.updateOidMetadata(oid, testUserId, fieldDefinitionValueList);
 
         //read back metadata:
         //1. make sure only the same number of fields exist
-        assert (new ObjectStringHibernateDAO().findAll().size() == 2);
-        assert (new ObjectAcidHibernateDAO().findAll().size() == 2);
+
+        assert (osDAO.findAll().size() == 2);
+        assertEquals(oaDAO.findAll().size(), 2);
 
         //2. make sure object string edits were applied
         List<ObjectString> objectStrings = ObjectTestsHelper.fdidValue(oid, stringFdid);
-        assert (objectStrings.get(0).getValue().equalsIgnoreCase("New string value 1"));
-        assert (objectStrings.get(1).getValue().equalsIgnoreCase("New string value 2"));
+
+        assertEquals(objectStrings.get(0).getValue().toLowerCase(), "new string value 1");
+        assertEquals(objectStrings.get(1).getValue().toLowerCase(), "new string value 2");
 
         //3. make sure object acid edits were applied
         List<AuthorityControl> acList = ObjectTestsHelper.fdidAcidValueList(oid, acidFdid);
-        logger.debug(acList.toString());
 
         assert (acList.get(0).getValue().equalsIgnoreCase("WHATEVER 1"));
         assert (acList.get(1).getValue().equalsIgnoreCase("Whatever 2"));
@@ -104,7 +114,6 @@ public class MetadataEditorTest extends AbstractDBTest {
         List<ObjectAcidVersion> oavList = oavDAO.findListByOidAndFdidAndVersion(oid, acidFdid, 1);
         assert (oavList.size() == 2);
 
-        AuthorityControlDAO authDAO = new AuthorityControlHibernateDAO();
         int acid1 = oavList.get(0).getValue();
         assert (authDAO.findByAcid(acid1).getValue().equalsIgnoreCase("String Acid Value"));
 
@@ -112,6 +121,13 @@ public class MetadataEditorTest extends AbstractDBTest {
         assert (authDAO.findByAcid(acid2).getValue().equalsIgnoreCase("String Acid Value 2"));
 
         assert (authDAO.findAll().size() == 4);
+
+        //clean up:
+        authDAO.deleteAll();
+        osvDAO.deleteAll();
+        oavDAO.deleteAll();
+        oaDAO.deleteAll();
+        osDAO.deleteAll();
     }
 
     /**
@@ -120,8 +136,12 @@ public class MetadataEditorTest extends AbstractDBTest {
      */
     @Test
     public void shouldUpdateMultipleDropdownMetadata() {
+
+        AuthorityControlDAO authDAO = new AuthorityControlHibernateDAO();
+        ObjectAcidDAO oaDAO = new ObjectAcidHibernateDAO();
+
         MetadataEditor metadataEditor = new MetadataEditor();
-        int testOid = 1;
+        //int testOid = 1;
         int testUserId = 1;
         List<FieldDefinitionValue> fieldDefinitionValueList = getDropDownFdidValueList();
         assertEquals(fieldDefinitionValueList.size(), 1);
@@ -138,20 +158,20 @@ public class MetadataEditorTest extends AbstractDBTest {
 
         assert (ObjectTestsHelper.fdidAcidValueList(oid, acidFdid).size() == 2);
 
-        metadataEditor.updateOidMetadata(testOid, testUserId, fieldDefinitionValueList);
+        metadataEditor.updateOidMetadata(oid, testUserId, fieldDefinitionValueList);
 
         //read back metadata:
         //1. make sure only the same number of fields exist
-        assert (new ObjectAcidHibernateDAO().findAll().size() == 2);
+        assert (oaDAO.findAll().size() == 2);
 
         //3. make sure object acid edits were applied
         List<AuthorityControl> acList = ObjectTestsHelper.fdidAcidValueList(oid, acidFdid);
-        logger.debug(acList.toString());
 
         assert (acList.get(0).getValue().equalsIgnoreCase("WHATEVER 1"));
         assert (acList.get(1).getValue().equalsIgnoreCase("Whatever 2"));
 
         assertEquals(authDAO.findAll().size(), 4);
+
     }
 
     private int writeDummyObject() {
@@ -198,7 +218,20 @@ public class MetadataEditorTest extends AbstractDBTest {
 
     @After
     public void stop() throws SQLException {
-        super.stop();
+
+        AuthorityControlDAO authDAO = new AuthorityControlHibernateDAO();
+        ObjectAcidDAO oaDAO = new ObjectAcidHibernateDAO();
+        ObjectStringDAO osDAO = new ObjectStringHibernateDAO();
+        ObjectStringVersionDAO osvDAO = new ObjectStringVersionHibernateDAO();
+        ObjectAcidVersionDAO oavDAO = new ObjectAcidVersionHibernateDAO();
+        ObjectDAO objectDAO = new ObjectHibernateDAO();
+
+        authDAO.deleteAll();
+        osvDAO.deleteAll();
+        oavDAO.deleteAll();
+        oaDAO.deleteAll();
+        osDAO.deleteAll();
+        objectDAO.deleteAll();
     }
 
 }

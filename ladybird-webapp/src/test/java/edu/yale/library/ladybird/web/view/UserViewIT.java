@@ -16,7 +16,7 @@ import java.util.List;
 public class UserViewIT extends HtmlUnitFacesTestCase {
 
     private static final String FORM = "UserForm";
-    private static final String PATH = "/pages/secure/user_manager_form.xhtml";
+    private static final String PATH = "/pages/secure/user/user_manager_form.xhtml";
 
     public UserViewIT(String name) {
         super(name);

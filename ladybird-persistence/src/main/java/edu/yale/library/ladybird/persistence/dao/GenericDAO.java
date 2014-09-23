@@ -22,4 +22,6 @@ public interface GenericDAO<T, ID extends Serializable> {
     int count();
 
     void delete(List<T> entities);
+
+    void deleteAll();
 }

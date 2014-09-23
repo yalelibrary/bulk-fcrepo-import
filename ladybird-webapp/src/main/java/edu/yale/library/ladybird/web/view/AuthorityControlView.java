@@ -20,7 +20,6 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.ListIterator;
 
 import static org.slf4j.LoggerFactory.getLogger;
 

@@ -44,8 +44,8 @@ public class DefaultImportReaderTest extends AbstractDBTest {
     }
 
     @After
-    public void stopDB() throws SQLException {
-        super.stop();
+    public void stop() throws SQLException {
+       // super.stop();
     }
 
 }

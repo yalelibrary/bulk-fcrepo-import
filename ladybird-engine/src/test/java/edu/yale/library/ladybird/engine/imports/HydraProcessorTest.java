@@ -81,6 +81,6 @@ public class HydraProcessorTest extends AbstractDBTest {
 
     @After
     public void stop() throws SQLException {
-        super.stop();
+        //super.stop();
     }
 }

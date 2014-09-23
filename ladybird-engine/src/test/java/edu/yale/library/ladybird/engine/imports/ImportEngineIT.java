@@ -22,6 +22,7 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobExheadHibern
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobHibernateDAO;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.FileInputStream;
@@ -45,6 +46,7 @@ public class ImportEngineIT extends AbstractDBTest {
      *
      * @throws Exception
      */
+    @Ignore("todo")
     @Test
     public void shouldRunFullCycle() throws Exception {
 
@@ -154,7 +156,7 @@ public class ImportEngineIT extends AbstractDBTest {
     }
 
     @After
-    public void stopDB() throws SQLException {
+    public void stop() throws SQLException {
         super.stop();
     }
 

@@ -48,6 +48,11 @@ public class DummyEventDAO implements UserEventDAO {
     }
 
     @Override
+    public void deleteAll() {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public List<UserEvent> findEventsByUser(String eventType, String userId) {
         return null;
     }

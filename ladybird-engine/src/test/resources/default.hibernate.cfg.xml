@@ -8,6 +8,16 @@
         <property name="hibernate.connection.url">jdbc:derby:memory:pamoja</property>
         <property name="show_sql">false</property>
         <property name="hibernate.dialect"> org.hibernate.dialect.DerbyTenSevenDialect</property>
+
+        <property name="connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
+        <property name="hibernate.c3p0.min_size">15</property>
+        <property name="hibernate.c3p0.max_size">100</property>
+        <property name="hibernate.c3p0.timeout">500</property>
+        <property name="hibernate.c3p0.max_statements">100</property>
+        <property name="hibernate.c3p0.idle_test_period">3000</property>
+
+
+
         <mapping resource="test-hbm/Collection.hbm.xml"/>
         <mapping resource="test-hbm/FieldDefinition.hbm.xml"/>
         <mapping resource="test-hbm/FieldMarcMapping.hbm.xml"/>

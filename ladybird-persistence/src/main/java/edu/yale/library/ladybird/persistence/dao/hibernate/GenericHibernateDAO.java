@@ -297,4 +297,29 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
             }
         }
     }
+
+    @Override
+    public void deleteAll() {
+        final Session s = getSession();
+        logger.trace("Deleting all");
+        try {
+            Transaction tx;
+            tx = s.beginTransaction();
+            final Query q = s.createQuery("delete from " + persistentClass.getName());
+            int num = q.executeUpdate();
+            s.flush();
+            tx.commit();
+            logger.debug("Deleted entries num={}", num);
+        } catch (HibernateException f){
+            logger.error("Error deleting all", f);
+            throw f;
+        }
+        finally {
+            if (s != null) {
+                s.close();
+            } else {
+                logger.error("Session null");
+            }
+        }
+    }
 }

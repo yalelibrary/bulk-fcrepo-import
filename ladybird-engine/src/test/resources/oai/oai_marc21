@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
     <responseDate>2014-02-27T14:56:09Z</responseDate>
     <request verb="GetRecord" identifier="oai:orbis.library.yale.edu:6915810" metadataPrefix="marc21">http://columbus.library.yale.edu:8055/OAI_Orbis/src/OAIOrbisTool.jsp</request>
     <GetRecord>

@@ -1,7 +1,10 @@
-package edu.yale.library.ladybird.engine.imports;
+package edu.yale.library.ladybird.engine.file;
 
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
+import edu.yale.library.ladybird.engine.imports.ImageReferenceProcessor;
+import edu.yale.library.ladybird.engine.imports.ImportEntity;
+import edu.yale.library.ladybird.engine.imports.ImportEntityValue;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.entity.ObjectFile;
@@ -10,6 +13,8 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectFileHibernateDA
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,6 +23,8 @@ import java.util.Date;
 import java.util.List;
 
 public class ImageReferenceProcessorTest extends AbstractDBTest {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Test
     public void shouldProcessF300() {
@@ -34,6 +41,8 @@ public class ImageReferenceProcessorTest extends AbstractDBTest {
 
         ObjectFile obj2 = objectFileDAO.findByOid(id);
         assert (obj2.getFilePath().equals("http://www.nasa.gov"));
+
+        objectFileDAO.deleteAll();
     }
 
     private ImportEntityValue getTestData() {
@@ -58,14 +67,13 @@ public class ImageReferenceProcessorTest extends AbstractDBTest {
 
     @Before
     public void init() {
-        super.init();
+        logger.debug("Trying to init db");
+        AbstractDBTest.initDB();
     }
 
     @After
     public void stop() throws SQLException {
-        super.stop();
+        //AbstractDBTest.stopDB();
     }
-
-
 
 }

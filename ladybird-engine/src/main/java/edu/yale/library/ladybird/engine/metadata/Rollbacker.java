@@ -25,7 +25,6 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectVersionHibernat
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

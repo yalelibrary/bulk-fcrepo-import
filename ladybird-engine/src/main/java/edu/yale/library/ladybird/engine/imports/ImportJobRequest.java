@@ -49,13 +49,13 @@ public final class ImportJobRequest {
 
     @Override
     public String toString() {
-        return "ImportJobRequest{" +
-                "userId=" + userId +
-                ", date=" + date +
-                ", jobFile='" + jobFile + '\'' +
-                ", jobDir='" + jobDir + '\'' +
-                ", projectId=" + projectId +
-                ", requestId=" + requestId +
-                '}';
+        return "ImportJobRequest{"
+                + "userId=" + userId
+                + ", date=" + date
+                + ", jobFile='" + jobFile + '\''
+                + ", jobDir='" + jobDir + '\''
+                + ", projectId=" + projectId
+                + ", requestId=" + requestId
+                + '}';
     }
 }

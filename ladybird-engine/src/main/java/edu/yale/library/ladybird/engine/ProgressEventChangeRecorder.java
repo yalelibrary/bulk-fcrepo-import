@@ -114,7 +114,7 @@ public class ProgressEventChangeRecorder implements Serializable {
         return progress;
     }
 
-    public boolean jobInMap(int jobId){
+    public boolean jobInMap(int jobId) {
         return progressMap.get(jobId) != null;
     }
 

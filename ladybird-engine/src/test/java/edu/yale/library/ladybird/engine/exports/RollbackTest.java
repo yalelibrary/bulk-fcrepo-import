@@ -39,12 +39,12 @@ public class RollbackTest extends AbstractDBTest {
 
     @Test
     public void shouldRollback() {
-        final int oid = 1, version = 1, userId = 0;
+        final int  version = 1, userId = 0;
         final String oldStrValue = "Old Value";
         final String oldAcidValue = "Old Acid Value";
 
         //1. persist dummy object and verify that old value is written
-        persistDummyObject(oid, fdid, oldStrValue, acidFdid, oldAcidValue);
+        final int oid = persistDummyObject(fdid, oldStrValue, acidFdid, oldAcidValue);
         List<ObjectString> osList = ObjectTestsHelper.fdidValue(oid, fdid);
         assert (osList.get(0).getValue().equals(oldStrValue)); //TODO same for acid
 
@@ -72,12 +72,12 @@ public class RollbackTest extends AbstractDBTest {
     @Ignore("TODO")
     @Test
     public void shouldRollbackToMultiple() {
-        final int oid = 1, version = 1, userId = 0;
+        final int version = 1, userId = 0;
         final String[] oldStrValue = {"Old Value 1", "Old Value 2"};
         final String[] oldAcidValue = {"Old Acid Value 1", "Old Acid Value 2"};
 
         //1. persist dummy object and verify that old value is written
-        persistDummyObjectMultipleFields(oid, fdid, oldStrValue, acidFdid, oldAcidValue);
+        final int oid = persistDummyObjectMultipleFields(fdid, oldStrValue, acidFdid, oldAcidValue);
 
         List<ObjectString> osList = ObjectTestsHelper.fdidValue(oid, fdid);
         assert (osList.get(0).getValue().equals(oldStrValue[0])); //TODO same for acid
@@ -108,7 +108,7 @@ public class RollbackTest extends AbstractDBTest {
         assert (new ObjectVersionHibernateDAO().findByOid(oid).size() == 2);
     }
 
-    private void persistDummyObject(int oid, int fdid, String stringValue, int acidFdid, String acidValue) {
+    private int persistDummyObject(int fdid, String stringValue, int acidFdid, String acidValue) {
         //1. persist field definitons:
         FieldDefinition fieldDefintion = new FieldDefinition(fdid);
         FieldDefinition fieldDefinition2 = new FieldDefinition(acidFdid);
@@ -119,13 +119,15 @@ public class RollbackTest extends AbstractDBTest {
         Date date = new Date();
         Object object = new ObjectBuilder().setDate(date).setProjectId(0).setUserId(0).createObject();
         ObjectDAO objectDAO = new ObjectHibernateDAO();
-        objectDAO.save(object);
+        int oid = objectDAO.save(object);
 
         ObjectTestsHelper.writeDummyObjString(oid, fdid, stringValue);
         ObjectTestsHelper.writeDummyObjAcid(oid, acidFdid, acidValue);
+
+        return oid;
     }
 
-    private void persistDummyObjectMultipleFields(int oid, int fdid, String[] stringValue, int acidFdid, String[] acidValue) {
+    private int persistDummyObjectMultipleFields(int fdid, String[] stringValue, int acidFdid, String[] acidValue) {
         //1. persist field definitons:
         FieldDefinition fieldDefintion = new FieldDefinition(fdid);
         FieldDefinition fieldDefinition2 = new FieldDefinition(acidFdid);
@@ -136,13 +138,15 @@ public class RollbackTest extends AbstractDBTest {
         Date date = new Date();
         Object object = new ObjectBuilder().setDate(date).setProjectId(0).setUserId(0).createObject();
         ObjectDAO objectDAO = new ObjectHibernateDAO();
-        objectDAO.save(object);
+        int oid = objectDAO.save(object);
 
         ObjectTestsHelper.writeDummyObjString(oid, fdid, stringValue[0]);
         ObjectTestsHelper.writeDummyObjString(oid, fdid, stringValue[1]);
 
         ObjectTestsHelper.writeDummyObjAcid(oid, acidFdid, acidValue[0]);
         ObjectTestsHelper.writeDummyObjAcid(oid, acidFdid, acidValue[1]);
+
+        return oid;
     }
 
     //This should update with versioning

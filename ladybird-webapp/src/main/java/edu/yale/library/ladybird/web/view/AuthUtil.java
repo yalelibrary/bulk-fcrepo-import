@@ -16,7 +16,6 @@ import org.omnifaces.util.Faces;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.NoSuchElementException;

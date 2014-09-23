@@ -109,8 +109,8 @@ public class MonitorView extends AbstractView {
     //TODO not sure how many times this may get hit
     public List getItemList() {
         try {
-            return (userDAO.count() == 0 || authUtil.getCurrentUser() == null) ? Collections.emptyList() :
-                    monitorDAO.findByUserAndProject(authUtil.getCurrentUserId(),
+            return (userDAO.count() == 0 || authUtil.getCurrentUser() == null) ? Collections.emptyList()
+                    : monitorDAO.findByUserAndProject(authUtil.getCurrentUserId(),
                             authUtil.getDefaultProjectForCurrentUser().getProjectId());
         } catch (Exception e) {
             logger.trace("Error finding monitor itemList", e);

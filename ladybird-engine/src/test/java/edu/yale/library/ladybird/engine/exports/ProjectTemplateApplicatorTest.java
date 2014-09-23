@@ -19,18 +19,26 @@ import edu.yale.library.ladybird.entity.ProjectTemplateStringsBuilder;
 import edu.yale.library.ladybird.persistence.dao.AuthorityControlDAO;
 import edu.yale.library.ladybird.persistence.dao.FieldDefinitionDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectAcidDAO;
+import edu.yale.library.ladybird.persistence.dao.ObjectAcidVersionDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectStringDAO;
+import edu.yale.library.ladybird.persistence.dao.ObjectStringVersionDAO;
+import edu.yale.library.ladybird.persistence.dao.ObjectVersionDAO;
+import edu.yale.library.ladybird.persistence.dao.ProjectTemplateDAO;
 import edu.yale.library.ladybird.persistence.dao.ProjectTemplateStringsDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.AuthorityControlHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.FieldDefinitionHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectAcidHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectAcidVersionHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectStringHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectStringVersionHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectVersionHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ProjectTemplateHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ProjectTemplateStringsHibernateDAO;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 
@@ -59,28 +67,70 @@ public class ProjectTemplateApplicatorTest extends AbstractDBTest {
     @Before
     public void init() {
         super.init();
+        AuthorityControlDAO authDAO = new AuthorityControlHibernateDAO();
+        ObjectAcidDAO oaDAO = new ObjectAcidHibernateDAO();
+        ObjectStringDAO osDAO = new ObjectStringHibernateDAO();
+        ObjectStringVersionDAO osvDAO = new ObjectStringVersionHibernateDAO();
+        ObjectAcidVersionDAO oavDAO = new ObjectAcidVersionHibernateDAO();
+        ObjectVersionDAO objectVersionDAO = new ObjectVersionHibernateDAO();
+        ObjectDAO objectDAO = new ObjectHibernateDAO();
+        ProjectTemplateStringsDAO templateStringDAO = new ProjectTemplateStringsHibernateDAO();
+        ProjectTemplateDAO projectTemplateDAO = new ProjectTemplateHibernateDAO();
+
+
+        authDAO.deleteAll();
+        osvDAO.deleteAll();
+        oavDAO.deleteAll();
+        oaDAO.deleteAll();
+        osDAO.deleteAll();
+        objectDAO.deleteAll();
+        templateStringDAO.deleteAll();
+        projectTemplateDAO.deleteAll();
+        objectVersionDAO.deleteAll();
     }
 
     @After
     public void stop() throws SQLException {
-        super.stop();
+        //super.stop();
+        AuthorityControlDAO authDAO = new AuthorityControlHibernateDAO();
+        ObjectAcidDAO oaDAO = new ObjectAcidHibernateDAO();
+        ObjectStringDAO osDAO = new ObjectStringHibernateDAO();
+        ObjectStringVersionDAO osvDAO = new ObjectStringVersionHibernateDAO();
+        ObjectAcidVersionDAO oavDAO = new ObjectAcidVersionHibernateDAO();
+        ObjectDAO objectDAO = new ObjectHibernateDAO();
+        ProjectTemplateStringsDAO templateStringDAO = new ProjectTemplateStringsHibernateDAO();
+        ProjectTemplateDAO projectTemplateDAO = new ProjectTemplateHibernateDAO();
+        ObjectVersionDAO objectVersionDAO = new ObjectVersionHibernateDAO();
+
+
+
+        authDAO.deleteAll();
+        osvDAO.deleteAll();
+        oavDAO.deleteAll();
+        oaDAO.deleteAll();
+        osDAO.deleteAll();
+        objectDAO.deleteAll();
+        templateStringDAO.deleteAll();
+        projectTemplateDAO.deleteAll();
+        objectVersionDAO.deleteAll();
+
     }
 
     //TODO save an acid which is mutlivalued fdid
     @Test
+    @Ignore("Since it's already tested in rollback method")
     public void shouldApplyTemplate() {
         final int userId = 1;
-        final int templateId = 0;
         try {
             //1. save sample object with 2 fields (for object_acid and object_string)
 
-            saveTestObject();
+            int oid = saveTestObject();
 
             //2. apply template
             ProjectTemplateApplicator projectTemplateApplicator = new ProjectTemplateApplicator();
             ProjectTemplate projectTemplate = new ProjectTemplateBuilder().setProjectId(1).setCreator(1)
                     .setDate(new Date()).setLabel("Vrc").createProjectTemplate();
-            new ProjectTemplateHibernateDAO().save(projectTemplate);
+            final int templateId = new ProjectTemplateHibernateDAO().save(projectTemplate);
 
             ProjectTemplateStringsDAO templateStringDAO = new ProjectTemplateStringsHibernateDAO();
 
@@ -103,18 +153,18 @@ public class ProjectTemplateApplicatorTest extends AbstractDBTest {
             ObjectString objectString2 = objectStringDAO.findAll().get(1);
             assertEquals(objectString2.getValue(), "--S");
 
-            List<ObjectAcid> objectAcidList = objectAcidDAO.findAll(); //should've saved 2 acids
+            List<ObjectAcid> objectAcidList = objectAcidDAO.findByOid(oid);
 
             //need this as init db only has one acid fdid whose multivalued is set to false.
             final boolean isMultiValued = fieldDAO.findByFdid(ACID_FDID).isMultivalue();
 
             if (isMultiValued) {
                 assert (objectAcidList.size() == 2);
-                assertEquals(objectAcidList.get(0).getValue(), 1);
-                assertEquals(objectAcidList.get(1).getValue(), 2);
+                assertEquals("Object acid value mismatch", objectAcidList.get(0).getValue(), 1);
+                assertEquals("Object acid value mismatch", objectAcidList.get(1).getValue(), 2);
             } else {
                 assert (objectAcidList.size() == 1);
-                assertEquals(objectAcidList.get(0).getValue(), 2);
+                assertEquals("Object acid value mismatch", objectAcidList.get(0).getValue(), 2);
             }
 
 
@@ -145,7 +195,7 @@ public class ProjectTemplateApplicatorTest extends AbstractDBTest {
     @Test
     public void shouldRollbackAppliedTemplate() {
         final int testUserId = 1;
-        final int templateId = 0;
+       //final int templateId = 0;
         try {
             //1. save sample object with 2 fields (for object_acid and object_string)
             //saveFdids();
@@ -158,7 +208,7 @@ public class ProjectTemplateApplicatorTest extends AbstractDBTest {
             ProjectTemplateApplicator projectTemplateApplicator = new ProjectTemplateApplicator();
             ProjectTemplate projectTemplate = new ProjectTemplateBuilder().setProjectId(1).setCreator(1)
                     .setDate(new Date()).createProjectTemplate();
-            new ProjectTemplateHibernateDAO().save(projectTemplate);
+            final int templateId = new ProjectTemplateHibernateDAO().save(projectTemplate);
 
             ProjectTemplateStringsDAO projectTemplateStringsDAO = new ProjectTemplateStringsHibernateDAO();
 
@@ -175,11 +225,14 @@ public class ProjectTemplateApplicatorTest extends AbstractDBTest {
             projectTemplateApplicator.applyTemplate(projectTemplate, testUserId);
 
             //3. confirm template application:
-            List<ObjectString> objectStrs = objectStringDAO.findAll();
+            List<ObjectString> objectStrs = objectStringDAO.findByOid(oid);
+
+            logger.debug("Objectstrings={}", objectStrs);
+
             assertEquals(objectStrs.get(0).getValue(), "test");
             assertEquals(objectStrs.get(1).getValue(), "--S");
 
-            List<ObjectAcid> objectAcidList = objectAcidDAO.findAll(); //should've saved 2 acids
+            List<ObjectAcid> objectAcidList = objectAcidDAO.findByOid(oid); //should've saved 2 acids
 
             final boolean isMultiValued = fieldDAO.findByFdid(ACID_FDID).isMultivalue();
 
@@ -193,13 +246,13 @@ public class ProjectTemplateApplicatorTest extends AbstractDBTest {
                 AuthorityControl ac = authorityControlDAO.findByAcid(objectAcidList.get(1).getValue());
                 assertEquals(ac.getValue(), "--A");
             } else {
-                assertEquals(objectAcidList.get(0).getValue(), 2);
+                //assertEquals(objectAcidList.get(0).getValue(), 4);  //4 is a guess we don't know what the primary id of acid actually is
 
                 AuthorityControl ex = authorityControlDAO.findByAcid(objectAcidList.get(0).getValue());
                 assertEquals(ex.getValue(), "--A");
             }
 
-            List<ObjectAcid> objAcidList2 = objectAcidDAO.findListByOidAndFdid(1, ACID_FDID);
+            List<ObjectAcid> objAcidList2 = objectAcidDAO.findListByOidAndFdid(oid, ACID_FDID);
 
             if (isMultiValued) {
                 assert (objAcidList2.size() == 2);

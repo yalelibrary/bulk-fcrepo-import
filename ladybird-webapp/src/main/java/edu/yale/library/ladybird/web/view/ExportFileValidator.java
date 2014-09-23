@@ -23,7 +23,6 @@ public class ExportFileValidator implements Validator {
 
     @Override
     public void validate(FacesContext facesContext, UIComponent uiComponent, Object o) throws ValidatorException {
-
         try {
             String rootPath = dao.findByProperty("import_root_path").getValue();
             String path = o.toString();

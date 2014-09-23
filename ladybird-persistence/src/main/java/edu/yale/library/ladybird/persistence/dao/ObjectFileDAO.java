@@ -11,6 +11,5 @@ public interface ObjectFileDAO extends GenericDAO<ObjectFile, Integer> {
     List<ObjectFile> findByProject(int projectId);
 
     List<ObjectFile> findByProjectMax(int projectId, int start, int count);
-
 }
 

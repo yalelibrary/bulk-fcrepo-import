@@ -44,7 +44,7 @@ public class MetadataEditor {
             for (final FieldDefinitionValue field : fieldDefinitionvalueList) {
                 final int fdid = field.getFdid().getFdid();
 
-                logger.trace("Eval={}", fdid);
+                logger.debug("Eval={}", fdid);
 
                 if (isString(fdid)) {
                     final List<ObjectString> objectStrings = objectStringDAO.findListByOidAndFdid(oid, fdid);

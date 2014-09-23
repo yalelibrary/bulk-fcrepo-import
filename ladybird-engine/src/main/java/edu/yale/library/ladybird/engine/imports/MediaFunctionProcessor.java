@@ -67,7 +67,7 @@ public class MediaFunctionProcessor {
 
         List<Row> rowList = importEntityValue.getContentRows();
 
-        for (int i = 0 ; i < rowList.size(); i++) {
+        for (int i = 0; i < rowList.size(); i++) {
             //final List<ImportEntity.Column> columnsList = rowList.get(i).getColumns();
 
             final Column<String> f3 = importEntityValue.getRowFieldColumn(FunctionConstants.F3, i);

@@ -34,6 +34,8 @@ public class ObjectFileHibernateDAO extends GenericHibernateDAO<ObjectFile, Inte
         } finally {
             if (s != null) {
                 s.close();
+            } else {
+                logger.error("Session null");
             }
         }
     }

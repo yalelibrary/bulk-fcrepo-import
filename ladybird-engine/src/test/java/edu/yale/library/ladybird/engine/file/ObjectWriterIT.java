@@ -1,10 +1,12 @@
-package edu.yale.library.ladybird.engine.imports;
+package edu.yale.library.ladybird.engine.file;
 
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
 import edu.yale.library.ladybird.engine.ExportBus;
 import edu.yale.library.ladybird.engine.TestModule;
 import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
+import edu.yale.library.ladybird.engine.imports.ImportEntity;
+import edu.yale.library.ladybird.engine.imports.ObjectWriter;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.FieldDefinition;
@@ -14,13 +16,21 @@ import edu.yale.library.ladybird.entity.ObjectString;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.persistence.dao.AuthorityControlDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectAcidDAO;
+import edu.yale.library.ladybird.persistence.dao.ObjectAcidVersionDAO;
+import edu.yale.library.ladybird.persistence.dao.ObjectDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectStringDAO;
+import edu.yale.library.ladybird.persistence.dao.ObjectStringVersionDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.AuthorityControlHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectAcidHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectAcidVersionHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectStringHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectStringVersionHibernateDAO;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -28,10 +38,12 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class ObjectWriterIT extends AbstractDBTest {
+public class ObjectWriterIT {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
-     * @see ObjectWriter creates object metadata tables and hits db to ensure that the values are written and
+     * @see edu.yale.library.ladybird.engine.imports.ObjectWriter creates object metadata tables and hits db to ensure that the values are written and
      * corresonding acid value is created
      */
     @Test
@@ -117,23 +129,52 @@ public class ObjectWriterIT extends AbstractDBTest {
         ObjectAcid objectAcid = objectAcidList.get(0);
 
         assertEquals("Value mismatch", objectAcid.getFdid(), fdid1);
-        assertEquals("Value mismatch", objectAcid.getValue(), 1);
+        //assertEquals("Value mismatch", objectAcid.getValue(), 1);
 
         //Verify the value of this acid:
         AuthorityControlDAO authorityControlDAO = new AuthorityControlHibernateDAO();
-        AuthorityControl acid = authorityControlDAO.findByAcid(1);
+        AuthorityControl acid = authorityControlDAO.findByAcid(objectAcid.getValue());
 
         assertEquals("Value mimsatch", acid.getValue(), "Name of the rose");
     }
 
     @Before
     public void init() {
-        super.init();
+        logger.debug("Trying to init db");
+        AbstractDBTest.initDB();
+
+        AuthorityControlDAO authDAO = new AuthorityControlHibernateDAO();
+        ObjectAcidDAO oaDAO = new ObjectAcidHibernateDAO();
+        ObjectStringDAO osDAO = new ObjectStringHibernateDAO();
+        ObjectStringVersionDAO osvDAO = new ObjectStringVersionHibernateDAO();
+        ObjectAcidVersionDAO oavDAO = new ObjectAcidVersionHibernateDAO();
+        ObjectDAO objectDAO = new ObjectHibernateDAO();
+
+        authDAO.deleteAll();
+        osvDAO.deleteAll();
+        oavDAO.deleteAll();
+        oaDAO.deleteAll();
+        osDAO.deleteAll();
+        objectDAO.deleteAll();
+
     }
 
     @After
     public void stop() throws SQLException {
-        super.stop();
+        //AbstractDBTest.stopDB();
+        AuthorityControlDAO authDAO = new AuthorityControlHibernateDAO();
+        ObjectAcidDAO oaDAO = new ObjectAcidHibernateDAO();
+        ObjectStringDAO osDAO = new ObjectStringHibernateDAO();
+        ObjectStringVersionDAO osvDAO = new ObjectStringVersionHibernateDAO();
+        ObjectAcidVersionDAO oavDAO = new ObjectAcidVersionHibernateDAO();
+        ObjectDAO objectDAO = new ObjectHibernateDAO();
+
+        authDAO.deleteAll();
+        osvDAO.deleteAll();
+        oavDAO.deleteAll();
+        oaDAO.deleteAll();
+        osDAO.deleteAll();
+        objectDAO.deleteAll();
     }
 
 }
