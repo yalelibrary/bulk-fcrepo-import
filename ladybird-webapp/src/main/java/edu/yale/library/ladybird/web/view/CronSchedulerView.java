@@ -2,6 +2,7 @@ package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.engine.cron.ExportFileMailerScheduler;
 import edu.yale.library.ladybird.engine.cron.ExportScheduler;
+import edu.yale.library.ladybird.engine.cron.ImageConversionScheduler;
 import edu.yale.library.ladybird.engine.cron.ImportScheduler;
 import edu.yale.library.ladybird.entity.CronBean;
 import edu.yale.library.ladybird.kernel.cron.JobsManager;
@@ -31,6 +32,9 @@ public class CronSchedulerView extends AbstractView {
 
     @Inject
     private ExportFileMailerScheduler exportFileMailerScheduler;
+
+    @Inject
+    private ImageConversionScheduler imageConversionScheduler;
 
     @Inject
     JobsManager jobsManager;
@@ -72,6 +76,10 @@ public class CronSchedulerView extends AbstractView {
             if (!isExportFileMailerCronScheduled()) {
                 exportFileMailerScheduler.scheduleJob(getCronBean().getFileNotificationCronExpression());
             }
+
+            if (!isImageConversionCronScheduled()) {
+                imageConversionScheduler.scheduleJob(getCronBean().getImageConversionExpression());
+            }
         } catch (Exception e) {
            throw e;
         }
@@ -108,6 +116,14 @@ public class CronSchedulerView extends AbstractView {
     public boolean isExportFileMailerCronScheduled() {
         final List<JobDetail> jobs = jobsManager.getJobs();
         if (!jobs.toString().contains(ExportFileMailerScheduler.getDefaultJobId())) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isImageConversionCronScheduled() {
+        final List<JobDetail> jobs = jobsManager.getJobs();
+        if (!jobs.toString().contains(ImageConversionScheduler.getDefaultJobId())) {
             return false;
         }
         return true;

@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.engine.imports;
 
 
+import edu.yale.library.ladybird.engine.cron.ImportImageConversionQueue;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.engine.oai.ImportSourceProcessor;
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
@@ -98,7 +99,7 @@ public class ImportWriter {
     /**
      * Writes body rows to import_job_contents
      *
-     * @param importId          import id of the job
+     * @param importId     import id of the job
      * @param importEntity helper data structure representing list<rows>
      */
     @SuppressWarnings("unchecked")
@@ -113,23 +114,24 @@ public class ImportWriter {
             //Write import source data
             importSourceProcessor.process(importId, oaiProvider, importEntity);
 
-            //final List<ImportEntity.Row> rowList = importEntity.getContentRows();
-
             if (sheetFieldConstants.contains(FunctionConstants.F1)) {
-               if (sheetFieldConstants.contains(FunctionConstants.F3)) { //F1 is present -> update oid with attached F3
-                   logger.info("Spreadsheet has col F1, and F3");
-                   mediaFunctionProcessor.process(importId, importEntity);
-               } else { //F1 is present, but no F3. Nothing to do.
-                   logger.info("No F3 column found in spreadsheet. Nothing to do.");
-               }
+                if (sheetFieldConstants.contains(FunctionConstants.F3)) { //F1 is present -> update oid with attached F3
+                    logger.info("Spreadsheet has col F1, and F3");
+                    mediaFunctionProcessor.processWithoutImage(importId, importEntity);
+                    addImageConversionJob(importId, importEntity);
+                } else { //F1 is present, but no F3. Nothing to do.
+                    logger.info("No F3 column found in spreadsheet. Nothing to do.");
+                }
             } else {
-                if (sheetFieldConstants.contains(FunctionConstants.F3)) { //no F1 -> genearte oid and attach F3
+                if (sheetFieldConstants.contains(FunctionConstants.F3)) { //no F1 -> generate oid and attach F3
                     logger.info("Spreadsheet doesn't have F1, but F3");
-                    mediaFunctionProcessor.process(importId, importEntity);
+                    mediaFunctionProcessor.processWithoutImage(importId, importEntity);
+                    addImageConversionJob(importId, importEntity);
                 } else { //Neither F1, nor F3 present -> generate blank
                     logger.info("Spreadsheet doesn't have F1, nor F3");
                     importEntity = addF3Column(importEntity);
-                    mediaFunctionProcessor.process(importId, importEntity);
+                    mediaFunctionProcessor.processWithoutImage(importId, importEntity);
+                    addImageConversionJob(importId, importEntity);
                 }
             }
 
@@ -165,12 +167,23 @@ public class ImportWriter {
                 }
             }
 
-            //logger.info("Wrote to import job contents num. rows={} for importId={}", dao.findByImportId(importId).size(), importId); //TODO dao count method
+            //logger.info("Wrote to import job contents num. rows={} for importId={}", dao.findByImportId(importId).size(), importId);
             checkImportIdPostConditions(importId);
         } catch (Exception e) {
             logger.error("Error writing import job contents.");
             throw e;
         }
+    }
+
+    private void addImageConversionJob(int importId, ImportEntityValue importEntityValue) {
+        ImageConversionRequestEvent event = new ImageConversionRequestEvent();
+        event.setImportEntityValue(importEntityValue);
+        event.setImportId(importId);
+        event.setExportDirPath(mediaFunctionProcessor.getProjectDir());
+
+        logger.debug("Adding event to image conversion queue={}", event);
+
+        ImportImageConversionQueue.addJob(event);
     }
 
     private void checkImportIdPreConditions(final int importId) {
@@ -189,7 +202,7 @@ public class ImportWriter {
         return importEntityValue.write(importEntityValue, FunctionConstants.F3, "test8787.tif");
     }
 
-     /**
+    /**
      * Writes to import job table
      *
      * @param importJobRequest Context containing information about the job

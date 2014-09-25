@@ -14,7 +14,6 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ImportFileHibernateDA
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectFileHibernateDAO;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,87 +21,111 @@ import java.util.Date;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkState;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class MediaFunctionProcessor {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    /**
-     * root path
-     */
+    private Logger logger = getLogger(this.getClass());
+
     private String rootPath = "";
 
-    /**
-     * relative path
-     */
-    private String path = "";
+    private String projectDir = "";
 
-    final ImportFileDAO importFileDAO = new ImportFileHibernateDAO(); //TODO
+    private static String defaultImage = "no-image-found.jpg";
 
-    final ImageMagickProcessor imgMagick = new ImageMagickProcessor(); //TODO
+    final ImportFileDAO importFileDAO = new ImportFileHibernateDAO();
 
-    final ObjectFileDAO objectFileDAO = new ObjectFileHibernateDAO(); //TODO
+    final ImageMagickProcessor imgMagick = new ImageMagickProcessor();
 
-    @SuppressWarnings("unchecked")
-    @Deprecated
-    public void process(final List<ImportEntity.Row> rowList, final int MEDIA_COLUMN) {
-        logger.debug("Processing list size={}", rowList.size());
-
-        for (Row row : rowList) {
-            final List<ImportEntity.Column> columnsList = row.getColumns();
-            final Column<String> c = columnsList.get(MEDIA_COLUMN);
-            convertImage(c.getValue(), MediaFormat.TIFF, MediaFormat.JPEG);
-        }
-    }
+    final ObjectFileDAO objectFileDAO = new ObjectFileHibernateDAO();
 
     /**
      * Process images and writes to import file and object file
+     *
      * @param importEntityValue import EntityValue
      * @throws IOException if any single conversion fails
      */
     @SuppressWarnings("unchecked")
     public void process(final int importId, final ImportEntityValue importEntityValue) throws IOException {
-//        logger.trace("Processing with F1 col num={}, F3 col num={}, list size={}", OID_COLUMN, MEDIA_COLUMN, rowList.size());
-
+        logger.debug("Running process");
         final int userId = 1; //TODO check this
 
         List<Row> rowList = importEntityValue.getContentRows();
 
-        for (int i = 0; i < rowList.size(); i++) {
-            //final List<ImportEntity.Column> columnsList = rowList.get(i).getColumns();
+        logger.debug("importId={} row list size={}", importId, rowList.size());
 
+        for (int i = 0; i < rowList.size(); i++) {
             final Column<String> f3 = importEntityValue.getRowFieldColumn(FunctionConstants.F3, i);
+
             checkState(f3.getField().getName().equals(FunctionConstants.F3.getName()), "Found wrong F3 col");
 
             final String f3Col = f3.getValue();
 
+            logger.debug("Evaluating f3={}", f3Col);
 
             final Column<String> f1 = importEntityValue.getRowFieldColumn(FunctionConstants.F1, i);
+
             checkState(f1.getField().getName().equals(FunctionConstants.F1.getName()), "Found wrong F1 col");
 
             final String oidCol = f1.getValue();
-
             final Integer oid = Integer.parseInt(oidCol);
 
+            // Update import file and convert image (plus a thumbnail)
+            // or, if no image found: update dao with blank image found on project folder & skip ImageMagick step.
             try {
-                //1. Update import file
-                logger.debug("Eval file={}", f3Col);
 
                 final File file = new File(getPath(f3Col));
 
+                logger.debug("Eval file={}", file.getAbsolutePath());
+
                 if (file.exists() && !file.isDirectory()) {
-                    ImportFile importFile = new ImportFileBuilder().setImportId(importId)
-                            .setFileLocation(f3Col).setDate(new Date()).setOid(oid).createImportFile();
+                    ImportFile imFile = getBuilder().importId(importId).fileLocation(f3Col).oid(oid).create();
+                    importFileDAO.save(imFile);
 
-                    importFileDAO.save(importFile);
+                    String from = MediaFormat.TIFF.toString();
+                    String to = MediaFormat.JPEG.toString();
+                    final String outputFilePath = asFormat(getOutPath(f3Col), from, to);
 
-                    //2. convert image and add a thumbnail
-                    convertImage(f3Col, MediaFormat.TIFF, MediaFormat.JPEG, oid, userId);
-                } else { //no image found. update dao with blank image found on project folder & skip image magick. no thumbnail.
-                    ImportFile importFile = new ImportFileBuilder().setImportId(importId).setOid(oid)
-                            .setFileLocation(getPath("no-image-found.jpg")).setDate(new Date()).createImportFile();
-                    importFileDAO.save(importFile);
+                    byte[] thumbnailBytes = convertImage(f3Col, outputFilePath, MediaFormat.TIFF, MediaFormat.JPEG, oid);
 
-                    convertImage("N/A", getPath("no-image-found.jpg"), oid, userId);
+                    ObjectFile exObjectFile = objectFileDAO.findByOid(oid);
+
+                    if (exObjectFile == null) {
+                        final ObjectFile objectFile = new ObjectFileBuilder().setDate(new Date()).setFilePath(outputFilePath)
+                                .setFileExt(MediaFormat.JPEG.toString()).setOid(oid).setUserId(userId).setFileLabel(f3Col)
+                                .setThumbnail(thumbnailBytes).setFileName(f3Col.replace(from, to)).createObjectFile();
+
+                        objectFileDAO.save(objectFile);
+
+                        logger.debug("Saved entity={}", objectFile);
+
+                    } else {
+                        exObjectFile.setFileName(f3Col.replace(from, to));
+                        exObjectFile.setFileExt(MediaFormat.JPEG.toString());
+                        exObjectFile.setFilePath(outputFilePath);
+                        exObjectFile.setDate(new Date());
+                        exObjectFile.setThumbnail(thumbnailBytes);
+                        exObjectFile.setFileLabel(f3Col);
+
+                        objectFileDAO.saveOrUpdateItem(exObjectFile);
+
+                        logger.debug("Updated entity={}", exObjectFile);
+                    }
+                } else {
+                    ImportFile imFile = getBuilder().importId(importId).oid(oid).fileLocation(getPath(defaultImage)).create();
+                    importFileDAO.save(imFile);
+
+                    String fileName = "N/A";
+
+                    byte[] thumbnail = convertImage(oid);
+
+                    ObjectFile objectFile = new ObjectFileBuilder().setDate(new Date()).setFilePath(getPath(defaultImage))
+                            .setFileExt(MediaFormat.JPEG.toString()).setOid(oid).setUserId(userId).setFileLabel(fileName)
+                            .setThumbnail(thumbnail).setFileName(fileName).createObjectFile();
+
+                    logger.trace("Saving entity={}", objectFile);
+
+                    objectFileDAO.save(objectFile);
                 }
             } catch (IOException e) {
                 logger.error("Error/warning persisting entity", e);
@@ -111,21 +134,57 @@ public class MediaFunctionProcessor {
         }
     }
 
-    @Deprecated
-    private void convertImage(final String fileName, final MediaFormat fromExt, final MediaFormat toExt) {
-        logger.error("Called deprecated method");
-        try {
-            final String inputFilePath = getPath(fileName);
-            final String outputFilePath = asFormat(getOutPath(fileName), fromExt.toString(), toExt.toString());
-            imgMagick.toFormat(inputFilePath, outputFilePath);
+    /**
+     * Process images and writes to import file and object file
+     *
+     * @param importEntityValue import EntityValue
+     * @throws IOException if any single conversion fails
+     */
+    @SuppressWarnings("unchecked")
+    public void processWithoutImage(final int importId, final ImportEntityValue importEntityValue) throws IOException {
+        final int userId = 1; //TODO check this
 
-            logger.trace("Converted image to={}", outputFilePath);
-        } catch (Exception e) {
-            logger.debug("Error or warning converting image={}", e.getMessage()); //N.B. ignore errors and warnings
-            logger.error("Error", e);
+        List<Row> rowList = importEntityValue.getContentRows();
+
+        for (int i = 0; i < rowList.size(); i++) {
+            final Column<String> f3 = importEntityValue.getRowFieldColumn(FunctionConstants.F3, i);
+
+            checkState(f3.getField().getName().equals(FunctionConstants.F3.getName()), "Found wrong F3 col");
+
+            final String f3Col = f3.getValue();
+
+            logger.debug("Evaluating f3={}", f3Col);
+
+            final Column<String> f1 = importEntityValue.getRowFieldColumn(FunctionConstants.F1, i);
+
+            checkState(f1.getField().getName().equals(FunctionConstants.F1.getName()), "Found wrong F1 col");
+
+            final String oidCol = f1.getValue();
+            final Integer oid = Integer.parseInt(oidCol);
+
+            // Update import file and convert image (plus a thumbnail)
+            // or, if no image found: update dao with blank image found on project folder & skip ImageMagick step.
+            try {
+                ImportFile imFile = getBuilder().importId(importId).oid(oid).fileLocation(getPath(defaultImage)).create();
+                importFileDAO.save(imFile);
+
+                String fileName = "N/A";
+
+                byte[] thumbnail = convertImage(oid);
+
+                ObjectFile objectFile = new ObjectFileBuilder().setDate(new Date()).setFilePath(getPath(defaultImage))
+                        .setFileExt(MediaFormat.JPEG.toString()).setOid(oid).setUserId(userId).setFileLabel(fileName)
+                        .setThumbnail(thumbnail).setFileName(fileName).createObjectFile();
+
+                logger.trace("Saving entity={}", objectFile);
+
+                objectFileDAO.save(objectFile);
+            } catch (IOException e) {
+                logger.error("Error/warning persisting entity", e);
+                throw e;
+            }
         }
     }
-
 
     /**
      * Converts image and updates object file table
@@ -135,11 +194,10 @@ public class MediaFunctionProcessor {
      * @param toExt    ext to convert to
      * @param oid      oid
      */
-    private void convertImage(final String fileName, final MediaFormat fromExt, final MediaFormat toExt, int oid, int userId)
+    private byte[] convertImage(final String fileName, final String outputFilePath, final MediaFormat fromExt, final MediaFormat toExt, int oid)
             throws IOException {
         // 1. convert
         final String inputFilePath = getPath(fileName);
-        final String outputFilePath = asFormat(getOutPath(fileName), fromExt.toString(), toExt.toString());
         try {
             imgMagick.toFormat(inputFilePath, outputFilePath);
 
@@ -149,7 +207,7 @@ public class MediaFunctionProcessor {
             logger.trace("Error", e);
         }
 
-        //1b. get thumbnail //TODO write to tmp
+        //1b. convert to thumbnail
         final String thumbnailPath = asFormat(getOutPath(fileName), fromExt.toString(), MediaFormat.THUMBNAIL.toString());
 
         try {
@@ -169,9 +227,9 @@ public class MediaFunctionProcessor {
             logger.error("Thumbnail image not found for oid={}", oid, e); //this means a conversion error
             try {
                 thumbnailByes = getBytes(ImageMagickProcessor.getBlankImagePath());
-            } catch (IOException e1) {
-                logger.error("Error setting default thumbnail image for oid={}", oid, e1);
-                throw e1;
+            } catch (IOException io) {
+                logger.error("Error setting default thumbnail image for oid={}", oid, io);
+                throw io;
             }
         }
 
@@ -179,20 +237,13 @@ public class MediaFunctionProcessor {
             throw new IOException("No thumbnail for oid=" + oid);
         }
 
-        final ObjectFile objectFile = new ObjectFileBuilder().setDate(new Date()).setFilePath(outputFilePath)
-                .setFileExt(MediaFormat.JPEG.toString()).setOid(oid).setUserId(userId).setFileLabel(fileName)
-                .setThumbnail(thumbnailByes)
-                .setFileName(fileName.replace(fromExt.toString(), toExt.toString())).createObjectFile(); //FIXME userid
-
-        objectFileDAO.save(objectFile);
-
-        logger.trace("Saved entity{}", objectFile.toString());
+        return thumbnailByes;
     }
 
     /**
      * Converts image and updates object file table
      */
-    private void convertImage(final String fileName, final String outputFilePath, int oid, int userId) throws IOException {
+    private byte[] convertImage(int oid) throws IOException {
         final String thumbnailPath = ImageMagickProcessor.getBlankImagePath();
 
         byte[] thumbnail = getBytes(thumbnailPath);
@@ -201,37 +252,27 @@ public class MediaFunctionProcessor {
             logger.error("Null bytes for thumbnail for oid={}", oid);
         }
 
-        ObjectFile objectFile = new ObjectFileBuilder()
-                .setDate(new Date()).setFilePath(outputFilePath)
-                .setFileExt(MediaFormat.JPEG.toString())
-                .setOid(oid).setUserId(userId).setFileLabel(fileName)
-                .setThumbnail(thumbnail)
-                .setFileName("N/A").createObjectFile();
-
-        logger.trace("Saving entity={}", objectFile);
-
-        objectFileDAO.save(objectFile);
-
-        logger.trace("Saved.");
+        return thumbnail;
     }
+
 
     private byte[] getBytes(String filePath) throws IOException {
         byte[] bytes;
         try {
             bytes = FileUtils.readFileToByteArray(new File(filePath));
         } catch (IOException e) {
-            logger.error("Error getting bytes for path={}", path, e);
+            logger.error("Error getting bytes for projectDir={}", projectDir, e);
             throw e;
         }
         return bytes;
     }
 
     private String getPath(final String fileName) {
-        return rootPath + File.separator + path + File.separator + fileName;
+        return rootPath + File.separator + projectDir + File.separator + fileName;
     }
 
     private String getOutPath(final String fileName) {
-        return rootPath + File.separator + path + File.separator + "exports" + File.separator + fileName;
+        return rootPath + File.separator + projectDir + File.separator + "exports" + File.separator + fileName;
     }
 
     private static String asFormat(final String fileName, final String from, final String ext) {
@@ -239,6 +280,7 @@ public class MediaFunctionProcessor {
     }
 
     private enum MediaFormat {
+
         TIFF(".tif"),
         JPEG(".jpg"),
         JPEG2000(".jp2"),
@@ -256,20 +298,20 @@ public class MediaFunctionProcessor {
         }
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setProjectDir(String projectDir) {
+        this.projectDir = projectDir;
     }
 
-    public String getPath() {
-        return path;
+    public String getProjectDir() {
+        return projectDir;
     }
 
-    public void setRootPath(String rootPath) {
+    public MediaFunctionProcessor(String rootPath, String projectDir) {
         this.rootPath = rootPath;
+        this.projectDir = projectDir;
     }
 
-    public MediaFunctionProcessor(String rootPath, String path) {
-        this.rootPath = rootPath;
-        this.path = path;
+    private static ImportFileBuilder getBuilder() {
+        return new ImportFileBuilder().date(new Date());
     }
 }

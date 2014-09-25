@@ -13,6 +13,8 @@ public class CronBean {
 
     private String fileNotificationCronExpression = "0/10 * * * * ?";
 
+    private String imageConversionExpression = "0/10 * * * * ?";
+
     public String getImportCronExpression() {
         return importCronExpression;
     }
@@ -43,6 +45,14 @@ public class CronBean {
 
     public void setFileNotificationCronExpression(String fileNotificationCronExpression) {
         this.fileNotificationCronExpression = fileNotificationCronExpression;
+    }
+
+    public String getImageConversionExpression() {
+        return imageConversionExpression;
+    }
+
+    public void setImageConversionExpression(String imageConversionExpression) {
+        this.imageConversionExpression = imageConversionExpression;
     }
 
     @Override

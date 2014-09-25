@@ -13,52 +13,52 @@ public class ImportFileBuilder {
     private String type;
     private String label;
 
-    public ImportFileBuilder setImportId(Integer importId) {
+    public ImportFileBuilder importId(Integer importId) {
         this.importId = importId;
         return this;
     }
 
-    public ImportFileBuilder setDate(Date date) {
+    public ImportFileBuilder date(Date date) {
         this.date = date;
         return this;
     }
 
-    public ImportFileBuilder setFileLocation(String fileLocation) {
+    public ImportFileBuilder fileLocation(String fileLocation) {
         this.fileLocation = fileLocation;
         return this;
     }
 
-    public ImportFileBuilder setOid(int oid) {
+    public ImportFileBuilder oid(int oid) {
         this.oid = oid;
         return this;
     }
 
-    public ImportFileBuilder setUserId(int userId) {
+    public ImportFileBuilder userId(int userId) {
         this.userId = userId;
         return this;
     }
 
-    public ImportFileBuilder setCode(Integer code) {
+    public ImportFileBuilder code(Integer code) {
         this.code = code;
         return this;
     }
 
-    public ImportFileBuilder setError(String error) {
+    public ImportFileBuilder error(String error) {
         this.error = error;
         return this;
     }
 
-    public ImportFileBuilder setType(String type) {
+    public ImportFileBuilder type(String type) {
         this.type = type;
         return this;
     }
 
-    public ImportFileBuilder setLabel(String label) {
+    public ImportFileBuilder label(String label) {
         this.label = label;
         return this;
     }
 
-    public ImportFile createImportFile() {
+    public ImportFile create() {
         final ImportFile importFile = new ImportFile();
         importFile.setImportId(importId);
         importFile.setDate(date);

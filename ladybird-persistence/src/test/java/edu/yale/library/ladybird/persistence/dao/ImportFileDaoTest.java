@@ -56,7 +56,7 @@ public class ImportFileDaoTest extends AbstractPersistenceTest {
 
     private ImportFile build() {
         final ImportFile item = new ImportFileBuilder()
-                .setImportId(555).setFileLocation("").createImportFile();
+                .importId(555).fileLocation("").create();
         final Date date = new Date(System.currentTimeMillis());
         item.setDate(date);
         return item;
