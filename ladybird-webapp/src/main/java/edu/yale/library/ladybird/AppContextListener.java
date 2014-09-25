@@ -9,15 +9,17 @@ import edu.yale.library.ladybird.kernel.KernelBootstrap;
 import edu.yale.library.ladybird.persistence.dao.EventTypeDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.EventTypeHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.FieldMarcMappingHibernateDAO;
+import org.slf4j.Logger;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-/**
- * Not meant to be used directly. Subject to modification.
- */
+import static org.slf4j.LoggerFactory.getLogger;
+
+
 public class AppContextListener implements ServletContextListener {
-    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(AppContextListener.class);
+
+    private static final Logger logger = getLogger(AppContextListener.class);
 
     private final KernelBootstrap kernelBootstrap = new KernelBootstrap();
 
@@ -29,35 +31,24 @@ public class AppContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         kernelBootstrap.init();
-        ExportBus exportBus = new ExportBus(); //TODO
+        ExportBus exportBus = getExportBus();
         exportBus.init();
-
-        // Load initial fdid
-        // TODO revisit concept/logic for init fdid for spreadsheet and db
-        /*
-        try {
-            FieldDefinitionInitializer fieldDefinitionInitializer = new FieldDefinitionInitializer();
-            fieldDefinitionInitializer.setInitialFieldDefinitionDb();
-        } catch (IOException e) {
-            logger.error("Error in fdid init", e); //ignore
-        }
-        */
 
         // Load initial fdid marc mappings
         try {
-            FdidMarcMappingUtil fdidMarcMappingInitializer = new FdidMarcMappingUtil();
-            fdidMarcMappingInitializer.setFieldMarcMappingDAO(new FieldMarcMappingHibernateDAO()); //FIXME
-            fdidMarcMappingInitializer.setInitialFieldMarcDb();
+            FdidMarcMappingUtil fdidMarcUtil = new FdidMarcMappingUtil();
+            fdidMarcUtil.setFieldMarcMappingDAO(new FieldMarcMappingHibernateDAO()); //FIXME
+            fdidMarcUtil.setInitialFieldMarcDb();
         } catch (Exception e) {
-            logger.error("Error in fdid init", e); //ignore
+            logger.error("Error in fdid marc init", e);
         }
 
         //Load properties file
         try {
-            SettingsInitializer settingsInitializer = new SettingsInitializer();
-            settingsInitializer.loadAndStore();
+            SettingsInitializer settingsInit = new SettingsInitializer();
+            settingsInit.loadAndStore();
         } catch (Exception e) {
-            logger.error("Error in setting settings", e); //ignore
+            logger.error("Error in setting settings", e);
         }
 
         //Add Object Events
@@ -71,13 +62,17 @@ public class AppContextListener implements ServletContextListener {
             logger.error("Error setting event types", e);
         }
 
-        //Add role permissions
+        //Add role permissions, if empty
         try {
             RolesPermissionsLoader rolesPermissionsLoader = new RolesPermissionsLoader();
-            rolesPermissionsLoader.load(); //TODO remove or check functionality since this will override
+            rolesPermissionsLoader.load();
         } catch (Exception e) {
             logger.error("Error init to db role permissions");
         }
+    }
+
+    private ExportBus getExportBus() {
+        return new ExportBus();
     }
 
 }

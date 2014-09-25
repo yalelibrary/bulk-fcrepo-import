@@ -26,17 +26,23 @@ public class RolesPermissionsLoader {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public void load() {
-        //Add role permissions
-        try {
-            logger.debug("Loading default init permissions"); //should be removed for dynamic state
-            RolesPermissionsDAO rolesPermissionsDAO = new RolesPermissionsHibernateDAO();
+        Date date = new Date();
 
-            Date date = new Date();
+        try {
+            RolesPermissionsDAO rolesPermissionsDAO = new RolesPermissionsHibernateDAO();
             RolesDAO rolesDAO = new RolesHibernateDAO();
             PermissionsDAO permissionsDAO = new PermissionsHibernateDAO();
 
+            if (rolesDAO.count() != 0 || permissionsDAO.count() != 0 || rolesPermissionsDAO.count() != 0) {
+                logger.debug("Fdid already initalized. Skipping");
+                return;
+            }
+
             Permissions[] permissions = Permissions.values();
             Map<Permissions, Integer> savedIds = new HashMap<>();
+
+            logger.debug("Loading default init permissions"); //should be removed for dynamic state
+
 
             for (Permissions p: permissions) {
                 edu.yale.library.ladybird.entity.Permissions pe = new edu.yale.library.ladybird.entity.Permissions();
@@ -82,6 +88,7 @@ public class RolesPermissionsLoader {
             }
         } catch (Exception e) {
             logger.error("Error init to db role permissions", e);
+            throw e;
         }
     }
 }
