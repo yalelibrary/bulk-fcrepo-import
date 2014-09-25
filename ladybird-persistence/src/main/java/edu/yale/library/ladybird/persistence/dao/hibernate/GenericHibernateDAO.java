@@ -96,8 +96,9 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
         try {
             s = getSession();
             tx = s.beginTransaction();
-            id = (Integer) s.save(item);
             logger.trace("Saving item={}", item.toString());
+            id = (Integer) s.save(item);
+            logger.trace("Saved item={}", item.toString());
             s.flush();
             tx.commit();
             logger.trace("Saved item");
