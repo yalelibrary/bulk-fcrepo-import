@@ -284,7 +284,7 @@ public class MediaFunctionProcessor {
         TIFF(".tif"),
         JPEG(".jpg"),
         JPEG2000(".jp2"),
-        THUMBNAIL(".png");
+        THUMBNAIL("-thumbnail.jpg");
 
         String name;
 

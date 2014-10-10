@@ -45,6 +45,7 @@ public class CronScheduleHttpService {
             cronBean.setImportCronExpression(cron);
             cronBean.setExportCronExpression(cron);
             cronBean.setFilePickerCronExpression(cron);
+            cronBean.setImageConversionExpression(cron);
             String s = cronSchedulerView.save();
             AbstractView abstractView = new AbstractView();
             if (s.equals(abstractView.ok())) {

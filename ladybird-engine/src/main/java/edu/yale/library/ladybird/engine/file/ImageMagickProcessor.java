@@ -5,6 +5,7 @@ import edu.yale.library.ladybird.entity.Settings;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
 import edu.yale.library.ladybird.persistence.dao.SettingsDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.SettingsHibernateDAO;
+import org.apache.commons.io.FileUtils;
 import org.im4java.core.ConvertCmd;
 import org.im4java.core.IM4JavaException;
 import org.im4java.core.IMOperation;
@@ -71,8 +72,7 @@ public class ImageMagickProcessor implements ImageProcessor {
         }
 
         final ConvertCmd cmd = new ConvertCmd();
-
-        String imageMagickPath = getImgMagickPath();
+        final String imageMagickPath = getImgMagickPath();
 
         if (!imageMagickPath.isEmpty()) {
             cmd.setSearchPath(imageMagickPath);
@@ -82,14 +82,15 @@ public class ImageMagickProcessor implements ImageProcessor {
         }
 
         try {
-            logger.trace("Converting file={}", src);
-            final IMOperation op = new IMOperation();
-            op.addImage(sourceImage);
-            op.thumbnail(150, 150);
-            op.addImage(destImage);
-            cmd.run(op);
+            final IMOperation op2 = new IMOperation();
+            op2.addImage(sourceImage);
+            op2.thumbnail(150, 150);
+            op2.quality((double) 10);
+            op2.strip();
+            op2.addImage(destImage);
+            cmd.run(op2);
         } catch (IOException | InterruptedException | IM4JavaException e) {
-            throw new RuntimeException("Error processing image", e);
+            throw new RuntimeException("Error processing thumbnail", e);
         }
     }
 
