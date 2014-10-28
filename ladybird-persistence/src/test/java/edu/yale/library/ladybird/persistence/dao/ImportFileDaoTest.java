@@ -17,8 +17,6 @@ import static org.junit.Assert.fail;
 
 public class ImportFileDaoTest extends AbstractPersistenceTest {
 
-    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(ImportFileDaoTest.class);
-
     {
         TestDaoInitializer.injectFields(this);
     }

@@ -5,15 +5,18 @@ import edu.yale.library.ladybird.persistence.dao.UserDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserHibernateDAO;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
+import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.Map;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Used for lazy loading paginated view
  */
 public class UserDataModel extends LazyDataModel<User> {
-    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(UserDataModel.class);
+    private static final Logger logger = getLogger(UserDataModel.class);
 
     @Override
     public List<User> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String, Object> filters) {

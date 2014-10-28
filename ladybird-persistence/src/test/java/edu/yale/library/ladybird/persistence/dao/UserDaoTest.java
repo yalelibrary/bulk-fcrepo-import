@@ -17,8 +17,6 @@ import static org.junit.Assert.fail;
 
 public class UserDaoTest extends AbstractPersistenceTest {
 
-    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(UserDaoTest.class);
-
     {
         TestDaoInitializer.injectFields(this);
     }
@@ -41,7 +39,6 @@ public class UserDaoTest extends AbstractPersistenceTest {
         final User user = build();
         try {
             dao.save(user);
-            logger.debug("Saved item.");
             final List list = dao.findAll();
             assertEquals("Item count incorrect", list.size(), 1);
         } catch (Throwable e) {

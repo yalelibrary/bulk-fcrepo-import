@@ -9,11 +9,14 @@ import edu.yale.library.ladybird.kernel.events.AbstractNotificationJob;
 import edu.yale.library.ladybird.kernel.events.Event;
 import edu.yale.library.ladybird.persistence.HibernateUtil;
 import org.apache.commons.lang.time.DurationFormatUtils;
+import org.slf4j.Logger;
 
 import java.util.List;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class KernelBootstrap {
-    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(KernelBootstrap.class);
+    private static final Logger logger = getLogger(KernelBootstrap.class);
 
     private static final String TIMESTAMP_FORMAT = "HH:mm:ss:SS";
 

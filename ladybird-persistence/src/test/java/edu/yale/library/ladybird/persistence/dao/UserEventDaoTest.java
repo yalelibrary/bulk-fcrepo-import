@@ -5,6 +5,7 @@ import edu.yale.library.ladybird.entity.UserEventBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -12,11 +13,12 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.slf4j.LoggerFactory.getLogger;
 
 
 public class UserEventDaoTest extends AbstractPersistenceTest {
 
-    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(UserEventDaoTest.class);
+    private static final Logger logger = getLogger(UserEventDaoTest.class);
 
     {
         TestDaoInitializer.injectFields(this);

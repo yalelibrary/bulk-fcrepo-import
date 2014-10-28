@@ -5,11 +5,14 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import edu.yale.library.ladybird.kernel.events.Event;
+import org.slf4j.Logger;
 
 import java.util.List;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class ExportBus {
-    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(ExportBus.class);
+    private static final Logger logger = getLogger(ExportBus.class);
 
     private static Module module;
     private static EventBus eventBus;

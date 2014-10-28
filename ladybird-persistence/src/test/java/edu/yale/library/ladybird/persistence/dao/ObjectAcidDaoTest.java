@@ -17,8 +17,6 @@ import static org.junit.Assert.fail;
 
 public class ObjectAcidDaoTest extends AbstractPersistenceTest {
 
-    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(ObjectAcidDaoTest.class);
-
     {
         TestDaoInitializer.injectFields(this);
     }
