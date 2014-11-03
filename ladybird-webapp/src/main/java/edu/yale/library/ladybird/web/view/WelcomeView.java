@@ -8,13 +8,13 @@ import edu.yale.library.ladybird.kernel.ApplicationProperties;
 import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobNotificationsDAO;
 import edu.yale.library.ladybird.persistence.dao.UserProjectDAO;
+import org.omnifaces.util.Faces;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,7 +27,7 @@ public class WelcomeView extends AbstractView {
 
     private Logger logger = LoggerFactory.getLogger(WelcomeView.class);
 
-    public static final String webXmlPrincipalLoginIdentifier = "netid-last-act-time";
+    public static final String WEB_XML_PRINCIPAL_LOGIN_IDENTIFIER = "netid-last-act-time";
 
     @Inject
     private AuthUtil authUtil;
@@ -48,16 +48,12 @@ public class WelcomeView extends AbstractView {
 
     public Date getPrincipalLastActTime() {
         try {
-            return new Date((long) getSessionAttribute(webXmlPrincipalLoginIdentifier)); //or get session creation time
+            //or get session creation time
+            return new Date((long) Faces.getSessionAttribute(WEB_XML_PRINCIPAL_LOGIN_IDENTIFIER));
         } catch (NullPointerException e) {
-            logger.error(e.getMessage());
+            logger.error("Cannot find principle last time {}", e.getMessage());
         }
-        return new Date(System.currentTimeMillis());
-    }
-
-    @Deprecated
-    private Object getSessionAttribute(final String key) {
-        return FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(key);
+        return new Date();
     }
 
     /**
@@ -77,7 +73,6 @@ public class WelcomeView extends AbstractView {
 
     /**
      * Gets all import jobs for current user
-     * @return
      */
     public List<ImportJob> jobsForCurrentUser() {
         try {
@@ -92,7 +87,7 @@ public class WelcomeView extends AbstractView {
 
     /**
      * Finds out if notifications have been sent for the current user
-     * @return return. false if exception.
+     * @return false if exception.
      */
     public boolean notificationSentForCurrentUser(int jobId) {
         try {
@@ -102,7 +97,8 @@ public class WelcomeView extends AbstractView {
             }
             return (notifications.get(0).getNotified() == 1);
         } catch (Exception e) {
-            logger.error("Error finding notifications", e);
+            logger.error("Error finding notifications for current user. {}", e.getMessage());
+            logger.trace("Error finding notification for current user", e);
             return false;
         }
     }
