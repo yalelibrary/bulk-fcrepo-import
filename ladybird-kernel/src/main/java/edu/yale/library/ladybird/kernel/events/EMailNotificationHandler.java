@@ -21,10 +21,10 @@ public class EMailNotificationHandler implements NotificationHandler {
     private final Logger logger = LoggerFactory.getLogger(EMailNotificationHandler.class);
 
     public void notifyUser(final User user, final Event event, String message, String subject) {
-        logger.debug("Sending e-mail notification to user email={} with subject={}", user.getEmail(), event.getEventName());
+        logger.trace("Sending e-mail notification to user email={} with subject={}", user.getEmail(), event.getEventName());
 
-        final Email email = new SimpleEmail();
         try {
+            final Email email = new SimpleEmail();
             email.setHostName(ApplicationProperties.CONFIG_STATE.EMAIL_HOST);
             email.setSmtpPort(ApplicationProperties.CONFIG_STATE.EMAIL_PORT);
             email.setFrom(ApplicationProperties.CONFIG_STATE.EMAIL_ADMIN);
@@ -32,19 +32,19 @@ public class EMailNotificationHandler implements NotificationHandler {
             email.setMsg(message); //TODO
             email.addTo(user.getEmail());
             email.send();
+            logger.trace("Notification sent to user={}", user.getEmail());
         } catch (EmailException e) {
-            logger.error("Exception sending notification", e.getMessage()); //TODO
+            logger.error("Exception sending notification", e);
         }
     }
 
     @Override
     public void notifyUserWithFile(User user, Event event, File file) {
-
-        logger.debug("Sending e-mail notification to user email={} with subject={} with fileName={}",
+        logger.trace("Sending e-mail notification to user email={} with subject={} with fileName={}",
                 user.getEmail(), event.getEventName(), file.getName());
 
-        final Email email = new MultiPartEmail();
         try {
+            final Email email = new MultiPartEmail();
             email.setHostName(ApplicationProperties.CONFIG_STATE.EMAIL_HOST);
             email.setSmtpPort(ApplicationProperties.CONFIG_STATE.EMAIL_PORT);
             email.setFrom(ApplicationProperties.CONFIG_STATE.EMAIL_ADMIN);
@@ -54,19 +54,15 @@ public class EMailNotificationHandler implements NotificationHandler {
 
             MimeBodyPart messageBodyPart = new MimeBodyPart();
             messageBodyPart.setFileName(file.getName());
-
             DataSource dataSource = new FileDataSource(file);
             messageBodyPart.setDataHandler(new DataHandler(dataSource));
-
             MimeMultipart multipart = new MimeMultipart();
             multipart.addBodyPart(messageBodyPart);
-
             email.setContent(multipart);
-
             email.send();
-
+            logger.trace("Notification sent to user={}", user.getEmail());
         } catch (Exception e) {
-            logger.error("Exception sending notification", e.getMessage()); //TODO
+            logger.error("Exception sending notification", e);
         }
     }
 }

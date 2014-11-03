@@ -13,10 +13,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -66,7 +63,12 @@ public class CasNetIdFilter implements Filter {
             final String ticket = req.getParameter("ticket");
 
             if (ticket == null || ticket.isEmpty()) {
-                throw new ServletException("Ticket null. Failed to log in.");
+                res.setContentType("text/html");
+                PrintWriter out = res.getWriter();
+                out.println("<h2>Please log in again.</h2>");
+                out.close();
+                return;
+                //throw new ServletException("Ticket null. Failed to log in.");
             }
 
             final String service = URLEncoder.encode(indexPage);
