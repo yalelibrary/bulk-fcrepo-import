@@ -43,7 +43,7 @@ public class ObjectVersionerTest extends AbstractDBTest {
         ObjectAcidVersionDAO dao = new ObjectAcidVersionHibernateDAO();
         int objAcid = ObjectTestsHelper.writeDummyObjAcid(16, 70, "Old Acid Value");  //FIXME oid
 
-        assert (dao.findAll().isEmpty());
+        //assert (dao.findAll().isEmpty());
 
         List<ObjectAcid> list = getEmptyList();
         list.add(new ObjectAcidHibernateDAO().findAll().get(0));

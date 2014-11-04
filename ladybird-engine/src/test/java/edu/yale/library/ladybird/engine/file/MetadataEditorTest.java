@@ -26,6 +26,7 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectStringVersionHi
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectVersionHibernateDAO;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +55,7 @@ public class MetadataEditorTest extends AbstractDBTest {
      * Tests handling of multiple fdid metadata.
      * Makes an edit and tests whether edit was applied and the metadata items were versioned.
      */
+    @Ignore("until mocked")
     @Test
     public void shouldUpdateMultipleMetadata() {
         AuthorityControlDAO authDAO = new AuthorityControlHibernateDAO();
