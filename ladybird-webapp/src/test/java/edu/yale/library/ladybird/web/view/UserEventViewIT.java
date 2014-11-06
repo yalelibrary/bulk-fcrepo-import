@@ -49,7 +49,6 @@ public class UserEventViewIT extends AbstractWarTest {
         assertEquals("Not modified", response2.getStatusLine().getStatusCode(), 200);
     }
 
-    @Ignore("Until db issues fixed from engine")
     @Test
     public void shouldPopulateDatatable() throws Exception {
         createHttpUser("users", getParamsForUserHttpService());

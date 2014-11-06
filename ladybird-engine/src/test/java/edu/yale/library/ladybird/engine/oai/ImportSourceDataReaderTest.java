@@ -52,10 +52,4 @@ public class ImportSourceDataReaderTest {
         importSourceDataReader.buildMultiMap(new LocalIdentifier<>("1122"), new Record(), 0);
     }
 
-    @Ignore("Takes too long")
-    @Test
-    public void shouldGetLocalIdMarcValueTest() { //TODO
-        ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
-        importSourceDataReader.readImportSourceData(0);
-    }
 }
