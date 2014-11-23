@@ -26,7 +26,7 @@ public class ImportImageConversionQueue {
 
     public static ImageConversionRequestEvent getJob() {
         ImageConversionRequestEvent event = jobQueue.poll();
-        logger.debug("Polling queue job={}", event.toString());
+        logger.debug("Got queue job={}", event.toString());
         return event;
     }
 

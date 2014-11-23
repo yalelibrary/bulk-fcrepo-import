@@ -50,12 +50,22 @@ public class FieldConstantUtil {
     }
 
     /**
+     * Shouldn't be called again and again due to DB ops
+     *
      * Converts string to a FieldConstant (fdid or a FunctionConstants)
      *
      * @param value
      * @return
      */
     public static FieldConstant convertStringToFieldConstant(final String value) {
+
+        try {
+            return FunctionConstants.valueOf(value.toUpperCase());
+        } catch (Exception e) {
+            logger.debug("Error converting to FieldConstant(FunctionConstant) value={}", value);
+        }
+
+        //Otherwise see if it's an fdid
         try {
             int fdidInt = FieldDefinition.fdidAsInt(value);
 
@@ -67,13 +77,6 @@ public class FieldConstantUtil {
             }
         } catch (Exception e) {
             logger.trace("Could not convert, seeing if it's a function constant");
-        }
-
-        //Otherwise, see if it's a function constant:
-        try {
-            return FunctionConstants.valueOf(value.toUpperCase());
-        } catch (Exception e) {
-            logger.debug("Error converting to FieldConstant(FunctionConstant) value={}", value);
         }
 
         return null;

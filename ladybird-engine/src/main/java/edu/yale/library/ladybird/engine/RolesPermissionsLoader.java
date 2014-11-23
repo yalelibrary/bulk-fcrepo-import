@@ -13,6 +13,7 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.RolesPermissionsHiber
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +53,8 @@ public class RolesPermissionsLoader {
             }
 
 
+            List<RolesPermissions> rolesPermissionsList = new ArrayList<>();
+
             for (Roles r: Roles.values()) {
 
                 edu.yale.library.ladybird.entity.Roles role = new edu.yale.library.ladybird.entity.Roles();
@@ -82,9 +85,12 @@ public class RolesPermissionsLoader {
                     }
 
                     rolesPermissions.setValue(enabled);
-                    rolesPermissionsDAO.save(rolesPermissions);
-                    logger.debug("Saved role permissions={}", rolesPermissions);
+                    rolesPermissionsList.add(rolesPermissions);
+                    //rolesPermissionsDAO.save(rolesPermissions);
+                    logger.debug("Will save role permissions={}", rolesPermissions);
                 }
+
+                rolesPermissionsDAO.saveList(rolesPermissionsList);
             }
         } catch (Exception e) {
             logger.error("Error init to db role permissions", e);

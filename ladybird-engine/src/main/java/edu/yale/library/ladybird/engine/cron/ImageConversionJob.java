@@ -22,16 +22,25 @@ public class ImageConversionJob implements Job {
 
     private Logger logger = getLogger(this.getClass());
 
+    private SettingsDAO settingsDAO = new SettingsHibernateDAO();
+
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        logger.debug("Executing image conversion job");
-        final ImageConversionRequestEvent importRequestedEvent = ImportImageConversionQueue.getJob();
-        logger.debug("Got polled job={}", importRequestedEvent);
-        logger.debug("Export dir path={}", importRequestedEvent.getExportDirPath());
+        logger.trace("Executing image conversion job");
+
+        final ImageConversionRequestEvent importReqEvent = ImportImageConversionQueue.getJob();
+
+        if (importReqEvent == null) {
+            logger.trace("No image conversion job to process");
+            return;
+        }
+
+        logger.debug("Got polled jobId={} with exportDir={}", importReqEvent.getImportId(), importReqEvent.getExportDirPath());
+
         final MediaFunctionProcessor mediaFunctionProcessor =
-                getCtxMediaFunctionProcessor(importRequestedEvent.getExportDirPath());
+                getCtxMediaFunctionProcessor(importReqEvent.getExportDirPath());
         try {
-            mediaFunctionProcessor.process(importRequestedEvent.getImportId(), importRequestedEvent.getImportEntityValue());
+            mediaFunctionProcessor.process(importReqEvent.getImportId(), importReqEvent.getImportEntityValue());
         } catch (IOException e) {
             logger.error("Error executing job", e);
         }
@@ -42,13 +51,13 @@ public class ImageConversionJob implements Job {
      * Returns a MediaFunctionProcessor if db state is found
      */
     private MediaFunctionProcessor getCtxMediaFunctionProcessor(final String path) {
-        SettingsDAO settingsDAO = new SettingsHibernateDAO();
         final Settings settings = settingsDAO.findByProperty(ApplicationProperties.IMPORT_ROOT_PATH_ID);
 
         if (settings == null) {
             logger.debug("No db configured property={}", ApplicationProperties.IMPORT_ROOT_PATH_ID);
             return new MediaFunctionProcessor(ApplicationProperties.CONFIG_STATE.IMPORT_ROOT_PATH, path);
         }
+
         final String rootPath = settings.getValue();
         return new MediaFunctionProcessor(rootPath, path);
     }

@@ -311,7 +311,7 @@ public class ImportEntityValue {
      * @param f FieldConstnat
      * @return string value of field constant for a particular row
      */
-    public Column<String> getRowFieldColumn(final FieldConstant f, int rowNum) {
+    public Column<String> getRowFieldColumn(final FieldConstant f, final int rowNum) {
         List<Column> columnsList = getContentRows().get(rowNum).getColumns();
         int colPosition = -1;
         for (int i = 0; i < columnsList.size(); i++) {
@@ -398,9 +398,9 @@ public class ImportEntityValue {
 
         for (ImportEntity.Row row : rowList) {
             //row.getColumns().add(new ImportEntity().new Column<>(FunctionConstants.F1, defaultValue)); //too verbose
-            logger.debug("Ex size={}", row.getColumns().size());
+            //logger.debug("Ex size={}", row.getColumns().size());
             row.getColumns().add(newColumn(func, defaultValue));
-            logger.debug("New size={}", row.getColumns().size());
+            //logger.debug("New size={}", row.getColumns().size());
         }
 
         importEntityValue.setContentRows(rowList);

@@ -59,6 +59,21 @@ public class ObjectHibernateDAO extends GenericHibernateDAO<Object, Integer> imp
         }
     }
 
+    @Override
+    public int projectCount(int projectId) {
+        final Session s = getSession();
+
+        try {
+            Query q = s.createQuery("select count(*) from edu.yale.library.ladybird.entity.Object where projectId = :param");
+            q.setParameter("param", projectId);
+            return ((Long) q.uniqueResult()).intValue();
+        } finally {
+            if (s != null) {
+                s.close();
+            }
+        }
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public List<Object> findByProject(int projectId) {

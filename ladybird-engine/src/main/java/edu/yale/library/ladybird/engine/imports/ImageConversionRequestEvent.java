@@ -49,7 +49,6 @@ public class ImageConversionRequestEvent extends ImportEvent {
         return "ImageConversionRequestEvent{" +
                 "importId=" + importId +
                 ", exportDirPath='" + exportDirPath + '\'' +
-                ", importEntityValue=" + importEntityValue +
                 '}';
     }
 }

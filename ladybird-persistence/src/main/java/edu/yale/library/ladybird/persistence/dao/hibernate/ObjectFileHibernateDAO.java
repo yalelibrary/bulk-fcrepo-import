@@ -92,16 +92,17 @@ public class ObjectFileHibernateDAO extends GenericHibernateDAO<ObjectFile, Inte
             q.setMaxResults(count);
 
             final List<Object> list = q.list();
-
             final List<ObjectFile> objFileList = new ArrayList<>();
 
             for (final Object o : list) {
                 final ObjectFile objectFile = findByOid(o.getOid(), s);
+
                 if (objectFile == null) {
                     logger.trace("No object file for oid={}", o.getOid());
                     continue;
                 }
-                objFileList.add(findByOid(o.getOid()));
+
+                objFileList.add(objectFile);
             }
             return objFileList;
         } catch (HibernateException e) {
@@ -117,11 +118,15 @@ public class ObjectFileHibernateDAO extends GenericHibernateDAO<ObjectFile, Inte
         try {
             final Query q = s.createQuery("from edu.yale.library.ladybird.entity.ObjectFile where oid = :param");
             q.setParameter("param", oid);
+            q.setFirstResult(1);
+            q.setMaxResults(1);
+
             final List<ObjectFile> list = q.list();
 
             if (list.isEmpty()) {
                 logger.trace("Empty list for oid={}", oid);
             }
+
             return list.isEmpty() ? null : list.get(0);
         } catch (HibernateException e) {
             logger.error("Error finding by oid={}", oid, e);

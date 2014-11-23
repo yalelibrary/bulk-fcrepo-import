@@ -14,5 +14,7 @@ public interface ObjectDAO extends GenericDAO<Object, Integer> {
 
     int childCount(int oid);
 
+    int projectCount(int projectId);
+
 }
 

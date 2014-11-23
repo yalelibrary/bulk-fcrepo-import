@@ -29,7 +29,7 @@ public class HandleMinter {
                 String bibId = row.getColumns().get(f104Column).getValue().toString();
                 row.getColumns().add(new ImportEntity().new Column<>(fdid111, "http://hdl.handle.net/10079/bibid/" + bibId));
             } catch (Exception e) {
-                logger.trace(e.getMessage()); //ignore
+                logger.trace("Error={}", e.getMessage()); //ignore
             }
         }
         importEntityValue.setContentRows(rowList);

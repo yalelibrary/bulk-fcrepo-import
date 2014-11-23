@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -75,13 +76,11 @@ public class ExportReader {
         }
 
         final List<Row> resultRowList = new ArrayList<>();
-
         resultRowList.add(exheadRow); //N.B. exhead row added
 
         //Get import job contents rows of columns. These will be MERGED with the oai data:
 
         final List<Row> regularRows = readImportRows(importId);
-
         ImportEntityValue importEntityValue = new ImportEntityValue(regularRows);
 
         int localIdentifierColumnNum = -1;
@@ -171,46 +170,53 @@ public class ExportReader {
      * @return list of ImportEntity.Row or empty list
      */
     public List<Row> readImportRows(final int importId) {
+
+        logger.debug("Reading import rows");
+
         final List<Row> resultList = new ArrayList<>();
         final ImportJobExheadDAO importJobExheadDAO = new ImportJobExheadHibernateDAO();
-        List<ImportJobExhead> importJobExheads;
+        List<ImportJobExhead> exheads;
 
         try {
-            importJobExheads = importJobExheadDAO.findByImportId(importId);
-            logger.trace("ImportJobExheads size={}", importJobExheads.size());
+            exheads = importJobExheadDAO.findByImportId(importId);
+            logger.trace("ImportJobExheads size={}", exheads.size());
 
             int numRowsPerImportJob = importJobContentsDAO.getNumRowsPerImportJob(importId);
             numRowsPerImportJob = numRowsPerImportJob + 1;
-
             logger.trace("Import job contents num rows={}", numRowsPerImportJob);
 
+            //cache functions
+            Map<String, FieldConstant> cache = new HashMap<>();
+
             for (int i = 0; i < numRowsPerImportJob; i++) {
-                final List<ImportJobContents> rowJobContentsList = importJobContentsDAO.findByRow(importId, i); //note
-
-                logger.trace("Job contents for row={}" + rowJobContentsList.toString());
-
+                final List<ImportJobContents> rowJobContents = importJobContentsDAO.findByRow(importId, i);
                 final Row row = new ImportEntity().new Row();
 
                 //Warning: Gets all columns (including F104/F105 COLUMN)
-                for (int j = 0; j < rowJobContentsList.size(); j++) {
+                for (int j = 0; j < rowJobContents.size(); j++) {
                     try {
-                        final ImportJobExhead importJobExhead = importJobExheads.get(j);
-                        String headerValue = importJobExhead.getValue();
-                        logger.trace("Header val={}", headerValue);
-                        final FieldConstant fieldConstant = FieldConstantUtil.convertStringToFieldConstant(headerValue);
+                        final ImportJobExhead importJobExhead = exheads.get(j);
+                        final String header = importJobExhead.getValue();
+                        logger.trace("Header={}", header);
 
-                        if (fieldConstant == null) {
-                            logger.trace("Field Constant null for headerValue={}", headerValue);
+                        FieldConstant fieldConstant;
+
+                        if (cache.containsKey(header)) {
+                            fieldConstant = cache.get(header);
+                        } else {
+                            fieldConstant = FieldConstantUtil.convertStringToFieldConstant(header);
+
+                            if (fieldConstant == null) {
+                                logger.trace("Field Constant null for headerValue={}", header);
+                            }
+
+                            cache.put(header, fieldConstant);
                         }
-                        final ImportJobContents jobContents = rowJobContentsList.get(j);
 
-                        logger.trace("JobContents={}", jobContents.toString());
-
+                        final ImportJobContents jobContents = rowJobContents.get(j);
                         row.getColumns().add(new ImportEntity().new Column<>(fieldConstant, jobContents.getValue()));
-                        //logger.debug("Added value={}", jobContents.getValueMap());
                     } catch (Exception e) {
                         logger.error("Error retrieving value={}", e.getMessage());
-                        continue;
                     }
                 }
                 resultList.add(row);

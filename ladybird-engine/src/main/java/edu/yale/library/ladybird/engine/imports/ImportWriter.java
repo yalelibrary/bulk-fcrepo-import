@@ -19,6 +19,7 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobExheadHibern
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobHibernateDAO;
 import org.slf4j.Logger;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -68,7 +69,7 @@ public class ImportWriter {
     }
 
     private synchronized ImportEntityValue writeF1(final ImportEntityValue importEntityValue, final int projectId) {
-        //Process F1
+        // Process F1
         if (!importEntityValue.fieldConstantsInExhead(FunctionConstants.F1)) {
             return processF1(importEntityValue, projectId);
         }
@@ -87,13 +88,17 @@ public class ImportWriter {
         final ImportJobExheadDAO dao = new ImportJobExheadHibernateDAO();
         int col = 0;
 
+        final List<ImportJobExhead> exheads = new ArrayList<>();
+
         for (final ImportEntity.Column column : list) {
             ImportJobExhead entry = new ImportJobExheadBuilder().setImportId(importId).setCol(col).
                     setDate(JOB_EXEC_DATE).setValue(column.field.getName()).createImportJobExhead();
-            dao.save(entry);
+            exheads.add(entry);
             logger.trace("Saved={}", entry.toString());
             col++;
         }
+
+        dao.saveList(exheads);
     }
 
     /**
@@ -111,13 +116,13 @@ public class ImportWriter {
 
             checkImportIdPreConditions(importId);
 
-            //Write import source data
+            // Write import source data
             importSourceProcessor.process(importId, oaiProvider, importEntity);
 
             if (sheetFieldConstants.contains(FunctionConstants.F1)) {
                 if (sheetFieldConstants.contains(FunctionConstants.F3)) { //F1 is present -> update oid with attached F3
                     logger.info("Spreadsheet has col F1, and F3");
-                    mediaFunctionProcessor.processWithoutImage(importId, importEntity);
+                    mediaFunctionProcessor.createObjectFile(importId, importEntity);
                     addImageConversionJob(importId, importEntity);
                 } else { //F1 is present, but no F3. Nothing to do.
                     logger.info("No F3 column found in spreadsheet. Nothing to do.");
@@ -125,12 +130,12 @@ public class ImportWriter {
             } else {
                 if (sheetFieldConstants.contains(FunctionConstants.F3)) { //no F1 -> generate oid and attach F3
                     logger.info("Spreadsheet doesn't have F1, but F3");
-                    mediaFunctionProcessor.processWithoutImage(importId, importEntity);
+                    mediaFunctionProcessor.createObjectFile(importId, importEntity);
                     addImageConversionJob(importId, importEntity);
                 } else { //Neither F1, nor F3 present -> generate blank
                     logger.info("Spreadsheet doesn't have F1, nor F3");
                     importEntity = addF3Column(importEntity);
-                    mediaFunctionProcessor.processWithoutImage(importId, importEntity);
+                    mediaFunctionProcessor.createObjectFile(importId, importEntity);
                     addImageConversionJob(importId, importEntity);
                 }
             }
@@ -153,19 +158,21 @@ public class ImportWriter {
 
             final ImportJobContentsBuilder imjBuilder = new ImportJobContentsBuilder();
 
-            //Save all to DB table import job contents (N.B. f104/f105 column(s) also persisted):
+            final List<ImportJobContents> importJobContentsList = new ArrayList<>();
+
+            // Save to DB import job contents (N.B. f104/f105 column(s) also persisted):
             for (int i = 0; i < rowList.size(); i++) {
                 final ImportEntity.Row row = rowList.get(i);
                 final List<ImportEntity.Column> cols = row.getColumns();
 
                 for (int j = 0; j < cols.size(); j++) {
                     final ImportEntity.Column<String> col = cols.get(j);
-                    final ImportJobContents entry = imjBuilder.setImportId(importId).setDate(JOB_EXEC_DATE)
-                            .setCol(j).setRow(i).setValue(col.getValue()).build();
-                    dao.save(entry);
-                    logger.trace("Saved entry={}", entry);
+                    importJobContentsList.add(imjBuilder.setImportId(importId).setDate(JOB_EXEC_DATE)
+                            .setCol(j).setRow(i).setValue(col.getValue()).build());
                 }
             }
+
+            dao.saveList(importJobContentsList);
 
             //logger.info("Wrote to import job contents num. rows={} for importId={}", dao.findByImportId(importId).size(), importId);
             checkImportIdPostConditions(importId);

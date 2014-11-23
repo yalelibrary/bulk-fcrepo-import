@@ -11,6 +11,7 @@
         <property name="hibernate.connection.CharSet">utf8</property>
         <property name="hibernate.connection.characterEncoding">utf8</property>
         <property name="hibernate.connection.useUnicode">true</property>
+        <property name="hibernate.jdbc.batch_size">500</property>
         <mapping resource="ladybird-hbm/Collection.hbm.xml"/>
         <mapping resource="ladybird-hbm/FieldDefinition.hbm.xml"/>
         <mapping resource="ladybird-hbm/FieldMarcMapping.hbm.xml"/>

@@ -98,11 +98,11 @@ public class ObjectFileBuilder {
         objectFile.setFileName(fileName);
         objectFile.setFilePath(filePath);
         objectFile.setFileExt(fileExt);
-        objectFile.setFileSize(fileSize);
+        //objectFile.setFileSize(fileSize);
         objectFile.setMd5(md5);
-        objectFile.setSha256(sha256);
-        objectFile.setHydraPublishId(hydraPublishId);
-        objectFile.setStatus(status);
+        //objectFile.setSha256(sha256);
+        //objectFile.setHydraPublishId(hydraPublishId);
+        //objectFile.setStatus(status);
         objectFile.setThumbnail(thumbnail);
         return objectFile;
     }

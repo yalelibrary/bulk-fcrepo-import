@@ -5,6 +5,7 @@ import edu.yale.library.ladybird.persistence.dao.GenericDAO;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
 import org.slf4j.Logger;
 
@@ -35,6 +36,10 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
 
     protected Session getSession() {
         return HibernateUtil.getSessionFactory().openSession();
+    }
+
+    protected StatelessSession getStatelessSession() {
+        return HibernateUtil.getSessionFactory().openStatelessSession();
     }
 
     public Class<T> getPersistentClass() {
@@ -90,20 +95,19 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
     }
 
     public Integer save(T item) {
+        logger.trace("Saving item={}", item.toString());
         Integer id = -1;
         Session s = null;
         Transaction tx = null;
         try {
             s = getSession();
             tx = s.beginTransaction();
-            logger.trace("Saving item={}", item.toString());
             id = (Integer) s.save(item);
-            logger.trace("Saved item={}", item.toString());
             s.flush();
             tx.commit();
-            logger.trace("Saved item");
+            logger.trace("Saved item={}", item.toString());
         } catch (HibernateException t) {
-            logger.error("Exception tyring to persist item." + t.getMessage());
+            logger.error("Exception tyring to persist item.", t);
             try {
                 if (tx != null) {
                     tx.rollback();
@@ -113,6 +117,8 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
                 throw rt;
             }
             throw t;
+        } catch (Throwable t)  {
+            logger.error("Generic error saving item", t);
         } finally {
             if (s != null) {
                 s.close();
@@ -232,20 +238,19 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
      * @param itemList list of entities
      */
     public void saveList(List<T> itemList) {
-        Integer id = -1;
-        Session s = null;
+        logger.debug("Saving list of size={}", itemList.size());
+        StatelessSession s = null;
         Transaction tx = null;
         try {
-            s = getSession();
+            s = getStatelessSession();
             tx = s.beginTransaction();
 
-            for (T item : itemList) {
-                s.save(item);
-                logger.trace("Saved item={}", item.toString());
-
-                s.flush();
+            for (int i = 0; i < itemList.size(); i++) {
+                //logger.debug("Inserting i={}", i);
+                s.insert(itemList.get(i));
             }
-            tx.commit();
+
+            s.getTransaction().commit();
         } catch (HibernateException t) {
             logger.error("Exception tyring to persist item." + t.getMessage());
             try {
