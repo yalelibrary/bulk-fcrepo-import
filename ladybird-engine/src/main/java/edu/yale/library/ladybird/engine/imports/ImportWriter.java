@@ -122,7 +122,7 @@ public class ImportWriter {
             if (sheetFieldConstants.contains(FunctionConstants.F1)) {
                 if (sheetFieldConstants.contains(FunctionConstants.F3)) { //F1 is present -> update oid with attached F3
                     logger.info("Spreadsheet has col F1, and F3");
-                    mediaFunctionProcessor.createObjectFile(importId, importEntity);
+                    mediaFunctionProcessor.createObjectFiles(importId, importEntity);
                     addImageConversionJob(importId, importEntity);
                 } else { //F1 is present, but no F3. Nothing to do.
                     logger.info("No F3 column found in spreadsheet. Nothing to do.");
@@ -130,12 +130,12 @@ public class ImportWriter {
             } else {
                 if (sheetFieldConstants.contains(FunctionConstants.F3)) { //no F1 -> generate oid and attach F3
                     logger.info("Spreadsheet doesn't have F1, but F3");
-                    mediaFunctionProcessor.createObjectFile(importId, importEntity);
+                    mediaFunctionProcessor.createObjectFiles(importId, importEntity);
                     addImageConversionJob(importId, importEntity);
                 } else { //Neither F1, nor F3 present -> generate blank
                     logger.info("Spreadsheet doesn't have F1, nor F3");
                     importEntity = addF3Column(importEntity);
-                    mediaFunctionProcessor.createObjectFile(importId, importEntity);
+                    mediaFunctionProcessor.createObjectFiles(importId, importEntity);
                     addImageConversionJob(importId, importEntity);
                 }
             }

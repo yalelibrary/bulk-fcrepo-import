@@ -60,9 +60,9 @@ public class ExportReader {
             return empty;
         }
 
-        ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
+        logger.debug("Merging with OAI provider values");
 
-        final List<LocalIdMarcValue> bibIdValueList = importSourceDataReader.readImportSourceData(importId);
+        ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
 
         //Get all FieldConstant. Each should have a column in the output.
         final List<FieldConstant> globalFConstantsList = FieldConstantUtil.getApplicationFieldConstants();
@@ -84,6 +84,7 @@ public class ExportReader {
         ImportEntityValue importEntityValue = new ImportEntityValue(regularRows);
 
         int localIdentifierColumnNum = -1;
+
         try {
             localIdentifierColumnNum = importEntityValue.getFunctionPosition(FunctionConstants.F104); //or F105 TODO
         } catch (Exception e) {
@@ -98,6 +99,8 @@ public class ExportReader {
             }
         }
 
+        final List<LocalIdMarcValue> bibIdValueList = importSourceDataReader.readImportSourceData(importId);
+
         for (int i = 0; i < numRowsToWrite; i++) {
             logger.trace("Eval={}", i);
 
@@ -107,7 +110,7 @@ public class ExportReader {
 
             // for each field constant (NOT for each column):
             for (final FieldConstant fieldConst : globalFConstantsList) {
-                final String mergedValue = getColumnValue(fieldConst, localIdentifierColumnNum, cols, bibIdValueList);
+                final String mergedValue = mergeWithOaiValue(fieldConst, localIdentifierColumnNum, cols, bibIdValueList);
                 final ImportEntity importEntity = new ImportEntity();
                 rowToWrite.getColumns().add(importEntity.new Column<>(fieldConst, mergedValue));
             }
@@ -122,9 +125,7 @@ public class ExportReader {
         return iContext;
     }
 
-    private String getColumnValue(FieldConstant fieldConst, int localIdentifierColumnNum, List<Column> cols, List<LocalIdMarcValue> bibIdValueList) {
-        logger.trace("Evaluating FieldConstant={} ", fieldConst.getName());
-
+    private String mergeWithOaiValue(FieldConstant fieldConst, int localIdentifierColumnNum, List<Column> cols, List<LocalIdMarcValue> bibIdValueList) {
         String plain =  ImportEntityValue.findColValueFromRow(fieldConst, cols);
 
         if (plain == null || plain.isEmpty()) {
@@ -137,10 +138,10 @@ public class ExportReader {
         //TODO chk via fdid marc:
         if (localIdentifierColumnNum != -1 && !FunctionConstants.isFunction(fieldConst.getName()) && !fieldConst.getTitle().equalsIgnoreCase("Handle")) {
             final Column<String> bibIdColumn = cols.get(localIdentifierColumnNum);
-            logger.trace("bibIdcolumn={}", bibIdColumn);
+            //logger.trace("bibIdcolumn={}", bibIdColumn);
 
             LocalIdMarcValue localIdMarcValue = LocalIdMarcValue.findMatch(bibIdValueList, bibIdColumn.getValue());
-            logger.trace("localIdMarcValue={}", localIdMarcValue);
+            //logger.trace("localIdMarcValue={}", localIdMarcValue);
 
             if (localIdMarcValue == null) {
                 return oai;
@@ -150,11 +151,9 @@ public class ExportReader {
         }
 
         final String merged = plain + oai;
-        logger.trace("Values: merged={} oai={} original={}", merged, oai, plain);
+        logger.trace("FieldConstant={} Values: merged={} oai={} original={}", fieldConst.getName(), merged, oai, plain);
         return merged;
     }
-
-
 
     /**
      * Returns rows of import job tables
@@ -162,15 +161,13 @@ public class ExportReader {
      * @return list of ImportEntity.Row or empty list
      */
     public List<Row> readImportRows(final int importId) {
-
-        logger.debug("Reading import rows");
+        logger.debug("Reading import rows for importId={}", importId);
 
         final List<Row> resultList = new ArrayList<>();
         final ImportJobExheadDAO importJobExheadDAO = new ImportJobExheadHibernateDAO();
-        List<ImportJobExhead> exheads;
 
         try {
-            exheads = importJobExheadDAO.findByImportId(importId);
+            List<ImportJobExhead> exheads = importJobExheadDAO.findByImportId(importId);
             logger.trace("ImportJobExheads size={}", exheads.size());
 
             int numRowsPerImportJob = importJobContentsDAO.getNumRowsPerImportJob(importId);
@@ -196,7 +193,7 @@ public class ExportReader {
                         if (cache.containsKey(header)) {
                             fieldConstant = cache.get(header);
                         } else {
-                            fieldConstant = FieldConstantUtil.convertStringToFieldConstant(header);
+                            fieldConstant = FieldConstantUtil.toFieldConstant(header);
 
                             if (fieldConstant == null) {
                                 logger.trace("Field Constant null for headerValue={}", header);

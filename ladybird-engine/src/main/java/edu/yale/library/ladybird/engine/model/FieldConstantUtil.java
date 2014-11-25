@@ -57,7 +57,7 @@ public class FieldConstantUtil {
      * @param value
      * @return
      */
-    public static FieldConstant convertStringToFieldConstant(final String value) {
+    public static FieldConstant toFieldConstant(final String value) {
 
         try {
             return FunctionConstants.valueOf(value.toUpperCase());
@@ -92,7 +92,7 @@ public class FieldConstantUtil {
      *
      */
     public static FieldConstant getFieldConstant(final String cellValue) throws UnknownFieldConstantException {
-        final FieldConstant f = FieldConstantUtil.convertStringToFieldConstant(cellValue);
+        final FieldConstant f = FieldConstantUtil.toFieldConstant(cellValue);
 
         if (f != null) {
             return f;
@@ -103,7 +103,7 @@ public class FieldConstantUtil {
             final String normCellString = cellValue.replace("{", "").replace("}", "");
             return FunctionConstants.valueOf(normCellString.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new UnknownFieldConstantException("Specified cell=" + cellValue + " not a recognized function or fdid.");
+            throw new UnknownFieldConstantException("Specified cell=" + cellValue + " unrecognized function or fdid.");
         }
     }
 

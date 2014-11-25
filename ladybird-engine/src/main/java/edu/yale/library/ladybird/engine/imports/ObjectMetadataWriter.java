@@ -69,15 +69,15 @@ public class ObjectMetadataWriter {
                     continue;
                 }
 
-                logger.trace("Evaluating FieldConstant={} ", f.getName());
+                //logger.trace("Evaluating FieldConstant={} ", f.getName());
 
                 Map<ImportEntity.Column, ImportEntity.Column> columnMap = importEntityValue.getContentColumnValuesWithOIds(f);
 
-                logger.trace("All column values for this field are={}", columnMap.toString());
+                //logger.trace("All column values for this field are={}", columnMap.toString());
 
                 Set<ImportEntity.Column> keys = columnMap.keySet();
 
-                logger.trace("Column map key set size={}", keys.size());
+                //logger.trace("Column map key set size={}", keys.size());
 
                 for (ImportEntity.Column c : keys) {
                     String oidStr = (String) c.getValue();
@@ -106,7 +106,6 @@ public class ObjectMetadataWriter {
                             acidObj.setDate(new Date());
                             acidObj.setValue(value);
                             acid = authorityControlDAO.save(acidObj);
-                            logger.trace("Saved entity={}", acidObj.toString());
                         } else if (existingAcidList.size() == 1) {
                             acid = existingAcidList.get(0).getAcid();
                         } else {
@@ -118,7 +117,7 @@ public class ObjectMetadataWriter {
                         ObjectAcid existingObjectAcid = objectAcidDAO.findByOidAndFdid(Integer.parseInt(oidStr), fdid);
 
                         if (existingObjectAcid != null) {
-                            logger.trace("Warning: An object acid value already exists for oid={} fdid={}", oidStr, fdid);
+                            logger.trace("An object acid value already exists for oid={} fdid={}", oidStr, fdid);
                             objectAcidDAO.delete(Collections.singletonList(existingObjectAcid));
                             logger.trace("Deleted={}", existingObjectAcid);
                         }
@@ -143,7 +142,7 @@ public class ObjectMetadataWriter {
                         final ObjectString exObjectString = objectStringDAO.findByOidAndFdid(oid, fdid);
 
                         if (exObjectString != null) {
-                            logger.trace("Warning: A string value already exists for oid={} fdid={}", oid, fdid);
+                            logger.trace("A string value already exists for oid={} fdid={}", oid, fdid);
                             objectStringDAO.delete(Collections.singletonList(exObjectString));
                             logger.trace("Deleted={}", exObjectString);
                         }

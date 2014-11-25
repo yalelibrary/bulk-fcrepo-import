@@ -95,7 +95,7 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
     }
 
     public Integer save(T item) {
-        logger.trace("Saving item={}", item.toString());
+        //logger.trace("Saving item={}", item.toString());
         Integer id = -1;
         Session s = null;
         Transaction tx = null;
@@ -237,7 +237,7 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
      * @param itemList list of entities
      */
     public void saveList(List<T> itemList) {
-        logger.debug("Saving list of size={}", itemList.size());
+        logger.trace("Saving list of size={}", itemList.size());
         StatelessSession s = null;
         Transaction tx = null;
         try {

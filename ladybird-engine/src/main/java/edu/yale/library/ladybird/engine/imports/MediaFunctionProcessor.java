@@ -13,6 +13,7 @@ import edu.yale.library.ladybird.persistence.dao.ObjectFileDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportFileHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectFileHibernateDAO;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.time.DurationFormatUtils;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -22,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkState;
+import static java.lang.Integer.parseInt;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class MediaFunctionProcessor {
@@ -47,16 +49,16 @@ public class MediaFunctionProcessor {
      * @throws IOException if any single conversion fails
      */
     @SuppressWarnings("unchecked")
-    public void process(final int importId, final ImportEntityValue importEntityValue) throws IOException {
-        logger.debug("Running process");
+    public void convert(final int importId, final ImportEntityValue importEntityValue) throws IOException {
+        String blankFileName = "N/A";
 
         final int userId = 1; //TODO check this
         final List<Row> rowList = importEntityValue.getContentRows();
-        logger.debug("importId={} row list size={}", importId, rowList.size());
+
+        logger.debug("[start] converting media for import id={} rowlist size={}", importId, rowList.size());
 
         for (int i = 0; i < rowList.size(); i++) {
             final Column<String> f3 = importEntityValue.getRowFieldColumn(FunctionConstants.F3, i);
-
             checkState(f3.getField().getName().equals(FunctionConstants.F3.getName()), "Found wrong F3 col");
 
             final String f3Col = f3.getValue();
@@ -64,9 +66,7 @@ public class MediaFunctionProcessor {
 
             final Column<String> f1 = importEntityValue.getRowFieldColumn(FunctionConstants.F1, i);
             checkState(f1.getField().getName().equals(FunctionConstants.F1.getName()), "Found wrong F1 col");
-
-            final String oidCol = f1.getValue();
-            final Integer oid = Integer.parseInt(oidCol);
+            final int oid = parseInt(f1.getValue());
 
             // Update import file and convert image (plus a thumbnail)
             // or, if no image found: update dao with blank image found on project folder & skip ImageMagick step.
@@ -108,7 +108,6 @@ public class MediaFunctionProcessor {
                             .fileLocation(getPath(defaultImage)).create();
                     importFileDAO.save(imFile);
 
-                    String fileName = "N/A";
                     byte[] thumbnail = getDefaultThumbnail();
 
                     if (thumbnail == null || thumbnail.length == 0) {
@@ -116,8 +115,8 @@ public class MediaFunctionProcessor {
                     }
 
                     final ObjectFile objectFile = new ObjectFileBuilder().setDate(new Date()).setFilePath(getPath(defaultImage))
-                            .setFileExt(MediaFormat.JPEG.toString()).setOid(oid).setUserId(userId).setFileLabel(fileName)
-                            .setThumbnail(thumbnail).setFileName(fileName).createObjectFile();
+                            .setFileExt(MediaFormat.JPEG.toString()).setOid(oid).setUserId(userId).setFileLabel(blankFileName)
+                            .setThumbnail(thumbnail).setFileName(blankFileName).createObjectFile();
 
                     objectFileDAO.save(objectFile);
                 }
@@ -126,6 +125,9 @@ public class MediaFunctionProcessor {
                 throw e;
             }
         }
+        //logger.debug("[end] conversion complete in={}",
+        // DurationFormatUtils.formatDurationHMS(System.currentTimeMillis() - timeInConversion));
+
     }
 
     /**
@@ -146,7 +148,7 @@ public class MediaFunctionProcessor {
 
             logger.trace("Converted image to={}", outputFilePath);
         } catch (Exception e) {
-            logger.error("Error or warning converting image={}", e.getMessage()); //N.B. ignore errors and warnings
+            logger.trace("Error/warning converting for oid={}", oid); //N.B. ignore errors and warnings
             logger.trace("Error", e);
         }
 
@@ -158,7 +160,7 @@ public class MediaFunctionProcessor {
 
             logger.trace("Converted image to thumbnail={}", thumbnailPath);
         } catch (Exception e) {
-            logger.error("Error or warning converting to thumbnail={}", e.getMessage()); //N.B. ignore errors and warnings
+            logger.trace("Error/warning converting to thumbnail for oid={}", oid); //N.B. ignore errors and warnings
             logger.trace("Error", e);
         }
 
@@ -195,8 +197,8 @@ public class MediaFunctionProcessor {
      * @throws Exception if any single conversion fails
      */
     @SuppressWarnings("unchecked")
-    public void createObjectFile(final int importId, final ImportEntityValue importEntityValue) throws Exception {
-        logger.debug("Creating ObjectFile with blank image references for importId={}", importId);
+    public void createObjectFiles(final int importId, final ImportEntityValue importEntityValue) throws Exception {
+        logger.debug("[start] Creating ObjectFiles with blank image references for importId={}", importId);
         final int userId = 1; //TODO check this
         final String nullFileName = "N/A";
         final byte[] thumbnail = getDefaultThumbnail();
@@ -215,7 +217,7 @@ public class MediaFunctionProcessor {
         for (int i = 0; i < rowList.size(); i++) {
             final Column<String> f1 = importEntityValue.getRowFieldColumn(FunctionConstants.F1, i);
             checkState(f1.getField().getName().equals(FunctionConstants.F1.getName()), "Found wrong F1 col");
-            oid = Integer.parseInt(f1.getValue());
+            oid = parseInt(f1.getValue());
             importFiles.add(importFileBuilder.importId(importId).oid(oid).fileLocation(filePath).create());
             objectFiles.add(objectFileBuilder.setDate(currentDate).setFilePath(filePath).setFileExt(jpeg)
                     .setOid(oid).setUserId(userId).setFileLabel(nullFileName).setThumbnail(thumbnail)
@@ -223,15 +225,15 @@ public class MediaFunctionProcessor {
         }
 
         try {
-            logger.debug("Saving importFile list of size={}", importFiles.size());
+            logger.trace("Saving importFile list of size={}", importFiles.size());
             importFileDAO.saveList(importFiles);
-            logger.debug("Saving objectFiles list of size={}", objectFiles.size());
+            logger.trace("Saving objectFiles list of size={}", objectFiles.size());
             objectFileDAO.saveList(objectFiles);
         } catch (Throwable e) {
             logger.error("Error/warning persisting importFile or objectFile", e);
             throw e;
         }
-        logger.debug("Done creating object file");
+        logger.debug("[end] done creating ObjectFiles");
     }
 
     /**

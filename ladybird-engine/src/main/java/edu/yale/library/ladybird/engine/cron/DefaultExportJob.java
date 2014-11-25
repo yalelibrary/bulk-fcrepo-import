@@ -43,6 +43,7 @@ import java.util.List;
 
 import static edu.yale.library.ladybird.engine.ExportBus.postEvent;
 import static org.apache.commons.lang.time.DurationFormatUtils.formatDurationHMS;
+import static org.apache.commons.lang.time.DurationFormatUtils.formatDurationWords;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class DefaultExportJob implements Job, ExportJob {
@@ -148,7 +149,7 @@ public class DefaultExportJob implements Job, ExportJob {
 
     private void sendNotification(final ExportCompleteEvent exportEvent, final List<User> u) {
         String message = "Rows exported:" + exportEvent.getRowsProcessed();
-        message += ", Time:" + formatDurationHMS(exportEvent.getTime());
+        message += ", Time:" + formatDurationWords(exportEvent.getTime(), true, true);
         String subject = "Export complete for job # " + exportEvent.getImportId();
         NotificationEventQueue.addEvent(new NotificationEventQueue().new NotificationItem(exportEvent, u, message, subject));
     }

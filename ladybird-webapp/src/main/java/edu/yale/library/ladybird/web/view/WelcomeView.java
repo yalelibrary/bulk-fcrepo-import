@@ -77,7 +77,7 @@ public class WelcomeView extends AbstractView {
     public List<ImportJob> jobsForCurrentUser() {
         try {
             List<ImportJob> importJobs = importJobDAO.findByUser(authUtil.getCurrentUserId());
-            logger.trace("Found list={}", importJobs.toString());
+            logger.trace("Import jobs for current user={}", importJobs.toString());
             return importJobs;
         } catch (Exception e) {
             logger.debug("No current user or error finding jobs.");

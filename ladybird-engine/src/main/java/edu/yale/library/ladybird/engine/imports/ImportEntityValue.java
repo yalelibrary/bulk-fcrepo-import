@@ -134,8 +134,8 @@ public class ImportEntityValue {
             Column o = rowList.get(i).getColumns().get(order);
             for (Column c : rowList.get(i).getColumns()) {
                 if (c.getField().getName().equals(fieldConstant.getName())) {
-                    logger.trace("Found match={} with value={}", c.getField().getName(), fieldConstant.getName());
-                    logger.trace("Values c1={} c2={}", o, c);
+                    //logger.trace("Found match={} with value={}", c.getField().getName(), fieldConstant.getName());
+                    //logger.trace("Values c1={} c2={}", o, c);
                     rowIdMap.put(o, c);
                 }
             }

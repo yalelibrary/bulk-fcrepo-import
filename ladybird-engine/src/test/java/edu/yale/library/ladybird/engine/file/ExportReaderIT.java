@@ -53,7 +53,7 @@ public class ExportReaderIT extends AbstractDBTest {
 
     @Test
     public void shouldConvertFunctionStringToFieldConst() {
-        final FieldConstant f = FieldConstantUtil.convertStringToFieldConstant("F1");
+        final FieldConstant f = FieldConstantUtil.toFieldConstant("F1");
         assert (f != null);
         assertEquals("Value mismatch", f.getName(), "F1");
 

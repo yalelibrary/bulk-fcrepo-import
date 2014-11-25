@@ -104,7 +104,7 @@ public final class ImportReader {
 
             try {
                 while (it.hasNext()) {
-                    logger.trace("Reading content row={}", debugRowCount);
+                    //logger.trace("Reading content row={}", debugRowCount);
                     debugRowCount++;
 
                     final ImportEntity.Row contentsSheetRow = importEntity.new Row();
@@ -140,7 +140,7 @@ public final class ImportReader {
 
                     cellCount = 0;
                 }
-                logger.trace("Content row index={}", debugRowCount);
+                //logger.trace("Content row index={}", debugRowCount);
             } catch (IllegalArgumentException e) {
                 logger.error("Error reading cell column={}, error={}", cellCount + 1, e.getMessage());
                 throw new IllegalArgumentException(e);

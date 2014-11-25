@@ -62,12 +62,11 @@ public class DefaultImportJob implements Job, ImportJob {
             final DefaultFieldDataValidator fieldDataValidator = new DefaultFieldDataValidator();
 
             //Post init
-            logger.debug("Posting progress event");
             ExportBus.postEvent(importRequestedEvent);
 
             final List<ImportEntity.Row> rowList = importEngine.read(spreadsheetFile, ReadMode.FULL, fieldDataValidator);
 
-            logger.debug("Read rows. list size={}", rowList.size());
+            logger.trace("Read rows. list size={}", rowList.size());
 
             //TODO provide
             final OaiProvider provider = getCtxOaiProvider();
@@ -117,7 +116,7 @@ public class DefaultImportJob implements Job, ImportJob {
 
     private void sendNotification(final ImportCompleteEvent importEvent, final List<User> userList) {
         String message = "Rows imported: " + importEvent.getRowsProcessed();
-        message += ",Time: " + DurationFormatUtils.formatDurationHMS(importEvent.getTime());
+        message += ",Time: " + DurationFormatUtils.formatDurationWords(importEvent.getTime(), true, true);
         String subject = "Import complete for job #" + importEvent.getImportId();
         NotificationEventQueue.addEvent(new NotificationEventQueue().new NotificationItem(importEvent, userList, message, subject));
     }
