@@ -11,6 +11,7 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.HydraPublishHibernate
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectFileHibernateDAO;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.SQLException;
@@ -20,10 +21,12 @@ import java.util.Date;
 import java.util.List;
 
 import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertEquals;
 
 
 public class HydraProcessorTest extends AbstractDBTest {
 
+    @Ignore
     @Test
     public void shouldWrite() {
 
@@ -46,7 +49,7 @@ public class HydraProcessorTest extends AbstractDBTest {
 
             //verify:
             HydraPublish hydraPublishResult = hydraPublishDAO.findByOid(oidToTest);
-            assert (hydraPublishResult.getAction().equalsIgnoreCase("delete"));
+            assertEquals(hydraPublishResult.getAction(), "delete");
 
         } catch (Exception e) {
             e.printStackTrace();  //TODO
