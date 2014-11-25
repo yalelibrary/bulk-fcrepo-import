@@ -81,15 +81,17 @@ public class DefaultImportJob implements Job, ImportJob {
 
             final int imid = importEngine.write(rowList, spreadsheetFile, importRequestedEvent.getMonitor().getId());
 
-            logger.debug("Completed import job in={}", DurationFormatUtils.formatDuration(System.currentTimeMillis() - startTime, "HH:mm:ss:SS"));
+            long elapsedImport = System.currentTimeMillis() - startTime;
+            logger.debug("Completed import job in={}", DurationFormatUtils.formatDuration(elapsedImport, "HH:mm:ss:SS"));
 
-            final ImportCompleteEvent importEvent = new ImportCompleteEventBuilder().setRowsProcessed(rowList.size()).createImportDoneEvent();
-            importEvent.setImportId(imid);
+            final ImportCompleteEvent importCompEvent = new ImportCompleteEventBuilder().setTime(elapsedImport)
+                    .setRowsProcessed(rowList.size()).createImportDoneEvent();
+            importCompEvent.setImportId(imid);
 
             //Post progress
-            ExportBus.postEvent(new ExportProgressEvent(importEvent, importRequestedEvent.getMonitor().getId())); //TODO consolidate
+            ExportBus.postEvent(new ExportProgressEvent(importCompEvent, importRequestedEvent.getMonitor().getId())); //TODO consolidate
 
-            sendNotification(importEvent, Collections.singletonList(importRequestedEvent.getMonitor().getUser()));
+            sendNotification(importCompEvent, Collections.singletonList(importRequestedEvent.getMonitor().getUser()));
 
             logger.debug("Added import event to notification queue");
 
@@ -114,8 +116,9 @@ public class DefaultImportJob implements Job, ImportJob {
     }
 
     private void sendNotification(final ImportCompleteEvent importEvent, final List<User> userList) {
-        String message = "Rows imported" + importEvent.getRowsProcessed();
-        String subject = "Import Complete for Job #" + importEvent.getImportId();
+        String message = "Rows imported: " + importEvent.getRowsProcessed();
+        message += ",Time: " + DurationFormatUtils.formatDurationHMS(importEvent.getTime());
+        String subject = "Import complete for job #" + importEvent.getImportId();
         NotificationEventQueue.addEvent(new NotificationEventQueue().new NotificationItem(importEvent, userList, message, subject));
     }
 

@@ -15,14 +15,16 @@ public final class ExportCompleteEvent extends ExportEvent {
     private int failedValidations;
     private SpreadsheetFile spreadsheetFile;
     private int importId;
+    private long time;
 
     public ExportCompleteEvent(User user, SpreadsheetFile spreadsheetFile, int rowsProcessed, int passCount,
-                               int failedValidations, int failCount) {
+                               int failedValidations, int failCount, long time) {
         this.spreadsheetFile = spreadsheetFile;
         this.rowsProcessed = rowsProcessed;
         this.passCount = passCount;
         this.failedValidations = failedValidations;
         this.failCount = failCount;
+        this.time = time;
     }
 
     public int getRowsProcessed() {
@@ -63,6 +65,10 @@ public final class ExportCompleteEvent extends ExportEvent {
 
     public void setSpreadsheetFile(SpreadsheetFile spreadsheetFile) {
         this.spreadsheetFile = spreadsheetFile;
+    }
+
+    public long getTime() {
+        return time;
     }
 
     public int getImportId() {

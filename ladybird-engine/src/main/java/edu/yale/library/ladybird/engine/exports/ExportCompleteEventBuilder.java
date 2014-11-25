@@ -10,6 +10,7 @@ public class ExportCompleteEventBuilder {
     private int passCount;
     private int failedValidations;
     private int failCount;
+    private long time;
 
     public ExportCompleteEventBuilder setUser(User user) {
         this.user = user;
@@ -41,7 +42,12 @@ public class ExportCompleteEventBuilder {
         return this;
     }
 
+    public ExportCompleteEventBuilder setTime(long time) {
+        this.time = time;
+        return this;
+    }
+
     public ExportCompleteEvent createExportCompleteEvent() {
-        return new ExportCompleteEvent(user, spreadsheetFile, rowsProcessed, passCount, failedValidations, failCount);
+        return new ExportCompleteEvent(user, spreadsheetFile, rowsProcessed, passCount, failedValidations, failCount, time);
     }
 }

@@ -9,6 +9,7 @@ public class ImportCompleteEventBuilder {
     private int passCount;
     private int failedValidations;
     private int failCount;
+    private long time;
 
     public ImportCompleteEventBuilder setUser(User user) {
         this.user = user;
@@ -40,7 +41,12 @@ public class ImportCompleteEventBuilder {
         return this;
     }
 
+    public ImportCompleteEventBuilder setTime(long time) {
+        this.time = time;
+        return this;
+    }
+
     public ImportCompleteEvent createImportDoneEvent() {
-        return new ImportCompleteEvent(user, spreadsheetFile, rowsProcessed, passCount, failedValidations, failCount);
+        return new ImportCompleteEvent(user, spreadsheetFile, rowsProcessed, passCount, failedValidations, failCount, time);
     }
 }

@@ -12,19 +12,26 @@ public final class ImportCompleteEvent extends ImportEvent {
     int passCount;
     int failCount;
     int failedValidations;
+    long time;
 
     private SpreadsheetFile spreadsheetFile;
 
-    public ImportCompleteEvent(User user, SpreadsheetFile spreadsheetFile, int rowsProcessed, int passCount, int failedValidations, int failCount) {
+    public ImportCompleteEvent(User user, SpreadsheetFile spreadsheetFile, int rowsProcessed, int passCount,
+                               int failedValidations, int failCount, long time) {
         this.spreadsheetFile = spreadsheetFile;
         this.rowsProcessed = rowsProcessed;
         this.passCount = passCount;
         this.failedValidations = failedValidations;
         this.failCount = failCount;
+        this.time = time;
     }
 
     public int getRowsProcessed() {
         return rowsProcessed;
+    }
+
+    public long getTime() {
+        return time;
     }
 
     public int getPassCount() {

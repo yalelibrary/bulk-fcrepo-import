@@ -31,6 +31,11 @@ public class DefaultExportMailerJob implements Job, ExportMailerJob {
 
     private Logger logger = getLogger(this.getClass());
 
+    //TODO: inject
+    private ImportJobNotificationsDAO importJobNotficationsDAO = new ImportJobNotificationsHibernateDAO();
+
+    private NotificationHandler notificationHandler = new EMailNotificationHandler();
+
     /* maximum number of notification attemtps */
     private short MAX_TRIES = 5;
 
@@ -40,10 +45,8 @@ public class DefaultExportMailerJob implements Job, ExportMailerJob {
 
         try {
             //1. Look up to see if any notifications need to be sent
-            ImportJobNotificationsDAO importJobNotficationsDAO = new ImportJobNotificationsHibernateDAO(); //TODO
             List<ImportJobNotifications> unsent = importJobNotficationsDAO.findAllUnsent();
 
-            NotificationHandler notificationHandler = new EMailNotificationHandler(); //TODO
             UserDAO userDAO = new UserHibernateDAO(); //TODO
             ImportJobDAO importJobDAO = new ImportJobHibernateDAO(); //TODO
 
@@ -60,7 +63,6 @@ public class DefaultExportMailerJob implements Job, ExportMailerJob {
                         User user = userDAO.findByUserId(userId);
 
                         final ImportJob importJob = importJobDAO.findByJobId(unsentNotification.getImportJobId()).get(0);
-
                         final String path = importJob.getExportJobDir();
 
                         if (path == null || path.isEmpty()) {
@@ -69,14 +71,12 @@ public class DefaultExportMailerJob implements Job, ExportMailerJob {
                             throw new Exception("Path null or empty");
                         }
 
-                        File f = new File(path);
-
+                        final File f = new File(path);
                         logger.debug("Attempting to send file={} to user={}", f.getAbsolutePath(), user.getUsername());
-
                         notificationHandler.notifyUserWithFile(user, new ExportEvent() {
                             @Override
                             public String getEventName() {
-                                return "FILE-READY";
+                                return "File for job #" + importJob.getImportId();
                             }
                         }, f);
 
@@ -85,8 +85,8 @@ public class DefaultExportMailerJob implements Job, ExportMailerJob {
                         unsentNotification.setNotified((byte) 1);
                         unsentNotification.setDateTried(new Date());
                         importJobNotficationsDAO.updateItem(unsentNotification);
-                        logger.trace("Updated item={}", unsentNotification);
-                        logger.trace("Full list={}", importJobNotficationsDAO.findAll()); //TODO remove
+                        //logger.trace("Updated item={}", unsentNotification);
+                        //logger.trace("Full list={}", importJobNotficationsDAO.findAll()); //TODO remove
                     } catch (Exception e) {
                         logger.error("Error notifing user with file attachment", e);
                         unsentNotification.setNumTries(unsentNotification.getNumTries() + 1);

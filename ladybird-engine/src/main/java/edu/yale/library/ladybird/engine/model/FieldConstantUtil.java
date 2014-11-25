@@ -62,7 +62,7 @@ public class FieldConstantUtil {
         try {
             return FunctionConstants.valueOf(value.toUpperCase());
         } catch (Exception e) {
-            logger.debug("Error converting to FieldConstant(FunctionConstant) value={}", value);
+            //logger.trace("Not a FunctionConstant value={}", value);
         }
 
         //Otherwise see if it's an fdid
@@ -76,9 +76,10 @@ public class FieldConstantUtil {
                 return fieldDefinition;
             }
         } catch (Exception e) {
-            logger.trace("Could not convert, seeing if it's a function constant");
+            //logger.trace("Could not convert");
         }
 
+        logger.error("Couldn't convert param={} to a FieldConstant", value);
         return null;
     }
 

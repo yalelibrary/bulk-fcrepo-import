@@ -6,7 +6,7 @@ import edu.yale.library.ladybird.engine.ExportBus;
 import edu.yale.library.ladybird.engine.TestModule;
 import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
 import edu.yale.library.ladybird.engine.imports.ImportEntity;
-import edu.yale.library.ladybird.engine.imports.ObjectWriter;
+import edu.yale.library.ladybird.engine.imports.ObjectMetadataWriter;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.FieldDefinition;
@@ -43,7 +43,7 @@ public class ObjectWriterIT {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
-     * @see edu.yale.library.ladybird.engine.imports.ObjectWriter creates object metadata tables and hits db to ensure that the values are written and
+     * @see edu.yale.library.ladybird.engine.imports.ObjectMetadataWriter creates object metadata tables and hits db to ensure that the values are written and
      * corresonding acid value is created
      */
     @Test
@@ -111,8 +111,8 @@ public class ObjectWriterIT {
         importEntityContext.setImportJobList(rowList);
 
         // Finally, test the method:
-        ObjectWriter objectWriter = new ObjectWriter();
-        objectWriter.write(importEntityContext);
+        ObjectMetadataWriter objectMetadataWriter = new ObjectMetadataWriter();
+        objectMetadataWriter.write(importEntityContext);
 
         // Now verify:
         ObjectAcidDAO objectAcidDAO = new ObjectAcidHibernateDAO();

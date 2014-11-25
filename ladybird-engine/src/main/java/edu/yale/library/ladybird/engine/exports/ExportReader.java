@@ -123,43 +123,35 @@ public class ExportReader {
     }
 
     private String getColumnValue(FieldConstant fieldConst, int localIdentifierColumnNum, List<Column> cols, List<LocalIdMarcValue> bibIdValueList) {
-        logger.trace("Evaluating FieldConstant={} num={} ", fieldConst.getTitle(), fieldConst.getName());
+        logger.trace("Evaluating FieldConstant={} ", fieldConst.getName());
 
-        String regularValue = ImportEntityValue.findColValueFromRow(fieldConst, cols);
+        String plain =  ImportEntityValue.findColValueFromRow(fieldConst, cols);
 
-        logger.trace("Regular Value={}", regularValue);
-
-        if (regularValue == null || regularValue.isEmpty()) {
-            logger.trace("Empty regular value");
-            regularValue = "";
+        if (plain == null || plain.isEmpty()) {
+            plain = "";
         }
 
-        String oaiVal = "";
+        String oai = "";
 
         //merge only if bibId col exists, and if not a function constant (like f104 itself)
-        if (localIdentifierColumnNum != -1 && !FunctionConstants.isFunction(fieldConst.getName()) && !fieldConst.getTitle().equalsIgnoreCase("Handle")) { //TODO chk via fdid marc mapping
+        //TODO chk via fdid marc:
+        if (localIdentifierColumnNum != -1 && !FunctionConstants.isFunction(fieldConst.getName()) && !fieldConst.getTitle().equalsIgnoreCase("Handle")) {
             final Column<String> bibIdColumn = cols.get(localIdentifierColumnNum);
-
-            logger.trace("bibIdcolum={}", bibIdColumn);
+            logger.trace("bibIdcolumn={}", bibIdColumn);
 
             LocalIdMarcValue localIdMarcValue = LocalIdMarcValue.findMatch(bibIdValueList, bibIdColumn.getValue());
-
             logger.trace("localIdMarcValue={}", localIdMarcValue);
 
             if (localIdMarcValue == null) {
-                logger.trace("OAI value cannot be determined. DS null");
-                return oaiVal;
+                return oai;
             }
 
-            oaiVal = getMultimapMarc21Field(new FdidMarcMappingUtil().toMarc21Field(fieldConst), localIdMarcValue.getValueMap());
-            logger.trace("Oai value={}", oaiVal);
+            oai = getMultimapMarc21Field(new FdidMarcMappingUtil().toMarc21Field(fieldConst), localIdMarcValue.getValueMap());
         }
 
-        final String mergedValue = regularValue + oaiVal;
-
-        logger.trace("Merged value={}", mergedValue);
-
-        return mergedValue;
+        final String merged = plain + oai;
+        logger.trace("Values: merged={} oai={} original={}", merged, oai, plain);
+        return merged;
     }
 
 
@@ -197,7 +189,7 @@ public class ExportReader {
                     try {
                         final ImportJobExhead importJobExhead = exheads.get(j);
                         final String header = importJobExhead.getValue();
-                        logger.trace("Header={}", header);
+                        //logger.trace("Header={}", header);
 
                         FieldConstant fieldConstant;
 

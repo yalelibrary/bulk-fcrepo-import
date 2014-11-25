@@ -118,34 +118,20 @@ public final class ImportReader {
 
                         //handle null fields, otherwise values will get mushed
                         if (cell == null) {
-                            logger.trace("Null field.");
+                            //logger.trace("Null field.");
 
                             contentsSheetRow.getColumns().add(ImportEntityValue.getBlankColumn(valueMap.get(cn)));
                             cellCount++;
 
-                            logger.trace("Added row");
+                            //logger.trace("Added row");
                         } else {
                             final ImportEntity.Column<String> column = importEntity.new Column<>(valueMap.get(cellCount),
                                     String.valueOf(SpreadsheetUtil.getCellValue(cell)));
-                            logger.trace("Column={}", column.toString());
+                            //logger.trace("Column={}", column.toString());
                             contentsSheetRow.getColumns().add(column);
                             cellCount++;
                         }
                     }
-                    /* Remove:
-                    final Iterator<Cell> cellIterator = row.cellIterator();
-                    while (cellIterator.hasNext() && cellCount < exHeadRowCellCount) {
-                        final Cell cell = cellIterator.next();
-                        logger.debug("Got cell={}", cell.toString());
-                        final ImportEntity.Column<String> column = importEntity.new Column<>(valueMap.get(cellCount),
-                                String.valueOf(SpreadsheetUtil.getCellValue(cell)));
-                        logger.trace("Column={}", column.toString());
-                        contentsSheetRow.getColumns().add(column);
-                        cellCount++;
-                    }
-                    logger.trace("Added content row={}", contentsSheetRow.toString());
-                    */
-
                     ImportEntity.Row evalRow = new ImportEntity().new Row(Collections.unmodifiableList(contentsSheetRow.getColumns()));
 
                     if (!allFieldsNull(evalRow)) {

@@ -32,16 +32,15 @@ import java.util.Set;
  *
  * @see MediaFunctionProcessor for object_file population
  */
-public class ObjectWriter {
+public class ObjectMetadataWriter {
 
-    private Logger logger = LoggerFactory.getLogger(ObjectWriter.class);
+    private Logger logger = LoggerFactory.getLogger(ObjectMetadataWriter.class);
 
     //TODO inject
 
     final ObjectStringDAO objectStringDAO = new ObjectStringHibernateDAO();
     final ObjectAcidDAO objectAcidDAO = new ObjectAcidHibernateDAO();
     final AuthorityControlDAO authorityControlDAO = new AuthorityControlHibernateDAO();
-
 
     /**
      * Populates object metadata tables
@@ -138,7 +137,6 @@ public class ObjectWriter {
                         objectAcidDAO.save(objAcid);
                         logger.trace("Saved={}", objectAcidDAO);
                     } else {
-
                         int oid = Integer.parseInt(oidStr);
 
                         //see if an objectstring already exists (this is used to replace the value when a spreadsheet update is done)

@@ -195,7 +195,6 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
         }
     }
 
-
     /**
      * Save or update list
      *
@@ -233,7 +232,7 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
     }
 
     /**
-     * Save or udate list
+     * Save list
      *
      * @param itemList list of entities
      */
@@ -246,7 +245,6 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
             tx = s.beginTransaction();
 
             for (int i = 0; i < itemList.size(); i++) {
-                //logger.debug("Inserting i={}", i);
                 s.insert(itemList.get(i));
             }
 

@@ -1,7 +1,6 @@
 package edu.yale.library.ladybird.engine.cron;
 
 
-import edu.yale.library.ladybird.engine.ExportBus;
 import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportCompleteEvent;
 import edu.yale.library.ladybird.engine.exports.ExportCompleteEventBuilder;
@@ -10,7 +9,7 @@ import edu.yale.library.ladybird.engine.exports.ExportSheet;
 import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
 import edu.yale.library.ladybird.engine.imports.ImportEngineException;
 import edu.yale.library.ladybird.engine.imports.ImportEntity;
-import edu.yale.library.ladybird.engine.imports.ObjectWriter;
+import edu.yale.library.ladybird.engine.imports.ObjectMetadataWriter;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.ImportJob;
@@ -42,80 +41,78 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static edu.yale.library.ladybird.engine.ExportBus.postEvent;
+import static org.apache.commons.lang.time.DurationFormatUtils.formatDurationHMS;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class DefaultExportJob implements Job, ExportJob {
     private final Logger logger = getLogger(this.getClass());
 
+    private ImportJobDAO importJobDAO = new ImportJobHibernateDAO();
+
+    private ImportJobNotificationsDAO notificationsDAO = new ImportJobNotificationsHibernateDAO();
+
+    private final SettingsDAO settingsDAO = new SettingsHibernateDAO();
+
     /**
      * Export Job reads content rows from import job tables and writes to a spreadsheet
-     * todo find out how to tie user id to file data
+     * TODO find out how to tie user id to file data
      *
-     * @param ctx
+     * @param ctx org.quartz.JobExecutionContext
      * @throws org.quartz.JobExecutionException
-     *
      */
     public void execute(JobExecutionContext ctx) throws JobExecutionException {
-
         final ExportEngine exportEngine = new DefaultExportEngine();
 
         try {
-            final long startTime = System.currentTimeMillis();
-            logger.trace("Looking for export job.");
+            logger.trace("[wait] export job.");
             final ImportEntityContext importEntityContext = exportEngine.read();
 
             if (importEntityContext.getImportJobList().isEmpty()) {
-                logger.error("No rows found to export.");
-                throw new JobExecutionException("No rows found to export");
+                logger.error("0 rows to export.");
+                throw new JobExecutionException("0 rows to export");
             }
 
-            logger.debug("[start] export job.");
-            logger.trace("Read rows from export engine, list size={}, import job context={}",
-                    importEntityContext.getImportJobList().size(), importEntityContext.toString());
+            logger.debug("[start] export job={}", importEntityContext.getImportId());
 
-            //1. Write to spreadsheet
+            /**
+             * 1. a. Write to spreadsheet, b. update import_jobs, c. send file
+             */
+            final long timeInXlsWriting = System.currentTimeMillis();
             final String exportFilePath = getWritePath(exportFile(importEntityContext.getMonitor().getExportPath()));
             logger.debug("Export file path={}", exportFilePath);
-
-
-            //1a. Set export fields
             final List<ExportSheet> exportSheets = new ArrayList<>();
-
-            ExportSheet exportSheet = new ExportSheet();
-            exportSheet.setTitle("Full Sheet");
-            exportSheet.setContents(importEntityContext.getImportJobList());
-            exportSheets.add(exportSheet);
-
-            ExportSheet exportSheet2 = getCustomSheet(importEntityContext.getImportJobList(), importEntityContext.getMonitor());
-            exportSheets.add(exportSheet2);
-
+            final ExportSheet sheet1 = new ExportSheet();
+            sheet1.setTitle("Full Sheet");
+            sheet1.setContents(importEntityContext.getImportJobList());
+            exportSheets.add(sheet1);
+            final ExportSheet sheet2 = getCustomSheet(importEntityContext.getImportJobList(), importEntityContext.getMonitor());
+            exportSheets.add(sheet2);
             exportEngine.writeSheets(exportSheets, exportFilePath);
+
             //1b. Update imjobs table
             updateImportJobs(importEntityContext.getImportId(), exportFilePath);
-            //1c. Create entry in import job notifications table (spreadsheet file will be emailed)
+            //1c. Create entry in import job notifications table (to enable spreadsheet file mailing etc)
             updateImportJobsNotification(importEntityContext.getImportId(), importEntityContext.getMonitor().getUser().getUserId());
 
-            logger.debug("[end] Completed export job in={}",
-                    DurationFormatUtils.formatDuration(System.currentTimeMillis() - startTime, "HH:mm:ss:SS"));
+            long elapsed = System.currentTimeMillis() - timeInXlsWriting;
+            logger.debug("[end] Completed spreadsheet writing in={}",
+                    DurationFormatUtils.formatDuration(elapsed, "HH:mm:ss:SS"));
 
-            //2. Write to object metadata tables
-            logger.debug("Writing contents to object metadata tables. Row size={}", importEntityContext.getImportJobList().size());
-            ObjectWriter objectWriter = new ObjectWriter(); //TODO
-            objectWriter.write(importEntityContext);
-            //logger.debug("[end] Wrote to object metadata tables");
-
-            /* Add params as desired */
-            final ExportCompleteEvent exportEvent = new ExportCompleteEventBuilder()
-                    .setRowsProcessed(importEntityContext.getImportJobList().size()).createExportCompleteEvent();
-            exportEvent.setImportId(importEntityContext.getImportId());
-
-            //Post progress
-            ExportBus.postEvent(new ExportProgressEvent(exportEvent, importEntityContext.getMonitor().getId())); //TODO consolidate
-
-            logger.debug("Adding export event; notifying user registered for this event instance.");
-
-            sendNotification(exportEvent, Collections.singletonList(importEntityContext.getMonitor().getUser())); //todo
-
+            /**
+             * 2. Write to object metadata tables, post ExportCompleteEvent and progress
+             */
+            logger.debug("Writing to object metadata tables. size={}", importEntityContext.getImportJobList().size());
+            ObjectMetadataWriter objectMetadataWriter = new ObjectMetadataWriter(); //TODO
+            long timeInObjWriter = System.currentTimeMillis();
+            objectMetadataWriter.write(importEntityContext);
+            logger.debug("[end] Wrote to object metadata tables in={}", formatDurationHMS(System.currentTimeMillis() - timeInObjWriter));
+            final ExportCompleteEvent exportCompEvent = new ExportCompleteEventBuilder()
+                    .setRowsProcessed(importEntityContext.getImportJobList().size()).setTime(elapsed).createExportCompleteEvent();
+            exportCompEvent.setImportId(importEntityContext.getImportId());
+            postEvent(new ExportProgressEvent(exportCompEvent, importEntityContext.getMonitor().getId()));
+            logger.debug("Notifying user registered.");
+            sendNotification(exportCompEvent, Collections.singletonList(importEntityContext.getMonitor().getUser()));
             logger.trace("Added export event to notification queue.");
         } catch (IOException e) {
             logger.error("Error executing job", e.getMessage());
@@ -123,40 +120,36 @@ public class DefaultExportJob implements Job, ExportJob {
         }
     }
 
-    private void updateImportJobs(int jobId, String exportFilePath) {
-        logger.debug("Updating import jobs table with jobId={} exportFilePath={}", jobId, exportFilePath);
+    private void updateImportJobs(final int jobId, final String exportFilePath) {
+        logger.debug("Updating import_jobs table with jobId={} exportFilePath={}", jobId, exportFilePath);
         try {
-            ImportJobDAO importJobDAO = new ImportJobHibernateDAO(); //TODO
             ImportJob importJob = importJobDAO.findByJobId(jobId).get(0); //TODO error if more than one job found
-            importJob.setExportJobFile(exportFilePath); //TODO use either export file path or directory
-            importJob.setExportJobDir(exportFilePath);  //TODO
+            importJob.setExportJobFile(exportFilePath);
+            importJob.setExportJobDir(exportFilePath);
             importJobDAO.saveOrUpdateItem(importJob);
-            logger.debug("Updated entity={}", importJob);
-            logger.debug("Updated list={}", importJobDAO.findAll()); //TODO remove
         } catch (Exception e) {
             logger.error("Error updating import job", e); //TODO throw exception
         }
     }
 
-    private void updateImportJobsNotification(int jobId, int userId) {
+    private void updateImportJobsNotification(final int jobId, final int userId) {
         logger.debug("Updating import jobs notifications with jobId={} userId={}", jobId, userId);
         try {
-            ImportJobNotificationsDAO dao = new ImportJobNotificationsHibernateDAO(); //TODO
-            ImportJobNotifications importJobNotifications = new ImportJobNotifications();
-            importJobNotifications.setImportJobId(jobId);
-            importJobNotifications.setDateCreated(new Date());
-            importJobNotifications.setUserId(userId);
-            dao.save(importJobNotifications);
-            logger.debug("Saved entity={}", importJobNotifications);
+            ImportJobNotifications notice = new ImportJobNotifications();
+            notice.setImportJobId(jobId);
+            notice.setDateCreated(new Date());
+            notice.setUserId(userId);
+            notificationsDAO.save(notice);
+            logger.debug("Saved entity={}", notice);
         } catch (Exception e) {
             logger.error("Error updating import job notification", e); //TODO throw exception
         }
     }
 
     private void sendNotification(final ExportCompleteEvent exportEvent, final List<User> u) {
-        //TODO construct message and subject
-        String message = "Exported number of rows was" + exportEvent.getRowsProcessed();
-        String subject = "Export for job # " + exportEvent.getImportId() + " is complete.";
+        String message = "Rows exported:" + exportEvent.getRowsProcessed();
+        message += ", Time:" + formatDurationHMS(exportEvent.getTime());
+        String subject = "Export complete for job # " + exportEvent.getImportId();
         NotificationEventQueue.addEvent(new NotificationEventQueue().new NotificationItem(exportEvent, u, message, subject));
     }
 
@@ -166,11 +159,10 @@ public class DefaultExportJob implements Job, ExportJob {
 
     /**
      * Returns absolute write appended with project
-     * @param relativePath
-     * @return
+     * @param relativePath file path
+     * @return full path
      */
     private String getWritePath(final String relativePath) {
-        final SettingsDAO settingsDAO = new SettingsHibernateDAO();
         logger.trace("Looking up relative path={}", relativePath);
         if (ApplicationProperties.CONFIG_STATE.IMPORT_ROOT_PATH == null) {
             logger.error("No import root path. Returning relative path as is.");
@@ -209,7 +201,7 @@ public class DefaultExportJob implements Job, ExportJob {
         List<ImportEntity.Row> newList = new ArrayList<>();
 
         try {
-            logger.debug("Finding custom fields for user={} for project={}", userId, projectId);
+            logger.debug("Finding custom fields for user={} for projectId={}", userId, projectId);
 
             ImportEntity.Row exheadRow = fullList.get(0); // get exhead (show probably use ImportEntityValue somewhere)
 
@@ -221,20 +213,20 @@ public class DefaultExportJob implements Job, ExportJob {
                 }
 
                 int fdid = FieldDefinition.fdidAsInt(c.getValue());
-                UserProjectFieldExportOptions u = dao.findByUserAndProjectAndFdid(userId, projectId, fdid);
-                if (u == null) { //not found = should not be exported
+                UserProjectFieldExportOptions userOptions = dao.findByUserAndProjectAndFdid(userId, projectId, fdid);
+
+                if (userOptions == null) { //not found = should not be exported
                     columnsToExclude.add(i);
                     columnsFdidsToExclude.add(fdid);
                 }
             }
 
-            logger.debug("Col nums to exclude={}", columnsToExclude.size());
+            logger.debug("Num. of columns to exclude={}", columnsToExclude.size());
 
             for (ImportEntity.Row row: fullList) {
+                final List<ImportEntity.Column> newColumns = new ArrayList<>();
 
-                List<ImportEntity.Column> newColumns = new ArrayList<>();
-
-                for (ImportEntity.Column<String> col: row.getColumns()) {
+                for (final ImportEntity.Column<String> col: row.getColumns()) {
                     if (FunctionConstants.isFunction(col.getField().getName())) {
                         newColumns.add(col);
                         continue;
