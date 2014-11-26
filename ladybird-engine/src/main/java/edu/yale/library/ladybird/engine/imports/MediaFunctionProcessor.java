@@ -57,6 +57,8 @@ public class MediaFunctionProcessor {
 
         logger.debug("[start] converting media for import id={} rowlist size={}", importId, rowList.size());
 
+        long timeInConversion = System.currentTimeMillis();
+
         for (int i = 0; i < rowList.size(); i++) {
             final Column<String> f3 = importEntityValue.getRowFieldColumn(FunctionConstants.F3, i);
             checkState(f3.getField().getName().equals(FunctionConstants.F3.getName()), "Found wrong F3 col");
@@ -125,8 +127,8 @@ public class MediaFunctionProcessor {
                 throw e;
             }
         }
-        //logger.debug("[end] conversion complete in={}",
-        // DurationFormatUtils.formatDurationHMS(System.currentTimeMillis() - timeInConversion));
+        logger.debug("[end] conversion complete in={}",
+         DurationFormatUtils.formatDurationHMS(System.currentTimeMillis() - timeInConversion));
 
     }
 

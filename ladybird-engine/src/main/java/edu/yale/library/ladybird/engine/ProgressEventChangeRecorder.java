@@ -13,24 +13,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class ProgressEventChangeRecorder implements Serializable {
 
     private static final Logger logger = LoggerFactory.getLogger(ProgressEventChangeRecorder.class);
 
-    //TODO static map
-    private static final Map<Integer, Integer> progressMap = new HashMap<>();
+    public static final int TOTAL_STEPS = 3;
+    private static final Map<Integer, Integer> steps = new HashMap<>();
 
-    private static final Map<Integer, JobStatus> jobStatusMap = new HashMap<>();
+    private static final Map<Integer, JobStatus> status = new HashMap<>();
 
-    private static final Map<Integer, List<ContextedRuntimeException>> exceptionMap = new HashMap<>();
+    private static final Map<Integer, List<ContextedRuntimeException>> exceptions = new HashMap<>();
 
-    //TODO number of steps
-    public static final int expectedSteps = 2;
-
-    @SuppressWarnings("unused")
+    /**
+     * Records steps
+     *
+     * @param event an ExportProgressEvent
+     */
     @Subscribe
+    @SuppressWarnings("unused")
     public void recordEvent(ExportProgressEvent event) {
         logger.trace("Recording event={} for jobId={}", event.toString(), event.getJobId());
 
@@ -39,11 +40,11 @@ public class ProgressEventChangeRecorder implements Serializable {
                 throw new NullPointerException("Job Id null");
             }
 
-            if (progressMap.get(event.getJobId()) != null) {
-                int original = progressMap.get(event.getJobId());
-                progressMap.put(event.getJobId(), original + 1);
+            if (steps.get(event.getJobId()) != null) {
+                int current = steps.get(event.getJobId());
+                steps.put(event.getJobId(), current + 1);
             } else {
-                progressMap.put(event.getJobId(), 1); //TODO
+                steps.put(event.getJobId(), 1);
             }
         } catch (Exception e) {
             throw new RuntimeException("Error saving event={}" + event.toString(), e);
@@ -52,10 +53,10 @@ public class ProgressEventChangeRecorder implements Serializable {
 
     /**
      * Records progress status
-     * Operates on jobStatusMap
+     * Operates on status
      */
-    @SuppressWarnings("unused")
     @Subscribe
+    @SuppressWarnings("unused")
     public void recordEvent(ImportRequestEvent event) {
         try {
             if (event.getMonitor().getId() == null) {
@@ -63,21 +64,19 @@ public class ProgressEventChangeRecorder implements Serializable {
             }
 
             int importId = event.getMonitor().getId();
-
-            logger.debug("Recording in progress event for importId={}", importId);
-
-            jobStatusMap.put(importId, JobStatus.IN_PROGRESS);
-         } catch (Exception e) {
+            logger.trace("Recording in progress event for importId={}", importId);
+            status.put(importId, JobStatus.IN_PROGRESS);
+        } catch (Exception e) {
             throw new RuntimeException("Error saving event={}" + event.toString(), e);
         }
     }
 
     /**
      * Records statuses and exceptions
-     * Operates on jobStatusMap and exceptionMap
+     * Operates on status and exceptions
      */
-    @SuppressWarnings("unused")
     @Subscribe
+    @SuppressWarnings("unused")
     public void recordEvent(JobExceptionEvent event) {
         try {
             if (event.getJobId() == null) {
@@ -85,29 +84,31 @@ public class ProgressEventChangeRecorder implements Serializable {
             }
 
             int importId = event.getJobId();
-
             logger.trace("Recording exception event for importId={}", importId);
-
-            jobStatusMap.put(importId, JobStatus.EXCEPTION);
-            //Update exceptions for this job:
-            List<ContextedRuntimeException> list = exceptionMap.get(importId);
+            status.put(importId, JobStatus.EXCEPTION);
+            List<ContextedRuntimeException> list = exceptions.get(importId);
 
             if (list == null || list.isEmpty()) {
                 list = new ArrayList<>();
             }
 
             list.add(event.getException());
-            exceptionMap.put(importId, list);
+            exceptions.put(importId, list);
         } catch (Exception e) {
             throw new RuntimeException("Error saving event={}" + event.toString(), e);
         }
     }
 
-
+    /**
+     * Called from pages
+     *
+     * @param jobId jobId
+     * @return number of steps complete
+     */
     public int getSteps(int jobId) {
         int progress;
         try {
-            progress = progressMap.get(jobId);
+            progress = steps.get(jobId);
         } catch (Exception e) {
             progress = 0;
         }
@@ -115,39 +116,40 @@ public class ProgressEventChangeRecorder implements Serializable {
     }
 
     public boolean jobInMap(int jobId) {
-        return progressMap.get(jobId) != null;
+        return steps.get(jobId) != null;
     }
 
     //Note: jobId is importId not montiorId
     public String getJobStatus(int jobId) {
-        if (jobStatusMap.get(jobId) == null) {
+        if (status.get(jobId) == null) {
             return "N/A";
         }
 
-        return jobStatusMap.get(jobId).toString();
+        return status.get(jobId).toString();
     }
 
     public List<ContextedRuntimeException> getRawException(int jobId) {
-        if (exceptionMap.get(jobId) == null) {
+        if (exceptions.get(jobId) == null) {
+            /*
             logger.trace("Nothing for this jobId. Existing entries are:");
-            Set<Integer> s = exceptionMap.keySet();
+            Set<Integer> s = exceptions.keySet();
             for (int i: s) {
                 logger.trace("Key={}", i);
-            }
+            } */
             return null;
         }
 
-        return exceptionMap.get(jobId);
+        return exceptions.get(jobId);
     }
 
     public int getExpectedTotalSteps() {
-        return expectedSteps;
+        return TOTAL_STEPS;
     }
 
-    enum JobStatus {
+    private enum JobStatus {
         COMPLETE, HANGING, EXCEPTION, IN_PROGRESS;
 
-        String name;
+        private String name;
 
         String getName() {
             return name;
