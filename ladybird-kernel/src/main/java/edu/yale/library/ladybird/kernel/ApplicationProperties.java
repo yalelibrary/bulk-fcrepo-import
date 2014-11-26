@@ -5,14 +5,14 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 public class ApplicationProperties {
 
-    public static final String PROPS_FILE = "ladybird.properties";
+    public static final String DEFAULT_PROPS_FILE = "ladybird.properties";
     public static final String DATABASE_STRING_IDENTIFIER = "database";
     public static final String DATABASE_DEFAULT_IDENTIFIER = "default";
-    public static final String DEFAULT_HIBERNATE_FILE = "default.hibernate.cfg.xml";
-    public static final String CUSTOM_HIBERNATE_FILE = "hibernate.cfg.xml";
-    public static final boolean RUN_WITH_INCOMPLETE_CONFIG = false;
     public static final String ALREADY_RUNNING = "Driver already RUNNING.";
     public static final String ALREADY_STOPPED = "Driver already STOPPED.";
     public static final String SCHEMA_PROPS_FILE = "/derby.schema.properties";
@@ -26,10 +26,6 @@ public class ApplicationProperties {
     public static final String NO_IMAGE_FOUND_PATH = "no_image_found_path";
     public static final String WELCOME_PAGE_id = "welcome_page";
 
-    public static boolean runWithIncompleteDBConfig() {
-        return ApplicationProperties.RUN_WITH_INCOMPLETE_CONFIG;
-    }
-
     /**
      *
      */
@@ -41,14 +37,21 @@ public class ApplicationProperties {
 
         static {
             try {
-                logger.info("Reading props from file={}" + PROPS_FILE);
-                cfg = new PropertiesConfiguration(PROPS_FILE);
+                final String altPath = System.getenv("ladybird_props");
+
+                if (altPath != null && Files.exists(Paths.get(altPath))) {
+                    logger.info("Reading config props from file={}",  altPath);
+                    cfg = new PropertiesConfiguration(altPath);
+                } else {
+                    logger.info("Reading config props from default file={}", DEFAULT_PROPS_FILE);
+                    cfg = new PropertiesConfiguration(DEFAULT_PROPS_FILE);
+                }
             } catch (ConfigurationException t) {
                 logger.error("Error setting up configuration file");
             }
         }
 
-        public static final boolean DEFAULT_DB_CONFIGURED = getConfig();
+        public static final boolean DEFAULT_DB_CONFIGURED = isDefaultDbConfig();
         public static final String EMAIL_ADMIN = getAdminEmail();
         public static final int EMAIL_PORT = getEmailPort();
         public static final String EMAIL_HOST = getEmailHost();
@@ -59,10 +62,8 @@ public class ApplicationProperties {
 
         /**
          * Ignores exception if prop not set and just returns false.
-         *
-         * @return
          */
-        private static boolean getConfig() {
+        private static boolean isDefaultDbConfig() {
             try {
                 return readProperty(DATABASE_STRING_IDENTIFIER).equals(DATABASE_DEFAULT_IDENTIFIER);
             } catch (Exception e) {
