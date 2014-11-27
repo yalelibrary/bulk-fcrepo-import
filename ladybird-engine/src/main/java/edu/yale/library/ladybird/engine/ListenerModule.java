@@ -16,6 +16,6 @@ public class ListenerModule implements Module {
 
     @Provides
     List provideListeners() {
-        return Collections.singletonList(ProgressEventChangeRecorder.class);
+        return Collections.singletonList(ProgressEventListener.class);
     }
 }

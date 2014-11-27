@@ -1,8 +1,7 @@
 package edu.yale.library.ladybird.engine;
 
 import com.google.common.eventbus.Subscribe;
-import edu.yale.library.ladybird.engine.cron.ExportProgressEvent;
-import edu.yale.library.ladybird.engine.imports.ImportRequestEvent;
+import edu.yale.library.ladybird.engine.cron.ProgressEvent;
 import edu.yale.library.ladybird.engine.imports.JobExceptionEvent;
 import org.apache.commons.lang3.exception.ContextedRuntimeException;
 import org.slf4j.Logger;
@@ -14,14 +13,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ProgressEventChangeRecorder implements Serializable {
+public class ProgressEventListener implements Serializable {
 
-    private static final Logger logger = LoggerFactory.getLogger(ProgressEventChangeRecorder.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProgressEventListener.class);
 
     public static final int TOTAL_STEPS = 3;
     private static final Map<Integer, Integer> steps = new HashMap<>();
 
-    private static final Map<Integer, JobStatus> status = new HashMap<>();
+    private static final Map<Integer, String> status = new HashMap<>();
 
     private static final Map<Integer, List<ContextedRuntimeException>> exceptions = new HashMap<>();
 
@@ -32,40 +31,27 @@ public class ProgressEventChangeRecorder implements Serializable {
      */
     @Subscribe
     @SuppressWarnings("unused")
-    public void recordEvent(ExportProgressEvent event) {
-        logger.trace("Recording event={} for jobId={}", event.toString(), event.getJobId());
-
+    public void onEventCompletion(ProgressEvent event) {
         try {
             if (event.getJobId() == null) {
                 throw new NullPointerException("Job Id null");
             }
 
-            if (steps.get(event.getJobId()) != null) {
+            final int importId = event.getJobId();
+            final JobStatus jobStatus = event.getEventStatus();
+
+            // skip steps increment if not complete
+            if (steps.get(event.getJobId()) != null && jobStatus == JobStatus.COMPLETE) {
+                logger.trace("Incrementing step for event={} for jobId={}", event.toString(), event.getJobId());
                 int current = steps.get(event.getJobId());
                 steps.put(event.getJobId(), current + 1);
-            } else {
+            } else  if (jobStatus == JobStatus.COMPLETE){
+                logger.trace("Incrementing step for event={} for jobId={}", event.toString(), event.getJobId());
                 steps.put(event.getJobId(), 1);
             }
-        } catch (Exception e) {
-            throw new RuntimeException("Error saving event={}" + event.toString(), e);
-        }
-    }
 
-    /**
-     * Records progress status
-     * Operates on status
-     */
-    @Subscribe
-    @SuppressWarnings("unused")
-    public void recordEvent(ImportRequestEvent event) {
-        try {
-            if (event.getMonitor().getId() == null) {
-                throw new NullPointerException("Job Id null");
-            }
-
-            int importId = event.getMonitor().getId();
-            logger.trace("Recording in progress event for importId={}", importId);
-            status.put(importId, JobStatus.IN_PROGRESS);
+            logger.trace("Recording status event={}", event.getEventName() + jobStatus.toString());
+            status.put(importId, event.getEvent().getEventName() + " : " + jobStatus.toString());
         } catch (Exception e) {
             throw new RuntimeException("Error saving event={}" + event.toString(), e);
         }
@@ -77,7 +63,7 @@ public class ProgressEventChangeRecorder implements Serializable {
      */
     @Subscribe
     @SuppressWarnings("unused")
-    public void recordEvent(JobExceptionEvent event) {
+    public void onException(JobExceptionEvent event) {
         try {
             if (event.getJobId() == null) {
                 throw new NullPointerException("Job Id null");
@@ -85,7 +71,7 @@ public class ProgressEventChangeRecorder implements Serializable {
 
             int importId = event.getJobId();
             logger.trace("Recording exception event for importId={}", importId);
-            status.put(importId, JobStatus.EXCEPTION);
+            status.put(importId, JobStatus.EXCEPTION.toString());
             List<ContextedRuntimeException> list = exceptions.get(importId);
 
             if (list == null || list.isEmpty()) {
@@ -125,7 +111,7 @@ public class ProgressEventChangeRecorder implements Serializable {
             return "N/A";
         }
 
-        return status.get(jobId).toString();
+        return status.get(jobId);
     }
 
     public List<ContextedRuntimeException> getRawException(int jobId) {
@@ -146,17 +132,7 @@ public class ProgressEventChangeRecorder implements Serializable {
         return TOTAL_STEPS;
     }
 
-    private enum JobStatus {
-        COMPLETE, HANGING, EXCEPTION, IN_PROGRESS;
-
-        private String name;
-
-        String getName() {
-            return name;
-        }
-
-        void setName(String name) {
-            this.name = name;
-        }
+    public enum JobStatus {
+        COMPLETE, HANGING, EXCEPTION, IN_PROGRESS
     }
 }

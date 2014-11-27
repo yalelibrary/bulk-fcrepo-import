@@ -3,6 +3,7 @@ package edu.yale.library.ladybird.engine.cron;
 
 import edu.yale.library.ladybird.engine.DefaultFieldDataValidator;
 import edu.yale.library.ladybird.engine.ExportBus;
+import edu.yale.library.ladybird.engine.ProgressEventListener;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
 import edu.yale.library.ladybird.engine.imports.DefaultImportEngine;
 import edu.yale.library.ladybird.engine.imports.ImportCompleteEvent;
@@ -62,7 +63,9 @@ public class DefaultImportJob implements Job, ImportJob {
             final DefaultFieldDataValidator fieldDataValidator = new DefaultFieldDataValidator();
 
             //Post init
-            ExportBus.postEvent(importRequestedEvent);
+            ProgressEvent progressEvent = new ProgressEvent(importRequestedEvent.getMonitor().getId(), importRequestedEvent,
+                    ProgressEventListener.JobStatus.IN_PROGRESS);
+            ExportBus.postEvent(progressEvent);
 
             final List<ImportEntity.Row> rowList = importEngine.read(spreadsheetFile, ReadMode.FULL, fieldDataValidator);
 
@@ -88,7 +91,8 @@ public class DefaultImportJob implements Job, ImportJob {
             importCompEvent.setImportId(imid);
 
             //Post progress
-            ExportBus.postEvent(new ExportProgressEvent(importCompEvent, importRequestedEvent.getMonitor().getId())); //TODO consolidate
+            ExportBus.postEvent(new ProgressEvent(importRequestedEvent.getMonitor().getId(), importCompEvent,
+                    ProgressEventListener.JobStatus.COMPLETE));
 
             sendNotification(importCompEvent, Collections.singletonList(importRequestedEvent.getMonitor().getUser()));
 

@@ -76,12 +76,8 @@
                         <!-- TODO clean up -->
                         <p:column headerText="Status" width="50%">
 
-                            <!-- Need clean up from backend logic. 3 conditions are being tested -->
-                            <h:outputText id="status2"
-                                          styleClass="alert alert-info"
-                                          value="IN PROGRESS"
-                                          rendered="#{importProgressView.statusInProgress(monitorItem.id) ne 'EXCEPTION' and importProgressView.statusInProgress(monitorItem.id) ne 'N/A'
-                                          and importProgressView.count(monitorItem.id) ne importProgressView.STEPS_TO_COMPLETE}"/>
+                            <h:outputText id="status2" styleClass="alert alert-info"
+                                          value="#{importProgressView.statusInProgress(monitorItem.id)}"/>
 
                             &nbsp;
 

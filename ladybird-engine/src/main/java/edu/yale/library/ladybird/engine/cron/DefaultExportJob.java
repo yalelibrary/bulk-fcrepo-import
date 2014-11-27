@@ -1,10 +1,12 @@
 package edu.yale.library.ladybird.engine.cron;
 
 
+import edu.yale.library.ladybird.engine.ProgressEventListener;
 import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportCompleteEvent;
 import edu.yale.library.ladybird.engine.exports.ExportCompleteEventBuilder;
 import edu.yale.library.ladybird.engine.exports.ExportEngine;
+import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
 import edu.yale.library.ladybird.engine.exports.ExportSheet;
 import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
 import edu.yale.library.ladybird.engine.imports.ImportEngineException;
@@ -76,6 +78,12 @@ public class DefaultExportJob implements Job, ExportJob {
 
             logger.debug("[start] export job={}", importEntityContext.getImportId());
 
+            ExportRequestEvent exportRequestEvent = new ExportRequestEvent();
+
+            //post init
+            postEvent(new ProgressEvent(importEntityContext.getMonitor().getId(),
+                    exportRequestEvent, ProgressEventListener.JobStatus.IN_PROGRESS));
+
             /**
              * 1. a. Write to spreadsheet, b. update import_jobs, c. send file
              */
@@ -111,7 +119,7 @@ public class DefaultExportJob implements Job, ExportJob {
             final ExportCompleteEvent exportCompEvent = new ExportCompleteEventBuilder()
                     .setRowsProcessed(importEntityContext.getImportJobList().size()).setTime(elapsed).createExportCompleteEvent();
             exportCompEvent.setImportId(importEntityContext.getImportId());
-            postEvent(new ExportProgressEvent(exportCompEvent, importEntityContext.getMonitor().getId()));
+            postEvent(new ProgressEvent(importEntityContext.getMonitor().getId(), exportCompEvent, ProgressEventListener.JobStatus.COMPLETE));
             logger.debug("Notifying user registered.");
             sendNotification(exportCompEvent, Collections.singletonList(importEntityContext.getMonitor().getUser()));
             logger.trace("Added export event to notification queue.");

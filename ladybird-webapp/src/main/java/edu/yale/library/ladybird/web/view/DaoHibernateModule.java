@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.web.view;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
-import edu.yale.library.ladybird.engine.ProgressEventChangeRecorder;
+import edu.yale.library.ladybird.engine.ProgressEventListener;
 import edu.yale.library.ladybird.engine.cron.ExportFileMailerScheduler;
 import edu.yale.library.ladybird.engine.cron.ExportScheduler;
 import edu.yale.library.ladybird.engine.cron.ImportScheduler;
@@ -151,7 +151,7 @@ public class DaoHibernateModule extends AbstractModule {
         bind(ImportScheduler.class);
         bind(ExportScheduler.class);
         bind(ExportFileMailerScheduler.class);
-        bind(ProgressEventChangeRecorder.class);
+        bind(ProgressEventListener.class);
 
         bind(JobsManager.class).to(DefaultJobsManager.class);
 

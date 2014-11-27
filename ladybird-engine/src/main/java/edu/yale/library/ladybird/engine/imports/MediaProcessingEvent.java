@@ -2,10 +2,7 @@ package edu.yale.library.ladybird.engine.imports;
 
 import edu.yale.library.ladybird.kernel.events.imports.ImportEvent;
 
-/**
- * TODO field access. Subject to modification.
- */
-public final class MediaProcessingCompleteEvent extends ImportEvent {
+public final class MediaProcessingEvent extends ImportEvent {
 
     private  int importId;
 
@@ -45,5 +42,10 @@ public final class MediaProcessingCompleteEvent extends ImportEvent {
                 "importId=" + importId +
                 ", duration=" + duration +
                 '}';
+    }
+
+    @Override
+    public String getEventName() {
+        return "Media Processing";
     }
 }

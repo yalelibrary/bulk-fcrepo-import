@@ -1,8 +1,10 @@
 package edu.yale.library.ladybird.engine.cron;
 
+import edu.yale.library.ladybird.engine.ExportBus;
+import edu.yale.library.ladybird.engine.ProgressEventListener;
 import edu.yale.library.ladybird.engine.imports.ImageConversionRequestEvent;
 import edu.yale.library.ladybird.engine.imports.MediaFunctionProcessor;
-import edu.yale.library.ladybird.engine.imports.MediaProcessingCompleteEvent;
+import edu.yale.library.ladybird.engine.imports.MediaProcessingEvent;
 import edu.yale.library.ladybird.entity.Settings;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
@@ -31,7 +33,8 @@ public class ImageConversionJob implements Job {
     private SettingsDAO settingsDAO = new SettingsHibernateDAO();
 
     @Override
-    public void execute(JobExecutionContext context) throws JobExecutionException {        logger.trace("Executing image conversion job");
+    public void execute(JobExecutionContext context) throws JobExecutionException {
+        logger.trace("Executing image conversion job");
 
 
         final ImageConversionRequestEvent importReqEvent = ImportImageConversionQueue.getJob();
@@ -47,18 +50,26 @@ public class ImageConversionJob implements Job {
 
         final MediaFunctionProcessor mediaFunctionProcessor =
                 getCtxMediaFunctionProcessor(importReqEvent.getExportDirPath());
+
+        //Post init
+        MediaProcessingEvent mediaEventInit = new MediaProcessingEvent();
+        ProgressEvent progressEvent = new ProgressEvent(importReqEvent.getImportId(), mediaEventInit,
+                ProgressEventListener.JobStatus.IN_PROGRESS);
+        postEvent(progressEvent);
+
+
         try {
             mediaFunctionProcessor.convert(importReqEvent.getImportId(), importReqEvent.getImportEntityValue());
             final long elapsed = System.currentTimeMillis() - timeInConversion;
 
-            MediaProcessingCompleteEvent mediaEvent = new MediaProcessingCompleteEvent();
+            MediaProcessingEvent mediaEvent = new MediaProcessingEvent();
             mediaEvent.setDuration(elapsed);
             mediaEvent.setImportId(importReqEvent.getImportId());
             //TODO check it matches up:
             mediaEvent.setConversions(importReqEvent.getImportEntityValue().getContentRows().size());
 
-            //ExportBus.postEvent(mediaProcessingCompleteEvent);
-            postEvent(new ExportProgressEvent(mediaEvent, importReqEvent.getImportId()));
+            //Post completion
+            postEvent(new ProgressEvent(importReqEvent.getImportId(), mediaEvent, ProgressEventListener.JobStatus.COMPLETE));
         } catch (IOException e) {
             logger.error("Error executing job", e);
         }
@@ -66,7 +77,7 @@ public class ImageConversionJob implements Job {
     }
 
     //TODO
-    private void sendNotification(final MediaProcessingCompleteEvent importEvent, final List<User> userList) {
+    private void sendNotification(final MediaProcessingEvent importEvent, final List<User> userList) {
         String message = "Media processed: " + importEvent.getConversions();
         message += ",Time: " + DurationFormatUtils.formatDurationWords(importEvent.getDuration(), true, true);
         String subject = "Import complete for job #" + importEvent.getImportId();

@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.web.view;
 
-import edu.yale.library.ladybird.engine.ProgressEventChangeRecorder;
+import edu.yale.library.ladybird.engine.ProgressEventListener;
 import edu.yale.library.ladybird.entity.ImportJob;
 import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
 import org.apache.commons.lang3.exception.ContextedRuntimeException;
@@ -23,7 +23,7 @@ public class ImportProgressView extends AbstractView implements Serializable {
     private Logger logger = LoggerFactory.getLogger(ImportProgressView.class);
 
     @Inject
-    ProgressEventChangeRecorder progressEventChangeRecorder;
+    ProgressEventListener progressEventListener;
 
     @Inject
     ImportJobDAO importJobDAO;
@@ -35,19 +35,19 @@ public class ImportProgressView extends AbstractView implements Serializable {
     @PostConstruct
     public void init() {
         initFields();
-        STEPS_TO_COMPLETE = progressEventChangeRecorder.getExpectedTotalSteps();
+        STEPS_TO_COMPLETE = progressEventListener.getExpectedTotalSteps();
     }
 
     public int count(int jobId) {
-        return progressEventChangeRecorder.getSteps(jobId);
+        return progressEventListener.getSteps(jobId);
     }
 
     public boolean jobInMap(int jobId) {
-        return progressEventChangeRecorder.jobInMap(jobId);
+        return progressEventListener.jobInMap(jobId);
     }
 
     public void progress(int jobId) {
-        count = progressEventChangeRecorder.getSteps(jobId);
+        count = progressEventListener.getSteps(jobId);
     }
 
     public int getSTEPS_TO_COMPLETE() {
@@ -58,7 +58,7 @@ public class ImportProgressView extends AbstractView implements Serializable {
     public String status(final int monitorId) {
         try {
             final int importId = convertToJobId(monitorId);
-            return importId == -1 ? "" : progressEventChangeRecorder.getJobStatus(importId);
+            return importId == -1 ? "" : progressEventListener.getJobStatus(importId);
         } catch (Exception e) {
             logger.error("Error finding status for monitorId={} Problem ={}", monitorId, e);
             return "ERR";
@@ -68,7 +68,7 @@ public class ImportProgressView extends AbstractView implements Serializable {
     //TODO change SQL lookup since it might be polled frequently
     public String statusInProgress(final int monitorId) {
         try {
-            return progressEventChangeRecorder.getJobStatus(monitorId);
+            return progressEventListener.getJobStatus(monitorId);
         } catch (Exception e) {
             logger.error("Error finding status for monitorId={} Problem ={}", monitorId, e);
             return "ERR";
@@ -79,8 +79,8 @@ public class ImportProgressView extends AbstractView implements Serializable {
         try {
             //convert moinitor id to import job id
             final int importId = convertToJobId(monitorId);
-            return importId == -1 ? 0 : (progressEventChangeRecorder.getRawException(importId) == null
-                    ? 0 : progressEventChangeRecorder.getRawException(importId).size());
+            return importId == -1 ? 0 : (progressEventListener.getRawException(importId) == null
+                    ? 0 : progressEventListener.getRawException(importId).size());
         } catch (Exception e) {
             logger.error("Error finding exception trace for item={}", monitorId, e);
             return 0;
@@ -97,7 +97,7 @@ public class ImportProgressView extends AbstractView implements Serializable {
         }
 
         final List<ContextTrace> list = new ArrayList<>();
-        List<ContextedRuntimeException> e = progressEventChangeRecorder.getRawException(importId);
+        List<ContextedRuntimeException> e = progressEventListener.getRawException(importId);
 
         for (final ContextedRuntimeException ie : e) {
             ContextTrace contextTrace = new ContextTrace();
