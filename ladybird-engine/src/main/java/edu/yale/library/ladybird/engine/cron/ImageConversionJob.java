@@ -1,6 +1,5 @@
 package edu.yale.library.ladybird.engine.cron;
 
-import edu.yale.library.ladybird.engine.ExportBus;
 import edu.yale.library.ladybird.engine.ProgressEventListener;
 import edu.yale.library.ladybird.engine.imports.ImageConversionRequestEvent;
 import edu.yale.library.ladybird.engine.imports.MediaFunctionProcessor;
@@ -20,7 +19,7 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.util.List;
 
-import static edu.yale.library.ladybird.engine.ExportBus.postEvent;
+import static edu.yale.library.ladybird.engine.ExportBus.post;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -51,11 +50,12 @@ public class ImageConversionJob implements Job {
         final MediaFunctionProcessor mediaFunctionProcessor =
                 getCtxMediaFunctionProcessor(importReqEvent.getExportDirPath());
 
-        //Post init
+        // Post init
         MediaProcessingEvent mediaEventInit = new MediaProcessingEvent();
+        mediaEventInit.setImportId(importReqEvent.getImportId());
         ProgressEvent progressEvent = new ProgressEvent(importReqEvent.getImportId(), mediaEventInit,
-                ProgressEventListener.JobStatus.IN_PROGRESS);
-        postEvent(progressEvent);
+                ProgressEventListener.JobStatus.INIT);
+        post(progressEvent);
 
 
         try {
@@ -68,8 +68,8 @@ public class ImageConversionJob implements Job {
             //TODO check it matches up:
             mediaEvent.setConversions(importReqEvent.getImportEntityValue().getContentRows().size());
 
-            //Post completion
-            postEvent(new ProgressEvent(importReqEvent.getImportId(), mediaEvent, ProgressEventListener.JobStatus.COMPLETE));
+            // Post completion
+            post(new ProgressEvent(importReqEvent.getImportId(), mediaEvent, ProgressEventListener.JobStatus.DONE));
         } catch (IOException e) {
             logger.error("Error executing job", e);
         }

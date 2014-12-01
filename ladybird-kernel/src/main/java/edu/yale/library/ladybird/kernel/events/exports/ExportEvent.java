@@ -14,7 +14,7 @@ public class ExportEvent implements UserGeneratedEvent {
     /* Time ended */
     private Date endTime;
 
-    private final String eventName = "Ladybird ExportEvent";
+    private final String eventName = "Export";
 
     @Override
     public String getEventName() {

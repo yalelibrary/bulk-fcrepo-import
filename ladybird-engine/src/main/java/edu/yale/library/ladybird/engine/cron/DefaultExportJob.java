@@ -43,7 +43,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static edu.yale.library.ladybird.engine.ExportBus.postEvent;
+import static edu.yale.library.ladybird.engine.ExportBus.post;
 import static org.apache.commons.lang.time.DurationFormatUtils.formatDurationHMS;
 import static org.apache.commons.lang.time.DurationFormatUtils.formatDurationWords;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -81,8 +81,8 @@ public class DefaultExportJob implements Job, ExportJob {
             ExportRequestEvent exportRequestEvent = new ExportRequestEvent();
 
             //post init
-            postEvent(new ProgressEvent(importEntityContext.getMonitor().getId(),
-                    exportRequestEvent, ProgressEventListener.JobStatus.IN_PROGRESS));
+            post(new ProgressEvent(importEntityContext.getMonitor().getId(),
+                    exportRequestEvent, ProgressEventListener.JobStatus.INIT));
 
             /**
              * 1. a. Write to spreadsheet, b. update import_jobs, c. send file
@@ -119,7 +119,7 @@ public class DefaultExportJob implements Job, ExportJob {
             final ExportCompleteEvent exportCompEvent = new ExportCompleteEventBuilder()
                     .setRowsProcessed(importEntityContext.getImportJobList().size()).setTime(elapsed).createExportCompleteEvent();
             exportCompEvent.setImportId(importEntityContext.getImportId());
-            postEvent(new ProgressEvent(importEntityContext.getMonitor().getId(), exportCompEvent, ProgressEventListener.JobStatus.COMPLETE));
+            post(new ProgressEvent(importEntityContext.getMonitor().getId(), exportCompEvent, ProgressEventListener.JobStatus.DONE));
             logger.debug("Notifying user registered.");
             sendNotification(exportCompEvent, Collections.singletonList(importEntityContext.getMonitor().getUser()));
             logger.trace("Added export event to notification queue.");

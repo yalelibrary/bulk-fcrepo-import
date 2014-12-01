@@ -18,7 +18,7 @@ public class ImportEvent implements UserGeneratedEvent {
     /* Time ended */
     private Date endTime;
 
-    private final String eventName = "Ladybird ImportEvent";
+    private final String eventName = "Import";
 
     private int importId;
 

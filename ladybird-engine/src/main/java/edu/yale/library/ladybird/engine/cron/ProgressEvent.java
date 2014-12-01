@@ -45,7 +45,7 @@ public class ProgressEvent implements Event {
     }
 
     public boolean isComplete(ProgressEvent event) {
-        return event.getEventStatus() == JobStatus.COMPLETE;
+        return event.getEventStatus() == JobStatus.DONE;
     }
 
     @Override

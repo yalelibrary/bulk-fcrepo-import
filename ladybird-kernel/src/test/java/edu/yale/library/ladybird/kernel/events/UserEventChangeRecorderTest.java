@@ -24,7 +24,7 @@ public class UserEventChangeRecorderTest {
         final List<UserEvent> list = dao.findAll();
         final UserEvent userEvent = list.get(0);
 
-        assertEquals("Value mismatch", userEvent.getEventType(), "Ladybird ExportEvent");
+        assertEquals("Value mismatch", userEvent.getEventType(), "Export");
     }
 
 }

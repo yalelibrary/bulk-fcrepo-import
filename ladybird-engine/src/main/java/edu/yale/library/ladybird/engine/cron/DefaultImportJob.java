@@ -64,8 +64,8 @@ public class DefaultImportJob implements Job, ImportJob {
 
             //Post init
             ProgressEvent progressEvent = new ProgressEvent(importRequestedEvent.getMonitor().getId(), importRequestedEvent,
-                    ProgressEventListener.JobStatus.IN_PROGRESS);
-            ExportBus.postEvent(progressEvent);
+                    ProgressEventListener.JobStatus.INIT);
+            ExportBus.post(progressEvent);
 
             final List<ImportEntity.Row> rowList = importEngine.read(spreadsheetFile, ReadMode.FULL, fieldDataValidator);
 
@@ -91,8 +91,8 @@ public class DefaultImportJob implements Job, ImportJob {
             importCompEvent.setImportId(imid);
 
             //Post progress
-            ExportBus.postEvent(new ProgressEvent(importRequestedEvent.getMonitor().getId(), importCompEvent,
-                    ProgressEventListener.JobStatus.COMPLETE));
+            ExportBus.post(new ProgressEvent(importRequestedEvent.getMonitor().getId(), importCompEvent,
+                    ProgressEventListener.JobStatus.DONE));
 
             sendNotification(importCompEvent, Collections.singletonList(importRequestedEvent.getMonitor().getUser()));
 

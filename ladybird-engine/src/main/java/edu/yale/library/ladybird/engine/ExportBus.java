@@ -56,7 +56,7 @@ public class ExportBus {
         return eventBus;
     }
 
-    public static void postEvent(final Event event) {
+    public static void post(final Event event) {
         getEventBus().post(event);
     }
 

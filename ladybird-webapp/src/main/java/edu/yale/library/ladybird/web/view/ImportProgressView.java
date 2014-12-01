@@ -58,7 +58,13 @@ public class ImportProgressView extends AbstractView implements Serializable {
     public String status(final int monitorId) {
         try {
             final int importId = convertToJobId(monitorId);
-            return importId == -1 ? "" : progressEventListener.getJobStatus(importId);
+            List<String> jobStatus = new ArrayList<>();
+
+            if (importId != -1) {
+                jobStatus = progressEventListener.getJobStatus(importId);
+            }
+
+            return importId == -1 ? "" : jobStatus.toString();
         } catch (Exception e) {
             logger.error("Error finding status for monitorId={} Problem ={}", monitorId, e);
             return "ERR";
@@ -68,7 +74,7 @@ public class ImportProgressView extends AbstractView implements Serializable {
     //TODO change SQL lookup since it might be polled frequently
     public String statusInProgress(final int monitorId) {
         try {
-            return progressEventListener.getJobStatus(monitorId);
+            return progressEventListener.getJobStatus(monitorId).toString();
         } catch (Exception e) {
             logger.error("Error finding status for monitorId={} Problem ={}", monitorId, e);
             return "ERR";
@@ -98,6 +104,10 @@ public class ImportProgressView extends AbstractView implements Serializable {
 
         final List<ContextTrace> list = new ArrayList<>();
         List<ContextedRuntimeException> e = progressEventListener.getRawException(importId);
+
+        if (e == null) {
+            return Collections.emptyList();
+        }
 
         for (final ContextedRuntimeException ie : e) {
             ContextTrace contextTrace = new ContextTrace();

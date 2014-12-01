@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ public class ProgressEventListener implements Serializable {
     public static final int TOTAL_STEPS = 3;
     private static final Map<Integer, Integer> steps = new HashMap<>();
 
-    private static final Map<Integer, String> status = new HashMap<>();
+    private static final Map<Integer, List<String>> status = new HashMap<>();
 
     private static final Map<Integer, List<ContextedRuntimeException>> exceptions = new HashMap<>();
 
@@ -31,7 +32,7 @@ public class ProgressEventListener implements Serializable {
      */
     @Subscribe
     @SuppressWarnings("unused")
-    public void onEventCompletion(ProgressEvent event) {
+    public void onProgress(ProgressEvent event) {
         try {
             if (event.getJobId() == null) {
                 throw new NullPointerException("Job Id null");
@@ -40,18 +41,30 @@ public class ProgressEventListener implements Serializable {
             final int importId = event.getJobId();
             final JobStatus jobStatus = event.getEventStatus();
 
-            // skip steps increment if not complete
-            if (steps.get(event.getJobId()) != null && jobStatus == JobStatus.COMPLETE) {
+            // skip steps incrementing if job not complete
+            if (steps.get(event.getJobId()) != null && jobStatus == JobStatus.DONE) {
                 logger.trace("Incrementing step for event={} for jobId={}", event.toString(), event.getJobId());
                 int current = steps.get(event.getJobId());
                 steps.put(event.getJobId(), current + 1);
-            } else  if (jobStatus == JobStatus.COMPLETE){
+            } else  if (jobStatus == JobStatus.DONE){
                 logger.trace("Incrementing step for event={} for jobId={}", event.toString(), event.getJobId());
                 steps.put(event.getJobId(), 1);
             }
 
-            logger.trace("Recording status event={}", event.getEventName() + jobStatus.toString());
-            status.put(importId, event.getEvent().getEventName() + " : " + jobStatus.toString());
+            logger.debug("Recording status event={}", event.getEventName() + jobStatus.toString());
+            List<String> existingStatus = status.get(importId);
+
+            if (existingStatus == null) {
+                existingStatus = new ArrayList<>();
+            }
+
+            if (event.getEvent().getEventName() == null) {
+                logger.trace("Null event name receieved");
+                return;
+            }
+
+            existingStatus.add(event.getEvent().getEventName() + ":" + jobStatus.toString());
+            status.put(importId, existingStatus);
         } catch (Exception e) {
             throw new RuntimeException("Error saving event={}" + event.toString(), e);
         }
@@ -71,7 +84,9 @@ public class ProgressEventListener implements Serializable {
 
             int importId = event.getJobId();
             logger.trace("Recording exception event for importId={}", importId);
-            status.put(importId, JobStatus.EXCEPTION.toString());
+            //List<String> existingStatus = status.get(importId);
+            //existingStatus.add(JobStatus.EXCEPTION.toString());
+            //status.put(importId, existingStatus);
             List<ContextedRuntimeException> list = exceptions.get(importId);
 
             if (list == null || list.isEmpty()) {
@@ -106,9 +121,9 @@ public class ProgressEventListener implements Serializable {
     }
 
     //Note: jobId is importId not montiorId
-    public String getJobStatus(int jobId) {
+    public List<String> getJobStatus(int jobId) {
         if (status.get(jobId) == null) {
-            return "N/A";
+            return Collections.singletonList("N/A");
         }
 
         return status.get(jobId);
@@ -133,6 +148,6 @@ public class ProgressEventListener implements Serializable {
     }
 
     public enum JobStatus {
-        COMPLETE, HANGING, EXCEPTION, IN_PROGRESS
+        DONE, HANGING, EXCEPTION, INIT
     }
 }

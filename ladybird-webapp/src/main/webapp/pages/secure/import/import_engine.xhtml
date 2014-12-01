@@ -18,7 +18,6 @@
                 </h:outputLink>
             </span>
         </div>
-
         <br/>
 
         <div>
@@ -28,81 +27,74 @@
                               rendered="#{empty monitorView.itemList}"/>
               </span>
         </div>
-
         <br/>
 
-
+        <!-- Form -->
         <h:form id="SchedulerForm" enctype="multipart/form-data" rendered="#{not empty monitorView.itemList}">
             <div>
-                <div>
-                    <!-- Data Table -->
 
-                    <p:dataTable id="DirDatatable"
-                                 editable="false"
-                                 paginator="false"
-                                 value="#{monitorView.itemList}"
-                                 var="monitorItem">
+                <!-- Data Table -->
+                <p:dataTable id="DirDatatable"
+                             editable="false"
+                             paginator="false"
+                             var="monitorItem"
+                             value="#{monitorView.itemList}">
 
-                        <p:column headerText="Import Directory" width="10%" rendered="false">
-                            <h:outputText value="#{monitorItem.dirPath}"/>
-                            <h:outputText value="local" rendered="#{empty monitorItem.dirPath}"/>
-                        </p:column>
+                    <p:column headerText="Import Directory" width="10%" rendered="false">
+                        <h:outputText value="#{monitorItem.dirPath}"/>
+                        <h:outputText value="local" rendered="#{empty monitorItem.dirPath}"/>
+                    </p:column>
 
-                        <p:column headerText="Export Directory" width="12%">
-                            <h:outputText value="#{monitorItem.exportPath}"/>
-                        </p:column>
+                    <p:column headerText="Export Directory" width="12%">
+                        <h:outputText value="#{monitorItem.exportPath}"/>
+                    </p:column>
 
-                        <p:column headerText="User" width="14%">
-                            <h:outputText value="#{monitorItem.notificationEmail}"/>
-                        </p:column>
+                    <p:column headerText="User" width="14%">
+                        <h:outputText value="#{monitorItem.notificationEmail}"/>
+                    </p:column>
 
-                        <p:column headerText="Time Scheduled" width="12%">
-                            <h:outputText value="#{monitorItem.date}">
-                                <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
-                            </h:outputText>
-                        </p:column>
+                    <p:column headerText="Time Scheduled" width="12%">
+                        <h:outputText value="#{monitorItem.date}">
+                            <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                        </h:outputText>
+                    </p:column>
 
-                        <p:column headerText="Progress" width="12%">
-                            <h:outputText id="progressOutputText"
-                                          value="#{importProgressView.count(monitorItem.id)} / #{importProgressView.STEPS_TO_COMPLETE} step(s)"
-                                    rendered="#{importProgressView.jobInMap(monitorItem.id)}"/>
-                            <!-- don't render if older value. since map is used -->
+                    <!-- progress meter -->
+                    <p:column headerText="Progress" width="12%">
+                        <h:graphicImage library="img" name="check.png"
+                                        rendered="#{importProgressView.count(monitorItem.id) eq importProgressView.STEPS_TO_COMPLETE}"/>
+                        &nbsp;
+                        <h:outputText id="progressOutputText"
+                                      value="#{importProgressView.count(monitorItem.id)} / #{importProgressView.STEPS_TO_COMPLETE} step(s)"
+                                      rendered="#{importProgressView.jobInMap(monitorItem.id)}"/>
+                        <!-- don't render if older value. since map is used -->
 
-                            <p:poll id="progressPoll" interval="5"
-                                    listener="#{importProgressView.progress(monitorItem.id)}"
-                                    update="progressOutputText"/>
-                        </p:column>
+                        <p:poll id="progressPoll" interval="5"
+                                listener="#{importProgressView.progress(monitorItem.id)}"
+                                update="progressOutputText"/>
+                    </p:column>
 
-                        <!-- TODO clean up -->
-                        <p:column headerText="Status" width="50%">
+                    <!-- events -->
+                    <p:column headerText="Events" width="50%">
+                        <h:outputText id="status2"
+                                      value="#{importProgressView.statusInProgress(monitorItem.id)}"/>
+                        &nbsp;
 
-                            <h:outputText id="status2" styleClass="alert alert-info"
-                                          value="#{importProgressView.statusInProgress(monitorItem.id)}"/>
+                        <h:link id="exceptionLink"
+                                value="Exceptions ( #{importProgressView.numberExceptions(monitorItem.id)} )"
+                                outcome="exception">
+                            <f:param name="id" value="#{monitorItem.id}"/>
+                        </h:link>
 
-                            &nbsp;
+                        <p:poll id="statusPoll"
+                                interval="3"
+                                listener="#{importProgressView.status(monitorItem.id)}"
+                                update="@form"/>
+                    </p:column>
 
-                            <h:link id="exceptionLink"
-                                    value="Exceptions ( #{importProgressView.numberExceptions(monitorItem.id)} )"
-                                    outcome="exception"
-                                    rendered="#{importProgressView.status(monitorItem.id) eq 'EXCEPTION'}"
-                                    style="color:red">
-                                <f:param name="id" value="#{monitorItem.id}"/>
-                            </h:link>
+                </p:dataTable>
+                <!-- end: datatable -->
 
-
-                            <h:outputText id="status3"
-                                          styleClass="alert alert-success"
-                                          value="Task Complete"
-                                          rendered="#{importProgressView.count(monitorItem.id) eq importProgressView.STEPS_TO_COMPLETE}"/>
-
-                            <p:poll id="statusPoll"
-                                    interval="3"
-                                    listener="#{importProgressView.status(monitorItem.id)}"
-                                    update="@form"/>
-                        </p:column>
-
-                    </p:dataTable>
-                </div>
             </div>
         </h:form>
     </ui:define>

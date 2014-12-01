@@ -40,7 +40,7 @@ public class ImportSourceDataReader implements JobExceptionEventPoster {
     //---------------------------------------------------------------
 
     public void post(JobExceptionEvent event) {
-        ExportBus.postEvent(event);
+        ExportBus.post(event);
     }
 
     /**

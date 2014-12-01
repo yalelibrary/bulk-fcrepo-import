@@ -46,6 +46,6 @@ public final class MediaProcessingEvent extends ImportEvent {
 
     @Override
     public String getEventName() {
-        return "Media Processing";
+        return "Media";
     }
 }
