@@ -81,7 +81,7 @@
                 <label class="col-sm-2 control-label">Export Directory</label>
 
                 <div class="col-sm-10">
-                    <p:inputText id="exportDirInupt" value="#{monitorView.monitorItem.exportPath}">
+                    <p:inputText id="exportDirInupt" value="#{monitorView.monitorItem.exportPath}" required="true">
                         <f:validator validatorId="edu.yale.library.ladybird.web.view.ExportFileValidator"/>
                     </p:inputText>
                     <h:message for="exportDirInupt" style="color:red"/>

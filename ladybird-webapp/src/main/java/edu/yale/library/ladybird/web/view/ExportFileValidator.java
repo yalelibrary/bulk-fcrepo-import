@@ -10,8 +10,11 @@ import javax.faces.context.FacesContext;
 import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
+import static java.lang.System.getProperty;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @FacesValidator("edu.yale.library.ladybird.web.view.ExportFileValidator")
@@ -25,19 +28,22 @@ public class ExportFileValidator implements Validator {
     public void validate(FacesContext facesContext, UIComponent uiComponent, Object o) throws ValidatorException {
         try {
             String rootPath = dao.findByProperty("import_root_path").getValue();
-            String path = o.toString();
-            File f = new File(rootPath + System.getProperty("file.separator") + path);
+            String userDir = o.toString();
+            Path path = Paths.get(rootPath + getProperty("file.separator") + userDir);
 
-            if (!f.exists() || !f.isDirectory()) {
-                logger.debug("User speciied invaild export path={}", path);
-                FacesMessage msg = new FacesMessage("Invalid directory.");
-                msg.setSeverity(FacesMessage.SEVERITY_ERROR);
-                throw new ValidatorException(msg);
+            if (!Files.isDirectory(path)) {
+                throw new ValidatorException(getException());
             }
         } catch (ValidatorException e) {
             logger.error("Error validating export file directory input", e);
             throw e;
         }
+    }
+
+    private FacesMessage getException() {
+        FacesMessage msg = new FacesMessage("Invalid directory.");
+        msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+        return msg;
     }
 
 }
