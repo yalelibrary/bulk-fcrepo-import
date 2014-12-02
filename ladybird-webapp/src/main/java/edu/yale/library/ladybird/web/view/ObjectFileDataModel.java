@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.entity.ObjectFile;
+import edu.yale.library.ladybird.entity.Project;
 import edu.yale.library.ladybird.persistence.dao.ObjectDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectFileDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectFileHibernateDAO;
@@ -9,6 +10,7 @@ import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 import org.slf4j.Logger;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +32,15 @@ public class ObjectFileDataModel extends LazyDataModel<ObjectFile> {
         //logger.trace("ObjectFile count={}", dao.count());
 
         final ObjectDAO objectDAO = new ObjectHibernateDAO();
-        final int dataSize = objectDAO.projectCount(authUtil.getDefaultProjectForCurrentUser().getProjectId());
+
+        final Project currentProject = authUtil.getDefaultProjectForCurrentUser();
+
+        if (currentProject == null) {
+            return Collections.emptyList();
+        }
+
+
+        final int dataSize = objectDAO.projectCount(currentProject.getProjectId());
 
         try {
             final int currentProjectId = authUtil.getDefaultProjectForCurrentUser().getProjectId();

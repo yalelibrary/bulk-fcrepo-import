@@ -62,6 +62,10 @@ public class ObjectFileView extends AbstractView {
                 logger.info("Current user not found in session. Can't determine default project"); //should have a filter somehwere
             }
 
+            if (authUtil.getDefaultProjectForCurrentUser() == null) {
+                logger.info("Cannot display. Default project not selected");
+            }
+
             if (subItemList == null) {
                 subItemList = new ObjectFileDataModel();
             }

@@ -118,7 +118,6 @@ public class ObjectFileHibernateDAO extends GenericHibernateDAO<ObjectFile, Inte
         try {
             final Query q = s.createQuery("from edu.yale.library.ladybird.entity.ObjectFile where oid = :param");
             q.setParameter("param", oid);
-            q.setFirstResult(1);
             q.setMaxResults(1);
 
             final List<ObjectFile> list = q.list();
