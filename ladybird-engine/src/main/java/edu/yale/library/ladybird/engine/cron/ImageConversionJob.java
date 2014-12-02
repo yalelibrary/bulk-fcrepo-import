@@ -9,6 +9,7 @@ import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
 import edu.yale.library.ladybird.kernel.events.NotificationEventQueue;
 import edu.yale.library.ladybird.persistence.dao.SettingsDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.SettingsHibernateDAO;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.quartz.Job;
@@ -52,11 +53,22 @@ public class ImageConversionJob implements Job {
 
         // Post init
         MediaProcessingEvent mediaEventInit = new MediaProcessingEvent();
-        mediaEventInit.setImportId(importReqEvent.getImportId());
-        ProgressEvent progressEvent = new ProgressEvent(importReqEvent.getImportId(), mediaEventInit,
+
+        // TODO
+        final int importId = importReqEvent.getImportId();
+        List<edu.yale.library.ladybird.entity.ImportJob> importJobs = new ImportJobHibernateDAO().findByJobId(importId);
+        int requestId = -1;
+
+        if (importJobs.isEmpty()) {
+            logger.debug("Cannot find fire event: corresponding job not found");
+        } else {
+            requestId = importJobs.get(0).getRequestId();
+        }
+
+        mediaEventInit.setImportId(requestId);
+        ProgressEvent progressEvent = new ProgressEvent(requestId, mediaEventInit,
                 ProgressEventListener.JobStatus.INIT);
         post(progressEvent);
-
 
         try {
             mediaFunctionProcessor.convert(importReqEvent.getImportId(), importReqEvent.getImportEntityValue());
@@ -64,12 +76,12 @@ public class ImageConversionJob implements Job {
 
             MediaProcessingEvent mediaEvent = new MediaProcessingEvent();
             mediaEvent.setDuration(elapsed);
-            mediaEvent.setImportId(importReqEvent.getImportId());
+            mediaEvent.setImportId(requestId);
             //TODO check it matches up:
             mediaEvent.setConversions(importReqEvent.getImportEntityValue().getContentRows().size());
 
             // Post completion
-            post(new ProgressEvent(importReqEvent.getImportId(), mediaEvent, ProgressEventListener.JobStatus.DONE));
+            post(new ProgressEvent(requestId, mediaEvent, ProgressEventListener.JobStatus.DONE));
         } catch (IOException e) {
             logger.error("Error executing job", e);
         }
