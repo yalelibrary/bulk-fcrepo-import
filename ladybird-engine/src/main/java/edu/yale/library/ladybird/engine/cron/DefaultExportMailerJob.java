@@ -72,7 +72,7 @@ public class DefaultExportMailerJob implements Job, ExportMailerJob {
                         }
 
                         final File f = new File(path);
-                        logger.debug("Attempting to send file={} to user={}", f.getAbsolutePath(), user.getUsername());
+                        logger.trace("Attempting to send file={} to user={}", f.getAbsolutePath(), user.getUsername());
                         notificationHandler.notifyUserWithFile(user, new ExportEvent() {
                             @Override
                             public String getEventName() {

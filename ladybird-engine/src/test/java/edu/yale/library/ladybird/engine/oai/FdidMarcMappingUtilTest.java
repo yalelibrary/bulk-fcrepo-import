@@ -68,6 +68,11 @@ public class FdidMarcMappingUtilTest {
             }
 
             @Override
+            public void delete(FieldMarcMapping entities) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
             public void saveOrUpdateItem(FieldMarcMapping item) {
                 //To change body of implemented methods use File | Settings | File Templates.
             }
@@ -86,6 +91,8 @@ public class FdidMarcMappingUtilTest {
             public void deleteAll() {
                 //To change body of implemented methods use File | Settings | File Templates.
             }
+
+
         });
 
         FieldMarcMapping fieldMarcMapping = new FieldMarcMappingBuilder().setK1("245").setFdid(70).createFieldMarcMapping();

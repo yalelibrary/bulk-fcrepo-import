@@ -21,7 +21,6 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectStringHibernate
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -36,8 +35,7 @@ public class ObjectMetadataWriter {
 
     private Logger logger = LoggerFactory.getLogger(ObjectMetadataWriter.class);
 
-    //TODO inject
-
+    // TODO inject:
     final ObjectStringDAO objectStringDAO = new ObjectStringHibernateDAO();
     final ObjectAcidDAO objectAcidDAO = new ObjectAcidHibernateDAO();
     final AuthorityControlDAO authorityControlDAO = new AuthorityControlHibernateDAO();
@@ -47,120 +45,105 @@ public class ObjectMetadataWriter {
      *
      * @param importEntityContext context
      * @see edu.yale.library.ladybird.engine.cron.DefaultExportJob#execute(org.quartz.JobExecutionContext) for call
-     * TODO pass ImportEntity directly
      */
-    public void write(ImportEntityContext importEntityContext) {
+    public void write(final ImportEntityContext importEntityContext) {
         try {
-            List<ImportEntity.Row> importRows = importEntityContext.getImportJobList();
-            ImportEntityValue importEntityValue = new ImportEntityValue(importRows);
+            final List<ImportEntity.Row> importRows = importEntityContext.getImportJobList();
+            final ImportEntityValue importEntityValue = new ImportEntityValue(importRows);
             final int userId = getUserId(importEntityContext);
-
-            logger.trace("Writing object metadata. Import Row size={}, UserId{}", importRows.size(), userId);
-
-            //Go through each column (F1.. fdid=220), and persist object data (i.e. it processes vertically):
-
             final List<FieldConstant> fieldConstants = importEntityValue.getAllFieldConstants();
+            logger.trace("Field constants are={}", fieldConstants.toString());
 
-            logger.trace("Field constants for this sheet are={}", fieldConstants.toString());
+            final Date currentDate = new Date();
 
-            for (FieldConstant f : fieldConstants) {
+            // Go through each column (F1.. fdid=220), and persist object data (i.e. it processes vertically):
+            for (final FieldConstant f : fieldConstants) {
 
-                if (FunctionConstants.isFunction(f.getName())) { //skip functions. functions have no metadata
+                if (FunctionConstants.isFunction(f.getName())) { // skip functions (no metadata)
                     continue;
                 }
 
-                //logger.trace("Evaluating FieldConstant={} ", f.getName());
+                final int fdid = FieldDefinition.fdidAsInt(f.getName());
+                logger.debug("Writing values for fdid={} ", fdid);
 
-                Map<ImportEntity.Column, ImportEntity.Column> columnMap = importEntityValue.getContentColumnValuesWithOIds(f);
+                final Map<ImportEntity.Column, ImportEntity.Column> columnMap
+                        = importEntityValue.getContentColumnValuesWithOIds(f);
+                final Set<ImportEntity.Column> keys = columnMap.keySet();
 
-                //logger.trace("All column values for this field are={}", columnMap.toString());
+                // Either an acid or a string:
+                final boolean shouldWriteAsObjectAcid = shouldWriteAsObjectAcid(fdid);
 
-                Set<ImportEntity.Column> keys = columnMap.keySet();
-
-                //logger.trace("Column map key set size={}", keys.size());
-
-                for (ImportEntity.Column c : keys) {
-                    String oidStr = (String) c.getValue();
-                    ImportEntity.Column fdidForOid = columnMap.get(c);
-
-                    //logger.debug("Processing (key oid) oid={}, field name={}, field value={}", oid,
-                            //fdidForOid.getField().getName(), fdidForOid.getValue());
-
-                    //Save object metadata
+                for (final ImportEntity.Column col : keys) {
+                    final int oid = Integer.parseInt((String) col.getValue());
+                    final ImportEntity.Column fdidForOid = columnMap.get(col);
                     final String value = (String) fdidForOid.getValue();
-                    final int fdid = FieldDefinition.fdidAsInt(f.getName());
 
-                    //Either an acid or a string:
-                    if (getTableType(fdid).equals(SCHEMA.OBJECT_ACID)) {
-                        //1a. reference existing or new acid:
-
-                        //first see if the acid already exists (to get rid of multiple acids landing into acid list view)
-                        List<AuthorityControl> existingAcidList = authorityControlDAO.findByFdidAndStringValue(fdid, value);
-
-                        int acid;
-
-                        if (existingAcidList.isEmpty()) {
-                            final AuthorityControl acidObj = new AuthorityControlBuilder().createAuthorityControl();
-                            acidObj.setFdid(fdid);
-                            acidObj.setUserId(userId);
-                            acidObj.setDate(new Date());
-                            acidObj.setValue(value);
-                            acid = authorityControlDAO.save(acidObj);
-                        } else if (existingAcidList.size() == 1) {
-                            acid = existingAcidList.get(0).getAcid();
-                        } else {
-                            logger.error("More than one acid value found for fdid={}", fdid);  //throw
-                            throw new Exception("Error with acid fdid multi value for fdid=" + fdid);
-                        }
-
-                        //see if an objectacid already exists (this is used to replace the value when a spreadsheet update is done)
-                        ObjectAcid existingObjectAcid = objectAcidDAO.findByOidAndFdid(Integer.parseInt(oidStr), fdid);
-
-                        if (existingObjectAcid != null) {
-                            logger.trace("An object acid value already exists for oid={} fdid={}", oidStr, fdid);
-                            objectAcidDAO.delete(Collections.singletonList(existingObjectAcid));
-                            logger.trace("Deleted={}", existingObjectAcid);
-                        }
-
-                        //1b. persist object acid
-                        final ObjectAcid objAcid = new ObjectAcidBuilder().createObjectAcid();
-                        objAcid.setFdid(fdid);
-
-                        if (oidStr != null) { //TODO
-                            objAcid.setObjectId(Integer.parseInt(oidStr));
-                        }
-
-                        objAcid.setValue(acid); //TODO acid PK
-                        objAcid.setUserId(userId);
-                        objAcid.setDate(new Date());
-                        objectAcidDAO.save(objAcid);
-                        logger.trace("Saved={}", objectAcidDAO);
+                    if (shouldWriteAsObjectAcid) {
+                        addObjectAcid(oid, fdid, userId, currentDate, value);
                     } else {
-                        int oid = Integer.parseInt(oidStr);
-
-                        //see if an objectstring already exists (this is used to replace the value when a spreadsheet update is done)
-                        final ObjectString exObjectString = objectStringDAO.findByOidAndFdid(oid, fdid);
-
-                        if (exObjectString != null) {
-                            logger.trace("A string value already exists for oid={} fdid={}", oid, fdid);
-                            objectStringDAO.delete(Collections.singletonList(exObjectString));
-                            logger.trace("Deleted={}", exObjectString);
-                        }
-
-                        final ObjectString objString = new ObjectStringBuilder().createObjectString();
-                        objString.setFdid(fdid);
-                        objString.setUserId(userId);
-                        objString.setDate(new Date());
-                        objString.setValue(value);
-                        objString.setOid(oid);
-                        objectStringDAO.save(objString);
-                        logger.trace("Saved={}", objString);
+                        addObjectString(oid, fdid, userId, currentDate, value);
                     }
                 }
             }
         } catch (Exception e) {
-            logger.error("Error writing to object metadata tables", e);
+            logger.error("Error writing to object metadata tables", e); // TODO
         }
+    }
+
+    private void addObjectAcid(int oid, int fdid, int userId, Date date, String value) throws Exception{
+        // 1a. reference existing or new acid:
+        // check if the acid already exists (to get rid of multiple acids landing into acid list view)
+        final List<AuthorityControl> existingAcidList
+                = authorityControlDAO.findByFdidAndStringValue(fdid, value);
+
+        int acid;
+
+        if (existingAcidList.isEmpty()) {
+            final AuthorityControl authorityControl
+                    = new AuthorityControlBuilder().setFdid(fdid).setUserId(userId).setDate(date).setValue(value)
+                    .createAuthorityControl();
+            acid = authorityControlDAO.save(authorityControl);
+        } else if (existingAcidList.size() == 1) {
+            acid = existingAcidList.get(0).getAcid();
+        } else {
+            logger.error("More than one acid value found for fdid={}", fdid);
+            throw new Exception("Error with acid fdid multi value for fdid=" + fdid); //TODO check
+        }
+
+        //see if an objectacid already exists (this is used to replace the value when a spreadsheet update is done)
+        final ObjectAcid existingObjectAcid = objectAcidDAO.findByOidAndFdid(oid, fdid);
+
+        if (existingObjectAcid != null) {
+            logger.trace("An object acid value already exists for oid={} fdid={}", oid, fdid);
+            objectAcidDAO.delete(existingObjectAcid);
+        }
+
+        //1b. persist object acid // TODO acid PK
+        final ObjectAcid objAcid
+                = new ObjectAcidBuilder().setFdid(fdid).setObjectId(oid).setValue(acid).setUserId(userId).setDate(date)
+                         .createObjectAcid();
+        objectAcidDAO.save(objAcid);
+    }
+
+    private void addObjectString(int oid, int fdid, int userId, Date date, String value) {
+        // see if an objectstring already exists
+        // (this is used to replace the value when a spreadsheet update is done)
+        final ObjectString exObjectString = objectStringDAO.findByOidAndFdid(oid, fdid);
+
+        if (exObjectString != null) {
+            logger.trace("A string value already exists for oid={} fdid={}", oid, fdid);
+            objectStringDAO.delete(exObjectString);
+        }
+
+        final ObjectString objString =
+                new ObjectStringBuilder().setFdid(fdid).setUserId(userId).setDate(date).setValue(value).setOid(oid)
+                        .createObjectString();
+        objString.setOid(oid);
+        objectStringDAO.save(objString);
+    }
+
+    public boolean shouldWriteAsObjectAcid(final int fdid) {
+        return getTableType(fdid).equals(SCHEMA.OBJECT_ACID);
     }
 
     /**
@@ -168,7 +151,7 @@ public class ObjectMetadataWriter {
      * @param fdid int fdid
      * @return table type (e.g. object_string or object_acid)
      */
-    public SCHEMA getTableType(int fdid) {
+    public SCHEMA getTableType(final int fdid) {
         return FieldConstantUtil.isString(fdid) ? SCHEMA.OBJECT_STRING : SCHEMA.OBJECT_ACID;
     }
 

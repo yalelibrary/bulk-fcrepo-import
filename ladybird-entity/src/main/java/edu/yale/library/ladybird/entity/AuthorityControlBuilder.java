@@ -42,7 +42,6 @@ public class AuthorityControlBuilder {
 
     public AuthorityControl createAuthorityControl() {
         return new AuthorityControl(date, fdid, value, code, userId);
-        // public AuthorityControl(Date date, int fdid, String value, String code, int userId) {
     }
 
     public AuthorityControl createAuthorityControl2() {

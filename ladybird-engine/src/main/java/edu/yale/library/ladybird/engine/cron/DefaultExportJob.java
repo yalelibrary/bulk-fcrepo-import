@@ -115,9 +115,11 @@ public class DefaultExportJob implements Job, ExportJob {
             ObjectMetadataWriter objectMetadataWriter = new ObjectMetadataWriter(); //TODO
             long timeInObjWriter = System.currentTimeMillis();
             objectMetadataWriter.write(importEntityContext);
-            logger.debug("[end] Wrote to object metadata tables in={}", formatDurationHMS(System.currentTimeMillis() - timeInObjWriter));
+            long elapsedInObjWriter = System.currentTimeMillis() - timeInObjWriter;
+
+            logger.debug("[end] Wrote to object metadata tables in={}", formatDurationHMS(elapsedInObjWriter));
             final ExportCompleteEvent exportCompEvent = new ExportCompleteEventBuilder()
-                    .setRowsProcessed(importEntityContext.getImportJobList().size()).setTime(elapsed).createExportCompleteEvent();
+                    .setRowsProcessed(importEntityContext.getImportJobList().size()).setTime(elapsedInObjWriter).createExportCompleteEvent();
             exportCompEvent.setImportId(importEntityContext.getImportId());
             post(new ProgressEvent(importEntityContext.getMonitor().getId(), exportCompEvent, ProgressEventListener.JobStatus.DONE));
             logger.debug("Notifying user registered.");

@@ -48,6 +48,10 @@ public class DummyEventDAO implements UserEventDAO {
     }
 
     @Override
+    public void delete(UserEvent entities) {
+    }
+
+    @Override
     public void deleteAll() {
         //To change body of implemented methods use File | Settings | File Templates.
     }
