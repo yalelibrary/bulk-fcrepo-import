@@ -4,6 +4,7 @@ import com.google.common.collect.Multimap;
 import edu.yale.library.ladybird.engine.AbstractDBTest;
 import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
 import edu.yale.library.ladybird.engine.exports.ExportReader;
+import edu.yale.library.ladybird.engine.exports.ExportReaderOaiMerger;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
 import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
 import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
@@ -65,12 +66,10 @@ public class ExportReaderIT extends AbstractDBTest {
         }
     }
 
-    /** @see edu.yale.library.ladybird.engine.exports.ExportReader#getMultimapMarc21Field */
     @Test
     public void shouldGetMultiMapValue() {
         initMarcMappingDB(); //FIXME Inst. db because ExportReader creates a new FdidMarcMappingUtil object
 
-        ExportReader exportReader = new ExportReader();
         final List<FieldConstant> globalFConstantsList = fakeGlobalApplicationFieldConstants();
 
         ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
@@ -78,9 +77,13 @@ public class ExportReaderIT extends AbstractDBTest {
 
         //logger.debug("Map={}", map.toString());
 
+
+        ExportReaderOaiMerger exportReaderOaiMerger = new ExportReaderOaiMerger();
+
+
         for (FieldConstant f: globalFConstantsList) {
             Marc21Field marc21Field = new FdidMarcMappingUtil().toMarc21Field(f);
-            String s = exportReader.getMultimapMarc21Field(marc21Field, map);
+            String s = exportReaderOaiMerger.getMultimapMarc21Field(marc21Field, map);
             //logger.debug("Value={}", s);
             assertEquals("Value mismatch", s, "Test value");
         }

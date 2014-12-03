@@ -42,26 +42,25 @@ public final class ImportReader {
      * @throws IOException
      */
     public List<ImportEntity.Row> read() throws ImportReaderValidationException, IOException {
-        logger.debug("Processing sheetNumber={} of file={}", sheetNumber, file);
-
-        final List<ImportEntity.Row> sheetRows = new ArrayList<>();
-        final List<FieldConstant> valueMap = new ArrayList<>();
+        logger.debug("Processing sheetNumber={} of={}", sheetNumber, file);
 
         try {
             final XSSFSheet sheet = file.getDefaultSheet(sheetNumber);
+            final int physicalRows = sheet.getPhysicalNumberOfRows();
+            final List<ImportEntity.Row> sheetRows = new ArrayList<>(physicalRows);
             final Iterator<Row> it = sheet.iterator();
-
-            //read first row
             final Row firstRow = it.next();
             final Iterator<Cell> firstRowCellItr = firstRow.cellIterator();
             final ImportEntity.Row headerRow = new ImportEntity().new Row();
 
             int exHeadRowCellCount = 0;
 
+            final List<FieldConstant> valueMap = new ArrayList<>(50);
+
             while (firstRowCellItr.hasNext()) {
                 final Cell cell = firstRowCellItr.next();
 
-                // Reader Header value.
+                // read header:
                 try {
                     FieldConstant f = FieldConstantUtil.getFieldConstant(String.valueOf(SpreadsheetUtil.getCellValue(cell)));
                     valueMap.add(f);
@@ -91,70 +90,54 @@ public final class ImportReader {
 
                 exHeadRowCellCount++;
             }
-
             logger.trace("Exhead cell count={}", exHeadRowCellCount);
-
-            //add header row:
+            // add header row:
             sheetRows.add(headerRow);
 
-            //iterate body:
+            // iterate body:
             int cellCount = 0;
             final ImportEntity importEntity = new ImportEntity();
-            int debugRowCount = 0;
 
             try {
                 while (it.hasNext()) {
-                    //logger.trace("Reading content row={}", debugRowCount);
-                    debugRowCount++;
-
                     final ImportEntity.Row contentsSheetRow = importEntity.new Row();
                     final Row row = it.next();
                     int lastColumn = Math.max(row.getLastCellNum(), exHeadRowCellCount);
 
-                    logger.trace("Last column={}", lastColumn);
-
                     for (int cn = 0; cn < lastColumn && cn < exHeadRowCellCount; cn++) {
                         Cell cell = row.getCell(cn, Row.RETURN_BLANK_AS_NULL);
 
-                        //handle null fields, otherwise values will get mushed
+                        // handle null fields, otherwise values will get mushed
                         if (cell == null) {
-                            //logger.trace("Null field.");
-
                             contentsSheetRow.getColumns().add(ImportEntityValue.getBlankColumn(valueMap.get(cn)));
                             cellCount++;
-
-                            //logger.trace("Added row");
                         } else {
                             final ImportEntity.Column<String> column = importEntity.new Column<>(valueMap.get(cellCount),
                                     String.valueOf(SpreadsheetUtil.getCellValue(cell)));
-                            //logger.trace("Column={}", column.toString());
                             contentsSheetRow.getColumns().add(column);
                             cellCount++;
                         }
                     }
-                    ImportEntity.Row evalRow = new ImportEntity().new Row(Collections.unmodifiableList(contentsSheetRow.getColumns()));
+                    ImportEntity.Row evalRow = new ImportEntity()
+                            .new Row(Collections.unmodifiableList(contentsSheetRow.getColumns()));
 
                     if (!allFieldsNull(evalRow)) {
                         sheetRows.add(contentsSheetRow);
+                        logger.debug("Added row num={}", sheetRows.size());
                     }
 
                     cellCount = 0;
                 }
-                //logger.trace("Content row index={}", debugRowCount);
+                logger.debug("Done reading sheetNumber={} of={} size={}", sheetNumber, file, sheetRows.size());
+                return sheetRows;
             } catch (IllegalArgumentException e) {
                 logger.error("Error reading cell column={}, error={}", cellCount + 1, e.getMessage());
                 throw new IllegalArgumentException(e);
             }
-        } catch (IOException e) {
-            logger.error("Error reading value in import reading", e);
-            throw e;
-        } catch (IllegalArgumentException e) {
-            logger.error("Error reading cell value={}", e.getMessage()); //ignore
+        }  catch (IOException | IllegalArgumentException e) {
+            logger.error("Error reading", e);
             throw e;
         }
-
-        logger.debug("Done reading sheet.");
-        return sheetRows;
     }
 
     private boolean allFieldsNull(final ImportEntity.Row row) {

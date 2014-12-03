@@ -60,7 +60,9 @@ public class ImportWriter {
             importEntityValue = processFdid111(importEntityValue);
 
             writeExHead(importId, importEntityValue.getHeaderRow().getColumns());
+            logger.debug("Wrote exheads for={}", importId);
             writeContents(importId, importEntityValue, fieldConstants);
+            logger.debug("Wrote contents for={}", importId);
             return importId;
         } catch (Exception e) {
             logger.error("Error in import writer for request id={}", importJobRequest.getRequestId());
@@ -94,7 +96,6 @@ public class ImportWriter {
             ImportJobExhead entry = new ImportJobExheadBuilder().setImportId(importId).setCol(col).
                     setDate(JOB_EXEC_DATE).setValue(column.field.getName()).createImportJobExhead();
             exheads.add(entry);
-            logger.trace("Saved={}", entry.toString());
             col++;
         }
 
@@ -111,7 +112,6 @@ public class ImportWriter {
     public synchronized void writeContents(final int importId, ImportEntityValue importEntity,
                                            Set<FieldConstant> sheetFieldConstants) throws Exception {
         try {
-            logger.debug("Writing import job contents for importId={}", importId);
             logger.info("Sheet contains FieldConstants={}", sheetFieldConstants.toString());
 
             checkImportIdPreConditions(importId);
@@ -142,7 +142,6 @@ public class ImportWriter {
 
             //Process F4,F6 (check step requirement)
             if (processF4F6(importEntity)) {
-                logger.debug("Processing F4, F6");
                 processComplex(importEntity);
             }
 

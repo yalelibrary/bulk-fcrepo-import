@@ -55,6 +55,7 @@ public class ObjectMetadataWriter {
             logger.trace("Field constants are={}", fieldConstants.toString());
 
             final Date currentDate = new Date();
+            final int importId = importEntityContext.getImportId();
 
             // Go through each column (F1.. fdid=220), and persist object data (i.e. it processes vertically):
             for (final FieldConstant f : fieldConstants) {
@@ -64,7 +65,7 @@ public class ObjectMetadataWriter {
                 }
 
                 final int fdid = FieldDefinition.fdidAsInt(f.getName());
-                logger.debug("Writing values for fdid={} ", fdid);
+                logger.debug("Writing values for fdid={} for import={} ", fdid, importId);
 
                 final Map<ImportEntity.Column, ImportEntity.Column> columnMap
                         = importEntityValue.getContentColumnValuesWithOIds(f);

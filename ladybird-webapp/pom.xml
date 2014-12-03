@@ -252,6 +252,7 @@
                             <cargo.tomcat.manager.url>
                                 http:/localhost:8080/manager
                             </cargo.tomcat.manager.url>
+                            <cargo.jvmargs>-Xms512m -Xmx2048m</cargo.jvmargs>
                         </properties>
                     </configuration>
                     <deployables>

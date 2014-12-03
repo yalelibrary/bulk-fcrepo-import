@@ -59,6 +59,8 @@ public class DefaultExportJob implements Job, ExportJob {
 
     /**
      * Export Job reads content rows from import job tables and writes to a spreadsheet
+     * It also writes to Object metadata tables (e.g. object acid)
+     *
      * TODO find out how to tie user id to file data
      *
      * @param ctx org.quartz.JobExecutionContext
@@ -68,15 +70,14 @@ public class DefaultExportJob implements Job, ExportJob {
         final ExportEngine exportEngine = new DefaultExportEngine();
 
         try {
-            logger.trace("[wait] export job.");
+            logger.debug("Reading frome export engine");
             final ImportEntityContext importEntityContext = exportEngine.read();
+            logger.debug("Read from export engine, size={}", importEntityContext.getImportJobList().size());
 
             if (importEntityContext.getImportJobList().isEmpty()) {
                 logger.error("0 rows to export.");
                 throw new JobExecutionException("0 rows to export");
             }
-
-            logger.debug("[start] export job={}", importEntityContext.getImportId());
 
             ExportRequestEvent exportRequestEvent = new ExportRequestEvent();
 
@@ -87,9 +88,10 @@ public class DefaultExportJob implements Job, ExportJob {
             /**
              * 1. a. Write to spreadsheet, b. update import_jobs, c. send file
              */
+            logger.debug("[start] writing sheet for export job={}", importEntityContext.getImportId());
+
             final long timeInXlsWriting = System.currentTimeMillis();
             final String exportFilePath = getWritePath(exportFile(importEntityContext.getMonitor().getExportPath()));
-            logger.debug("Export file path={}", exportFilePath);
             final List<ExportSheet> exportSheets = new ArrayList<>();
             final ExportSheet sheet1 = new ExportSheet();
             sheet1.setTitle("Full Sheet");
@@ -104,14 +106,14 @@ public class DefaultExportJob implements Job, ExportJob {
             //1c. Create entry in import job notifications table (to enable spreadsheet file mailing etc)
             updateImportJobsNotification(importEntityContext.getImportId(), importEntityContext.getMonitor().getUser().getUserId());
 
-            long elapsed = System.currentTimeMillis() - timeInXlsWriting;
+            long elapsedInXls = System.currentTimeMillis() - timeInXlsWriting;
             logger.debug("[end] Completed spreadsheet writing in={}",
-                    DurationFormatUtils.formatDuration(elapsed, "HH:mm:ss:SS"));
+                    DurationFormatUtils.formatDuration(elapsedInXls, "HH:mm:ss:SS"));
 
             /**
              * 2. Write to object metadata tables, post ExportCompleteEvent and progress
              */
-            logger.debug("Writing to object metadata tables. size={}", importEntityContext.getImportJobList().size());
+            logger.debug("Writing to object metadata tables");
             ObjectMetadataWriter objectMetadataWriter = new ObjectMetadataWriter(); //TODO
             long timeInObjWriter = System.currentTimeMillis();
             objectMetadataWriter.write(importEntityContext);
