@@ -30,11 +30,14 @@ public class OidMinter {
 
             try {
                 final int id = objectDAO.save(object);
-                row.getColumns().add(new ImportEntity().new Column(FunctionConstants.F1, String.valueOf(id))); //uses auto-increment
+                row.getColumns().add(new ImportEntity().new Column(FunctionConstants.F1, String.valueOf(id)));
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Error creating oid", e);
+                throw e;
             }
         }
+
+        logger.debug("Wrote oids={}", rowList.size());
 
         importEntityValue.setContentRows(rowList);
         return importEntityValue;
