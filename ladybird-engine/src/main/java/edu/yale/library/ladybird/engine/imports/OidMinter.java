@@ -16,16 +16,18 @@ public class OidMinter {
 
     ObjectDAO objectDAO = new ObjectHibernateDAO();
 
-    public ImportEntityValue write(final ImportEntityValue importEntityValue, int projectId) {
+    public ImportEntityValue write(final ImportEntityValue importEntityValue, final int projectId) {
         final List<ImportEntity.Column> exheadList = importEntityValue.getHeaderRow().getColumns();
         final ImportEntity.Column<String> column = new ImportEntity().new Column(FunctionConstants.F1, "");
         exheadList.add(column);
         importEntityValue.setHeaderRow(exheadList);
         final List<ImportEntity.Row> rowList = importEntityValue.getContentRows();
+        final Date currentDate = new Date();
+        final ObjectBuilder objectBuilder = new ObjectBuilder();
 
         for (ImportEntity.Row row: rowList) {
-            Object object = new ObjectBuilder().createObject();
-            object.setDate(new Date());
+            Object object = objectBuilder.createObject();
+            object.setDate(currentDate);
             object.setProjectId(projectId);
 
             try {
@@ -36,9 +38,6 @@ public class OidMinter {
                 throw e;
             }
         }
-
-        logger.debug("Wrote oids={}", rowList.size());
-
         importEntityValue.setContentRows(rowList);
         return importEntityValue;
     }

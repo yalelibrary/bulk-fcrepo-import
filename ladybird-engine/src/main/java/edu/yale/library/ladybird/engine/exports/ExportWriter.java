@@ -66,30 +66,38 @@ public class ExportWriter {
         }
     }
 
+    //TODO: write sheets one by one
     public void writeSheets(final List<ExportSheet> exportSheets, final String filePath) throws IOException {
         final XSSFWorkbook workbook = new XSSFWorkbook();
 
-        for (ExportSheet exportSheet: exportSheets) {
-            logger.trace("Writing sheet={}", exportSheet.getTitle());
+        try {
+            for (ExportSheet exportSheet: exportSheets) {
+                logger.trace("Preparing sheet={}", exportSheet.getTitle());
 
-            final XSSFSheet sheet = workbook.createSheet(exportSheet.getTitle());
-            int rowNum = 0;
-            for (final ImportEntity.Row importRow : exportSheet.getContents()) {
-                final Row row = sheet.createRow(rowNum++);
-                final List<ImportEntity.Column> columnList = importRow.getColumns();
-                int cellNum = 0;
-                for (Object o : columnList) {
-                    final ImportEntity.Column col = (ImportEntity.Column) o;
-                    final String colValue = col.getValue().toString();
-                    final Cell cell = row.createCell(cellNum++);
+                final XSSFSheet sheet = workbook.createSheet(exportSheet.getTitle());
+                int rowNum = 0;
+                List<ImportEntity.Row> contents = exportSheet.getContents();
 
-                    if (colValue instanceof String) {
-                        cell.setCellValue(colValue);
-                    } else {
-                        logger.debug("Unknown col data type={}", colValue);
+                for (final ImportEntity.Row importRow : contents) {
+
+                    if (rowNum % 1000 == 0) {
+                        logger.debug("Created cells for row number={} for sheet={} for file={}",
+                                rowNum, exportSheet.getTitle(), filePath);
+                    }
+
+                    final Row row = sheet.createRow(rowNum++);
+                    final List<ImportEntity.Column> columnList = importRow.getColumns();
+                    int cellNum = 0;
+                    for (ImportEntity.Column col : columnList) {
+                        //final ImportEntity.Column col = (ImportEntity.Column) o;
+                        final Cell cell = row.createCell(cellNum++);
+                        cell.setCellValue(col.getValue().toString());
                     }
                 }
             }
+        } catch (Exception e) {
+            logger.error("Error preparting sheets data", e);
+            throw e;
         }
 
         try {
@@ -100,6 +108,7 @@ public class ExportWriter {
     }
 
     public void writeFile(XSSFWorkbook workbook, String filePath) throws IOException {
+        logger.debug("Writing file to path={}", filePath);
          /* Write contents */
         FileOutputStream out = null;
         try {

@@ -50,16 +50,21 @@ public class MediaFunctionProcessor {
      */
     @SuppressWarnings("unchecked")
     public void convert(final int importId, final ImportEntityValue importEntityValue) throws IOException {
-        String blankFileName = "N/A";
+        final String blankFileName = "N/A";
 
         final int userId = 1; //TODO check this
         final List<Row> rowList = importEntityValue.getContentRows();
 
         logger.debug("[start] converting media for import id={} rowlist size={}", importId, rowList.size());
 
-        long timeInConversion = System.currentTimeMillis();
+        final long timeInConversion = System.currentTimeMillis();
 
         for (int i = 0; i < rowList.size(); i++) {
+
+            if (i % 100 == 0) {
+                logger.debug("Converted media, so far={} for importId={}", i, importId);
+            }
+
             final Column<String> f3 = importEntityValue.getRowFieldColumn(FunctionConstants.F3, i);
             checkState(f3.getField().getName().equals(FunctionConstants.F3.getName()), "Found wrong F3 col");
 

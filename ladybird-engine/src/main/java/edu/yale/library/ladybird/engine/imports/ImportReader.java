@@ -125,8 +125,8 @@ public final class ImportReader {
                         sheetRows.add(contentsSheetRow);
                     }
 
-                    if (sheetRows.size() % 1000 == 0) {
-                        logger.debug("Read list size={} for= {}", sheetRows.size(), file);
+                    if (sheetRows.size() % 10000 == 0) {
+                        logger.debug("Read so far rows={} for= {}", sheetRows.size(), file.getFileName());
                     }
 
                     cellCount = 0;

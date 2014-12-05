@@ -17,6 +17,7 @@ import edu.yale.library.ladybird.persistence.dao.ImportJobExheadDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobContentsHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobExheadHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobHibernateDAO;
+import org.apache.commons.lang.time.DurationFormatUtils;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -52,17 +53,22 @@ public class ImportWriter {
         try {
             final int importId = writeImportJob(importJobRequest);
 
+            logger.debug("Saved import job={}", importId);
+
             //save which functions exist
             Set<FieldConstant> fieldConstants = importEntityValue.getAllFunctions();
 
             //note 2 columns are added:
+            logger.debug("Processing oids");
             importEntityValue = writeF1(importEntityValue, importJobRequest.getProjectId());
+
+            logger.debug("Process fdid111");
             importEntityValue = processFdid111(importEntityValue);
 
             writeExHead(importId, importEntityValue.getHeaderRow().getColumns());
-            logger.debug("Wrote exheads for={}", importId);
+            logger.debug("Wrote import job exheads for={}", importId);
             writeContents(importId, importEntityValue, fieldConstants);
-            logger.debug("Wrote contents for={}", importId);
+            logger.debug("Wrote import job contents for={}", importId);
             return importId;
         } catch (Exception e) {
             logger.error("Error in import writer for request id={}", importJobRequest.getRequestId());
@@ -215,8 +221,6 @@ public class ImportWriter {
      * @return minted job id
      */
     public Integer writeImportJob(final ImportJobRequest importJobRequest) {
-        logger.info("Saving import job={}", importJobRequest.toString());
-
         return importJobDAO.save(new ImportJobBuilder().setDate(JOB_EXEC_DATE).setJobDirectory(importJobRequest.getJobDir()).
                 setJobFile(importJobRequest.getJobFile()).setUserId(importJobRequest.getUserId())
                 .setRequestId(importJobRequest.getRequestId()).createImportJob());
@@ -244,7 +248,12 @@ public class ImportWriter {
 
     private ImportEntityValue processF1(ImportEntityValue importEntityValue, int projectId) {
         OidMinter oidMinter = new OidMinter();
-        return oidMinter.write(importEntityValue, projectId);
+        long elapsed = System.currentTimeMillis();
+        ImportEntityValue modifiedImportEntity =  oidMinter.write(importEntityValue, projectId);
+        logger.debug("Completed processing F1 in={} rows={}",
+                DurationFormatUtils.formatDurationHMS(System.currentTimeMillis() - elapsed),
+                modifiedImportEntity.getContentRows().size());
+        return modifiedImportEntity;
     }
 
     private ImportEntityValue processFdid111(ImportEntityValue importEntityValue) {
