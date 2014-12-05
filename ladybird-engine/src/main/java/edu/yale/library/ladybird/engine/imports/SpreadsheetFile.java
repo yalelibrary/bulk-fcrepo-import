@@ -58,8 +58,6 @@ public class SpreadsheetFile implements Cloneable {
     public String toString() {
         return "SpreadsheetFile{"
                 + "fileName='" + fileName + '\''
-                + ", altName='" + altName + '\''
-                + ", path='" + path + '\''
                 + '}';
     }
 

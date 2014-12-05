@@ -123,7 +123,10 @@ public final class ImportReader {
 
                     if (!allFieldsNull(evalRow)) {
                         sheetRows.add(contentsSheetRow);
-                        logger.debug("Added row num={}", sheetRows.size());
+                    }
+
+                    if (sheetRows.size() % 1000 == 0) {
+                        logger.debug("Read list size={} for= {}", sheetRows.size(), file);
                     }
 
                     cellCount = 0;

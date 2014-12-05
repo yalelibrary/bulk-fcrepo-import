@@ -9,11 +9,13 @@ import edu.yale.library.ladybird.engine.oai.FdidMarcMappingUtil;
 import edu.yale.library.ladybird.engine.oai.ImportSourceDataReader;
 import edu.yale.library.ladybird.engine.oai.Marc21Field;
 import edu.yale.library.ladybird.entity.FieldConstant;
+import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobContentsHibernateDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +31,18 @@ public class ExportReaderOaiMerger {
 
     final ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
 
-    public List<ImportEntity.Row> merge(int importId, int localIdentifierColumnNum, int numRowsToWrite,
+    public List<ImportEntity.Row> merge(int importId, int localIdentifierColumnNum,
                                         List<FieldConstant> globalFConstantsList, List<ImportEntity.Row> plainRows) {
+
+        int numRowsToWrite = getExpectedNumRowsToWrite(importId) + 1;
+
+        logger.debug("Read job={} from export engine queue. Expected num to write={}", importId, numRowsToWrite);
+
+        if (numRowsToWrite <= 1) {
+            logger.error("No rows to merge!");
+            Collections.emptyList();
+        }
+
         List<ImportEntity.Row> resultRowList = new ArrayList<>();
         final List<LocalIdMarcValue> bibIdValueList = importSourceDataReader.readImportSourceData(importId);
         logger.debug("BibIdValueList size={}", bibIdValueList.size());
@@ -106,6 +118,17 @@ public class ExportReaderOaiMerger {
         logger.trace("Found for field={} value={} map={} map value={} attr. collection size={}",
                 marc21Field.toString(), val, multimap.toString(), attrCollection.toString(), attrCollection.size());
         return val;
+    }
+
+    /**
+     * TODO lock numRows for a particular job
+     */
+    private int getExpectedNumRowsToWrite(final int importId) {
+        try {
+            return new ImportJobContentsHibernateDAO().getNumRowsPerImportJob(importId);
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
 

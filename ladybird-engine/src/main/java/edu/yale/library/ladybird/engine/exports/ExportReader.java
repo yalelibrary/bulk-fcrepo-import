@@ -40,12 +40,12 @@ public class ExportReader {
     public ImportEntityContext read() {
         final ExportRequestEvent exportRequestEvent = ExportEngineQueue.getJob(); //from Queue
         final int importId = exportRequestEvent.getImportId();
-        int numRowsToWrite = getExpectedNumRowsToWrite(importId);
+        final int numRowsToWrite = importJobContentsDAO.getNumRowsPerImportJob(importId) + 1;
 
         logger.debug("Read job={} from export engine queue. Expected num to write={}", importId, numRowsToWrite);
 
-        if (numRowsToWrite == 0) {
-            logger.debug("No rows to write!");
+        if (numRowsToWrite <= 1) {
+            logger.debug("No rows to write for importId={}!", importId);
             ImportEntityContext empty = ImportEntityContext.newInstance();
             empty.setImportId(importId);
             return empty;
@@ -72,7 +72,7 @@ public class ExportReader {
         logger.debug("Merging with OAI provider values");
         ExportReaderOaiMerger exportReaderOaiMerger = new ExportReaderOaiMerger();
         int oaiColumnIndex = getLocalIdentifierColumnNum(plainRows);
-        List<Row> contentRows = exportReaderOaiMerger.merge(importId, oaiColumnIndex, numRowsToWrite, ladybirdFieldConstants, plainRows);
+        List<Row> contentRows = exportReaderOaiMerger.merge(importId, oaiColumnIndex, ladybirdFieldConstants, plainRows);
         resultRowList.addAll(contentRows);
 
         final ImportEntityContext iContext = new ImportEntityContext();
@@ -123,22 +123,24 @@ public class ExportReader {
         public List<Row> read(final int importId) {
             logger.debug("Reading import rows for importId={}", importId);
 
-            final List<Row> importRows = new ArrayList<>();
-
             try {
                 List<ImportJobExhead> exheads = importJobExheadDAO.findByImportId(importId);
                 logger.trace("ImportJobExheads size={}", exheads.size());
 
-                int numRowsPerImportJob = importJobContentsDAO.getNumRowsPerImportJob(importId);
-                numRowsPerImportJob = numRowsPerImportJob + 1;
-                logger.trace("Import job contents num rows={}", numRowsPerImportJob);
+                final int numRowsPerImportJob = importJobContentsDAO.getNumRowsPerImportJob(importId) + 1;
+                final List<Row> importRows = new ArrayList<>(numRowsPerImportJob);
 
                 //cache functions
-                Map<String, FieldConstant> cache = new HashMap<>();
+                final Map<String, FieldConstant> cache = new HashMap<>();
+
 
                 for (int i = 0; i < numRowsPerImportJob; i++) {
                     final List<ImportJobContents> rowJobContents = importJobContentsDAO.findByRow(importId, i);
                     final Row row = new ImportEntity().new Row();
+
+                    if (i % 1000 == 0)  {
+                        logger.debug("Read row={}", i);
+                    }
 
                     //Warning: Gets all columns (including F104/F105 COLUMN)
                     for (int j = 0; j < rowJobContents.size(); j++) {
@@ -176,23 +178,9 @@ public class ExportReader {
 
             return Collections.emptyList();
         }
+
     }
 
-    /**
-     * Return expected number of write by consutling the import job contents.
-     * @param importId import id of the job
-     * @return number of exact rows or 0 if error
-     */
-    private int getExpectedNumRowsToWrite(final int importId) {
-        int rows = 0;
 
-        try {
-            rows = importJobContentsDAO.getNumRowsPerImportJob(importId) + 1; //gets contents count not exhead
-        } catch (Exception e) {
-            logger.error("Error finding rows in import job contents for importId={}", importId, e);
-        }
-
-        return rows;
-    }
 
 }

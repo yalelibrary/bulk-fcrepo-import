@@ -70,7 +70,6 @@ public class DefaultExportJob implements Job, ExportJob {
         final ExportEngine exportEngine = new DefaultExportEngine();
 
         try {
-            logger.debug("Reading frome export engine");
             final ImportEntityContext importEntityContext = exportEngine.read();
             logger.debug("Read from export engine, size={}", importEntityContext.getImportJobList().size());
 
