@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Reads from import job tables and data structures.
@@ -125,48 +126,65 @@ public class ExportReader {
 
             try {
                 List<ImportJobExhead> exheads = importJobExheadDAO.findByImportId(importId);
-                logger.trace("ImportJobExheads size={}", exheads.size());
+                logger.trace("importId={} exheads size={}", importId, exheads.size());
 
                 final int numRowsPerImportJob = importJobContentsDAO.getNumRowsPerImportJob(importId) + 1;
-                final List<Row> importRows = new ArrayList<>(numRowsPerImportJob);
+                logger.trace("importId={} importRowsPerJob={}", importId, numRowsPerImportJob);
 
                 //cache functions
                 final Map<String, FieldConstant> cache = new HashMap<>();
 
+                // read contents at once (instead of hitting row by row)
+                final Map<Integer, List<ImportJobContents>> contentCache = new HashMap<>();
+                final List<ImportJobContents> importJobContents = importJobContentsDAO.findByImportId(importId);
 
-                for (int i = 0; i < numRowsPerImportJob; i++) {
-                    final List<ImportJobContents> rowJobContents = importJobContentsDAO.findByRow(importId, i);
-                    final Row row = new ImportEntity().new Row();
+                for (int i = 0; i < importJobContents.size(); i++) {
+                    List<ImportJobContents> existing = contentCache.get(importJobContents.get(i).getRow());
 
-                    if (i % 1000 == 0)  {
-                        logger.debug("Read row={}", i);
+                    if (existing == null) {
+                        existing = new ArrayList<>(); //TODO
                     }
 
-                    //Warning: Gets all columns (including F104/F105 COLUMN)
-                    for (int j = 0; j < rowJobContents.size(); j++) {
+                    existing.add(importJobContents.get(i));
+                    contentCache.put(importJobContents.get(i).getRow(), existing);
+                }
+                logger.debug("Read content rows size={} for importId={}", importJobContents.size(), importId);
+
+                final List<Row> importRows = new ArrayList<>(numRowsPerImportJob);
+                final Set<Integer> set = contentCache.keySet();
+
+                for (final int entry: set) {
+                    final List<ImportJobContents> rowJobContents = contentCache.get(entry);
+                    final Row row = new ImportEntity().new Row();
+
+                    if (entry % 10000 == 0)  {
+                        logger.debug("Read row={}", entry);
+                    }
+
+                    // Note: Gets all columns (including F104/F105 COLUMN)
+                    for (int i = 0; i < rowJobContents.size(); i++) {
                         try {
-                            final ImportJobExhead importJobExhead = exheads.get(j);
-                            final String header = importJobExhead.getValue();
-                            //logger.trace("Header={}", header);
+                            final ImportJobExhead importJobExhead = exheads.get(i);
+                            final String exhead = importJobExhead.getValue();
 
                             FieldConstant fieldConstant;
 
-                            if (cache.containsKey(header)) {
-                                fieldConstant = cache.get(header);
+                            if (cache.containsKey(exhead)) {
+                                fieldConstant = cache.get(exhead);
                             } else {
-                                fieldConstant = FieldConstantUtil.toFieldConstant(header);
+                                fieldConstant = FieldConstantUtil.toFieldConstant(exhead);
 
                                 if (fieldConstant == null) {
-                                    logger.trace("Field Constant null for headerValue={}", header);
+                                    logger.trace("Field Constant null for headerValue={}", exhead);
                                 }
 
-                                cache.put(header, fieldConstant);
+                                cache.put(exhead, fieldConstant);
                             }
 
-                            final ImportJobContents jobContents = rowJobContents.get(j);
+                            final ImportJobContents jobContents = rowJobContents.get(i);
                             row.getColumns().add(new ImportEntity().new Column<>(fieldConstant, jobContents.getValue()));
                         } catch (Exception e) {
-                            logger.error("Error retrieving value={}", e.getMessage());
+                            logger.error("Error retrieving value={}", e); // throw ?
                         }
                     }
                     importRows.add(row);
@@ -178,7 +196,6 @@ public class ExportReader {
 
             return Collections.emptyList();
         }
-
     }
 
 
