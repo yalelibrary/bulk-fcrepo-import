@@ -76,6 +76,7 @@ public class ImportJobContentsHibernateDAO extends GenericHibernateDAO<ImportJob
 
             if (result == null) {
                 logger.error("Hibernate unique result null for param={}", arg);
+                return 0;
             }
             return (Integer) result;
         } finally {
