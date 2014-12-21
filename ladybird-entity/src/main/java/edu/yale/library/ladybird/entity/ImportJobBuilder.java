@@ -47,7 +47,7 @@ public class ImportJobBuilder {
         return this;
     }
 
-    public ImportJobBuilder setRequestId(Integer id){
+    public ImportJobBuilder setRequestId(Integer id) {
         this.requestId = id;
         return this;
     }

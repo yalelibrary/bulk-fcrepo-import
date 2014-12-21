@@ -91,7 +91,7 @@ public class ObjectMetadataWriter {
         }
     }
 
-    private void addObjectAcid(int oid, int fdid, int userId, Date date, String value) throws Exception{
+    private void addObjectAcid(int oid, int fdid, int userId, Date date, String value) throws Exception {
         // 1a. reference existing or new acid:
         // check if the acid already exists (to get rid of multiple acids landing into acid list view)
         final List<AuthorityControl> existingAcidList

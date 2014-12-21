@@ -4,7 +4,6 @@ import com.google.common.collect.Multimap;
 import edu.yale.library.ladybird.engine.model.LocalIdentifier;
 import edu.yale.library.ladybird.entity.ImportSourceData;
 import edu.yale.library.ladybird.entity.ImportSourceDataBuilder;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;

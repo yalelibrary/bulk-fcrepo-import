@@ -25,7 +25,7 @@ public class ExportFileValidator implements Validator {
     private SettingsDAO dao = new SettingsHibernateDAO(); //TODO
 
     @Override
-    public void validate(FacesContext facesContext, UIComponent uiComponent, Object o) throws ValidatorException {
+    public void validate(FacesContext facesContext, UIComponent uiComponent, Object o) {
         try {
             String rootPath = dao.findByProperty("import_root_path").getValue();
             String userDir = o.toString();

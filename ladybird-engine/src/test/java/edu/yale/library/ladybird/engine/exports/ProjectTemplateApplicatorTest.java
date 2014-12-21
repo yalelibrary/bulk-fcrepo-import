@@ -38,7 +38,6 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ProjectTemplateHibern
 import edu.yale.library.ladybird.persistence.dao.hibernate.ProjectTemplateStringsHibernateDAO;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 

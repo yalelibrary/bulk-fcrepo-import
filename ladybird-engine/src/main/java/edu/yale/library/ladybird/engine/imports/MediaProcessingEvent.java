@@ -38,10 +38,8 @@ public final class MediaProcessingEvent extends ImportEvent {
 
     @Override
     public String toString() {
-        return "MediaProcessingCompleteEvent{" +
-                "importId=" + importId +
-                ", duration=" + duration +
-                '}';
+        return "MediaProcessingCompleteEvent{" + "importId=" + importId
+                + ", duration=" + duration + '}';
     }
 
     @Override

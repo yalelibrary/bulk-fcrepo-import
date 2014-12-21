@@ -46,7 +46,7 @@ public class ProgressEventListener implements Serializable {
                 logger.trace("Incrementing step for event={} for jobId={}", event.toString(), event.getJobId());
                 int current = steps.get(event.getJobId());
                 steps.put(event.getJobId(), current + 1);
-            } else  if (jobStatus == JobStatus.DONE){
+            } else  if (jobStatus == JobStatus.DONE) {
                 logger.trace("Incrementing step for event={} for jobId={}", event.toString(), event.getJobId());
                 steps.put(event.getJobId(), 1);
             }

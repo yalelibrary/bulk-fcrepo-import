@@ -83,7 +83,7 @@ public class ImageMagickProcessor implements ImageProcessor {
         }
     }
 
-    private ConvertCmd buildImageMagickCommand(){
+    private ConvertCmd buildImageMagickCommand() {
         final ConvertCmd cmd = new ConvertCmd();
         final String imageMagickPath = IMAGEMAGICK_PATH;
 

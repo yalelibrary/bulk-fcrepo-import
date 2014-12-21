@@ -22,7 +22,7 @@ public class UserManagerFormValidator implements Validator {
     private UserDAO dao = new UserHibernateDAO(); //TODO
 
     @Override
-    public void validate(FacesContext facesContext, UIComponent uiComponent, Object o) throws ValidatorException {
+    public void validate(FacesContext facesContext, UIComponent uiComponent, Object o) {
         FacesMessage msg = new FacesMessage("Specify non-existing username or email");
         msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 

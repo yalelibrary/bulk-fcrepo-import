@@ -27,7 +27,7 @@ public class ProjectFormValidator implements Validator {
     private ProjectDAO dao = new ProjectHibernateDAO(); //TODO
 
     @Override
-    public void validate(FacesContext facesContext, UIComponent uiComponent, Object o) throws ValidatorException {
+    public void validate(FacesContext facesContext, UIComponent uiComponent, Object o) {
         final FacesMessage msg = new FacesMessage("Specify non-existing project label");
         msg.setSeverity(FacesMessage.SEVERITY_ERROR);
 

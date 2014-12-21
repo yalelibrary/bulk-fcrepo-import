@@ -1,6 +1,5 @@
 package edu.yale.library.ladybird.engine.imports;
 
-import edu.yale.library.ladybird.entity.Monitor;
 import edu.yale.library.ladybird.kernel.events.imports.ImportEvent;
 
 public class ImageConversionRequestEvent extends ImportEvent {
@@ -46,9 +45,7 @@ public class ImageConversionRequestEvent extends ImportEvent {
 
     @Override
     public String toString() {
-        return "ImageConversionRequestEvent{" +
-                "importId=" + importId +
-                ", exportDirPath='" + exportDirPath + '\'' +
-                '}';
+        return "ImageConversionRequestEvent{" + "importId=" + importId + ", exportDirPath='" + exportDirPath + '\''
+                +'}';
     }
 }
