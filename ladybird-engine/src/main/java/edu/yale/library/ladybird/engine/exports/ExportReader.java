@@ -1,9 +1,9 @@
 package edu.yale.library.ladybird.engine.exports;
 
 import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
-import edu.yale.library.ladybird.engine.imports.ImportEntity;
-import edu.yale.library.ladybird.engine.imports.ImportEntity.Row;
-import edu.yale.library.ladybird.engine.imports.ImportEntityValue;
+import edu.yale.library.ladybird.engine.imports.Import;
+import edu.yale.library.ladybird.engine.imports.Import.Row;
+import edu.yale.library.ladybird.engine.imports.ImportValue;
 import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.FieldConstant;
@@ -56,10 +56,10 @@ public class ExportReader {
         final List<FieldConstant> ladybirdFieldConstants = FieldConstantUtil.getApplicationFieldConstants();
 
         //Write exhead
-        final Row exheadRow = new ImportEntity().new Row();
+        final Row exheadRow = new Import().new Row();
 
         for (final FieldConstant fieldConst : ladybirdFieldConstants) {
-            ImportEntity importEntity = new ImportEntity();
+            Import importEntity = new Import();
             exheadRow.getColumns().add(importEntity.new Column(fieldConst, fieldConst.getName()));
         }
 
@@ -90,18 +90,18 @@ public class ExportReader {
      * @return position
      */
     private int getLocalIdentifierColumnNum(List<Row> regularRows) {
-        ImportEntityValue importEntityValue = new ImportEntityValue(regularRows);
+        ImportValue importValue = new ImportValue(regularRows);
 
         int index = -1;
         try {
-            index = importEntityValue.getFunctionPosition(FunctionConstants.F104); //or F105 TODO
+            index = importValue.getFunctionPosition(FunctionConstants.F104); //or F105 TODO
         } catch (Exception e) {
             logger.debug("Col with bib data not found in this dataset(sheet)");
         }
 
         if (index == -1) {
             try {
-                index = importEntityValue.getFunctionPosition(FunctionConstants.F105); //or F105 TODO
+                index = importValue.getFunctionPosition(FunctionConstants.F105); //or F105 TODO
             } catch (Exception e) {
                 logger.debug("Col with barcode data not found in this dataset(sheet)");
             }
@@ -155,7 +155,7 @@ public class ExportReader {
 
                 for (final int entry: set) {
                     final List<ImportJobContents> rowJobContents = contentCache.get(entry);
-                    final Row row = new ImportEntity().new Row();
+                    final Row row = new Import().new Row();
 
                     if (entry % 10000 == 0)  {
                         logger.debug("Read row={}", entry);
@@ -182,7 +182,7 @@ public class ExportReader {
                             }
 
                             final ImportJobContents jobContents = rowJobContents.get(i);
-                            row.getColumns().add(new ImportEntity().new Column<>(fieldConstant, jobContents.getValue()));
+                            row.getColumns().add(new Import().new Column<>(fieldConstant, jobContents.getValue()));
                         } catch (Exception e) {
                             logger.error("Error retrieving value={}", e); // throw ?
                         }

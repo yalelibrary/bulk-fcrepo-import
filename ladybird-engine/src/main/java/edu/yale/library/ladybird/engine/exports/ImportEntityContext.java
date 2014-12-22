@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.engine.exports;
 
-import edu.yale.library.ladybird.engine.imports.ImportEntity;
+import edu.yale.library.ladybird.engine.imports.Import;
 import edu.yale.library.ladybird.entity.Monitor;
 
 import java.util.Collections;
@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class ImportEntityContext {
 
-    private List<ImportEntity.Row> importJobList; //TODO rename
+    private List<Import.Row> importJobList; //TODO rename
     private Monitor monitor;
     /** imj id */
     private int importId;
@@ -25,11 +25,11 @@ public class ImportEntityContext {
         this.monitor = monitor;
     }
 
-    public List<ImportEntity.Row> getImportJobList() {
+    public List<Import.Row> getImportJobList() {
         return importJobList;
     }
 
-    public void setImportJobList(final List<ImportEntity.Row> importJobList) {
+    public void setImportJobList(final List<Import.Row> importJobList) {
         this.importJobList = importJobList;
     }
 

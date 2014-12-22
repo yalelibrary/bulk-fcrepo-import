@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.engine.model;
 
-import edu.yale.library.ladybird.engine.imports.ImportEntityValue;
+import edu.yale.library.ladybird.engine.imports.ImportValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,25 +56,25 @@ public class LocalIdentifier<T> {
 
     /**
      * Converts a list of columns to a list of LocalIdentifier (barcode or bibids)
-     * @param importEntityValue representing list of columns
+     * @param importValue representing list of columns
      * @return list of LocalIdentifier
      *
      * Note: relies heavily on importentityvalue implementation
      */
-    public static List<LocalIdentifier<String>> getLocalIdList(ImportEntityValue importEntityValue) {
+    public static List<LocalIdentifier<String>> getLocalIdList(ImportValue importValue) {
         int importSourceColumn = -1;
 
-        List<String> list = importEntityValue.getColumnStrings(FunctionConstants.F104);
+        List<String> list = importValue.getColumnStrings(FunctionConstants.F104);
 
         if (!list.isEmpty()) {
-            importSourceColumn = importEntityValue.getFunctionPosition(FunctionConstants.F104);
+            importSourceColumn = importValue.getFunctionPosition(FunctionConstants.F104);
         }
 
         if (list.isEmpty()) { //try F105 TODO
-            list = importEntityValue.getColumnStrings(FunctionConstants.F105);
+            list = importValue.getColumnStrings(FunctionConstants.F105);
 
             if (!list.isEmpty()) {
-                importSourceColumn = importEntityValue.getFunctionPosition(FunctionConstants.F105);
+                importSourceColumn = importValue.getFunctionPosition(FunctionConstants.F105);
             }
         }
 

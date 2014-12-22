@@ -10,7 +10,7 @@ import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
 import edu.yale.library.ladybird.engine.exports.ExportSheet;
 import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
 import edu.yale.library.ladybird.engine.imports.ImportEngineException;
-import edu.yale.library.ladybird.engine.imports.ImportEntity;
+import edu.yale.library.ladybird.engine.imports.Import;
 import edu.yale.library.ladybird.engine.imports.ObjectMetadataWriter;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.FieldDefinition;
@@ -200,7 +200,7 @@ public class DefaultExportJob implements Job, ExportJob {
      *
      * TODO test
      */
-    private ExportSheet getCustomSheet(List<ImportEntity.Row> fullList, Monitor monitor) {
+    private ExportSheet getCustomSheet(List<Import.Row> fullList, Monitor monitor) {
         final UserProjectFieldExportOptionsDAO dao = new UserProjectFieldExportOptionsHibernateDAO(); //TODO
         final ExportSheet exportSheet = new ExportSheet();
         exportSheet.setTitle("Custom Sheet");
@@ -210,15 +210,15 @@ public class DefaultExportJob implements Job, ExportJob {
 
         List<Integer> columnsToExclude = new ArrayList<>();
         List<Integer> columnsFdidsToExclude = new ArrayList<>();
-        List<ImportEntity.Row> newList = new ArrayList<>();
+        List<Import.Row> newList = new ArrayList<>();
 
         try {
             logger.debug("Finding custom fields for user={} for projectId={}", userId, projectId);
 
-            ImportEntity.Row exheadRow = fullList.get(0); // get exhead (show probably use ImportEntityValue somewhere)
+            Import.Row exheadRow = fullList.get(0); // get exhead (show probably use ImportEntityValue somewhere)
 
             for (int i = 0; i < exheadRow.getColumns().size(); i++) {
-                ImportEntity.Column<String> c = exheadRow.getColumns().get(i);
+                Import.Column<String> c = exheadRow.getColumns().get(i);
 
                 if (FunctionConstants.isFunction(c.getValue())) {
                     continue;
@@ -235,10 +235,10 @@ public class DefaultExportJob implements Job, ExportJob {
 
             logger.debug("Num. of columns to exclude={}", columnsToExclude.size());
 
-            for (ImportEntity.Row row: fullList) {
-                final List<ImportEntity.Column> newColumns = new ArrayList<>();
+            for (Import.Row row: fullList) {
+                final List<Import.Column> newColumns = new ArrayList<>();
 
-                for (final ImportEntity.Column<String> col: row.getColumns()) {
+                for (final Import.Column<String> col: row.getColumns()) {
                     if (FunctionConstants.isFunction(col.getField().getName())) {
                         newColumns.add(col);
                         continue;
@@ -255,7 +255,7 @@ public class DefaultExportJob implements Job, ExportJob {
                     }
                 }
 
-                ImportEntity.Row newRow = new ImportEntity().new Row();
+                Import.Row newRow = new Import().new Row();
                 newRow.setColumns(newColumns);
                 newList.add(newRow);
             }

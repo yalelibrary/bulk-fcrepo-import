@@ -1,8 +1,8 @@
 package edu.yale.library.ladybird.engine.imports;
 
 import edu.yale.library.ladybird.engine.file.ImageMagickProcessor;
-import edu.yale.library.ladybird.engine.imports.ImportEntity.Column;
-import edu.yale.library.ladybird.engine.imports.ImportEntity.Row;
+import edu.yale.library.ladybird.engine.imports.Import.Column;
+import edu.yale.library.ladybird.engine.imports.Import.Row;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.ImportFile;
 import edu.yale.library.ladybird.entity.ImportFileBuilder;
@@ -50,15 +50,15 @@ public class MediaFunctionProcessor {
     /**
      * Process images and writes to import file and object file
      *
-     * @param importEntityValue import EntityValue
+     * @param importValue import EntityValue
      * @throws IOException if any single conversion fails
      */
     @SuppressWarnings("unchecked")
-    public void convert(final int importId, final ImportEntityValue importEntityValue) throws IOException {
+    public void convert(final int importId, final ImportValue importValue) throws IOException {
         final String blankFileName = "N/A";
 
         final int userId = 1; //TODO check this
-        final List<Row> rowList = importEntityValue.getContentRows();
+        final List<Row> rowList = importValue.getContentRows();
 
         logger.debug("[start] converting media for import id={} rowlist size={}", importId, rowList.size());
 
@@ -74,13 +74,13 @@ public class MediaFunctionProcessor {
                 logger.debug("Converted media, so far={} for importId={}", i, importId);
             }
 
-            final Column<String> f3 = importEntityValue.getRowFieldColumn(FunctionConstants.F3, i);
+            final Column<String> f3 = importValue.getRowFieldColumn(FunctionConstants.F3, i);
             checkState(f3.getField().getName().equals(FunctionConstants.F3.getName()), "Found wrong F3 col");
 
             final String f3Col = f3.getValue();
             logger.trace("Evaluating f3={}", f3Col);
 
-            final Column<String> f1 = importEntityValue.getRowFieldColumn(FunctionConstants.F1, i);
+            final Column<String> f1 = importValue.getRowFieldColumn(FunctionConstants.F1, i);
             checkState(f1.getField().getName().equals(FunctionConstants.F1.getName()), "Found wrong F1 col");
             final int oid = parseInt(f1.getValue());
 
@@ -209,11 +209,11 @@ public class MediaFunctionProcessor {
     /**
      * Update dao with blank image found on project folder. Skip ImageMagick image conversion.
      *
-     * @param importEntityValue import EntityValue
+     * @param importValue import EntityValue
      * @throws Exception if any single conversion fails
      */
     @SuppressWarnings("unchecked")
-    public void createObjectFiles(final int importId, final ImportEntityValue importEntityValue) throws Exception {
+    public void createObjectFiles(final int importId, final ImportValue importValue) throws Exception {
         logger.debug("[start] Creating ObjectFiles with blank image references for importId={}", importId);
         final int userId = 1; //TODO check this
         final String nullFileName = "N/A";
@@ -224,14 +224,14 @@ public class MediaFunctionProcessor {
         final String filePath = PATH_PREFIX + defaultImage;
         final String jpeg = MediaFormat.JPEG.toString();
 
-        List<Row> rowList = importEntityValue.getContentRows();
+        List<Row> rowList = importValue.getContentRows();
         List<ImportFile> importFiles = new ArrayList<>();
         List<ObjectFile> objectFiles = new ArrayList<>();
 
         int oid;
 
         for (int i = 0; i < rowList.size(); i++) {
-            final Column<String> f1 = importEntityValue.getRowFieldColumn(FunctionConstants.F1, i);
+            final Column<String> f1 = importValue.getRowFieldColumn(FunctionConstants.F1, i);
             checkState(f1.getField().getName().equals(FunctionConstants.F1.getName()), "Found wrong F1 col");
             oid = parseInt(f1.getValue());
             importFiles.add(importFileBuilder.importId(importId).oid(oid).fileLocation(filePath).create());

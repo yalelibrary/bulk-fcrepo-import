@@ -48,10 +48,10 @@ public class ObjectMetadataWriter {
      */
     public void write(final ImportEntityContext importEntityContext) {
         try {
-            final List<ImportEntity.Row> importRows = importEntityContext.getImportJobList();
-            final ImportEntityValue importEntityValue = new ImportEntityValue(importRows);
+            final List<Import.Row> importRows = importEntityContext.getImportJobList();
+            final ImportValue importValue = new ImportValue(importRows);
             final int userId = getUserId(importEntityContext);
-            final List<FieldConstant> fieldConstants = importEntityValue.getAllFieldConstants();
+            final List<FieldConstant> fieldConstants = importValue.getAllFieldConstants();
             logger.trace("Field constants are={}", fieldConstants.toString());
 
             final Date currentDate = new Date();
@@ -67,16 +67,16 @@ public class ObjectMetadataWriter {
                 final int fdid = FieldDefinition.fdidAsInt(f.getName());
                 logger.debug("Writing values for fdid={} for import={} ", fdid, importId);
 
-                final Map<ImportEntity.Column, ImportEntity.Column> columnMap
-                        = importEntityValue.getContentColumnValuesWithOIds(f);
-                final Set<ImportEntity.Column> keys = columnMap.keySet();
+                final Map<Import.Column, Import.Column> columnMap
+                        = importValue.getContentColumnValuesWithOIds(f);
+                final Set<Import.Column> keys = columnMap.keySet();
 
                 // Either an acid or a string:
                 final boolean shouldWriteAsObjectAcid = shouldWriteAsObjectAcid(fdid);
 
-                for (final ImportEntity.Column col : keys) {
+                for (final Import.Column col : keys) {
                     final int oid = Integer.parseInt((String) col.getValue());
-                    final ImportEntity.Column fdidForOid = columnMap.get(col);
+                    final Import.Column fdidForOid = columnMap.get(col);
                     final String value = (String) fdidForOid.getValue();
 
                     if (shouldWriteAsObjectAcid) {

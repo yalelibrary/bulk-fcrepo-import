@@ -41,17 +41,17 @@ public final class ImportReader {
      * @throws ImportReaderValidationException
      * @throws IOException
      */
-    public List<ImportEntity.Row> read() throws ImportReaderValidationException, IOException {
+    public List<Import.Row> read() throws ImportReaderValidationException, IOException {
         logger.debug("Processing sheetNumber={} of={}", sheetNumber, file);
 
         try {
             final XSSFSheet sheet = file.getDefaultSheet(sheetNumber);
             final int physicalRows = sheet.getPhysicalNumberOfRows();
-            final List<ImportEntity.Row> sheetRows = new ArrayList<>(physicalRows);
+            final List<Import.Row> sheetRows = new ArrayList<>(physicalRows);
             final Iterator<Row> it = sheet.iterator();
             final Row firstRow = it.next();
             final Iterator<Cell> firstRowCellItr = firstRow.cellIterator();
-            final ImportEntity.Row headerRow = new ImportEntity().new Row();
+            final Import.Row headerRow = new Import().new Row();
 
             int exHeadRowCellCount = 0;
 
@@ -65,7 +65,7 @@ public final class ImportReader {
                     FieldConstant f = FieldConstantUtil.getFieldConstant(String.valueOf(SpreadsheetUtil.getCellValue(cell)));
                     valueMap.add(f);
 
-                    final ImportEntity.Column<String> column = new ImportEntity().new Column<>(f, String.valueOf(SpreadsheetUtil.getCellValue(cell)));
+                    final Import.Column<String> column = new Import().new Column<>(f, String.valueOf(SpreadsheetUtil.getCellValue(cell)));
                     headerRow.getColumns().add(column);
                 } catch (UnknownFieldConstantException unknownFunction) {
                     if (this.readMode == ReadMode.HALT) {
@@ -81,7 +81,7 @@ public final class ImportReader {
 
                     logger.debug("Adding UNK in 1st row for this unrecognized FieldConstant"); //added to keep the exhead and contents col. the same.
 
-                    final ImportEntity.Column<String> column = new ImportEntity()
+                    final Import.Column<String> column = new Import()
                             .new Column<>(FunctionConstants.UNK, String.valueOf(SpreadsheetUtil.getCellValue(cell)));
                     headerRow.getColumns().add(column);
                 } catch (Exception e) {
@@ -96,11 +96,11 @@ public final class ImportReader {
 
             // iterate body:
             int cellCount = 0;
-            final ImportEntity importEntity = new ImportEntity();
+            final Import importEntity = new Import();
 
             try {
                 while (it.hasNext()) {
-                    final ImportEntity.Row contentsSheetRow = importEntity.new Row();
+                    final Import.Row contentsSheetRow = importEntity.new Row();
                     final Row row = it.next();
                     int lastColumn = Math.max(row.getLastCellNum(), exHeadRowCellCount);
 
@@ -109,16 +109,16 @@ public final class ImportReader {
 
                         // handle null fields, otherwise values will get mushed
                         if (cell == null) {
-                            contentsSheetRow.getColumns().add(ImportEntityValue.getBlankColumn(valueMap.get(cn)));
+                            contentsSheetRow.getColumns().add(ImportValue.getBlankColumn(valueMap.get(cn)));
                             cellCount++;
                         } else {
-                            final ImportEntity.Column<String> column = importEntity.new Column<>(valueMap.get(cellCount),
+                            final Import.Column<String> column = importEntity.new Column<>(valueMap.get(cellCount),
                                     String.valueOf(SpreadsheetUtil.getCellValue(cell)));
                             contentsSheetRow.getColumns().add(column);
                             cellCount++;
                         }
                     }
-                    ImportEntity.Row evalRow = new ImportEntity()
+                    Import.Row evalRow = new Import()
                             .new Row(Collections.unmodifiableList(contentsSheetRow.getColumns()));
 
                     if (!allFieldsNull(evalRow)) {
@@ -143,11 +143,11 @@ public final class ImportReader {
         }
     }
 
-    private boolean allFieldsNull(final ImportEntity.Row row) {
-        List<ImportEntity.Column> cols = row.getColumns();
+    private boolean allFieldsNull(final Import.Row row) {
+        List<Import.Column> cols = row.getColumns();
         boolean blank = true;
 
-        for (final ImportEntity.Column<String> c : cols) {
+        for (final Import.Column<String> c : cols) {
             if (c.getValue() == null) {
                 logger.error("Null column value found");
                 throw new IllegalArgumentException("Null col value");

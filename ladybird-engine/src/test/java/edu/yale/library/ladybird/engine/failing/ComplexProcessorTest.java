@@ -2,8 +2,8 @@ package edu.yale.library.ladybird.engine.failing;
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
 import edu.yale.library.ladybird.engine.imports.ComplexProcessor;
-import edu.yale.library.ladybird.engine.imports.ImportEntity;
-import edu.yale.library.ladybird.engine.imports.ImportEntityValue;
+import edu.yale.library.ladybird.engine.imports.Import;
+import edu.yale.library.ladybird.engine.imports.ImportValue;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.entity.Object;
@@ -128,168 +128,168 @@ public class ComplexProcessorTest extends AbstractDBTest {
     }
 
     //F4
-    private ImportEntityValue getF4TestData(int p1, int c1p1, int p2, int c2p2) {
-        final ImportEntity.Row exHeadRow = getRow(getExheadCols(FunctionConstants.F1, FunctionConstants.F4, FunctionConstants.F6));
+    private ImportValue getF4TestData(int p1, int c1p1, int p2, int c2p2) {
+        final Import.Row exHeadRow = getRow(getExheadCols(FunctionConstants.F1, FunctionConstants.F4, FunctionConstants.F6));
         assert (exHeadRow.getColumns().size() == 3);
 
         //content row 1 (parent)
-        final List<ImportEntity.Column> cols1 = new ArrayList<>();
+        final List<Import.Column> cols1 = new ArrayList<>();
         cols1.add(getCol(FunctionConstants.F1, String.valueOf(p1))); //parent oid
         cols1.add(getCol(FunctionConstants.F4, "0"));
         cols1.add(getCol(FunctionConstants.F6, "0"));
 
-        final ImportEntity.Row row1 = getRow(cols1);
+        final Import.Row row1 = getRow(cols1);
 
         //content row 2 (child)
-        final List<ImportEntity.Column> cols2 = new ArrayList<>();
+        final List<Import.Column> cols2 = new ArrayList<>();
         cols2.add(getCol(FunctionConstants.F1, String.valueOf(c1p1))); //child oid
         cols2.add(getCol(FunctionConstants.F4, String.valueOf(p1))); //parent oid
         cols2.add(getCol(FunctionConstants.F6, "1"));
 
-        final ImportEntity.Row row2 = getRow(cols2);
+        final Import.Row row2 = getRow(cols2);
 
         //content row 3 (parent 2)
-        final List<ImportEntity.Column> cols3 = new ArrayList<>();
+        final List<Import.Column> cols3 = new ArrayList<>();
         cols3.add(getCol(FunctionConstants.F1, String.valueOf(p2))); //child oid
         cols3.add(getCol(FunctionConstants.F4, "0")); //parent oid
         cols3.add(getCol(FunctionConstants.F6, "0"));
 
-        final ImportEntity.Row row3 = getRow(cols3);
+        final Import.Row row3 = getRow(cols3);
 
         //content row 4 (child of parent 2)
-        final List<ImportEntity.Column> cols4 = new ArrayList<>();
+        final List<Import.Column> cols4 = new ArrayList<>();
         cols4.add(getCol(FunctionConstants.F1, String.valueOf(c2p2))); //child oid
         cols4.add(getCol(FunctionConstants.F4, valueOf(p2))); //parent oid
         cols4.add(getCol(FunctionConstants.F6, "1"));
 
-        final ImportEntity.Row row4 = getRow(cols4);
+        final Import.Row row4 = getRow(cols4);
 
         //spreadsheet:
-        final List<ImportEntity.Row> spreadsheetRows = new ArrayList<>();
+        final List<Import.Row> spreadsheetRows = new ArrayList<>();
         spreadsheetRows.add(exHeadRow);
         spreadsheetRows.add(row1);
         spreadsheetRows.add(row2);
         spreadsheetRows.add(row3);
         spreadsheetRows.add(row4);
 
-        return  new ImportEntityValue(spreadsheetRows);
+        return  new ImportValue(spreadsheetRows);
     }
 
     //F5
-    private ImportEntityValue getF5TestData(int p1, int c1p1, int p2, int c2p2) {
-        final ImportEntity.Row exHeadRow = getRow(getExheadCols(FunctionConstants.F1, FunctionConstants.F5, FunctionConstants.F6));
+    private ImportValue getF5TestData(int p1, int c1p1, int p2, int c2p2) {
+        final Import.Row exHeadRow = getRow(getExheadCols(FunctionConstants.F1, FunctionConstants.F5, FunctionConstants.F6));
         assert (exHeadRow.getColumns().size() == 3); //not sure if f1 should be present for all
 
         //content row 1 (parent)
-        final List<ImportEntity.Column> cols1 = new ArrayList<>();
+        final List<Import.Column> cols1 = new ArrayList<>();
         cols1.add(getCol(FunctionConstants.F1, String.valueOf(p1))); //parent oid
         cols1.add(getCol(FunctionConstants.F5, String.valueOf(p1))); //parent oid
         cols1.add(getCol(FunctionConstants.F6, "0"));
 
-        final ImportEntity.Row contentRow1 = getRow(cols1);
+        final Import.Row contentRow1 = getRow(cols1);
 
         //content row 2 (child)
-        final List<ImportEntity.Column> cols2 = new ArrayList<>();
+        final List<Import.Column> cols2 = new ArrayList<>();
         cols2.add(getCol(FunctionConstants.F1, String.valueOf(c1p1))); //parent oid
         cols2.add(getCol(FunctionConstants.F5, String.valueOf(p1))); //parent oid
         cols2.add(getCol(FunctionConstants.F6, "1"));
 
-        final ImportEntity.Row contentRow2 = getRow(cols2);
+        final Import.Row contentRow2 = getRow(cols2);
 
         //content row 3 (parent 2)
-        final List<ImportEntity.Column> cols3 = new ArrayList<>();
+        final List<Import.Column> cols3 = new ArrayList<>();
         cols3.add(getCol(FunctionConstants.F1, String.valueOf(p2))); //parent oid
         cols3.add(getCol(FunctionConstants.F5, String.valueOf(p2))); //parent oid
         cols3.add(getCol(FunctionConstants.F6, "0"));
 
-        final ImportEntity.Row contentRow3 = getRow(cols3);
+        final Import.Row contentRow3 = getRow(cols3);
 
         //content row 4 (child of parent 2)
-        final List<ImportEntity.Column> cols4 = new ArrayList<>();
+        final List<Import.Column> cols4 = new ArrayList<>();
         cols4.add(getCol(FunctionConstants.F1, String.valueOf(c2p2))); //parent oid
         cols4.add(getCol(FunctionConstants.F5, String.valueOf(p2))); //parent oid
         cols4.add(getCol(FunctionConstants.F6, "1"));
 
-        final ImportEntity.Row contentRow4 = getRow(cols4);
+        final Import.Row contentRow4 = getRow(cols4);
 
         //spreadsheet:
-        final List<ImportEntity.Row> spreadsheetRows = new ArrayList<>();
+        final List<Import.Row> spreadsheetRows = new ArrayList<>();
         spreadsheetRows.add(exHeadRow);
         spreadsheetRows.add(contentRow1);
         spreadsheetRows.add(contentRow2);
         spreadsheetRows.add(contentRow3);
         spreadsheetRows.add(contentRow4);
 
-        return  new ImportEntityValue(spreadsheetRows);
+        return  new ImportValue(spreadsheetRows);
     }
 
     //F7
-    private ImportEntityValue getF7TestData() {
-        final ImportEntity.Row exHeadRow = getRow(getExheadCols(FunctionConstants.F1, FunctionConstants.F6, FunctionConstants.F7, FunctionConstants.F8));
+    private ImportValue getF7TestData() {
+        final Import.Row exHeadRow = getRow(getExheadCols(FunctionConstants.F1, FunctionConstants.F6, FunctionConstants.F7, FunctionConstants.F8));
         assert (exHeadRow.getColumns().size() == 4); //not sure if f1 should be present for all
 
         //content row 1 (parent)
-        final List<ImportEntity.Column> cols1 = new ArrayList<>();
+        final List<Import.Column> cols1 = new ArrayList<>();
         cols1.add(getCol(FunctionConstants.F1, "1")); //parent oid
         cols1.add(getCol(FunctionConstants.F6, "0")); //parent id
         cols1.add(getCol(FunctionConstants.F7, "1")); //random id
         cols1.add(getCol(FunctionConstants.F8, "0")); //parent id
 
-        final ImportEntity.Row row1 = getRow(cols1);
+        final Import.Row row1 = getRow(cols1);
 
         //content row 2 (child)
-        final List<ImportEntity.Column> cols2 = new ArrayList<>();
+        final List<Import.Column> cols2 = new ArrayList<>();
         cols2.add(getCol(FunctionConstants.F1, "2")); //parent oid
         cols2.add(getCol(FunctionConstants.F6, "1"));
         cols2.add(getCol(FunctionConstants.F7, "2"));
         cols2.add(getCol(FunctionConstants.F8, "1"));
 
-        final ImportEntity.Row row2 = getRow(cols2);
+        final Import.Row row2 = getRow(cols2);
 
         //content row 3 (parent 2)
-        final List<ImportEntity.Column> cols3 = new ArrayList<>();
+        final List<Import.Column> cols3 = new ArrayList<>();
         cols3.add(getCol(FunctionConstants.F1, "3")); //parent oid
         cols3.add(getCol(FunctionConstants.F6, "0"));
         cols3.add(getCol(FunctionConstants.F7, "3"));
         cols3.add(getCol(FunctionConstants.F8, "0"));
 
-        final ImportEntity.Row row3 = getRow(cols3);
+        final Import.Row row3 = getRow(cols3);
 
         //content row 4 (child of parent 2)
-        final List<ImportEntity.Column> cols4 = new ArrayList<>();
+        final List<Import.Column> cols4 = new ArrayList<>();
         cols4.add(getCol(FunctionConstants.F1, "4")); //parent oid
         cols4.add(getCol(FunctionConstants.F6, "1"));
         cols4.add(getCol(FunctionConstants.F7, "4"));
         cols4.add(getCol(FunctionConstants.F8, "3"));
 
-        final ImportEntity.Row row4 = getRow(cols4);
+        final Import.Row row4 = getRow(cols4);
 
         //spreadsheet:
-        final List<ImportEntity.Row> spreadsheetRows = new ArrayList<>();
+        final List<Import.Row> spreadsheetRows = new ArrayList<>();
         spreadsheetRows.add(exHeadRow);
         spreadsheetRows.add(row1);
         spreadsheetRows.add(row2);
         spreadsheetRows.add(row3);
         spreadsheetRows.add(row4);
 
-        return  new ImportEntityValue(spreadsheetRows);
+        return  new ImportValue(spreadsheetRows);
     }
 
 
-    private List<ImportEntity.Column> getExheadCols(final FieldConstant... f) {
-        final List<ImportEntity.Column> columns = new ArrayList<>();
+    private List<Import.Column> getExheadCols(final FieldConstant... f) {
+        final List<Import.Column> columns = new ArrayList<>();
         for (FieldConstant fieldConstant: f) {
-            columns.add(new ImportEntity().new Column<>(fieldConstant, ""));
+            columns.add(new Import().new Column<>(fieldConstant, ""));
         }
         return columns;
     }
 
-    private ImportEntity.Column getCol(final FieldConstant f, final String value) {
-        return new ImportEntity().new Column<>(f, value);
+    private Import.Column getCol(final FieldConstant f, final String value) {
+        return new Import().new Column<>(f, value);
     }
 
-    private ImportEntity.Row getRow(final List<ImportEntity.Column> columns) {
-        ImportEntity.Row row = new ImportEntity().new Row();
+    private Import.Row getRow(final List<Import.Column> columns) {
+        Import.Row row = new Import().new Row();
         row.setColumns(columns);
         return row;
     }

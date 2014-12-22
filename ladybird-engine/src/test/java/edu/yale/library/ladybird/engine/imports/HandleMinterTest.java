@@ -21,38 +21,38 @@ public class HandleMinterTest extends AbstractDBTest {
     @Test
     public void shouldConstructHandle() {
         HandleMinter handleMinter = new HandleMinter();
-        ImportEntityValue importEntityValue = handleMinter.write(getTestData());
-        assert (importEntityValue.getRowList().size() == 2);
-        assert (importEntityValue.getRowList().get(1).getColumns().size() == 2);
-        assertEquals(importEntityValue.getRowList().get(1).getColumns().get(1).getValue(), "http://hdl.handle.net/10079/bibid/6848003");
+        ImportValue importValue = handleMinter.write(getTestData());
+        assert (importValue.getRowList().size() == 2);
+        assert (importValue.getRowList().get(1).getColumns().size() == 2);
+        assertEquals(importValue.getRowList().get(1).getColumns().get(1).getValue(), "http://hdl.handle.net/10079/bibid/6848003");
     }
 
-    private ImportEntityValue getTestData() {
-        final List<ImportEntity.Column> columns = new ArrayList<>();
+    private ImportValue getTestData() {
+        final List<Import.Column> columns = new ArrayList<>();
 
         columns.add(getColumn(FunctionConstants.F104, ""));
-        final ImportEntity.Row row = getRow(columns);
+        final Import.Row row = getRow(columns);
 
-        final List<ImportEntity.Column> listColumns = new ArrayList<>();
+        final List<Import.Column> listColumns = new ArrayList<>();
         listColumns.add(getColumn(FunctionConstants.F104, "6848003")); //bibid
 
-        final ImportEntity.Row contentRow = getRow(listColumns);
+        final Import.Row contentRow = getRow(listColumns);
 
-        List<ImportEntity.Row> spreadsheetRows = new ArrayList<>();
+        List<Import.Row> spreadsheetRows = new ArrayList<>();
         spreadsheetRows.add(row);
         spreadsheetRows.add(contentRow);
 
-        final ImportEntityValue importEntityValue = new ImportEntityValue(spreadsheetRows);
+        final ImportValue importValue = new ImportValue(spreadsheetRows);
 
-        return importEntityValue;
+        return importValue;
     }
 
-    private ImportEntity.Column getColumn(final FieldConstant f, final String value) {
-        return new ImportEntity().new Column<>(f, value);
+    private Import.Column getColumn(final FieldConstant f, final String value) {
+        return new Import().new Column<>(f, value);
     }
 
-    private ImportEntity.Row getRow(final List<ImportEntity.Column> columns) {
-        ImportEntity.Row row = new ImportEntity().new Row();
+    private Import.Row getRow(final List<Import.Column> columns) {
+        Import.Row row = new Import().new Row();
         row.setColumns(columns);
         return row;
     }

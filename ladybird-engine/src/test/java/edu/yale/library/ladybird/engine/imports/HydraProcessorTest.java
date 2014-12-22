@@ -57,22 +57,22 @@ public class HydraProcessorTest extends AbstractDBTest {
         }
     }
 
-    private ImportEntityValue getTestData() {
-        final List<ImportEntity.Column> columns = new ArrayList<>();
+    private ImportValue getTestData() {
+        final List<Import.Column> columns = new ArrayList<>();
         columns.add(getColumn(FunctionConstants.F1, "333993"));
         columns.add(getColumn(FunctionConstants.F40, "DELETE"));
 
-        final ImportEntity.Row row = getRow(columns);
-        final ImportEntityValue importEntityValue = new ImportEntityValue(Collections.singletonList(row));
-        return importEntityValue;
+        final Import.Row row = getRow(columns);
+        final ImportValue importValue = new ImportValue(Collections.singletonList(row));
+        return importValue;
     }
 
-    private ImportEntity.Column getColumn(final FieldConstant f, final String value) {
-        return new ImportEntity().new Column<>(f, value);
+    private Import.Column getColumn(final FieldConstant f, final String value) {
+        return new Import().new Column<>(f, value);
     }
 
-    private ImportEntity.Row getRow(final List<ImportEntity.Column> columns) {
-        ImportEntity.Row row = new ImportEntity().new Row();
+    private Import.Row getRow(final List<Import.Column> columns) {
+        Import.Row row = new Import().new Row();
         row.setColumns(columns);
         return row;
     }

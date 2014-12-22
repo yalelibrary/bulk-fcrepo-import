@@ -23,7 +23,7 @@ public class DefaultImportReaderTest extends AbstractDBTest {
     @Test
     public void execute() throws Exception {
         AbstractImportEngine abstractImportProcessor = new DefaultImportEngine(0, 1); //TODO chk params logic
-        List<ImportEntity.Row> rows = abstractImportProcessor.read(getTestSpreadsheeet(), ReadMode.FULL,
+        List<Import.Row> rows = abstractImportProcessor.read(getTestSpreadsheeet(), ReadMode.FULL,
                 new DefaultFieldDataValidator());
         Assert.assertEquals("Row size mismatch while reading spreadsheet", rows.size(), TestFileConstants.ROW_COUNT);
         assertEquals(rows.get(1).getColumns().get(4).getValue(), "Gilchrist, Scott");

@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.engine.exports;
 
-import edu.yale.library.ladybird.engine.imports.ImportEntity;
+import edu.yale.library.ladybird.engine.imports.Import;
 import edu.yale.library.ladybird.entity.Settings;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
 import edu.yale.library.ladybird.persistence.dao.SettingsDAO;
@@ -39,7 +39,7 @@ public class DefaultExportEngine extends AbstractExportEngine {
      * @throws IOException
      */
     @Override
-    public void doWrite(final List<ImportEntity.Row> list, final String path) throws IOException {
+    public void doWrite(final List<Import.Row> list, final String path) throws IOException {
         //final String fullPath = getWritePath(relativePath);
         logger.debug("Initiating write to spreadsheet to relative path={}", path);
         exportWriter.write(list, path);

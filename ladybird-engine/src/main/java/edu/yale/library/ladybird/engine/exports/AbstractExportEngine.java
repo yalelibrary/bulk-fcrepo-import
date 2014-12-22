@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.engine.exports;
 
 
-import edu.yale.library.ladybird.engine.imports.ImportEntity;
+import edu.yale.library.ladybird.engine.imports.Import;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,7 +28,7 @@ public abstract class AbstractExportEngine implements ExportEngine {
      *
      * @param list
      */
-    public final void write(final List<ImportEntity.Row> list, final String pathName) throws IOException {
+    public final void write(final List<Import.Row> list, final String pathName) throws IOException {
         doWrite(list, pathName);
     }
 
@@ -44,7 +44,7 @@ public abstract class AbstractExportEngine implements ExportEngine {
 
     public abstract ImportEntityContext doRead();
 
-    public abstract void doWrite(List<ImportEntity.Row> file, String pathName) throws IOException;
+    public abstract void doWrite(List<Import.Row> file, String pathName) throws IOException;
 
     public abstract void doWriteSheets(List<ExportSheet> file, String pathName) throws IOException;
 

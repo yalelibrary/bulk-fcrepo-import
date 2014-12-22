@@ -1,8 +1,8 @@
 package edu.yale.library.ladybird.engine.failing;
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
-import edu.yale.library.ladybird.engine.imports.ImportEntity;
-import edu.yale.library.ladybird.engine.imports.ImportEntityValue;
+import edu.yale.library.ladybird.engine.imports.Import;
+import edu.yale.library.ladybird.engine.imports.ImportValue;
 import edu.yale.library.ladybird.engine.imports.OidMinter;
 import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.entity.FieldDefinition;
@@ -33,41 +33,41 @@ public class OidMinterTest extends AbstractDBTest {
     @Test
     public void shouldMint() {
         OidMinter oidMinter = new OidMinter();
-        ImportEntityValue modifiedImportEntityValue = oidMinter.write(getTestData(), 1);
-        assert (modifiedImportEntityValue.getHeaderRow().getColumns().size() == 2);
-        assertEquals(modifiedImportEntityValue.getContentRows().size(), 1);
-        List<ImportEntity.Row> rowsBack = modifiedImportEntityValue.getContentRows();
-        ImportEntity.Row firstRow = rowsBack.get(0);
-        List<ImportEntity.Column> listcols = firstRow.getColumns();
+        ImportValue modifiedImportValue = oidMinter.write(getTestData(), 1);
+        assert (modifiedImportValue.getHeaderRow().getColumns().size() == 2);
+        assertEquals(modifiedImportValue.getContentRows().size(), 1);
+        List<Import.Row> rowsBack = modifiedImportValue.getContentRows();
+        Import.Row firstRow = rowsBack.get(0);
+        List<Import.Column> listcols = firstRow.getColumns();
         assert (listcols.get(0).getValue().equals("The Wizard of Oz."));
     }
 
-    private ImportEntityValue getTestData() {
-        final List<ImportEntity.Column> columns = new ArrayList<>();
+    private ImportValue getTestData() {
+        final List<Import.Column> columns = new ArrayList<>();
 
         columns.add(getColumn(new FieldDefinition(70, "Title"), ""));
-        final ImportEntity.Row row = getRow(columns);
+        final Import.Row row = getRow(columns);
 
-        final List<ImportEntity.Column> listColumns = new ArrayList<>();
+        final List<Import.Column> listColumns = new ArrayList<>();
         listColumns.add(getColumn(new FieldDefinition(70, "Title"), "The Wizard of Oz.")); //content
 
-        final ImportEntity.Row contentRow = getRow(listColumns);
+        final Import.Row contentRow = getRow(listColumns);
 
-        List<ImportEntity.Row> spreadsheetRows = new ArrayList<>();
+        List<Import.Row> spreadsheetRows = new ArrayList<>();
         spreadsheetRows.add(row);
         spreadsheetRows.add(contentRow);
 
-        final ImportEntityValue importEntityValue = new ImportEntityValue(spreadsheetRows);
+        final ImportValue importValue = new ImportValue(spreadsheetRows);
 
-        return importEntityValue;
+        return importValue;
     }
 
-    private ImportEntity.Column getColumn(final FieldConstant f, final String value) {
-        return new ImportEntity().new Column<>(f, value);
+    private Import.Column getColumn(final FieldConstant f, final String value) {
+        return new Import().new Column<>(f, value);
     }
 
-    private ImportEntity.Row getRow(final List<ImportEntity.Column> columns) {
-        ImportEntity.Row row = new ImportEntity().new Row();
+    private Import.Row getRow(final List<Import.Column> columns) {
+        Import.Row row = new Import().new Row();
         row.setColumns(columns);
         return row;
     }

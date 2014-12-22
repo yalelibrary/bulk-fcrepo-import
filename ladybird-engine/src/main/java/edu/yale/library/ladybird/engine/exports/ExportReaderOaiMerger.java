@@ -1,8 +1,8 @@
 package edu.yale.library.ladybird.engine.exports;
 
 import com.google.common.collect.Multimap;
-import edu.yale.library.ladybird.engine.imports.ImportEntity;
-import edu.yale.library.ladybird.engine.imports.ImportEntityValue;
+import edu.yale.library.ladybird.engine.imports.Import;
+import edu.yale.library.ladybird.engine.imports.ImportValue;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.engine.model.LocalIdMarcValue;
 import edu.yale.library.ladybird.engine.oai.FdidMarcMappingUtil;
@@ -31,8 +31,8 @@ public class ExportReaderOaiMerger {
 
     final ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
 
-    public List<ImportEntity.Row> merge(int importId, int localIdentifierColumnNum,
-                                        List<FieldConstant> globalFConstantsList, List<ImportEntity.Row> plainRows) {
+    public List<Import.Row> merge(int importId, int localIdentifierColumnNum,
+                                        List<FieldConstant> globalFConstantsList, List<Import.Row> plainRows) {
 
         int numRowsToWrite = getExpectedNumRowsToWrite(importId) + 1;
 
@@ -43,27 +43,27 @@ public class ExportReaderOaiMerger {
             Collections.emptyList();
         }
 
-        List<ImportEntity.Row> resultRowList = new ArrayList<>();
+        List<Import.Row> resultRowList = new ArrayList<>();
         final List<LocalIdMarcValue> bibIdValueList = importSourceDataReader.readImportSourceData(importId);
         logger.debug("BibIdValueList size={}", bibIdValueList.size());
 
         for (int i = 0; i < numRowsToWrite; i++) {
-            final List<ImportEntity.Column> cols = plainRows.get(i).getColumns();
-            final ImportEntity.Row rowToWrite = new ImportEntity().new Row();
+            final List<Import.Column> cols = plainRows.get(i).getColumns();
+            final Import.Row rowToWrite = new Import().new Row();
 
             // for each field constant (NOT for each column):
             for (final FieldConstant fieldConst : globalFConstantsList) {
                 final String mergedValue = mergeValue(fieldConst, localIdentifierColumnNum, cols, bibIdValueList);
-                rowToWrite.getColumns().add(new ImportEntity().new Column<>(fieldConst, mergedValue));
+                rowToWrite.getColumns().add(new Import().new Column<>(fieldConst, mergedValue));
             }
             resultRowList.add(rowToWrite);
         }
         return resultRowList;
     }
 
-    public String mergeValue(FieldConstant fieldConst, int localIdentifierColumnNum, List<ImportEntity.Column> cols,
+    public String mergeValue(FieldConstant fieldConst, int localIdentifierColumnNum, List<Import.Column> cols,
                         List<LocalIdMarcValue> bibIdValueList) {
-        String plain =  ImportEntityValue.findColValueFromRow(fieldConst, cols);
+        String plain =  ImportValue.findColValueFromRow(fieldConst, cols);
 
         if (plain == null || plain.isEmpty()) {
             plain = "";
@@ -75,7 +75,7 @@ public class ExportReaderOaiMerger {
         //TODO chk via fdid marc:
         if (localIdentifierColumnNum != -1 && !FunctionConstants.isFunction(fieldConst.getName())
                 && !fieldConst.getTitle().equalsIgnoreCase("Handle")) {
-            final ImportEntity.Column<String> bibIdColumn = cols.get(localIdentifierColumnNum);
+            final Import.Column<String> bibIdColumn = cols.get(localIdentifierColumnNum);
             //logger.trace("bibIdcolumn={}", bibIdColumn);
 
             LocalIdMarcValue localIdMarcValue = LocalIdMarcValue.findMatch(bibIdValueList, bibIdColumn.getValue());

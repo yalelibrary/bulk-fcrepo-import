@@ -42,7 +42,7 @@ public abstract class AbstractImportEngine implements ImportEngine {
      *
      * @see #read(SpreadsheetFile, ReadMode, edu.yale.library.ladybird.engine.DefaultFieldDataValidator)
      */
-    public final List<ImportEntity.Row> read(SpreadsheetFile file) throws ImportReaderValidationException, IOException {
+    public final List<Import.Row> read(SpreadsheetFile file) throws ImportReaderValidationException, IOException {
         return read(file, ReadMode.FULL, new DefaultFieldDataValidator());
     }
 
@@ -53,10 +53,10 @@ public abstract class AbstractImportEngine implements ImportEngine {
      * @param validator
      * @return list of row values. Perhaps should return sheet.
      */
-    public final List<ImportEntity.Row> read(SpreadsheetFile file, ReadMode inputReadMode,
+    public final List<Import.Row> read(SpreadsheetFile file, ReadMode inputReadMode,
                                              DefaultFieldDataValidator validator) throws ImportReaderValidationException, IOException {
         spreadsheetFile = file;
-        List<ImportEntity.Row> rows = doRead(file, inputReadMode);
+        List<Import.Row> rows = doRead(file, inputReadMode);
         return rows;
     }
 
@@ -65,7 +65,7 @@ public abstract class AbstractImportEngine implements ImportEngine {
      *
      * @param list
      */
-    public final int write(List<ImportEntity.Row> list) {
+    public final int write(List<Import.Row> list) {
         return doWrite(list);
     }
 
@@ -74,7 +74,7 @@ public abstract class AbstractImportEngine implements ImportEngine {
      *
      * @param list
      */
-    public final int write(List<ImportEntity.Row> list, SpreadsheetFile spreadsheetFile, int requestId) {
+    public final int write(List<Import.Row> list, SpreadsheetFile spreadsheetFile, int requestId) {
         return doWrite(list, spreadsheetFile, requestId);
     }
 
@@ -82,11 +82,11 @@ public abstract class AbstractImportEngine implements ImportEngine {
         return spreadsheetFile.clone();
     }
 
-    public abstract List<ImportEntity.Row> doRead(SpreadsheetFile file, ReadMode mode)
+    public abstract List<Import.Row> doRead(SpreadsheetFile file, ReadMode mode)
             throws ImportReaderValidationException, IOException;
 
-    public abstract int doWrite(List<ImportEntity.Row> file);
+    public abstract int doWrite(List<Import.Row> file);
 
-    public abstract int doWrite(List<ImportEntity.Row> file, SpreadsheetFile spreadsheetFile, int requestId);
+    public abstract int doWrite(List<Import.Row> file, SpreadsheetFile spreadsheetFile, int requestId);
 
 }

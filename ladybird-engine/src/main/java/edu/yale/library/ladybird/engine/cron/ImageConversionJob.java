@@ -71,14 +71,14 @@ public class ImageConversionJob implements Job {
         post(progressEvent);
 
         try {
-            mediaFunctionProcessor.convert(importReqEvent.getImportId(), importReqEvent.getImportEntityValue());
+            mediaFunctionProcessor.convert(importReqEvent.getImportId(), importReqEvent.getImportValue());
             final long elapsed = System.currentTimeMillis() - timeInConversion;
 
             MediaProcessingEvent mediaEvent = new MediaProcessingEvent();
             mediaEvent.setDuration(elapsed);
             mediaEvent.setImportId(requestId);
             //TODO check it matches up:
-            mediaEvent.setConversions(importReqEvent.getImportEntityValue().getContentRows().size());
+            mediaEvent.setConversions(importReqEvent.getImportValue().getContentRows().size());
 
             // Post completion
             post(new ProgressEvent(requestId, mediaEvent, ProgressEventListener.JobStatus.DONE));

@@ -12,8 +12,8 @@ import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
 import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
 import edu.yale.library.ladybird.engine.imports.DefaultImportEngine;
 import edu.yale.library.ladybird.engine.imports.ImportEngine;
-import edu.yale.library.ladybird.engine.imports.ImportEntity;
-import edu.yale.library.ladybird.engine.imports.ImportEntityValue;
+import edu.yale.library.ladybird.engine.imports.Import;
+import edu.yale.library.ladybird.engine.imports.ImportValue;
 import edu.yale.library.ladybird.engine.imports.ImportReaderValidationException;
 import edu.yale.library.ladybird.engine.imports.ReadMode;
 import edu.yale.library.ladybird.engine.imports.SpreadsheetFile;
@@ -96,7 +96,7 @@ public class MarcImportEngineIT extends AbstractDBTest {
 
         importEngine.setImportSourceProcessor(new ImportSourceProcessor()); //TODO
 
-        List<ImportEntity.Row> rows = Collections.emptyList();
+        List<Import.Row> rows = Collections.emptyList();
         try {
             rows = importEngine.read(getImportSpreadsheeet(), ReadMode.FULL,
                     new DefaultFieldDataValidator());
@@ -137,13 +137,13 @@ public class MarcImportEngineIT extends AbstractDBTest {
 
         final ImportEntityContext importEntityContext = exportEngine.read();
 
-        final List<ImportEntity.Row> listExportRows = importEntityContext.getImportJobList();
+        final List<Import.Row> listExportRows = importEntityContext.getImportJobList();
 
         assertEquals("Export rows don't equal import expected rows", listExportRows.size(), 5);
 
-        ImportEntityValue importEntityValue = new ImportEntityValue(listExportRows); //to analyze this
+        ImportValue importValue = new ImportValue(listExportRows); //to analyze this
         FieldConstant fieldConstant = new FieldDefinition(70, "");
-        List<ImportEntity.Column> col = importEntityValue.getColumnValues(fieldConstant);
+        List<Import.Column> col = importValue.getColumnValues(fieldConstant);
 
         //(Compare against an expected spreadhseet?)
 

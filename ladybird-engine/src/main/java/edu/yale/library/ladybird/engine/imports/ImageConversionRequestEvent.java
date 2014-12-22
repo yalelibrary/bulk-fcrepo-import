@@ -11,7 +11,7 @@ public class ImageConversionRequestEvent extends ImportEvent {
     private String exportDirPath = "";
 
     //TODO use just column?
-    private ImportEntityValue importEntityValue;
+    private ImportValue importValue;
 
     public int getImportId() {
         return importId;
@@ -35,12 +35,12 @@ public class ImageConversionRequestEvent extends ImportEvent {
         this.exportDirPath = exportDirPath;
     }
 
-    public ImportEntityValue getImportEntityValue() {
-        return importEntityValue;
+    public ImportValue getImportValue() {
+        return importValue;
     }
 
-    public void setImportEntityValue(ImportEntityValue importEntityValue) {
-        this.importEntityValue = importEntityValue;
+    public void setImportValue(ImportValue importValue) {
+        this.importValue = importValue;
     }
 
     @Override

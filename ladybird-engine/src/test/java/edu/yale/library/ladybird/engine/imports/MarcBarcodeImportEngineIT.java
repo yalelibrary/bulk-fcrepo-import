@@ -68,7 +68,7 @@ public class MarcBarcodeImportEngineIT extends AbstractDBTest {
 
             importEngine.setImportSourceProcessor(new ImportSourceProcessor()); //TODO
 
-            final List<ImportEntity.Row> rows = importEngine.read(getImportSpreadsheeet(), ReadMode.FULL,
+            final List<Import.Row> rows = importEngine.read(getImportSpreadsheeet(), ReadMode.FULL,
                     new DefaultFieldDataValidator());
 
             assertEquals("Rows size mismatch", rows.size(), ExportFileConstants.ROW_COUNT);
@@ -102,13 +102,13 @@ public class MarcBarcodeImportEngineIT extends AbstractDBTest {
 
             final ImportEntityContext importEntityContext = exportEngine.read();
 
-            final List<ImportEntity.Row> listExportRows = importEntityContext.getImportJobList();
+            final List<Import.Row> listExportRows = importEntityContext.getImportJobList();
 
             assertEquals("Export rows don't equal import expected rows", listExportRows.size(), 2);
 
-            ImportEntityValue importEntityValue = new ImportEntityValue(listExportRows); //to analyze this
+            ImportValue importValue = new ImportValue(listExportRows); //to analyze this
             FieldConstant fieldConstant = new FieldDefinition(70, "");
-            List<ImportEntity.Column> col = importEntityValue.getColumnValues(fieldConstant);
+            List<Import.Column> col = importValue.getColumnValues(fieldConstant);
 
             //(Compare against an expected spreadhseet?)
 

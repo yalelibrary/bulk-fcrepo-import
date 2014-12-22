@@ -5,7 +5,7 @@ import edu.yale.library.ladybird.engine.AbstractDBTest;
 import edu.yale.library.ladybird.engine.ExportBus;
 import edu.yale.library.ladybird.engine.TestModule;
 import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
-import edu.yale.library.ladybird.engine.imports.ImportEntity;
+import edu.yale.library.ladybird.engine.imports.Import;
 import edu.yale.library.ladybird.engine.imports.ObjectMetadataWriter;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.AuthorityControl;
@@ -63,20 +63,20 @@ public class ObjectWriterIT {
 
         //2. populate list of import rows
 
-        final List<ImportEntity.Row> rowList = new ArrayList<>();
+        final List<Import.Row> rowList = new ArrayList<>();
 
         //a. exhead
-        final ImportEntity.Row exHeadRow = new ImportEntity().new Row();
-        final List<ImportEntity.Column> exHeadColumns = new ArrayList<>();
+        final Import.Row exHeadRow = new Import().new Row();
+        final List<Import.Column> exHeadColumns = new ArrayList<>();
 
-        ImportEntity.Column oidExHeadColumn = new ImportEntity().new Column(FunctionConstants.F1, "");
+        Import.Column oidExHeadColumn = new Import().new Column(FunctionConstants.F1, "");
         exHeadColumns.add(oidExHeadColumn);
 
         FieldDefinition fieldDefinition = new FieldDefinition(fdid1, "69");
-        ImportEntity.Column fieldExHeadColumn = new ImportEntity().new Column<>(fieldDefinition, "");
+        Import.Column fieldExHeadColumn = new Import().new Column<>(fieldDefinition, "");
 
         FieldDefinition fieldDefinition2 = new FieldDefinition(fdid2, "58");
-        ImportEntity.Column fieldExHeadColumn2 = new ImportEntity().new Column<>(fieldDefinition2, "");
+        Import.Column fieldExHeadColumn2 = new Import().new Column<>(fieldDefinition2, "");
 
         exHeadColumns.add(fieldExHeadColumn);
         exHeadColumns.add(fieldExHeadColumn2);
@@ -87,18 +87,18 @@ public class ObjectWriterIT {
 
         //b. content row
 
-        final ImportEntity.Row contentRow = new ImportEntity().new Row();
-        List<ImportEntity.Column> contentColumns = new ArrayList<>();
+        final Import.Row contentRow = new Import().new Row();
+        List<Import.Column> contentColumns = new ArrayList<>();
 
-        ImportEntity.Column oidContentColumn = new ImportEntity().new Column(FunctionConstants.F1, "777");
+        Import.Column oidContentColumn = new Import().new Column(FunctionConstants.F1, "777");
         contentColumns.add(oidContentColumn);
 
         FieldDefinition fieldDefinitionContent = new FieldDefinition(fdid1, "69");
-        ImportEntity.Column fieldContentColumn = new ImportEntity().new Column<>(fieldDefinitionContent, "Name of the rose");
+        Import.Column fieldContentColumn = new Import().new Column<>(fieldDefinitionContent, "Name of the rose");
         contentColumns.add(fieldContentColumn);
 
         FieldDefinition fieldDefinitionContent2 = new FieldDefinition(fdid2, "58");
-        ImportEntity.Column fieldContentColumn2 = new ImportEntity().new Column<>(fieldDefinitionContent2, "Name of the rose");
+        Import.Column fieldContentColumn2 = new Import().new Column<>(fieldDefinitionContent2, "Name of the rose");
         contentColumns.add(fieldContentColumn2);
 
         contentRow.setColumns(contentColumns);

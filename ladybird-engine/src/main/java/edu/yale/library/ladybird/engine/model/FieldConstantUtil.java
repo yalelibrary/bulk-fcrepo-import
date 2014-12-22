@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.engine.model;
 
-import edu.yale.library.ladybird.engine.imports.ImportEntity;
+import edu.yale.library.ladybird.engine.imports.Import;
 import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.persistence.dao.FieldDefinitionDAO;
@@ -21,7 +21,7 @@ public class FieldConstantUtil {
      * @param col A spreadsheet column value
      * @return whether a column matches an official OAI field
      */
-    public static boolean isOAIFunction(final ImportEntity.Column col) {
+    public static boolean isOAIFunction(final Import.Column col) {
         final String field = col.getField().getName();
         return (field.equals(FunctionConstants.F104.getName())) || field.equals(FunctionConstants.F105.getName());
     }

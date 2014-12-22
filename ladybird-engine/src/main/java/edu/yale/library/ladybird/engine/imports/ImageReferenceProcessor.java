@@ -18,14 +18,14 @@ public class ImageReferenceProcessor {
 
     ObjectFileDAO objectFileDAO = new ObjectFileHibernateDAO();
 
-    public void write(final ImportEntityValue importEntityValue) {
+    public void write(final ImportValue importValue) {
         try {
-            Map<ImportEntity.Column, ImportEntity.Column> columnMap =
-                    importEntityValue.getColumnValuesWithOIds(FunctionConstants.F300);
+            Map<Import.Column, Import.Column> columnMap =
+                    importValue.getColumnValuesWithOIds(FunctionConstants.F300);
 
-            Set<ImportEntity.Column> keySet = columnMap.keySet();
+            Set<Import.Column> keySet = columnMap.keySet();
 
-            for (ImportEntity.Column col : keySet) {
+            for (Import.Column col : keySet) {
                 int oid = Integer.parseInt(col.getValue().toString());
 
                 ObjectFile objectFile = objectFileDAO.findByOid(oid);

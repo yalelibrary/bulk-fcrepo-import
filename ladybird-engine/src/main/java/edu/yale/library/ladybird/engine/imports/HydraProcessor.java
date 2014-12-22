@@ -51,13 +51,13 @@ public class HydraProcessor {
         }
     }
 
-    public void write(final ImportEntityValue importEntityValue) {
+    public void write(final ImportValue importValue) {
         try {
-            Map<ImportEntity.Column, ImportEntity.Column> columnMap = importEntityValue.getColumnValuesWithOIds(FunctionConstants.F40);
+            Map<Import.Column, Import.Column> columnMap = importValue.getColumnValuesWithOIds(FunctionConstants.F40);
 
-            Set<ImportEntity.Column> keySet = columnMap.keySet();
+            Set<Import.Column> keySet = columnMap.keySet();
 
-            for (ImportEntity.Column col : keySet) {
+            for (Import.Column col : keySet) {
                 int oid = Integer.parseInt(col.getValue().toString());
 
                 ACTION operation = ACTION.valueOf(columnMap.get(col).getValue().toString());

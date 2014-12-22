@@ -1,9 +1,9 @@
 package edu.yale.library.ladybird.engine.model;
 
-import edu.yale.library.ladybird.engine.imports.ImportEntity;
-import edu.yale.library.ladybird.engine.imports.ImportEntity.Column;
-import edu.yale.library.ladybird.engine.imports.ImportEntity.Row;
-import edu.yale.library.ladybird.engine.imports.ImportEntityValue;
+import edu.yale.library.ladybird.engine.imports.Import;
+import edu.yale.library.ladybird.engine.imports.Import.Column;
+import edu.yale.library.ladybird.engine.imports.Import.Row;
+import edu.yale.library.ladybird.engine.imports.ImportValue;
 import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.entity.FieldDefinition;
 import org.junit.Test;
@@ -20,19 +20,19 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class ImportEntityValueTest {
+public class ImportValueTest {
 
     @Test
     public void getColumnValues() {
-        final ImportEntityValue importEntityValue = getTestSingleColumnRowImportEntityValue();
-        final List<Column> columnsList = importEntityValue.getColumnValues((short) 0);
+        final ImportValue importValue = getTestSingleColumnRowImportEntityValue();
+        final List<Column> columnsList = importValue.getColumnValues((short) 0);
         assertTrue(columnsList.get(0).getField().equals(FunctionConstants.F1));
     }
 
     @Test
     public void getColumnValuesWithIds() {
-        final ImportEntityValue importEntityValue = getTestSingleColumnRowImportEntityValue();
-        final Map<Integer, Column> importColumn = importEntityValue.getColumnValuesWithIds(FunctionConstants.F1);
+        final ImportValue importValue = getTestSingleColumnRowImportEntityValue();
+        final Map<Integer, Column> importColumn = importValue.getColumnValuesWithIds(FunctionConstants.F1);
         assertTrue(importColumn.containsKey(new Integer(0)));
         final Column column = importColumn.get(new Integer(0));
         assertTrue(column.getField().equals(FunctionConstants.F1));
@@ -40,8 +40,8 @@ public class ImportEntityValueTest {
 
     @Test
     public void getColumnValuesWithOIds() {
-        final ImportEntityValue importEntityValue = getTestSingleColumnRowImportEntityValue();
-        final Map<Column, Column> map = importEntityValue.getColumnValuesWithOIds(FunctionConstants.F1);
+        final ImportValue importValue = getTestSingleColumnRowImportEntityValue();
+        final Map<Column, Column> map = importValue.getColumnValuesWithOIds(FunctionConstants.F1);
         assertTrue(map.containsKey(getTestColumn(FunctionConstants.F1, "333993")));
         final Column column = map.get(getTestColumn(FunctionConstants.F1, "333993"));
         assertTrue(column.getField().equals(FunctionConstants.F1));
@@ -49,30 +49,30 @@ public class ImportEntityValueTest {
 
     @Test
     public void shouldFindExHead() {
-        final ImportEntityValue importEntityValue = getTestSingleColumnRowImportEntityValue();
-        assertTrue(importEntityValue.fieldConstantsInExhead(FunctionConstants.F1));
-        assertFalse(importEntityValue.fieldConstantsInExhead(FunctionConstants.F3));
+        final ImportValue importValue = getTestSingleColumnRowImportEntityValue();
+        assertTrue(importValue.fieldConstantsInExhead(FunctionConstants.F1));
+        assertFalse(importValue.fieldConstantsInExhead(FunctionConstants.F3));
     }
 
     @Test
     public void shouldGetColumnsFromRow() {
-        final ImportEntityValue importEntityValue = getTestSingleColumnRowImportEntityValue();
-        final List<Column> columnList = importEntityValue.getRowColumns((short) 0);
+        final ImportValue importValue = getTestSingleColumnRowImportEntityValue();
+        final List<Column> columnList = importValue.getRowColumns((short) 0);
         assertTrue(columnList.size() == 1);
     }
 
     @Test
     public void shouldFetchAllFieldConstants() {
-        final ImportEntityValue importEntityValue = getTestSingleColumnRowImportEntityValue();
-        final List<FieldConstant> fieldConstants = importEntityValue.getAllFieldConstants();
+        final ImportValue importValue = getTestSingleColumnRowImportEntityValue();
+        final List<FieldConstant> fieldConstants = importValue.getAllFieldConstants();
         assertTrue(fieldConstants.size() == 1);
         assertTrue(fieldConstants.get(0).equals(FunctionConstants.F1));
     }
 
     @Test
     public void shouldFetchFunctionConstantAndFdid() { //i.e. all FieldConstants
-        final ImportEntityValue importEntityValue = getTestMultipleRowImportEntityValue();
-        final List<FieldConstant> fieldConstants = importEntityValue.getAllFieldConstants();
+        final ImportValue importValue = getTestMultipleRowImportEntityValue();
+        final List<FieldConstant> fieldConstants = importValue.getAllFieldConstants();
         assertTrue(fieldConstants.size() == 2);
         assertTrue(fieldConstants.get(0).equals(FunctionConstants.F1));
         FieldDefinition fieldDefinition = (FieldDefinition) fieldConstants.get(1);
@@ -81,10 +81,10 @@ public class ImportEntityValueTest {
 
     @Test
     public void shouldFetchContentRowsFieldConstants() {
-        final ImportEntityValue importEntityValue = getTestMultipleRowImportEntityValue();
+        final ImportValue importValue = getTestMultipleRowImportEntityValue();
         FieldDefinition fdValue = new FieldDefinition(69, "tt");
 
-        final Map<Column, Column> map = importEntityValue.getContentColumnValuesWithOIds(fdValue);
+        final Map<Column, Column> map = importValue.getContentColumnValuesWithOIds(fdValue);
         //logger.debug(map.toString());
 
         Set<Column> keySet = map.keySet();
@@ -104,30 +104,30 @@ public class ImportEntityValueTest {
 
     @Test
     public void shouldEqualFieldConstantsCount() {
-        final ImportEntityValue importEntityValue = getTestSingleColumnRowImportEntityValue();
-        final FieldOccurrence fieldOccurrence = importEntityValue.getFieldConstantsCount(FunctionConstants.F1);
+        final ImportValue importValue = getTestSingleColumnRowImportEntityValue();
+        final FieldOccurrence fieldOccurrence = importValue.getFieldConstantsCount(FunctionConstants.F1);
         assertTrue(fieldOccurrence.equals(FieldOccurrence.ONCE));
     }
 
     @Test
     public void getFunctionPosition() {
-        final ImportEntityValue importEntityValue = getTestSingleColumnRowImportEntityValue();
-        final int position = importEntityValue.getFunctionPosition(FunctionConstants.F1);
+        final ImportValue importValue = getTestSingleColumnRowImportEntityValue();
+        final int position = importValue.getFunctionPosition(FunctionConstants.F1);
         assertTrue(position == 0);
     }
 
     @Test
     public void showThrowExceptionWithUnknownFunction() {
-        final ImportEntityValue importEntityValue = getTestSingleColumnRowImportEntityValue();
+        final ImportValue importValue = getTestSingleColumnRowImportEntityValue();
         try {
-            final int position = importEntityValue.getFunctionPosition(FunctionConstants.F1);
+            final int position = importValue.getFunctionPosition(FunctionConstants.F1);
             assertTrue(position == 0);
         } catch (NoSuchElementException e) {
             fail("Mishandled function location");
         }
 
         try {
-            importEntityValue.getFunctionPosition(FunctionConstants.F3);
+            importValue.getFunctionPosition(FunctionConstants.F3);
             fail("Mishandled function location");
         } catch (NoSuchElementException e) {
             assert (e.getMessage().contains(FunctionConstants.F3.getName()));
@@ -136,15 +136,15 @@ public class ImportEntityValueTest {
 
     @Test
     public void shouldGetContentRows() throws Exception {
-        final ImportEntityValue importEntityvalue = getTestExheadAndContentRowsImportEntityValue();
+        final ImportValue importEntityvalue = getTestExheadAndContentRowsImportEntityValue();
         final List<Row> rowsList = importEntityvalue.getContentRows();
         assertTrue(rowsList.size() == 1);
     }
 
     @Test
     public void shouldGetExHeadOnly() {
-        ImportEntityValue importEntityValue = getTestExheadAndContentRowsImportEntityValue();
-        final Row headerRow = importEntityValue.getHeaderRow();
+        ImportValue importValue = getTestExheadAndContentRowsImportEntityValue();
+        final Row headerRow = importValue.getHeaderRow();
         for (final Column c: headerRow.getColumns()) {
             if (c.getValue().toString().length() != 0) {
                 fail("Wrong value found");
@@ -154,35 +154,35 @@ public class ImportEntityValueTest {
 
     @Test
     public void shouldGetMultipleFunctions() {
-        ImportEntityValue importEntityValue = getTestTripleEntityValue();
-        assert (importEntityValue.hasFunction(FunctionConstants.F1, FunctionConstants.F40, FunctionConstants.F104) == true);
+        ImportValue importValue = getTestTripleEntityValue();
+        assert (importValue.hasFunction(FunctionConstants.F1, FunctionConstants.F40, FunctionConstants.F104) == true);
     }
 
-    private ImportEntityValue getTestSingleColumnRowImportEntityValue() {
-        final List<ImportEntity.Column> columns = new ArrayList<>();
+    private ImportValue getTestSingleColumnRowImportEntityValue() {
+        final List<Import.Column> columns = new ArrayList<>();
         columns.add(getTestColumn(FunctionConstants.F1, "333993"));
         final Row row = getTestRow(columns);
-        final ImportEntityValue importEntityValue = new ImportEntityValue(Collections.singletonList(row));
-        return importEntityValue;
+        final ImportValue importValue = new ImportValue(Collections.singletonList(row));
+        return importValue;
     }
 
-    private ImportEntityValue getTestTripleEntityValue() {
-        final List<ImportEntity.Column> columns = new ArrayList<>();
+    private ImportValue getTestTripleEntityValue() {
+        final List<Import.Column> columns = new ArrayList<>();
         columns.add(getTestColumn(FunctionConstants.F1, "333993"));
         columns.add(getTestColumn(FunctionConstants.F40, "DELETE"));
         columns.add(getTestColumn(FunctionConstants.F104, "11"));
 
         final Row row = getTestRow(columns);
-        final ImportEntityValue importEntityValue = new ImportEntityValue(Collections.singletonList(row));
-        return importEntityValue;
+        final ImportValue importValue = new ImportValue(Collections.singletonList(row));
+        return importValue;
     }
 
-    private ImportEntityValue getTestExheadAndContentRowsImportEntityValue() {
-        final List<ImportEntity.Column> columnList1 = new ArrayList<>();
+    private ImportValue getTestExheadAndContentRowsImportEntityValue() {
+        final List<Import.Column> columnList1 = new ArrayList<>();
         columnList1.add(getTestColumn(FunctionConstants.F1, ""));
         final Row row = getTestRow(columnList1);
 
-        final List<ImportEntity.Column> columnList2 = new ArrayList<>();
+        final List<Import.Column> columnList2 = new ArrayList<>();
         columnList2.add(getTestColumn(FunctionConstants.F1, "333993"));
         final Row row2 = getTestRow(columnList2);
 
@@ -190,21 +190,21 @@ public class ImportEntityValueTest {
         importRows.add(row);
         importRows.add(row2);
 
-        final ImportEntityValue importEntityValue = new ImportEntityValue(importRows);
-        return importEntityValue;
+        final ImportValue importValue = new ImportValue(importRows);
+        return importValue;
     }
 
-    private ImportEntityValue getTestMultipleRowImportEntityValue() {
-        final List<ImportEntity.Column> columnList1 = new ArrayList<>();
+    private ImportValue getTestMultipleRowImportEntityValue() {
+        final List<Import.Column> columnList1 = new ArrayList<>();
 
         columnList1.add(getTestColumn(FunctionConstants.F1, ""));
-        columnList1.add(new ImportEntity().new Column<>(new FieldDefinition(69, ""), ""));
+        columnList1.add(new Import().new Column<>(new FieldDefinition(69, ""), ""));
 
         final Row row = getTestRow(columnList1);
 
-        final List<ImportEntity.Column> columnList2 = new ArrayList<>();
+        final List<Import.Column> columnList2 = new ArrayList<>();
         columnList2.add(getTestColumn(FunctionConstants.F1, "333993"));
-        columnList2.add(new ImportEntity().new Column<>(new FieldDefinition(69, ""), "name"));
+        columnList2.add(new Import().new Column<>(new FieldDefinition(69, ""), "name"));
 
         final Row row2 = getTestRow(columnList2);
 
@@ -212,16 +212,16 @@ public class ImportEntityValueTest {
         importRows.add(row);
         importRows.add(row2);
 
-        final ImportEntityValue importEntityValue = new ImportEntityValue(importRows);
-        return importEntityValue;
+        final ImportValue importValue = new ImportValue(importRows);
+        return importValue;
     }
 
     private Column getTestColumn(final FieldConstant f, final String value) {
-        return new ImportEntity().new Column<>(f, value);
+        return new Import().new Column<>(f, value);
     }
 
     private Row getTestRow(final List<Column> columns) {
-        Row row = new ImportEntity().new Row();
+        Row row = new Import().new Row();
         row.setColumns(columns);
         return row;
     }

@@ -14,7 +14,7 @@ public class DefaultImportEngine extends AbstractImportEngine {
     private static final Integer DEFAULT_SHEET = 0; //TODO
 
     @Override
-    public List<ImportEntity.Row> doRead(final SpreadsheetFile file, final ReadMode readMode)
+    public List<Import.Row> doRead(final SpreadsheetFile file, final ReadMode readMode)
             throws ImportReaderValidationException, IOException {
         logger.debug("Initiating read={}", file.getAltName());
 
@@ -23,7 +23,7 @@ public class DefaultImportEngine extends AbstractImportEngine {
     }
 
     @Override
-    public int doWrite(final List<ImportEntity.Row> list) {
+    public int doWrite(final List<Import.Row> list) {
         logger.debug("Initiating write, userId={} projectId={} row list size={}", USER_ID, PROJECT_ID, list.size());
 
         ImportWriter importWriter = new ImportWriter();
@@ -31,10 +31,10 @@ public class DefaultImportEngine extends AbstractImportEngine {
         importWriter.setMediaFunctionProcessor(mediaFunctionProcessor); //TODO
         importWriter.setImportSourceProcessor(importSourceProcessor); //TODO
 
-        ImportEntityValue importEntityValue = new ImportEntityValue(list);
+        ImportValue importValue = new ImportValue(list);
 
         try {
-            return importWriter.write(importEntityValue,
+            return importWriter.write(importValue,
                     new ImportJobRequestBuilder().userId(USER_ID).file("").dir("").projectId(PROJECT_ID)
                             .build());
         } catch (Exception e) {
@@ -44,7 +44,7 @@ public class DefaultImportEngine extends AbstractImportEngine {
 
     //TODO consolidate or use different param construct (instead of list of row)
     @Override
-    public int doWrite(final List<ImportEntity.Row> list, SpreadsheetFile spreadsheetFile, int requestId) {
+    public int doWrite(final List<Import.Row> list, SpreadsheetFile spreadsheetFile, int requestId) {
         logger.debug("Initiating write, userId={} projectId={} list size={}", USER_ID, PROJECT_ID, list.size());
 
         ImportWriter importWriter = new ImportWriter();
@@ -52,9 +52,9 @@ public class DefaultImportEngine extends AbstractImportEngine {
         importWriter.setMediaFunctionProcessor(mediaFunctionProcessor); //TODO
         importWriter.setImportSourceProcessor(importSourceProcessor); //TODO
 
-        ImportEntityValue importEntityValue = new ImportEntityValue(list);
+        ImportValue importValue = new ImportValue(list);
         try {
-            return importWriter.write(importEntityValue,
+            return importWriter.write(importValue,
                     new ImportJobRequestBuilder().userId(USER_ID).file(spreadsheetFile.getFileName())
                             .dir("").requestId(requestId).projectId(PROJECT_ID).build());
         } catch (ContextedRuntimeException cre) {

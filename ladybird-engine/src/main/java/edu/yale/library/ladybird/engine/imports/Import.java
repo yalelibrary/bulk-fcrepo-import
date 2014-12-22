@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Represents rows and columns.
  */
-public class ImportEntity {
+public class Import {
     /**
      * Column represents a spreadsheet cell
      * @param <T>

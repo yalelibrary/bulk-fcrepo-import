@@ -33,12 +33,12 @@ public class ImportWriterTest {
     public void shoudEqualOAIFunction() {
         final FieldConstantUtil fieldConstantUtil = new FieldConstantUtil();
         final FieldConstant f104 = FunctionConstants.F104;
-        final ImportEntity.Column<String> column1 = new ImportEntity().new Column<>(f104, String.valueOf("2222"));
+        final Import.Column<String> column1 = new Import().new Column<>(f104, String.valueOf("2222"));
 
         assert (fieldConstantUtil.isOAIFunction(column1));
 
         final FieldConstant f1 = FunctionConstants.F1;
-        final ImportEntity.Column<String> column2 = new ImportEntity().new Column<>(f1, String.valueOf("2222"));
+        final Import.Column<String> column2 = new Import().new Column<>(f1, String.valueOf("2222"));
 
         assert (!fieldConstantUtil.isOAIFunction(column2));
     }

@@ -3,8 +3,8 @@ package edu.yale.library.ladybird.engine.failing;
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
 import edu.yale.library.ladybird.engine.imports.DeleteProcessor;
-import edu.yale.library.ladybird.engine.imports.ImportEntity;
-import edu.yale.library.ladybird.engine.imports.ImportEntityValue;
+import edu.yale.library.ladybird.engine.imports.Import;
+import edu.yale.library.ladybird.engine.imports.ImportValue;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.entity.ObjectBuilder;
@@ -49,22 +49,22 @@ public class DeleteProcessorTest extends AbstractDBTest {
         assert (objectDAO.findByOid(oid) == null);
     }
 
-    private ImportEntityValue getTestData(int oid) {
-        final List<ImportEntity.Column> columns = new ArrayList<>();
+    private ImportValue getTestData(int oid) {
+        final List<Import.Column> columns = new ArrayList<>();
         columns.add(getColumn(FunctionConstants.F1, String.valueOf(oid)));
         columns.add(getColumn(FunctionConstants.F00, "CONFIRM"));
 
-        final ImportEntity.Row row = getRow(columns);
-        final ImportEntityValue importEntityValue = new ImportEntityValue(Collections.singletonList(row));
-        return importEntityValue;
+        final Import.Row row = getRow(columns);
+        final ImportValue importValue = new ImportValue(Collections.singletonList(row));
+        return importValue;
     }
 
-    private ImportEntity.Column getColumn(final FieldConstant f, final String value) {
-        return new ImportEntity().new Column<>(f, value);
+    private Import.Column getColumn(final FieldConstant f, final String value) {
+        return new Import().new Column<>(f, value);
     }
 
-    private ImportEntity.Row getRow(final List<ImportEntity.Column> columns) {
-        ImportEntity.Row row = new ImportEntity().new Row();
+    private Import.Row getRow(final List<Import.Column> columns) {
+        Import.Row row = new Import().new Row();
         row.setColumns(columns);
         return row;
     }

@@ -20,8 +20,8 @@ public class ComplexProcessor {
 
     final ObjectDAO objectDAO = new ObjectHibernateDAO();
 
-    public void processF4(ImportEntityValue importEntityValue) {
-        final List<ImportEntity.Row> rows = importEntityValue.getContentRows();
+    public void processF4(ImportValue importValue) {
+        final List<Import.Row> rows = importValue.getContentRows();
         final List<Object> listToUpdate = new ArrayList<>();
 
         //int tmp = 0;
@@ -29,13 +29,13 @@ public class ComplexProcessor {
         for (int i = 0; i < rows.size(); i++) {
 
             try {
-                Object object = objectDAO.findByOid(asInt(importEntityValue.getRowFieldValue(FunctionConstants.F1, i)));
+                Object object = objectDAO.findByOid(asInt(importValue.getRowFieldValue(FunctionConstants.F1, i)));
 
                 checkNotNull(object, "Object must not be null. Row=" + i);
 
-                final Integer f1 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F1, i));
-                final Integer f4 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F4, i));
-                final Integer f6 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F6, i));
+                final Integer f1 = asInt(importValue.getRowFieldValue(FunctionConstants.F1, i));
+                final Integer f4 = asInt(importValue.getRowFieldValue(FunctionConstants.F4, i));
+                final Integer f6 = asInt(importValue.getRowFieldValue(FunctionConstants.F6, i));
 
                 logger.trace("For oid={} f1={} f4={} f6={}", object.getOid(), f1, f4, f6);
 
@@ -68,23 +68,23 @@ public class ComplexProcessor {
 
     /**
      * Logic needs to be adjusted per F1 requirements.
-     * @param importEntityValue importEntityValue
+     * @param importValue importEntityValue
      */
-    public void processF5(ImportEntityValue importEntityValue) {
-        final List<ImportEntity.Row> rowList = importEntityValue.getContentRows();
+    public void processF5(ImportValue importValue) {
+        final List<Import.Row> rowList = importValue.getContentRows();
         final List<Object> objectsToUpdate = new ArrayList<>();
         final Map<Integer, Integer> parentOidMap = new HashMap<>(); //contains F5, F1 pair to link parent child
 
         for (int i = 0; i < rowList.size(); i++) {
             try {
-                logger.trace("Eval={}", asInt(importEntityValue.getRowFieldValue(FunctionConstants.F1, i)));
+                logger.trace("Eval={}", asInt(importValue.getRowFieldValue(FunctionConstants.F1, i)));
 
-                Object object = objectDAO.findByOid(asInt(importEntityValue.getRowFieldValue(FunctionConstants.F1, i)));
+                Object object = objectDAO.findByOid(asInt(importValue.getRowFieldValue(FunctionConstants.F1, i)));
 
                 // N.B using int
-                final Integer f1 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F1, i));
-                final Integer f5 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F5, i));
-                final Integer f6 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F6, i));
+                final Integer f1 = asInt(importValue.getRowFieldValue(FunctionConstants.F1, i));
+                final Integer f5 = asInt(importValue.getRowFieldValue(FunctionConstants.F5, i));
+                final Integer f6 = asInt(importValue.getRowFieldValue(FunctionConstants.F6, i));
 
                 logger.trace("Given f1={} f5={} f6={}", f1, f5, f6);
 
@@ -136,26 +136,26 @@ public class ComplexProcessor {
 
     /**
      * Logic needs to be adjusted per F1 requirements.
-     * @param importEntityValue importEntityValue
+     * @param importValue importEntityValue
      */
-    public void processF7(ImportEntityValue importEntityValue) {
-        final List<ImportEntity.Row> rowList = importEntityValue.getContentRows();
+    public void processF7(ImportValue importValue) {
+        final List<Import.Row> rowList = importValue.getContentRows();
         final List<Object> updateList = new ArrayList<>();
         final Map<Integer, Integer> parentOidMap = new HashMap<>(); //contains F7, F1 pair to link parent child
 
         for (int i = 0; i < rowList.size(); i++) {
             try {
-                final Integer f1 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F1, i));
-                final Integer f6 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F6, i));
-                final Integer f7 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F7, i));
-                final Integer f8 = asInt(importEntityValue.getRowFieldValue(FunctionConstants.F8, i));
+                final Integer f1 = asInt(importValue.getRowFieldValue(FunctionConstants.F1, i));
+                final Integer f6 = asInt(importValue.getRowFieldValue(FunctionConstants.F6, i));
+                final Integer f7 = asInt(importValue.getRowFieldValue(FunctionConstants.F7, i));
+                final Integer f8 = asInt(importValue.getRowFieldValue(FunctionConstants.F8, i));
 
                 checkState(f1 > 0, "F1 must be greater than 0");
                 checkState(f6 > -1, "F6 cannot be negative");
                 checkState(f7 > 0, "F7 must be greather than 0");
                 checkState(f8 > -1, "F8 cannot be negative");
 
-                final Object object = objectDAO.findByOid(asInt(importEntityValue.getRowFieldValue(FunctionConstants.F1, i)));
+                final Object object = objectDAO.findByOid(asInt(importValue.getRowFieldValue(FunctionConstants.F1, i)));
                 checkNotNull(object, "Object cannot be null in row=" + i);
 
                 if (parentOidMap.containsKey(f7)) {

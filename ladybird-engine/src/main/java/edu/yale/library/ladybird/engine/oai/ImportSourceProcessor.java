@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.engine.oai;
 
-import edu.yale.library.ladybird.engine.imports.ImportEntityValue;
+import edu.yale.library.ladybird.engine.imports.ImportValue;
 import edu.yale.library.ladybird.engine.model.LocalIdMarcImportSource;
 import edu.yale.library.ladybird.engine.model.LocalIdentifier;
 import org.apache.commons.lang3.exception.ContextedRuntimeException;
@@ -17,10 +17,10 @@ public class ImportSourceProcessor {
     final ImportSourceDataWriter writer = new ImportSourceDataWriter();
 
     /** Reaads and writes marc data */
-    public void process(final int importId, final OaiProvider provider, final ImportEntityValue importEntityValue)
+    public void process(final int importId, final OaiProvider provider, final ImportValue importValue)
             throws IOException, MarcReadingException {
         try {
-            final List<LocalIdentifier<String>> bibIdList = LocalIdentifier.getLocalIdList(importEntityValue);
+            final List<LocalIdentifier<String>> bibIdList = LocalIdentifier.getLocalIdList(importValue);
             final List<LocalIdMarcImportSource> list = reader.readMarc(provider, bibIdList, importId);
             writer.write(list, importId);
         } catch (ContextedRuntimeException e) {

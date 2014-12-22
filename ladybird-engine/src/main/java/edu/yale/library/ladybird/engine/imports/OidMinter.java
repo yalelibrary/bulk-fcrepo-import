@@ -16,29 +16,29 @@ public class OidMinter {
 
     ObjectDAO objectDAO = new ObjectHibernateDAO();
 
-    public ImportEntityValue write(final ImportEntityValue importEntityValue, final int projectId) {
-        final List<ImportEntity.Column> exheadList = importEntityValue.getHeaderRow().getColumns();
-        final ImportEntity.Column<String> column = new ImportEntity().new Column(FunctionConstants.F1, "");
+    public ImportValue write(final ImportValue importValue, final int projectId) {
+        final List<Import.Column> exheadList = importValue.getHeaderRow().getColumns();
+        final Import.Column<String> column = new Import().new Column(FunctionConstants.F1, "");
         exheadList.add(column);
-        importEntityValue.setHeaderRow(exheadList);
-        final List<ImportEntity.Row> rowList = importEntityValue.getContentRows();
+        importValue.setHeaderRow(exheadList);
+        final List<Import.Row> rowList = importValue.getContentRows();
         final Date currentDate = new Date();
         final ObjectBuilder objectBuilder = new ObjectBuilder();
 
-        for (ImportEntity.Row row: rowList) {
+        for (Import.Row row: rowList) {
             Object object = objectBuilder.createObject();
             object.setDate(currentDate);
             object.setProjectId(projectId);
 
             try {
                 final int id = objectDAO.save(object);
-                row.getColumns().add(new ImportEntity().new Column(FunctionConstants.F1, String.valueOf(id)));
+                row.getColumns().add(new Import().new Column(FunctionConstants.F1, String.valueOf(id)));
             } catch (Exception e) {
                 logger.error("Error creating oid", e);
                 throw e;
             }
         }
-        importEntityValue.setContentRows(rowList);
-        return importEntityValue;
+        importValue.setContentRows(rowList);
+        return importValue;
     }
 }

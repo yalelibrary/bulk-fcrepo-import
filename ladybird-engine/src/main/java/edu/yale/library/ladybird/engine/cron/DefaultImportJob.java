@@ -10,7 +10,7 @@ import edu.yale.library.ladybird.engine.imports.ImportCompleteEvent;
 import edu.yale.library.ladybird.engine.imports.ImportCompleteEventBuilder;
 import edu.yale.library.ladybird.engine.imports.ImportEngine;
 import edu.yale.library.ladybird.engine.imports.ImportEngineException;
-import edu.yale.library.ladybird.engine.imports.ImportEntity;
+import edu.yale.library.ladybird.engine.imports.Import;
 import edu.yale.library.ladybird.engine.imports.ImportReaderValidationException;
 import edu.yale.library.ladybird.engine.imports.ImportRequestEvent;
 import edu.yale.library.ladybird.engine.imports.MediaFunctionProcessor;
@@ -67,7 +67,7 @@ public class DefaultImportJob implements Job, ImportJob {
                     ProgressEventListener.JobStatus.INIT);
             ExportBus.post(progressEvent);
 
-            final List<ImportEntity.Row> rowList = importEngine.read(spreadsheetFile, ReadMode.FULL, fieldDataValidator);
+            final List<Import.Row> rowList = importEngine.read(spreadsheetFile, ReadMode.FULL, fieldDataValidator);
 
             logger.trace("Read rows. list size={}", rowList.size());
 

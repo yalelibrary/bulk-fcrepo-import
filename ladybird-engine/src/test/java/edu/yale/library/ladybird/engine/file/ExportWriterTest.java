@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.engine.file;
 
 import edu.yale.library.ladybird.engine.exports.ExportSheet;
 import edu.yale.library.ladybird.engine.exports.ExportWriter;
-import edu.yale.library.ladybird.engine.imports.ImportEntity;
+import edu.yale.library.ladybird.engine.imports.Import;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.FieldConstant;
 import org.junit.Test;
@@ -57,14 +57,14 @@ public class ExportWriterTest {
         return System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + s;
     }
 
-    private static List<ImportEntity.Row> getData() {
-        final ImportEntity.Row row = new ImportEntity().new Row();
+    private static List<Import.Row> getData() {
+        final Import.Row row = new Import().new Row();
         final FieldConstant f1 = FunctionConstants.F104;
-        final ImportEntity.Column<String> column1 = new ImportEntity().new Column<>(f1,
+        final Import.Column<String> column1 = new Import().new Column<>(f1,
                 String.valueOf("2222"));
         row.getColumns().add(column1);
         final FieldConstant f2 = FunctionConstants.F1;
-        final ImportEntity.Column<String> column2 = new ImportEntity().new Column<>(f2,
+        final Import.Column<String> column2 = new Import().new Column<>(f2,
                 String.valueOf("2222"));
         row.getColumns().add(column2);
         return Collections.singletonList(row);

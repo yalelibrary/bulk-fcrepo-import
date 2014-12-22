@@ -61,7 +61,7 @@ public class ImportEngineIT extends AbstractDBTest {
         final ImportEngine importEngine = new DefaultImportEngine(0, 1); //TODO chek params logic
         importEngine.setImportSourceProcessor(new ImportSourceProcessor()); //TODO
 
-        final List<ImportEntity.Row> rows = importEngine.read(getImportSpreadsheeet(), ReadMode.FULL,
+        final List<Import.Row> rows = importEngine.read(getImportSpreadsheeet(), ReadMode.FULL,
                 new DefaultFieldDataValidator());
 
         assertEquals("Rows size mismatch", rows.size(), FileConstants.ROW_COUNT);
@@ -103,7 +103,7 @@ public class ImportEngineIT extends AbstractDBTest {
 
         final ImportEntityContext importEntityContext = exportEngine.read();
 
-        final List<ImportEntity.Row> listExportRows = importEntityContext.getImportJobList();
+        final List<Import.Row> listExportRows = importEntityContext.getImportJobList();
 
         assert (listExportRows != null);
         assertEquals("Export rows don't equal import expected rows", listExportRows.size(), 78);
@@ -112,7 +112,7 @@ public class ImportEngineIT extends AbstractDBTest {
         exportEngine.write(listExportRows, XLS_FILE_TO_WRITE);
 
         //again, read back:
-        final List<ImportEntity.Row> rowsReadBack = importEngine.read(getExportSpreadsheeet(), ReadMode.FULL,
+        final List<Import.Row> rowsReadBack = importEngine.read(getExportSpreadsheeet(), ReadMode.FULL,
                 new DefaultFieldDataValidator());
         assertEquals("Rows size mismatch", rowsReadBack.size(), 78);
     }

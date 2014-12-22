@@ -35,16 +35,16 @@ public class DeleteProcessor {
         }
     }
 
-    public void process(final ImportEntityValue importEntityValue) {
+    public void process(final ImportValue importValue) {
         try {
-            Map<ImportEntity.Column, ImportEntity.Column> columnMap =
-                    importEntityValue.getColumnValuesWithOIds(FunctionConstants.F00);
+            Map<Import.Column, Import.Column> columnMap =
+                    importValue.getColumnValuesWithOIds(FunctionConstants.F00);
 
-            Set<ImportEntity.Column> keySet = columnMap.keySet();
+            Set<Import.Column> keySet = columnMap.keySet();
 
             List<Object> objectsToDelete = new ArrayList<>();
 
-            for (ImportEntity.Column<String> col : keySet) {
+            for (Import.Column<String> col : keySet) {
                 int oid = Integer.parseInt(col.getValue().toString());
 
                 //TODO validate OID, version metadata, hydra stuff etc

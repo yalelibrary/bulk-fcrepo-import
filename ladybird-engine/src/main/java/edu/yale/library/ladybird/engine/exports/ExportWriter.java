@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.engine.exports;
 
-import edu.yale.library.ladybird.engine.imports.ImportEntity;
+import edu.yale.library.ladybird.engine.imports.Import;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -25,16 +25,16 @@ public class ExportWriter {
      * @param filePath path to write to
      * @throws IOException
      */
-    public void write(final List<ImportEntity.Row> list, final String filePath) throws IOException {
+    public void write(final List<Import.Row> list, final String filePath) throws IOException {
         final XSSFWorkbook workbook = new XSSFWorkbook();
         final XSSFSheet sheet = workbook.createSheet("Default Sheet");
         int rowNum = 0;
-        for (final ImportEntity.Row importRow : list) {
+        for (final Import.Row importRow : list) {
             final Row row = sheet.createRow(rowNum++);
-            final List<ImportEntity.Column> columnList = importRow.getColumns();
+            final List<Import.Column> columnList = importRow.getColumns();
             int cellNum = 0;
             for (Object o : columnList) {
-                final ImportEntity.Column col = (ImportEntity.Column) o;
+                final Import.Column col = (Import.Column) o;
                 final String colValue = col.getValue().toString();
                 final Cell cell = row.createCell(cellNum++);
 
@@ -76,9 +76,9 @@ public class ExportWriter {
 
                 final XSSFSheet sheet = workbook.createSheet(exportSheet.getTitle());
                 int rowNum = 0;
-                List<ImportEntity.Row> contents = exportSheet.getContents();
+                List<Import.Row> contents = exportSheet.getContents();
 
-                for (final ImportEntity.Row importRow : contents) {
+                for (final Import.Row importRow : contents) {
 
                     if (rowNum % 1000 == 0) {
                         logger.debug("Created cells for row number={} for sheet={} for file={}",
@@ -86,9 +86,9 @@ public class ExportWriter {
                     }
 
                     final Row row = sheet.createRow(rowNum++);
-                    final List<ImportEntity.Column> columnList = importRow.getColumns();
+                    final List<Import.Column> columnList = importRow.getColumns();
                     int cellNum = 0;
-                    for (ImportEntity.Column col : columnList) {
+                    for (Import.Column col : columnList) {
                         //final ImportEntity.Column col = (ImportEntity.Column) o;
                         final Cell cell = row.createCell(cellNum++);
                         cell.setCellValue(col.getValue().toString());

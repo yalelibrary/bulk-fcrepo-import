@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.engine.exports;
 
-import edu.yale.library.ladybird.engine.imports.ImportEntity;
+import edu.yale.library.ladybird.engine.imports.Import;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
 public class ExportSheet {
 
     private String title;
-    private List<ImportEntity.Row> contents;
+    private List<Import.Row> contents;
 
     public String getTitle() {
         return title;
@@ -20,11 +20,11 @@ public class ExportSheet {
         this.title = title;
     }
 
-    public List<ImportEntity.Row> getContents() {
+    public List<Import.Row> getContents() {
         return contents;
     }
 
-    public void setContents(List<ImportEntity.Row> contents) {
+    public void setContents(List<Import.Row> contents) {
         this.contents = contents;
     }
 
