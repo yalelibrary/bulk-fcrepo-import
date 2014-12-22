@@ -36,11 +36,16 @@ public class MediaFunctionProcessor {
 
     private static String defaultImage = "no-image-found.jpg";
 
-    final ImportFileDAO importFileDAO = new ImportFileHibernateDAO();
+    private final ImportFileDAO importFileDAO = new ImportFileHibernateDAO();
 
-    final ImageMagickProcessor imgMagick = new ImageMagickProcessor();
+    private final ImageMagickProcessor imgMagick = new ImageMagickProcessor();
 
-    final ObjectFileDAO objectFileDAO = new ObjectFileHibernateDAO();
+    private final ObjectFileDAO objectFileDAO = new ObjectFileHibernateDAO();
+
+    private final String PATH_PREFIX =  rootPath + File.separator + projectDir + File.separator;
+
+    private final String OUT_PATH_PREFIX = rootPath + File.separator + projectDir + File.separator + "exports"
+            + File.separator;
 
     /**
      * Process images and writes to import file and object file
@@ -58,6 +63,10 @@ public class MediaFunctionProcessor {
         logger.debug("[start] converting media for import id={} rowlist size={}", importId, rowList.size());
 
         final long timeInConversion = System.currentTimeMillis();
+
+        final String PATH_PREFIX =  rootPath + File.separator + projectDir + File.separator;
+        final String OUT_PATH_PREFIX = rootPath + File.separator + projectDir + File.separator + "exports"
+                + File.separator;
 
         for (int i = 0; i < rowList.size(); i++) {
 
@@ -79,7 +88,7 @@ public class MediaFunctionProcessor {
             // or, if no image found: update dao with blank image found on project folder & skip ImageMagick step.
             try {
 
-                final File file = new File(getPath(f3Col));
+                final File file = new File(PATH_PREFIX + f3Col);
 
                 logger.trace("Eval file={}", file.getAbsolutePath());
 
@@ -89,7 +98,7 @@ public class MediaFunctionProcessor {
 
                     final String from = MediaFormat.TIFF.toString();
                     final String to = MediaFormat.JPEG.toString();
-                    final String outputFilePath = asFormat(getOutPath(f3Col), from, to);
+                    final String outputFilePath = asFormat(OUT_PATH_PREFIX + f3Col, from, to);
                     final byte[] thumbnailBytes = convertImage(f3Col, outputFilePath, MediaFormat.TIFF, MediaFormat.JPEG, oid);
 
                     final ObjectFile exObjectFile = objectFileDAO.findByOid(oid);
@@ -112,7 +121,7 @@ public class MediaFunctionProcessor {
                     }
                 } else {
                     final ImportFile imFile = getBuilder().importId(importId).oid(oid)
-                            .fileLocation(getPath(defaultImage)).create();
+                            .fileLocation(PATH_PREFIX + defaultImage).create();
                     importFileDAO.save(imFile);
 
                     byte[] thumbnail = getDefaultThumbnail();
@@ -121,7 +130,7 @@ public class MediaFunctionProcessor {
                         logger.error("Null bytes for thumbnail for oid={}", oid);
                     }
 
-                    final ObjectFile objectFile = new ObjectFileBuilder().setDate(new Date()).setFilePath(getPath(defaultImage))
+                    final ObjectFile objectFile = new ObjectFileBuilder().setDate(new Date()).setFilePath(PATH_PREFIX + defaultImage)
                             .setFileExt(MediaFormat.JPEG.toString()).setOid(oid).setUserId(userId).setFileLabel(blankFileName)
                             .setThumbnail(thumbnail).setFileName(blankFileName).createObjectFile();
 
@@ -149,7 +158,7 @@ public class MediaFunctionProcessor {
                                 final MediaFormat toExt, int oid)
             throws IOException {
         // 1. convert
-        final String inputFilePath = getPath(fileName);
+        final String inputFilePath = PATH_PREFIX + fileName;
         try {
             imgMagick.toFormat(inputFilePath, outputFilePath);
 
@@ -160,7 +169,7 @@ public class MediaFunctionProcessor {
         }
 
         //1b. convert to thumbnail
-        final String thumbnailPath = asFormat(getOutPath(fileName), fromExt.toString(), MediaFormat.THUMBNAIL.toString());
+        final String thumbnailPath = asFormat(OUT_PATH_PREFIX + fileName, fromExt.toString(), MediaFormat.THUMBNAIL.toString());
 
         try {
             imgMagick.toThumbnailFormat(outputFilePath, thumbnailPath);
@@ -212,7 +221,7 @@ public class MediaFunctionProcessor {
         final ObjectFileBuilder objectFileBuilder = new ObjectFileBuilder();
         final ImportFileBuilder importFileBuilder = getBuilder();
         final Date currentDate = new Date();
-        final String filePath = getPath(defaultImage);
+        final String filePath = PATH_PREFIX + defaultImage;
         final String jpeg = MediaFormat.JPEG.toString();
 
         List<Row> rowList = importEntityValue.getContentRows();
@@ -260,14 +269,6 @@ public class MediaFunctionProcessor {
             throw e;
         }
         return bytes;
-    }
-
-    private String getPath(final String fileName) {
-        return rootPath + File.separator + projectDir + File.separator + fileName;
-    }
-
-    private String getOutPath(final String fileName) {
-        return rootPath + File.separator + projectDir + File.separator + "exports" + File.separator + fileName;
     }
 
     private static String asFormat(final String fileName, final String from, final String ext) {
