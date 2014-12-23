@@ -28,24 +28,32 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class MediaFunctionProcessor {
 
-    private Logger logger = getLogger(this.getClass());
+    private final Logger logger = getLogger(this.getClass());
+
+    private static final String DEFAULT_IMAGE = "no-image-found.jpg";
 
     private String rootPath = "";
 
     private String projectDir = "";
 
-    private static String defaultImage = "no-image-found.jpg";
+    private String pathPrefix =  "";
 
-    private final ImportFileDAO importFileDAO = new ImportFileHibernateDAO();
+    private String outPathPrefix = "";
+
+    public MediaFunctionProcessor(String rootPath, String projectDir) {
+        this.rootPath = rootPath;
+        this.projectDir = projectDir;
+
+        pathPrefix =  rootPath + File.separator + projectDir + File.separator;
+        outPathPrefix = rootPath + File.separator + projectDir + File.separator + "exports"
+                + File.separator;
+    }
 
     private final ImageMagickProcessor imgMagick = new ImageMagickProcessor();
 
+    private final ImportFileDAO importFileDAO = new ImportFileHibernateDAO();
+
     private final ObjectFileDAO objectFileDAO = new ObjectFileHibernateDAO();
-
-    private final String PATH_PREFIX =  rootPath + File.separator + projectDir + File.separator;
-
-    private final String OUT_PATH_PREFIX = rootPath + File.separator + projectDir + File.separator + "exports"
-            + File.separator;
 
     /**
      * Process images and writes to import file and object file
@@ -55,18 +63,14 @@ public class MediaFunctionProcessor {
      */
     @SuppressWarnings("unchecked")
     public void convert(final int importId, final ImportValue importValue) throws IOException {
-        final String blankFileName = "N/A";
-
-        final int userId = 1; //TODO check this
         final List<Row> rowList = importValue.getContentRows();
 
         logger.debug("[start] converting media for import id={} rowlist size={}", importId, rowList.size());
 
         final long timeInConversion = System.currentTimeMillis();
-
-        final String PATH_PREFIX =  rootPath + File.separator + projectDir + File.separator;
-        final String OUT_PATH_PREFIX = rootPath + File.separator + projectDir + File.separator + "exports"
-                + File.separator;
+        final Date currentDate = new Date(); //TODO uses the same date
+        final String blankFileName = "N/A";
+        final int userId = 1; //TODO check this
 
         for (int i = 0; i < rowList.size(); i++) {
 
@@ -88,7 +92,7 @@ public class MediaFunctionProcessor {
             // or, if no image found: update dao with blank image found on project folder & skip ImageMagick step.
             try {
 
-                final File file = new File(PATH_PREFIX + f3Col);
+                final File file = new File(pathPrefix + f3Col);
 
                 logger.trace("Eval file={}", file.getAbsolutePath());
 
@@ -98,7 +102,7 @@ public class MediaFunctionProcessor {
 
                     final String from = MediaFormat.TIFF.toString();
                     final String to = MediaFormat.JPEG.toString();
-                    final String outputFilePath = asFormat(OUT_PATH_PREFIX + f3Col, from, to);
+                    final String outputFilePath = asFormat(outPathPrefix + f3Col, from, to);
                     final byte[] thumbnailBytes = convertImage(f3Col, outputFilePath, MediaFormat.TIFF, MediaFormat.JPEG, oid);
 
                     final ObjectFile exObjectFile = objectFileDAO.findByOid(oid);
@@ -113,7 +117,7 @@ public class MediaFunctionProcessor {
                         exObjectFile.setFileName(f3Col.replace(from, to));
                         exObjectFile.setFileExt(MediaFormat.JPEG.toString());
                         exObjectFile.setFilePath(outputFilePath);
-                        exObjectFile.setDate(new Date());
+                        exObjectFile.setDate(currentDate);
                         exObjectFile.setThumbnail(thumbnailBytes);
                         exObjectFile.setFileLabel(f3Col);
 
@@ -121,7 +125,7 @@ public class MediaFunctionProcessor {
                     }
                 } else {
                     final ImportFile imFile = getBuilder().importId(importId).oid(oid)
-                            .fileLocation(PATH_PREFIX + defaultImage).create();
+                            .fileLocation(pathPrefix + DEFAULT_IMAGE).create();
                     importFileDAO.save(imFile);
 
                     byte[] thumbnail = getDefaultThumbnail();
@@ -130,7 +134,7 @@ public class MediaFunctionProcessor {
                         logger.error("Null bytes for thumbnail for oid={}", oid);
                     }
 
-                    final ObjectFile objectFile = new ObjectFileBuilder().setDate(new Date()).setFilePath(PATH_PREFIX + defaultImage)
+                    final ObjectFile objectFile = new ObjectFileBuilder().setDate(new Date()).setFilePath(pathPrefix + DEFAULT_IMAGE)
                             .setFileExt(MediaFormat.JPEG.toString()).setOid(oid).setUserId(userId).setFileLabel(blankFileName)
                             .setThumbnail(thumbnail).setFileName(blankFileName).createObjectFile();
 
@@ -158,7 +162,7 @@ public class MediaFunctionProcessor {
                                 final MediaFormat toExt, int oid)
             throws IOException {
         // 1. convert
-        final String inputFilePath = PATH_PREFIX + fileName;
+        final String inputFilePath = pathPrefix + fileName;
         try {
             imgMagick.toFormat(inputFilePath, outputFilePath);
 
@@ -169,7 +173,7 @@ public class MediaFunctionProcessor {
         }
 
         //1b. convert to thumbnail
-        final String thumbnailPath = asFormat(OUT_PATH_PREFIX + fileName, fromExt.toString(), MediaFormat.THUMBNAIL.toString());
+        final String thumbnailPath = asFormat(outPathPrefix + fileName, fromExt.toString(), MediaFormat.THUMBNAIL.toString());
 
         try {
             imgMagick.toThumbnailFormat(outputFilePath, thumbnailPath);
@@ -221,7 +225,7 @@ public class MediaFunctionProcessor {
         final ObjectFileBuilder objectFileBuilder = new ObjectFileBuilder();
         final ImportFileBuilder importFileBuilder = getBuilder();
         final Date currentDate = new Date();
-        final String filePath = PATH_PREFIX + defaultImage;
+        final String filePath = pathPrefix + DEFAULT_IMAGE;
         final String jpeg = MediaFormat.JPEG.toString();
 
         List<Row> rowList = importValue.getContentRows();
@@ -300,11 +304,6 @@ public class MediaFunctionProcessor {
 
     public String getProjectDir() {
         return projectDir;
-    }
-
-    public MediaFunctionProcessor(String rootPath, String projectDir) {
-        this.rootPath = rootPath;
-        this.projectDir = projectDir;
     }
 
     private static ImportFileBuilder getBuilder() {
