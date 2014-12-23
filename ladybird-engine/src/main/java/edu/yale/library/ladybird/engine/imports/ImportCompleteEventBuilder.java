@@ -4,7 +4,7 @@ import edu.yale.library.ladybird.entity.User;
 
 public class ImportCompleteEventBuilder {
     private User user;
-    private SpreadsheetFile spreadsheetFile;
+    private Spreadsheet spreadsheet;
     private int rowsProcessed;
     private int passCount;
     private int failedValidations;
@@ -16,8 +16,8 @@ public class ImportCompleteEventBuilder {
         return this;
     }
 
-    public ImportCompleteEventBuilder setSpreadsheetFile(SpreadsheetFile spreadsheetFile) {
-        this.spreadsheetFile = spreadsheetFile;
+    public ImportCompleteEventBuilder setSpreadsheet(Spreadsheet spreadsheet) {
+        this.spreadsheet = spreadsheet;
         return this;
     }
 
@@ -47,6 +47,6 @@ public class ImportCompleteEventBuilder {
     }
 
     public ImportCompleteEvent createImportDoneEvent() {
-        return new ImportCompleteEvent(user, spreadsheetFile, rowsProcessed, passCount, failedValidations, failCount, time);
+        return new ImportCompleteEvent(user, spreadsheet, rowsProcessed, passCount, failedValidations, failCount, time);
     }
 }

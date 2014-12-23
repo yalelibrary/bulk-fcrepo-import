@@ -12,14 +12,14 @@ import java.util.List;
  * Implementations provide functionality specific to import. Subject to name change.
  */
 public interface ImportEngine {
-    List<Import.Row> read(SpreadsheetFile file) throws ImportReaderValidationException, IOException;
+    List<Import.Row> read(Spreadsheet file) throws ImportReaderValidationException, IOException;
 
-    List<Import.Row> read(SpreadsheetFile file, ReadMode inputReadMode, DefaultFieldDataValidator validator)
+    List<Import.Row> read(Spreadsheet file, ReadMode inputReadMode, DefaultFieldDataValidator validator)
             throws ImportReaderValidationException, IOException;
 
     int write(List<Import.Row> list);
 
-    int write(List<Import.Row> list, SpreadsheetFile spreadsheetFile, int requestId);
+    int write(List<Import.Row> list, Spreadsheet spreadsheet, int requestId);
 
     void setOaiProvider(OaiProvider oaiProvider);
 

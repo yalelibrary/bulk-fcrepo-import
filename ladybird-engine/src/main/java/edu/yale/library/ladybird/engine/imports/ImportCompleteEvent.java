@@ -14,11 +14,11 @@ public final class ImportCompleteEvent extends ImportEvent {
     int failedValidations;
     long time;
 
-    private SpreadsheetFile spreadsheetFile;
+    private Spreadsheet spreadsheet;
 
-    public ImportCompleteEvent(User user, SpreadsheetFile spreadsheetFile, int rowsProcessed, int passCount,
+    public ImportCompleteEvent(User user, Spreadsheet spreadsheet, int rowsProcessed, int passCount,
                                int failedValidations, int failCount, long time) {
-        this.spreadsheetFile = spreadsheetFile;
+        this.spreadsheet = spreadsheet;
         this.rowsProcessed = rowsProcessed;
         this.passCount = passCount;
         this.failedValidations = failedValidations;
@@ -46,8 +46,8 @@ public final class ImportCompleteEvent extends ImportEvent {
         return failedValidations;
     }
 
-    public SpreadsheetFile getSpreadsheetFile() {
-        return spreadsheetFile;
+    public Spreadsheet getSpreadsheet() {
+        return spreadsheet;
     }
 
     @Override
@@ -57,7 +57,7 @@ public final class ImportCompleteEvent extends ImportEvent {
                 + ", passCount=" + passCount
                 + ", failCount=" + failCount
                 + ", failedValidations=" + failedValidations
-                + ", spreadsheetFile=" + spreadsheetFile
+                + ", spreadsheetFile=" + spreadsheet
                 + '}';
     }
 }

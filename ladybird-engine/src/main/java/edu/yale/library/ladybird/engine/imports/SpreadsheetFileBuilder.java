@@ -4,17 +4,11 @@ import java.io.InputStream;
 
 public class SpreadsheetFileBuilder {
     private String fileName;
-    private String altName;
     private String path;
     private InputStream fileStream;
 
     public SpreadsheetFileBuilder filename(String fileName) {
         this.fileName = fileName;
-        return this;
-    }
-
-    public SpreadsheetFileBuilder altname(String altName) {
-        this.altName = altName;
         return this;
     }
 
@@ -28,7 +22,7 @@ public class SpreadsheetFileBuilder {
         return this;
     }
 
-    public SpreadsheetFile create() {
-        return new SpreadsheetFile(fileName, altName, path, fileStream);
+    public Spreadsheet create() {
+        return new Spreadsheet(fileName, path, fileStream);
     }
 }

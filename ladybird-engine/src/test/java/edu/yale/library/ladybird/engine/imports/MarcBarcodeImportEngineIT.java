@@ -121,9 +121,9 @@ public class MarcBarcodeImportEngineIT extends AbstractDBTest {
         }
     }
 
-    private SpreadsheetFile getImportSpreadsheeet() {
+    private Spreadsheet getImportSpreadsheeet() {
         return new SpreadsheetFileBuilder().filename(ExportFileConstants.TEST_XLS_FILE)
-                .altname("Test spreadsheet").filepath(ExportFileConstants.TEST_XLS_FILE)
+                .filepath(ExportFileConstants.TEST_XLS_FILE)
                 .stream(getClass().getClassLoader().getResourceAsStream(ExportFileConstants.TEST_XLS_FILE))
                 .create();
     }

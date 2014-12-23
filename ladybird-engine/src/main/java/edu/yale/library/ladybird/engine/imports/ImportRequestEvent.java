@@ -8,26 +8,26 @@ import edu.yale.library.ladybird.kernel.events.imports.ImportEvent;
  */
 public final class ImportRequestEvent extends ImportEvent {
 
-    private SpreadsheetFile spreadsheetFile;
+    private Spreadsheet spreadsheet;
     private Monitor monitor;
 
-    public ImportRequestEvent(SpreadsheetFile spreadsheetFile, Monitor monitor) {
-        this.spreadsheetFile = spreadsheetFile;
+    public ImportRequestEvent(Spreadsheet spreadsheet, Monitor monitor) {
+        this.spreadsheet = spreadsheet;
         this.monitor = monitor;
     }
 
-    public SpreadsheetFile getSpreadsheetFile() {
-        return spreadsheetFile;
+    public Spreadsheet getSpreadsheet() {
+        return spreadsheet;
     }
 
     @Override
     public String toString() {
-        return "ImportRequestEvent{" + "spreadsheetFile=" + spreadsheetFile
+        return "ImportRequestEvent{" + "spreadsheetFile=" + spreadsheet
                 + ", monitor=" + monitor + '}';
     }
 
-    public void setSpreadsheetFile(SpreadsheetFile spreadsheetFile) {
-        this.spreadsheetFile = spreadsheetFile;
+    public void setSpreadsheet(Spreadsheet spreadsheet) {
+        this.spreadsheet = spreadsheet;
     }
 
     public Monitor getMonitor() {

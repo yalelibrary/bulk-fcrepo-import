@@ -24,11 +24,11 @@ public final class ImportReader {
 
     private static final Logger logger = getLogger(ImportReader.class);
 
-    private final SpreadsheetFile file;
+    private final Spreadsheet file;
     private final int sheetNumber;
     private ReadMode readMode;
 
-    public ImportReader(SpreadsheetFile file, int sheetNumber, ReadMode readMode) {
+    public ImportReader(Spreadsheet file, int sheetNumber, ReadMode readMode) {
         this.file = file;
         this.sheetNumber = sheetNumber;
         this.readMode = readMode;

@@ -118,19 +118,17 @@ public class ImportEngineIT extends AbstractDBTest {
     }
 
 
-    public SpreadsheetFile getImportSpreadsheeet() {
+    public Spreadsheet getImportSpreadsheeet() {
         return new SpreadsheetFileBuilder().filename(FileConstants.TEST_XLS_FILE)
-                .altname("Test spreadsheet")
                 .filepath(FileConstants.TEST_XLS_FILE)
                 .stream(getClass().getClassLoader().getResourceAsStream(FileConstants.TEST_XLS_FILE))
                 .create();
     }
 
-    public SpreadsheetFile getExportSpreadsheeet() throws FileNotFoundException {
+    public Spreadsheet getExportSpreadsheeet() throws FileNotFoundException {
         final String testPath = System.getProperty("java.io.tmpdir")
                 + System.getProperty("file.separator") + "test_export.xlsx";
         return new SpreadsheetFileBuilder().filename("test_export_xlsx")
-                .altname("Test export xls")
                 .filepath(testPath)
                 .stream(new FileInputStream(testPath))
                 .create();

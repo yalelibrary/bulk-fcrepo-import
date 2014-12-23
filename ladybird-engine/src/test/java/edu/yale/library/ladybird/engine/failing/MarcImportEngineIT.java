@@ -16,7 +16,7 @@ import edu.yale.library.ladybird.engine.imports.Import;
 import edu.yale.library.ladybird.engine.imports.ImportValue;
 import edu.yale.library.ladybird.engine.imports.ImportReaderValidationException;
 import edu.yale.library.ladybird.engine.imports.ReadMode;
-import edu.yale.library.ladybird.engine.imports.SpreadsheetFile;
+import edu.yale.library.ladybird.engine.imports.Spreadsheet;
 import edu.yale.library.ladybird.engine.imports.SpreadsheetFileBuilder;
 import edu.yale.library.ladybird.engine.oai.FdidMarcMappingUtil;
 import edu.yale.library.ladybird.engine.oai.ImportSourceProcessor;
@@ -159,9 +159,9 @@ public class MarcImportEngineIT extends AbstractDBTest {
     }
 
 
-    private SpreadsheetFile getImportSpreadsheeet() {
+    private Spreadsheet getImportSpreadsheeet() {
         return new SpreadsheetFileBuilder().filename(ExportFileConstants.TEST_XLS_FILE)
-                .altname("Test spreadsheet").filepath(ExportFileConstants.TEST_XLS_FILE)
+                .filepath(ExportFileConstants.TEST_XLS_FILE)
                 .stream(getClass().getClassLoader().getResourceAsStream(ExportFileConstants.TEST_XLS_FILE))
                 .create();
     }

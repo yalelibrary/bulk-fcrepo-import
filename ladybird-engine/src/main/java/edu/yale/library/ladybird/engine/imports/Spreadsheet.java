@@ -10,24 +10,18 @@ import java.io.InputStream;
 /**
  * Represents a spreadsheet file.
  */
-public class SpreadsheetFile implements Cloneable {
-    private String fileName;
+public class Spreadsheet implements Cloneable {
 
-    private String altName;
+    private String fileName;
 
     private String path;
 
     private InputStream fileStream;
 
-    public SpreadsheetFile(String fileName, String altName, String path, InputStream fileStream) {
+    public Spreadsheet(String fileName, String path, InputStream fileStream) {
         this.fileName = fileName;
-        this.altName = altName;
         this.path = path;
         this.fileStream = fileStream;
-    }
-
-    public String getAltName() {
-        return altName;
     }
 
     public String getPath() {
@@ -62,9 +56,9 @@ public class SpreadsheetFile implements Cloneable {
     }
 
     @Override
-    protected SpreadsheetFile clone() {
+    protected Spreadsheet clone() {
         try {
-            return (SpreadsheetFile) super.clone();
+            return (Spreadsheet) super.clone();
         } catch (Throwable t) {
             throw new InternalError(t.toString());
         }

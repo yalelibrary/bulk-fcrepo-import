@@ -13,7 +13,7 @@ import java.util.List;
  */
 public abstract class AbstractImportEngine implements ImportEngine {
 
-    private SpreadsheetFile spreadsheetFile = null;
+    private Spreadsheet spreadsheet = null;
 
     protected Integer USER_ID = 0; //todo
 
@@ -40,9 +40,9 @@ public abstract class AbstractImportEngine implements ImportEngine {
     /**
      * Read with default param settings.
      *
-     * @see #read(SpreadsheetFile, ReadMode, edu.yale.library.ladybird.engine.DefaultFieldDataValidator)
+     * @see #read(Spreadsheet, ReadMode, edu.yale.library.ladybird.engine.DefaultFieldDataValidator)
      */
-    public final List<Import.Row> read(SpreadsheetFile file) throws ImportReaderValidationException, IOException {
+    public final List<Import.Row> read(Spreadsheet file) throws ImportReaderValidationException, IOException {
         return read(file, ReadMode.FULL, new DefaultFieldDataValidator());
     }
 
@@ -53,9 +53,9 @@ public abstract class AbstractImportEngine implements ImportEngine {
      * @param validator
      * @return list of row values. Perhaps should return sheet.
      */
-    public final List<Import.Row> read(SpreadsheetFile file, ReadMode inputReadMode,
+    public final List<Import.Row> read(Spreadsheet file, ReadMode inputReadMode,
                                              DefaultFieldDataValidator validator) throws ImportReaderValidationException, IOException {
-        spreadsheetFile = file;
+        spreadsheet = file;
         List<Import.Row> rows = doRead(file, inputReadMode);
         return rows;
     }
@@ -74,19 +74,19 @@ public abstract class AbstractImportEngine implements ImportEngine {
      *
      * @param list
      */
-    public final int write(List<Import.Row> list, SpreadsheetFile spreadsheetFile, int requestId) {
-        return doWrite(list, spreadsheetFile, requestId);
+    public final int write(List<Import.Row> list, Spreadsheet spreadsheet, int requestId) {
+        return doWrite(list, spreadsheet, requestId);
     }
 
-    protected SpreadsheetFile getFile() {
-        return spreadsheetFile.clone();
+    protected Spreadsheet getFile() {
+        return spreadsheet.clone();
     }
 
-    public abstract List<Import.Row> doRead(SpreadsheetFile file, ReadMode mode)
+    public abstract List<Import.Row> doRead(Spreadsheet file, ReadMode mode)
             throws ImportReaderValidationException, IOException;
 
     public abstract int doWrite(List<Import.Row> file);
 
-    public abstract int doWrite(List<Import.Row> file, SpreadsheetFile spreadsheetFile, int requestId);
+    public abstract int doWrite(List<Import.Row> file, Spreadsheet spreadsheet, int requestId);
 
 }

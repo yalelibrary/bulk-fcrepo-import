@@ -29,10 +29,9 @@ public class DefaultImportReaderTest extends AbstractDBTest {
         assertEquals(rows.get(1).getColumns().get(4).getValue(), "Gilchrist, Scott");
     }
 
-    public SpreadsheetFile getTestSpreadsheeet() throws IOException {
+    public Spreadsheet getTestSpreadsheeet() throws IOException {
         return new SpreadsheetFileBuilder()
                 .filename(TestFileConstants.TEST_XLS_FILE)
-                .altname("Test spreadsheet")
                 .filepath(TestFileConstants.TEST_XLS_FILE)
                 .stream(getClass().getClassLoader().getResourceAsStream(TestFileConstants.TEST_XLS_FILE))
                 .create();

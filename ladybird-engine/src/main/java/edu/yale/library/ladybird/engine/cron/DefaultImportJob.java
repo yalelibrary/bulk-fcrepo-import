@@ -15,7 +15,7 @@ import edu.yale.library.ladybird.engine.imports.ImportReaderValidationException;
 import edu.yale.library.ladybird.engine.imports.ImportRequestEvent;
 import edu.yale.library.ladybird.engine.imports.MediaFunctionProcessor;
 import edu.yale.library.ladybird.engine.imports.ReadMode;
-import edu.yale.library.ladybird.engine.imports.SpreadsheetFile;
+import edu.yale.library.ladybird.engine.imports.Spreadsheet;
 import edu.yale.library.ladybird.engine.oai.ImportSourceProcessor;
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
 import edu.yale.library.ladybird.entity.ImportSource;
@@ -51,9 +51,9 @@ public class DefaultImportJob implements Job, ImportJob {
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
         final long startTime = System.currentTimeMillis();
         final ImportRequestEvent importRequestedEvent = ImportEngineQueue.getJob();
-        final SpreadsheetFile spreadsheetFile = importRequestedEvent.getSpreadsheetFile();
+        final Spreadsheet spreadsheet = importRequestedEvent.getSpreadsheet();
 
-        logger.debug("Starting import job for file={}", spreadsheetFile);
+        logger.debug("Starting import job for file={}", spreadsheet);
 
         try {
             final int userId = importRequestedEvent.getMonitor().getUser().getUserId();
@@ -67,7 +67,7 @@ public class DefaultImportJob implements Job, ImportJob {
                     ProgressEventListener.JobStatus.INIT);
             ExportBus.post(progressEvent);
 
-            final List<Import.Row> rowList = importEngine.read(spreadsheetFile, ReadMode.FULL, fieldDataValidator);
+            final List<Import.Row> rowList = importEngine.read(spreadsheet, ReadMode.FULL, fieldDataValidator);
 
             logger.trace("Read rows. list size={}", rowList.size());
 
@@ -81,7 +81,7 @@ public class DefaultImportJob implements Job, ImportJob {
 
             logger.debug("Writing to import table(s)");
 
-            final int imid = importEngine.write(rowList, spreadsheetFile, importRequestedEvent.getMonitor().getId());
+            final int imid = importEngine.write(rowList, spreadsheet, importRequestedEvent.getMonitor().getId());
 
             long elapsedImport = System.currentTimeMillis() - startTime;
             logger.debug("Completed import job in={}", DurationFormatUtils.formatDuration(elapsedImport, "HH:mm:ss:SS"));

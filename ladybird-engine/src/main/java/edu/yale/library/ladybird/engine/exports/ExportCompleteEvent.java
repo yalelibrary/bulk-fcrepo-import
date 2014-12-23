@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.engine.exports;
 
-import edu.yale.library.ladybird.engine.imports.SpreadsheetFile;
+import edu.yale.library.ladybird.engine.imports.Spreadsheet;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.kernel.events.exports.ExportEvent;
 
@@ -13,13 +13,13 @@ public final class ExportCompleteEvent extends ExportEvent {
     private int passCount;
     private int failCount;
     private int failedValidations;
-    private SpreadsheetFile spreadsheetFile;
+    private Spreadsheet spreadsheet;
     private int importId;
     private long time;
 
-    public ExportCompleteEvent(User user, SpreadsheetFile spreadsheetFile, int rowsProcessed, int passCount,
+    public ExportCompleteEvent(User user, Spreadsheet spreadsheet, int rowsProcessed, int passCount,
                                int failedValidations, int failCount, long time) {
-        this.spreadsheetFile = spreadsheetFile;
+        this.spreadsheet = spreadsheet;
         this.rowsProcessed = rowsProcessed;
         this.passCount = passCount;
         this.failedValidations = failedValidations;
@@ -43,8 +43,8 @@ public final class ExportCompleteEvent extends ExportEvent {
         return failedValidations;
     }
 
-    public SpreadsheetFile getSpreadsheetFile() {
-        return spreadsheetFile;
+    public Spreadsheet getSpreadsheet() {
+        return spreadsheet;
     }
 
     public void setRowsProcessed(int rowsProcessed) {
@@ -63,8 +63,8 @@ public final class ExportCompleteEvent extends ExportEvent {
         this.failedValidations = failedValidations;
     }
 
-    public void setSpreadsheetFile(SpreadsheetFile spreadsheetFile) {
-        this.spreadsheetFile = spreadsheetFile;
+    public void setSpreadsheet(Spreadsheet spreadsheet) {
+        this.spreadsheet = spreadsheet;
     }
 
     public long getTime() {
@@ -86,7 +86,7 @@ public final class ExportCompleteEvent extends ExportEvent {
                 + ", passCount=" + passCount
                 + ", failCount=" + failCount
                 + ", failedValidations=" + failedValidations
-                + ", spreadsheetFile=" + spreadsheetFile
+                + ", spreadsheetFile=" + spreadsheet
                 + '}';
     }
 }

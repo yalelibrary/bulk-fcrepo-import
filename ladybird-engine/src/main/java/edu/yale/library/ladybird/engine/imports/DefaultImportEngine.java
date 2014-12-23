@@ -14,9 +14,9 @@ public class DefaultImportEngine extends AbstractImportEngine {
     private static final Integer DEFAULT_SHEET = 0; //TODO
 
     @Override
-    public List<Import.Row> doRead(final SpreadsheetFile file, final ReadMode readMode)
+    public List<Import.Row> doRead(final Spreadsheet file, final ReadMode readMode)
             throws ImportReaderValidationException, IOException {
-        logger.debug("Initiating read={}", file.getAltName());
+        logger.debug("Initiating read={}", file.getFileName());
 
         ImportReader reader = new ImportReader(file, DEFAULT_SHEET, readMode);
         return reader.read();
@@ -44,7 +44,7 @@ public class DefaultImportEngine extends AbstractImportEngine {
 
     //TODO consolidate or use different param construct (instead of list of row)
     @Override
-    public int doWrite(final List<Import.Row> list, SpreadsheetFile spreadsheetFile, int requestId) {
+    public int doWrite(final List<Import.Row> list, Spreadsheet spreadsheet, int requestId) {
         logger.debug("Initiating write, userId={} projectId={} list size={}", USER_ID, PROJECT_ID, list.size());
 
         ImportWriter importWriter = new ImportWriter();
@@ -55,7 +55,7 @@ public class DefaultImportEngine extends AbstractImportEngine {
         ImportValue importValue = new ImportValue(list);
         try {
             return importWriter.write(importValue,
-                    new ImportJobRequestBuilder().userId(USER_ID).file(spreadsheetFile.getFileName())
+                    new ImportJobRequestBuilder().userId(USER_ID).file(spreadsheet.getFileName())
                             .dir("").requestId(requestId).projectId(PROJECT_ID).build());
         } catch (ContextedRuntimeException cre) {
             ImportEngineException importEngineException = new ImportEngineException(cre);

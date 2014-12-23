@@ -1,11 +1,11 @@
 package edu.yale.library.ladybird.engine.exports;
 
-import edu.yale.library.ladybird.engine.imports.SpreadsheetFile;
+import edu.yale.library.ladybird.engine.imports.Spreadsheet;
 import edu.yale.library.ladybird.entity.User;
 
 public class ExportCompleteEventBuilder {
     private User user;
-    private SpreadsheetFile spreadsheetFile;
+    private Spreadsheet spreadsheet;
     private int rowsProcessed;
     private int passCount;
     private int failedValidations;
@@ -17,8 +17,8 @@ public class ExportCompleteEventBuilder {
         return this;
     }
 
-    public ExportCompleteEventBuilder setSpreadsheetFile(SpreadsheetFile spreadsheetFile) {
-        this.spreadsheetFile = spreadsheetFile;
+    public ExportCompleteEventBuilder setSpreadsheet(Spreadsheet spreadsheet) {
+        this.spreadsheet = spreadsheet;
         return this;
     }
 
@@ -48,6 +48,6 @@ public class ExportCompleteEventBuilder {
     }
 
     public ExportCompleteEvent createExportCompleteEvent() {
-        return new ExportCompleteEvent(user, spreadsheetFile, rowsProcessed, passCount, failedValidations, failCount, time);
+        return new ExportCompleteEvent(user, spreadsheet, rowsProcessed, passCount, failedValidations, failCount, time);
     }
 }

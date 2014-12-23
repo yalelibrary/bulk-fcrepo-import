@@ -3,7 +3,7 @@ package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.engine.cron.ImportEngineQueue;
 import edu.yale.library.ladybird.engine.imports.ImportRequestEvent;
-import edu.yale.library.ladybird.engine.imports.SpreadsheetFile;
+import edu.yale.library.ladybird.engine.imports.Spreadsheet;
 import edu.yale.library.ladybird.engine.imports.SpreadsheetFileBuilder;
 import edu.yale.library.ladybird.entity.Monitor;
 import edu.yale.library.ladybird.entity.Project;
@@ -81,9 +81,8 @@ public class MonitorView extends AbstractView {
             monitorItem.setUser(userList.get(0));
             monitorItem.setCurrentProject(currentProject);
 
-            final SpreadsheetFile file = new SpreadsheetFileBuilder()
+            final Spreadsheet file = new SpreadsheetFileBuilder()
                     .filename(getSessionParam("uploadedFileName").toString())
-                    .altname(getSessionParam("uploadedFileName").toString())
                     .stream((InputStream) getSessionParam("uploadedFileStream"))
                     .create();
 
