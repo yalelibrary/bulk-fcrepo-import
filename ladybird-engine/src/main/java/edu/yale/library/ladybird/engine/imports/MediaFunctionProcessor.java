@@ -103,7 +103,7 @@ public class MediaFunctionProcessor {
                     final String from = MediaFormat.TIFF.toString();
                     final String to = MediaFormat.JPEG.toString();
                     final String outputFilePath = asFormat(outPathPrefix + f3Col, from, to);
-                    final byte[] thumbnailBytes = convertImage(f3Col, outputFilePath, MediaFormat.TIFF, MediaFormat.JPEG, oid);
+                    final byte[] thumbnailBytes = convertImage(f3Col, outputFilePath, MediaFormat.TIFF, oid);
 
                     final ObjectFile exObjectFile = objectFileDAO.findByOid(oid);
 
@@ -154,12 +154,11 @@ public class MediaFunctionProcessor {
      * Converts image and updates object file table
      *
      * @param fileName filename
-     * @param fromExt  ext to convert to
+     * @param from  ext to convert to
      * @param toExt    ext to convert to
      * @param oid      oid
      */
-    private byte[] convertImage(final String fileName, final String outputFilePath, final MediaFormat fromExt,
-                                final MediaFormat toExt, int oid)
+    private byte[] convertImage(final String fileName, final String outputFilePath, final MediaFormat from, final int oid)
             throws IOException {
         // 1. convert
         final String inputFilePath = pathPrefix + fileName;
@@ -173,7 +172,7 @@ public class MediaFunctionProcessor {
         }
 
         //1b. convert to thumbnail
-        final String thumbnailPath = asFormat(outPathPrefix + fileName, fromExt.toString(), MediaFormat.THUMBNAIL.toString());
+        final String thumbnailPath = asFormat(outPathPrefix + fileName, from.toString(), MediaFormat.THUMBNAIL.toString());
 
         try {
             imgMagick.toThumbnailFormat(outputFilePath, thumbnailPath);
