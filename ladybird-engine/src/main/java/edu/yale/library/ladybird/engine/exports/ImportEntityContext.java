@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.engine.exports;
 
 import edu.yale.library.ladybird.engine.imports.Import;
-import edu.yale.library.ladybird.entity.Monitor;
+import edu.yale.library.ladybird.entity.JobRequest;
 
 import java.util.Collections;
 import java.util.List;
@@ -13,16 +13,16 @@ import java.util.List;
 public class ImportEntityContext {
 
     private List<Import.Row> importJobList; //TODO rename
-    private Monitor monitor;
+    private JobRequest jobRequest;
     /** imj id */
     private int importId;
 
-    public Monitor getMonitor() {
-        return monitor;
+    public JobRequest getJobRequest() {
+        return jobRequest;
     }
 
-    public void setMonitor(final Monitor monitor) {
-        this.monitor = monitor;
+    public void setJobRequest(final JobRequest jobRequest) {
+        this.jobRequest = jobRequest;
     }
 
     public List<Import.Row> getImportJobList() {
@@ -48,7 +48,7 @@ public class ImportEntityContext {
     public static ImportEntityContext newInstance() {
         ImportEntityContext importEntityContext = new ImportEntityContext();
         importEntityContext.setImportJobList(Collections.emptyList());
-        importEntityContext.setMonitor(new Monitor());
+        importEntityContext.setJobRequest(new JobRequest());
         importEntityContext.setImportId(-1);
         return importEntityContext;
     }
@@ -57,7 +57,7 @@ public class ImportEntityContext {
     public String toString() {
         return "ImportEntityContext{"
                 + "importJobList size=" + importJobList.size()
-                + ", monitor=" + monitor
+                + ", monitor=" + jobRequest
                 + '}';
     }
 }

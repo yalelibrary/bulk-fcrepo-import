@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.persistence.dao;
 
-import edu.yale.library.ladybird.entity.Monitor;
+import edu.yale.library.ladybird.entity.JobRequest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 
-public class MonitorDaoTest extends AbstractPersistenceTest {
+public class JobRequestDaoTest extends AbstractPersistenceTest {
 
     {
         TestDaoInitializer.injectFields(this);
@@ -30,11 +30,11 @@ public class MonitorDaoTest extends AbstractPersistenceTest {
     }
 
     @Inject
-    private MonitorDAO dao;
+    private JobRequestDAO dao;
 
     @Test
     public void shouldSave() {
-        final Monitor item = new Monitor();
+        final JobRequest item = new JobRequest();
         item.setCurrentProjectId(1);
         item.setCurrentUserId(1);
         item.setExportPath("");
@@ -50,8 +50,8 @@ public class MonitorDaoTest extends AbstractPersistenceTest {
         }
 
         assertEquals("Item count incorrect", list.size(), 1);
-        final Monitor monitorItem = (Monitor) list.get(0);
-        assertEquals("Value mismatch", (long) monitorItem.getCurrentProjectId(), 1);
+        final JobRequest jobRequestItem = (JobRequest) list.get(0);
+        assertEquals("Value mismatch", (long) jobRequestItem.getCurrentProjectId(), 1);
     }
 
 }

@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.engine.cron;
 
 import edu.yale.library.ladybird.engine.CronSchedulingException;
-import edu.yale.library.ladybird.entity.Monitor;
+import edu.yale.library.ladybird.entity.JobRequest;
 import edu.yale.library.ladybird.kernel.cron.DefaultJobsManager;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
@@ -54,12 +54,12 @@ public class ExportScheduler {
     }
 
     @Deprecated
-    public void scheduleJob(final Monitor monitorItem, final Trigger trigger) {
+    public void scheduleJob(final JobRequest jobRequestItem, final Trigger trigger) {
         logger.debug("Scheduling export job..");
 
         JobDetail job;
         try {
-            job = getJob(DEFAULT_EXPORT_JOB_ID, ExportJobFactory.getInstance().getClass(), monitorItem);
+            job = getJob(DEFAULT_EXPORT_JOB_ID, ExportJobFactory.getInstance().getClass(), jobRequestItem);
             doScheduleJob(job, trigger);
 
             DefaultJobsManager defaultJobsManager = new DefaultJobsManager();
@@ -98,10 +98,10 @@ public class ExportScheduler {
 
     @SuppressWarnings("unchecked")
     @Deprecated
-    protected JobDetail getJob(String jobName, Class klass, Monitor monitorItem) {
+    protected JobDetail getJob(String jobName, Class klass, JobRequest jobRequestItem) {
         JobDetail job = JobBuilder.newJob(klass)
                 .withIdentity(jobName, "EXJ").build();
-        job.getJobDataMap().put("event", monitorItem); //used by DefaultExportJob
+        job.getJobDataMap().put("event", jobRequestItem); //used by DefaultExportJob
         return job;
     }
 

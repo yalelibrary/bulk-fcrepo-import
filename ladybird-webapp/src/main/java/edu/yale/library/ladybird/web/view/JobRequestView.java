@@ -5,10 +5,10 @@ import edu.yale.library.ladybird.engine.cron.ImportEngineQueue;
 import edu.yale.library.ladybird.engine.imports.ImportRequestEvent;
 import edu.yale.library.ladybird.engine.imports.Spreadsheet;
 import edu.yale.library.ladybird.engine.imports.SpreadsheetFileBuilder;
-import edu.yale.library.ladybird.entity.Monitor;
+import edu.yale.library.ladybird.entity.JobRequest;
 import edu.yale.library.ladybird.entity.Project;
 import edu.yale.library.ladybird.entity.User;
-import edu.yale.library.ladybird.persistence.dao.MonitorDAO;
+import edu.yale.library.ladybird.persistence.dao.JobRequestDAO;
 import edu.yale.library.ladybird.persistence.dao.UserDAO;
 import org.omnifaces.util.Faces;
 import org.primefaces.event.FileUploadEvent;
@@ -31,18 +31,18 @@ import static org.slf4j.LoggerFactory.getLogger;
 @ManagedBean
 @RequestScoped
 @SuppressWarnings("unchecked")
-public class MonitorView extends AbstractView {
+public class JobRequestView extends AbstractView {
 
     private final Logger logger = getLogger(this.getClass());
 
-    private List<Monitor> itemList;
-    private Monitor monitorItem = new Monitor();
+    private List<JobRequest> itemList;
+    private JobRequest jobRequestItem = new JobRequest();
     private UploadedFile uploadedFile;
     private String uploadedFileName;
     private InputStream uploadedFileStream;
 
     @Inject
-    private MonitorDAO monitorDAO;
+    private JobRequestDAO jobRequestDAO;
 
     @Inject
     private UserDAO userDAO;
@@ -53,7 +53,7 @@ public class MonitorView extends AbstractView {
     @PostConstruct
     public void init() {
         initFields();
-        dao = monitorDAO;
+        dao = jobRequestDAO;
     }
 
     public String process() {
@@ -67,19 +67,19 @@ public class MonitorView extends AbstractView {
 
             checkNotNull(currentProject, "No default project for current user");
 
-            monitorItem.setDirPath("local"); //TODO
-            monitorItem.setDate(new Date());
-            monitorItem.setCurrentUserId(authUtil.getCurrentUserId());
-            monitorItem.setCurrentProjectId(currentProject.getProjectId());
+            jobRequestItem.setDirPath("local"); //TODO
+            jobRequestItem.setDate(new Date());
+            jobRequestItem.setCurrentUserId(authUtil.getCurrentUserId());
+            jobRequestItem.setCurrentProjectId(currentProject.getProjectId());
 
-            dao.save(monitorItem);
+            dao.save(jobRequestItem);
 
-            logger.debug("Saved import/export pair={}", monitorItem);
+            logger.debug("Saved import/export pair={}", jobRequestItem);
 
             //set user id and project id
-            List<User> userList = userDAO.findByEmail(monitorItem.getNotificationEmail()); //TODO should be only 1
-            monitorItem.setUser(userList.get(0));
-            monitorItem.setCurrentProject(currentProject);
+            List<User> userList = userDAO.findByEmail(jobRequestItem.getNotificationEmail()); //TODO should be only 1
+            jobRequestItem.setUser(userList.get(0));
+            jobRequestItem.setCurrentProject(currentProject);
 
             final Spreadsheet file = new SpreadsheetFileBuilder()
                     .filename(getSessionParam("uploadedFileName").toString())
@@ -87,7 +87,7 @@ public class MonitorView extends AbstractView {
                     .create();
 
             //Queue it:
-            final ImportRequestEvent importEvent = new ImportRequestEvent(file, monitorItem);
+            final ImportRequestEvent importEvent = new ImportRequestEvent(file, jobRequestItem);
             ImportEngineQueue.addJob(importEvent);
 
             logger.info("Enqueued event={}", importEvent.toString());
@@ -109,7 +109,7 @@ public class MonitorView extends AbstractView {
     public List getItemList() {
         try {
             return (userDAO.count() == 0 || authUtil.getCurrentUser() == null) ? Collections.emptyList()
-                    : monitorDAO.findByUserAndProject(authUtil.getCurrentUserId(),
+                    : jobRequestDAO.findByUserAndProject(authUtil.getCurrentUserId(),
                             authUtil.getDefaultProjectForCurrentUser().getProjectId());
         } catch (Exception e) {
             logger.trace("Error finding monitor itemList", e);
@@ -129,12 +129,12 @@ public class MonitorView extends AbstractView {
         }
     }
 
-    public Monitor getMonitorItem() {
-        return monitorItem;
+    public JobRequest getJobRequestItem() {
+        return jobRequestItem;
     }
 
-    public void setMonitorItem(Monitor monitorItem) {
-        this.monitorItem = monitorItem;
+    public void setJobRequestItem(JobRequest jobRequestItem) {
+        this.jobRequestItem = jobRequestItem;
     }
 
     private void putSessionAttribute(String s, Object val) {
@@ -147,7 +147,7 @@ public class MonitorView extends AbstractView {
 
     @Override
     public String toString() {
-        return monitorItem.toString();
+        return jobRequestItem.toString();
     }
 }
 

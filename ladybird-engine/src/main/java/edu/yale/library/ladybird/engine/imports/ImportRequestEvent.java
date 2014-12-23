@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.engine.imports;
 
-import edu.yale.library.ladybird.entity.Monitor;
+import edu.yale.library.ladybird.entity.JobRequest;
 import edu.yale.library.ladybird.kernel.events.imports.ImportEvent;
 
 /**
@@ -9,11 +9,11 @@ import edu.yale.library.ladybird.kernel.events.imports.ImportEvent;
 public final class ImportRequestEvent extends ImportEvent {
 
     private Spreadsheet spreadsheet;
-    private Monitor monitor;
+    private JobRequest jobRequest;
 
-    public ImportRequestEvent(Spreadsheet spreadsheet, Monitor monitor) {
+    public ImportRequestEvent(Spreadsheet spreadsheet, JobRequest jobRequest) {
         this.spreadsheet = spreadsheet;
-        this.monitor = monitor;
+        this.jobRequest = jobRequest;
     }
 
     public Spreadsheet getSpreadsheet() {
@@ -23,18 +23,18 @@ public final class ImportRequestEvent extends ImportEvent {
     @Override
     public String toString() {
         return "ImportRequestEvent{" + "spreadsheetFile=" + spreadsheet
-                + ", monitor=" + monitor + '}';
+                + ", monitor=" + jobRequest + '}';
     }
 
     public void setSpreadsheet(Spreadsheet spreadsheet) {
         this.spreadsheet = spreadsheet;
     }
 
-    public Monitor getMonitor() {
-        return monitor;
+    public JobRequest getJobRequest() {
+        return jobRequest;
     }
 
-    public void setMonitor(Monitor monitor) {
-        this.monitor = monitor;
+    public void setJobRequest(JobRequest jobRequest) {
+        this.jobRequest = jobRequest;
     }
 }

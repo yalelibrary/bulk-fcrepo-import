@@ -6,8 +6,6 @@ public class ImageConversionRequestEvent extends ImportEvent {
 
     private int importId;
 
-    //private Monitor monitor = new Monitor();
-
     private String exportDirPath = "";
 
     //TODO use just column?

@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.engine.exports;
 
-import edu.yale.library.ladybird.entity.Monitor;
+import edu.yale.library.ladybird.entity.JobRequest;
 import edu.yale.library.ladybird.kernel.events.exports.ExportEvent;
 
 public class ExportRequestEvent extends ExportEvent {
@@ -9,7 +9,7 @@ public class ExportRequestEvent extends ExportEvent {
      * Import Job identifier (aka imid) to run against
      */
     private int importId;
-    private Monitor monitor = new Monitor();
+    private JobRequest jobRequest = new JobRequest();
 
     public ExportRequestEvent() {
     }
@@ -18,9 +18,9 @@ public class ExportRequestEvent extends ExportEvent {
         this.importId = importId;
     }
 
-    public ExportRequestEvent(final int importId, final Monitor monitor) {
+    public ExportRequestEvent(final int importId, final JobRequest jobRequest) {
         this.importId = importId;
-        this.monitor = monitor;
+        this.jobRequest = jobRequest;
     }
 
     public int getImportId() {
@@ -31,19 +31,19 @@ public class ExportRequestEvent extends ExportEvent {
         this.importId = importId;
     }
 
-    public Monitor getMonitor() {
-        return monitor;
+    public JobRequest getJobRequest() {
+        return jobRequest;
     }
 
-    public void setMonitor(final Monitor monitor) {
-        this.monitor = monitor;
+    public void setJobRequest(final JobRequest jobRequest) {
+        this.jobRequest = jobRequest;
     }
 
     @Override
     public String toString() {
         return "ExportRequestEvent{"
                 + "importId=" + importId
-                + ", monitor=" + monitor
+                + ", monitor=" + jobRequest
                 + '}';
     }
 }

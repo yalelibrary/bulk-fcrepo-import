@@ -55,9 +55,9 @@ public class ImportProgressView extends AbstractView implements Serializable {
     }
 
     //TODO change SQL lookup since it might be polled frequently
-    public String status(final int monitorId) {
+    public String status(final int jobRequestId) {
         try {
-            final int importId = convertToJobId(monitorId);
+            final int importId = convertToJobId(jobRequestId);
             List<String> jobStatus = new ArrayList<>();
 
             if (importId != -1) {
@@ -66,37 +66,37 @@ public class ImportProgressView extends AbstractView implements Serializable {
 
             return importId == -1 ? "" : jobStatus.toString();
         } catch (Exception e) {
-            logger.error("Error finding status for monitorId={} Problem ={}", monitorId, e);
+            logger.error("Error finding status for monitorId={} Problem ={}", jobRequestId, e);
             return "ERR";
         }
     }
 
     //TODO change SQL lookup since it might be polled frequently
-    public String statusInProgress(final int monitorId) {
+    public String statusInProgress(final int jobRequestId) {
         try {
-            return progressEventListener.getJobStatus(monitorId).toString();
+            return progressEventListener.getJobStatus(jobRequestId).toString();
         } catch (Exception e) {
-            logger.error("Error finding status for monitorId={} Problem ={}", monitorId, e);
+            logger.error("Error finding status for monitorId={} Problem ={}", jobRequestId, e);
             return "ERR";
         }
     }
 
-    public int numberExceptions(final int monitorId) {
+    public int numberExceptions(final int jobRequestId) {
         try {
             //convert moinitor id to import job id
-            final int importId = convertToJobId(monitorId);
+            final int importId = convertToJobId(jobRequestId);
             return importId == -1 ? 0 : (progressEventListener.getRawException(importId) == null
                     ? 0 : progressEventListener.getRawException(importId).size());
         } catch (Exception e) {
-            logger.error("Error finding exception trace for item={}", monitorId, e);
+            logger.error("Error finding exception trace for item={}", jobRequestId, e);
             return 0;
         }
     }
 
-    public List<ContextTrace> getContextTrace(final int monitorId) {
-        logger.trace("Getting stack trace info for={} from Event bean", monitorId);
+    public List<ContextTrace> getContextTrace(final int jobRequestId) {
+        logger.trace("Getting stack trace info for={} from Event bean", jobRequestId);
 
-        final int importId = convertToJobId(monitorId);
+        final int importId = convertToJobId(jobRequestId);
 
         if (importId == -1) {
             return Collections.emptyList();
@@ -119,12 +119,12 @@ public class ImportProgressView extends AbstractView implements Serializable {
         return list;
     }
 
-    private int convertToJobId(final int monitorId) {
-        if (monitorId < 0) {
+    private int convertToJobId(final int jobRequestId) {
+        if (jobRequestId < 0) {
             return -1;
         }
 
-        final List<ImportJob> importJobs = importJobDAO.findByRequestId(monitorId);
+        final List<ImportJob> importJobs = importJobDAO.findByRequestId(jobRequestId);
 
         if (importJobs == null || importJobs.isEmpty()) {
             return -1;

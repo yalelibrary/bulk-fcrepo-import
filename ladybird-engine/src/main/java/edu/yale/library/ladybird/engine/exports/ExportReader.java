@@ -78,7 +78,7 @@ public class ExportReader {
 
         final ImportEntityContext iContext = new ImportEntityContext();
         iContext.setImportJobList(resultRowList);
-        iContext.setMonitor(exportRequestEvent.getMonitor());
+        iContext.setJobRequest(exportRequestEvent.getJobRequest());
         iContext.setImportId(importId);
         return iContext;
     }

@@ -23,7 +23,7 @@ import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobNotificationsDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportSourceDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportSourceDataDAO;
-import edu.yale.library.ladybird.persistence.dao.MonitorDAO;
+import edu.yale.library.ladybird.persistence.dao.JobRequestDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectAcidDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectAcidVersionDAO;
 import edu.yale.library.ladybird.persistence.dao.ObjectDAO;
@@ -59,7 +59,7 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobHibernateDAO
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobNotificationsHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceDataHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceHibernateDAO;
-import edu.yale.library.ladybird.persistence.dao.hibernate.MonitorHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.JobRequestHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectAcidHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectAcidVersionHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectEventHibernateDAO;
@@ -105,7 +105,7 @@ public class DaoHibernateModule extends AbstractModule {
 
         bind(UserDAO.class).to(UserHibernateDAO.class);
         bind(UserPreferencesDAO.class).to(UserPreferencesHibernateDAO.class);
-        bind(MonitorDAO.class).to(MonitorHibernateDAO.class);
+        bind(JobRequestDAO.class).to(JobRequestHibernateDAO.class);
         bind(ImportSourceDAO.class).to(ImportSourceHibernateDAO.class);
         bind(ImportSourceDataDAO.class).to(ImportSourceDataHibernateDAO.class);
         bind(ImportFileDAO.class).to(ImportFileHibernateDAO.class);

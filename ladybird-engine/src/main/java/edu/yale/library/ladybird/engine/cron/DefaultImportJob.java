@@ -56,14 +56,14 @@ public class DefaultImportJob implements Job, ImportJob {
         logger.debug("Starting import job for file={}", spreadsheet);
 
         try {
-            final int userId = importRequestedEvent.getMonitor().getUser().getUserId();
-            final int projectId = importRequestedEvent.getMonitor().getCurrentProject().getProjectId();
+            final int userId = importRequestedEvent.getJobRequest().getUser().getUserId();
+            final int projectId = importRequestedEvent.getJobRequest().getCurrentProject().getProjectId();
 
             final ImportEngine importEngine = new DefaultImportEngine(userId, projectId);
             final DefaultFieldDataValidator fieldDataValidator = new DefaultFieldDataValidator();
 
             //Post init
-            ProgressEvent progressEvent = new ProgressEvent(importRequestedEvent.getMonitor().getId(), importRequestedEvent,
+            ProgressEvent progressEvent = new ProgressEvent(importRequestedEvent.getJobRequest().getId(), importRequestedEvent,
                     ProgressEventListener.JobStatus.INIT);
             ExportBus.post(progressEvent);
 
@@ -75,13 +75,13 @@ public class DefaultImportJob implements Job, ImportJob {
             final OaiProvider provider = getCtxOaiProvider();
             importEngine.setOaiProvider(provider);
             //passes relative path for each import job. This is provided by the user on each run. The root path is set application wide.
-            final MediaFunctionProcessor mediaFunctionProcessor = getCtxMediaFunctionProcessor(importRequestedEvent.getMonitor().getExportPath());
+            final MediaFunctionProcessor mediaFunctionProcessor = getCtxMediaFunctionProcessor(importRequestedEvent.getJobRequest().getExportPath());
             importEngine.setMediaFunctionProcessor(mediaFunctionProcessor);
             importEngine.setImportSourceProcessor(new ImportSourceProcessor());
 
             logger.debug("Writing to import table(s)");
 
-            final int imid = importEngine.write(rowList, spreadsheet, importRequestedEvent.getMonitor().getId());
+            final int imid = importEngine.write(rowList, spreadsheet, importRequestedEvent.getJobRequest().getId());
 
             long elapsedImport = System.currentTimeMillis() - startTime;
             logger.debug("Completed import job in={}", DurationFormatUtils.formatDuration(elapsedImport, "HH:mm:ss:SS"));
@@ -91,15 +91,15 @@ public class DefaultImportJob implements Job, ImportJob {
             importCompEvent.setImportId(imid);
 
             //Post progress
-            ExportBus.post(new ProgressEvent(importRequestedEvent.getMonitor().getId(), importCompEvent,
+            ExportBus.post(new ProgressEvent(importRequestedEvent.getJobRequest().getId(), importCompEvent,
                     ProgressEventListener.JobStatus.DONE));
 
-            sendNotification(importCompEvent, Collections.singletonList(importRequestedEvent.getMonitor().getUser()));
+            sendNotification(importCompEvent, Collections.singletonList(importRequestedEvent.getJobRequest().getUser()));
 
             logger.debug("Added import event to notification queue");
 
             /* Add request for export */  //Note: This needs to be re-visited per logic requirement
-            final ExportRequestEvent exportEvent = new ExportRequestEvent(imid, importRequestedEvent.getMonitor());
+            final ExportRequestEvent exportEvent = new ExportRequestEvent(imid, importRequestedEvent.getJobRequest());
             ExportEngineQueue.addJob(exportEvent);
 
             logger.trace("Added event to ExportEngineQueue=" + exportEvent.toString());
@@ -110,10 +110,10 @@ public class DefaultImportJob implements Job, ImportJob {
             logger.error("Error executing job", e.getMessage());
             throw new ImportEngineException(e);
         } catch (final ImportEngineException cre) {
-            logger.error("Exception in import job number={}.", importRequestedEvent.getMonitor().getId(), cre);
+            logger.error("Exception in import job number={}.", importRequestedEvent.getJobRequest().getId(), cre);
             throw cre;
         } catch (Exception e) {
-            logger.error("Exception in import job number={}.", importRequestedEvent.getMonitor().getId(), e);
+            logger.error("Exception in import job number={}.", importRequestedEvent.getJobRequest().getId(), e);
             throw new ImportEngineException(e);
         }
     }

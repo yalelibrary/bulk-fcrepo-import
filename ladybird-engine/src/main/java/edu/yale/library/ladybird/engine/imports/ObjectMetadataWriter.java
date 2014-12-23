@@ -7,7 +7,7 @@ import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.AuthorityControlBuilder;
 import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.entity.FieldDefinition;
-import edu.yale.library.ladybird.entity.Monitor;
+import edu.yale.library.ladybird.entity.JobRequest;
 import edu.yale.library.ladybird.entity.ObjectAcid;
 import edu.yale.library.ladybird.entity.ObjectAcidBuilder;
 import edu.yale.library.ladybird.entity.ObjectString;
@@ -163,8 +163,8 @@ public class ObjectMetadataWriter {
     }
 
     private int getUserId(final ImportEntityContext importEntityContext) {
-        final Monitor monitor = importEntityContext.getMonitor();
-        return monitor.getUser().getUserId();
+        final JobRequest jobRequest = importEntityContext.getJobRequest();
+        return jobRequest.getUser().getUserId();
     }
 
 }

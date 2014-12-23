@@ -24,13 +24,13 @@
               <span>
                 <h:outputText styleClass="alert alert-warning"
                               value="No import jobs exist yet."
-                              rendered="#{empty monitorView.itemList}"/>
+                              rendered="#{empty jobRequestView.itemList}"/>
               </span>
         </div>
         <br/>
 
         <!-- Form -->
-        <h:form id="SchedulerForm" enctype="multipart/form-data" rendered="#{not empty monitorView.itemList}">
+        <h:form id="SchedulerForm" enctype="multipart/form-data" rendered="#{not empty jobRequestView.itemList}">
             <div>
 
                 <!-- Data Table -->
@@ -38,7 +38,7 @@
                              editable="false"
                              paginator="false"
                              var="monitorItem"
-                             value="#{monitorView.itemList}">
+                             value="#{jobRequestView.itemList}">
 
                     <p:column headerText="Import Directory" width="10%" rendered="false">
                         <h:outputText value="#{monitorItem.dirPath}"/>

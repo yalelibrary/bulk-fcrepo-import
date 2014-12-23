@@ -15,7 +15,7 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceHibernate
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceDataHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.FieldDefinitionHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.FieldMarcMappingHibernateDAO;
-import edu.yale.library.ladybird.persistence.dao.hibernate.MonitorHibernateDAO;
+import edu.yale.library.ladybird.persistence.dao.hibernate.JobRequestHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectAcidVersionHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectEventHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ObjectFileHibernateDAO;
@@ -57,7 +57,7 @@ public class TestDaoHibernateModule extends AbstractModule {
         bind(userDaoType).to(UserDAO.class);
         bind(UserDAO.class).to(UserHibernateDAO.class);
         bind(UserPreferencesDAO.class).to(UserPreferencesHibernateDAO.class);
-        bind(MonitorDAO.class).to(MonitorHibernateDAO.class);
+        bind(JobRequestDAO.class).to(JobRequestHibernateDAO.class);
         bind(ImportFileDAO.class).to(ImportFileHibernateDAO.class);
         bind(ImportSourceDAO.class).to(ImportSourceHibernateDAO.class);
         bind(ImportSourceDataDAO.class).to(ImportSourceDataHibernateDAO.class);

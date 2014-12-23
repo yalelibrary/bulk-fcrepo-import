@@ -16,7 +16,7 @@ import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.ImportJob;
 import edu.yale.library.ladybird.entity.ImportJobNotifications;
-import edu.yale.library.ladybird.entity.Monitor;
+import edu.yale.library.ladybird.entity.JobRequest;
 import edu.yale.library.ladybird.entity.Settings;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.entity.UserProjectFieldExportOptions;
@@ -81,7 +81,7 @@ public class DefaultExportJob implements Job, ExportJob {
             ExportRequestEvent exportRequestEvent = new ExportRequestEvent();
 
             //post init
-            post(new ProgressEvent(importEntityContext.getMonitor().getId(),
+            post(new ProgressEvent(importEntityContext.getJobRequest().getId(),
                     exportRequestEvent, ProgressEventListener.JobStatus.INIT));
 
             /**
@@ -90,20 +90,20 @@ public class DefaultExportJob implements Job, ExportJob {
             logger.debug("[start] writing sheet for export job={}", importEntityContext.getImportId());
 
             final long timeInXlsWriting = System.currentTimeMillis();
-            final String exportFilePath = getWritePath(exportFile(importEntityContext.getMonitor().getExportPath()));
+            final String exportFilePath = getWritePath(exportFile(importEntityContext.getJobRequest().getExportPath()));
             final List<ExportSheet> exportSheets = new ArrayList<>();
             final ExportSheet sheet1 = new ExportSheet();
             sheet1.setTitle("Full Sheet");
             sheet1.setContents(importEntityContext.getImportJobList());
             exportSheets.add(sheet1);
-            final ExportSheet sheet2 = getCustomSheet(importEntityContext.getImportJobList(), importEntityContext.getMonitor());
+            final ExportSheet sheet2 = getCustomSheet(importEntityContext.getImportJobList(), importEntityContext.getJobRequest());
             exportSheets.add(sheet2);
             exportEngine.writeSheets(exportSheets, exportFilePath);
 
             //1b. Update imjobs table
             updateImportJobs(importEntityContext.getImportId(), exportFilePath);
             //1c. Create entry in import job notifications table (to enable spreadsheet file mailing etc)
-            updateImportJobsNotification(importEntityContext.getImportId(), importEntityContext.getMonitor().getUser().getUserId());
+            updateImportJobsNotification(importEntityContext.getImportId(), importEntityContext.getJobRequest().getUser().getUserId());
 
             long elapsedInXls = System.currentTimeMillis() - timeInXlsWriting;
             logger.debug("[end] Completed spreadsheet writing in={}",
@@ -122,9 +122,9 @@ public class DefaultExportJob implements Job, ExportJob {
             final ExportCompleteEvent exportCompEvent = new ExportCompleteEventBuilder()
                     .setRowsProcessed(importEntityContext.getImportJobList().size()).setTime(elapsedInObjWriter).createExportCompleteEvent();
             exportCompEvent.setImportId(importEntityContext.getImportId());
-            post(new ProgressEvent(importEntityContext.getMonitor().getId(), exportCompEvent, ProgressEventListener.JobStatus.DONE));
+            post(new ProgressEvent(importEntityContext.getJobRequest().getId(), exportCompEvent, ProgressEventListener.JobStatus.DONE));
             logger.debug("Notifying user registered.");
-            sendNotification(exportCompEvent, Collections.singletonList(importEntityContext.getMonitor().getUser()));
+            sendNotification(exportCompEvent, Collections.singletonList(importEntityContext.getJobRequest().getUser()));
             logger.trace("Added export event to notification queue.");
         } catch (IOException e) {
             logger.error("Error executing job", e.getMessage());
@@ -195,18 +195,18 @@ public class DefaultExportJob implements Job, ExportJob {
     /**
      * Gets custom sheet
      * @param fullList original list
-     * @param monitor context data
+     * @param jobRequest context data
      * @return an ExportSheet representing purged list
      *
      * TODO test
      */
-    private ExportSheet getCustomSheet(List<Import.Row> fullList, Monitor monitor) {
+    private ExportSheet getCustomSheet(List<Import.Row> fullList, JobRequest jobRequest) {
         final UserProjectFieldExportOptionsDAO dao = new UserProjectFieldExportOptionsHibernateDAO(); //TODO
         final ExportSheet exportSheet = new ExportSheet();
         exportSheet.setTitle("Custom Sheet");
 
-        final int projectId = monitor.getCurrentProject().getProjectId();
-        final int userId = monitor.getUser().getUserId();
+        final int projectId = jobRequest.getCurrentProject().getProjectId();
+        final int userId = jobRequest.getUser().getUserId();
 
         List<Integer> columnsToExclude = new ArrayList<>();
         List<Integer> columnsFdidsToExclude = new ArrayList<>();

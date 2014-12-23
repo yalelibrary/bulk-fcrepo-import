@@ -10,7 +10,7 @@ import edu.yale.library.ladybird.engine.imports.ObjectMetadataWriter;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.FieldDefinition;
-import edu.yale.library.ladybird.entity.Monitor;
+import edu.yale.library.ladybird.entity.JobRequest;
 import edu.yale.library.ladybird.entity.ObjectAcid;
 import edu.yale.library.ladybird.entity.ObjectString;
 import edu.yale.library.ladybird.entity.User;
@@ -56,10 +56,10 @@ public class ObjectWriterIT {
         ExportBus exportBus = new ExportBus();
         exportBus.setAbstractModule(new TestModule());
 
-        Monitor monitor = new Monitor();
+        JobRequest jobRequest = new JobRequest();
         User user = new User();
         user.setUserId(0);
-        monitor.setUser(user);
+        jobRequest.setUser(user);
 
         //2. populate list of import rows
 
@@ -107,7 +107,7 @@ public class ObjectWriterIT {
 
         //3. Init Object:
         ImportEntityContext importEntityContext = new ImportEntityContext();
-        importEntityContext.setMonitor(monitor);
+        importEntityContext.setJobRequest(jobRequest);
         importEntityContext.setImportJobList(rowList);
 
         // Finally, test the method:

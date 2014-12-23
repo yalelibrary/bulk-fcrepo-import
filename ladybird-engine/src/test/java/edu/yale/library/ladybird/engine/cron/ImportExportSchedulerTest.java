@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.engine.cron;
 
 
 import com.dumbster.smtp.SimpleSmtpServer;
-import edu.yale.library.ladybird.entity.Monitor;
+import edu.yale.library.ladybird.entity.JobRequest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -72,9 +72,9 @@ public class ImportExportSchedulerTest {
         try {
             ExportJobFactory.setInstance(new DummyImportEngineJob());
             final ExportScheduler exportScheduler = new ExportScheduler();
-            final Monitor monitorUnit = new Monitor();
-            monitorUnit.setUser(null);
-            exportScheduler.scheduleJob(monitorUnit, getSimpleTrigger());
+            final JobRequest jobRequestUnit = new JobRequest();
+            jobRequestUnit.setUser(null);
+            exportScheduler.scheduleJob(jobRequestUnit, getSimpleTrigger());
             Thread.sleep(3000); //TODO
         } catch (Exception e) {
             fail("Exception= " + e);

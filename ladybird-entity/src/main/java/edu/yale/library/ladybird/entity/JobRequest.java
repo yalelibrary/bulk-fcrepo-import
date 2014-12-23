@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * Represents input-output folder pair and user.
  */
-public class Monitor implements java.io.Serializable {
+public class JobRequest implements java.io.Serializable {
 
     private Integer id;
     private String dirPath;
@@ -20,29 +20,29 @@ public class Monitor implements java.io.Serializable {
     @Deprecated
     private String notificationEmail; //todo remove
 
-    public Monitor() {
+    public JobRequest() {
 
     }
 
-    public Monitor(Integer id, String dirPath) {
+    public JobRequest(Integer id, String dirPath) {
         this.id = id;
         this.dirPath = dirPath;
     }
 
-    public Monitor(Integer id, String dirPath, String exportPath) {
+    public JobRequest(Integer id, String dirPath, String exportPath) {
         this.id = id;
         this.dirPath = dirPath;
         this.exportPath = exportPath;
     }
 
-    public Monitor(Integer id, String dirPath, String exportPath, User user) {
+    public JobRequest(Integer id, String dirPath, String exportPath, User user) {
         this.id = id;
         this.dirPath = dirPath;
         this.exportPath = exportPath;
         this.user = user;
     }
 
-    public Monitor(Integer id, String dirPath, String exportPath, User user, String notificationEmail) {
+    public JobRequest(Integer id, String dirPath, String exportPath, User user, String notificationEmail) {
         this.id = id;
         this.dirPath = dirPath;
         this.exportPath = exportPath;
@@ -50,7 +50,7 @@ public class Monitor implements java.io.Serializable {
         this.notificationEmail = notificationEmail;
     }
 
-    public Monitor(Integer id, String dirPath, String exportPath, User user, Date date, Project currentProject) {
+    public JobRequest(Integer id, String dirPath, String exportPath, User user, Date date, Project currentProject) {
         this.id = id;
         this.dirPath = dirPath;
         this.exportPath = exportPath;
@@ -133,7 +133,7 @@ public class Monitor implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return "Monitor{"
+        return "JobRequest{"
                 + "id=" + id
                 + ", dirPath='"
                 + dirPath + '\''
