@@ -85,7 +85,7 @@ public class ImageConversionJob implements Job {
         } catch (IOException e) {
             logger.error("Error executing job", e);
         }
-        logger.debug("Done image conversion job");
+        logger.debug("Done image conversion job for import job request={}", requestId);
     }
 
     //TODO

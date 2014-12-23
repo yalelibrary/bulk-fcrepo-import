@@ -145,8 +145,9 @@ public class MediaFunctionProcessor {
                 throw e;
             }
         }
-        logger.debug("[end] conversion complete in={}",
-                DurationFormatUtils.formatDurationHMS(System.currentTimeMillis() - timeInConversion));
+        logger.debug("[end] conversion complete in={} for={}",
+                DurationFormatUtils.formatDurationHMS(System.currentTimeMillis() - timeInConversion),
+                importId);
 
     }
 

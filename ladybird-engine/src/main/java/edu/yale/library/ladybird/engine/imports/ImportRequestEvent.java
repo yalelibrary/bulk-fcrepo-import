@@ -23,7 +23,7 @@ public final class ImportRequestEvent extends ImportEvent {
     @Override
     public String toString() {
         return "ImportRequestEvent{" + "spreadsheetFile=" + spreadsheet
-                + ", monitor=" + jobRequest + '}';
+                + ", jobRequest=" + jobRequest + '}';
     }
 
     public void setSpreadsheet(Spreadsheet spreadsheet) {

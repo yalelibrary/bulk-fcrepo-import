@@ -65,7 +65,7 @@ public class ObjectMetadataWriter {
                 }
 
                 final int fdid = FieldDefinition.fdidAsInt(f.getName());
-                logger.debug("Writing values for fdid={} for import={} ", fdid, importId);
+                logger.debug("Writing fdid={} for import={} ", fdid, importId);
 
                 final Map<Import.Column, Import.Column> columnMap
                         = importValue.getContentColumnValuesWithOIds(f);

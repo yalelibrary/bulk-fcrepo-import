@@ -79,7 +79,7 @@ public class FieldConstantUtil {
             //logger.trace("Could not convert");
         }
 
-        logger.error("Couldn't convert param={} to a FieldConstant", value);
+        logger.trace("Couldn't convert param={} to a FieldConstant", value);
         return null;
     }
 

@@ -51,7 +51,7 @@ public class ProgressEventListener implements Serializable {
                 steps.put(event.getJobId(), 1);
             }
 
-            logger.debug("Recording status event={}", event.getEventName() + jobStatus.toString());
+            logger.trace("Recording status event={}", event.getEventName() + jobStatus.toString());
             List<String> existingStatus = status.get(importId);
 
             if (existingStatus == null) {

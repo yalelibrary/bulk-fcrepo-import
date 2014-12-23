@@ -70,7 +70,7 @@ public class ExportReader {
         final List<Row> plainRows = new ImportWriterConverter().read(importId);
         logger.debug("Import job contents rows size={} for importId={}", plainRows.size(), importId);
 
-        logger.debug("Merging with OAI provider values");
+        logger.debug("Merging with OAI provider values for importId={}", importId);
         ExportReaderOaiMerger exportReaderOaiMerger = new ExportReaderOaiMerger();
         int oaiColumnIndex = getLocalIdentifierColumnNum(plainRows);
         List<Row> contentRows = exportReaderOaiMerger.merge(importId, oaiColumnIndex, ladybirdFieldConstants, plainRows);

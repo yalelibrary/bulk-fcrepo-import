@@ -135,10 +135,10 @@ public class JobRequest implements java.io.Serializable {
     public String toString() {
         return "JobRequest{"
                 + "id=" + id
-                + ", dirPath='"
-                + dirPath + '\''
+                //+ ", dirPath='"
+                //+ dirPath + '\''
                 + ", exportPath='" + exportPath + '\''
-                + ", user=" + user
+                + ", user=" + user.getUsername()
                 + ", date=" + date
                 + ", currentProject=" + currentProject
                 + ", notificationEmail='" + notificationEmail + '\''

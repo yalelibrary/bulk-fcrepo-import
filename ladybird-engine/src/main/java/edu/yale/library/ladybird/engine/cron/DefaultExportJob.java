@@ -81,7 +81,8 @@ public class DefaultExportJob implements Job, ExportJob {
             ExportRequestEvent exportRequestEvent = new ExportRequestEvent();
 
             //post init
-            post(new ProgressEvent(importEntityContext.getJobRequest().getId(),
+            final int jobRequestId = importEntityContext.getJobRequest().getId();
+            post(new ProgressEvent(jobRequestId,
                     exportRequestEvent, ProgressEventListener.JobStatus.INIT));
 
             /**
@@ -106,24 +107,26 @@ public class DefaultExportJob implements Job, ExportJob {
             updateImportJobsNotification(importEntityContext.getImportId(), importEntityContext.getJobRequest().getUser().getUserId());
 
             long elapsedInXls = System.currentTimeMillis() - timeInXlsWriting;
-            logger.debug("[end] Completed spreadsheet writing in={}",
-                    DurationFormatUtils.formatDuration(elapsedInXls, "HH:mm:ss:SS"));
+            logger.debug("[end] Completed spreadsheet writing in={} for={}",
+                    DurationFormatUtils.formatDuration(elapsedInXls, "HH:mm:ss:SS"),
+                    jobRequestId);
 
             /**
              * 2. Write to object metadata tables, post ExportCompleteEvent and progress
              */
-            logger.debug("Writing to object metadata tables");
+            logger.debug("Writing to object metadata tables for={}", importEntityContext.getImportId());
             ObjectMetadataWriter objectMetadataWriter = new ObjectMetadataWriter(); //TODO
             long timeInObjWriter = System.currentTimeMillis();
             objectMetadataWriter.write(importEntityContext);
             long elapsedInObjWriter = System.currentTimeMillis() - timeInObjWriter;
 
-            logger.debug("[end] Wrote to object metadata tables in={}", formatDurationHMS(elapsedInObjWriter));
+            logger.debug("[end] Wrote to object metadata tables in={} for={}", formatDurationHMS(elapsedInObjWriter),
+                    jobRequestId);
             final ExportCompleteEvent exportCompEvent = new ExportCompleteEventBuilder()
                     .setRowsProcessed(importEntityContext.getImportJobList().size()).setTime(elapsedInObjWriter).createExportCompleteEvent();
             exportCompEvent.setImportId(importEntityContext.getImportId());
-            post(new ProgressEvent(importEntityContext.getJobRequest().getId(), exportCompEvent, ProgressEventListener.JobStatus.DONE));
-            logger.debug("Notifying user registered.");
+            post(new ProgressEvent(jobRequestId, exportCompEvent, ProgressEventListener.JobStatus.DONE));
+            logger.trace("Notifying user for job={}.", jobRequestId);
             sendNotification(exportCompEvent, Collections.singletonList(importEntityContext.getJobRequest().getUser()));
             logger.trace("Added export event to notification queue.");
         } catch (IOException e) {
@@ -133,7 +136,7 @@ public class DefaultExportJob implements Job, ExportJob {
     }
 
     private void updateImportJobs(final int jobId, final String exportFilePath) {
-        logger.debug("Updating import_jobs table with jobId={} exportFilePath={}", jobId, exportFilePath);
+        logger.debug("Updating import_jobs table for jobId={}", jobId);
         try {
             ImportJob importJob = importJobDAO.findByJobId(jobId).get(0); //TODO error if more than one job found
             importJob.setExportJobFile(exportFilePath);
@@ -145,14 +148,14 @@ public class DefaultExportJob implements Job, ExportJob {
     }
 
     private void updateImportJobsNotification(final int jobId, final int userId) {
-        logger.debug("Updating import jobs notifications with jobId={} userId={}", jobId, userId);
+        logger.trace("Updating import job notifications for jobId={}", jobId);
         try {
             ImportJobNotifications notice = new ImportJobNotifications();
             notice.setImportJobId(jobId);
             notice.setDateCreated(new Date());
             notice.setUserId(userId);
             notificationsDAO.save(notice);
-            logger.debug("Saved entity={}", notice);
+            logger.trace("Saved entity={}", notice);
         } catch (Exception e) {
             logger.error("Error updating import job notification", e); //TODO throw exception
         }
@@ -213,7 +216,7 @@ public class DefaultExportJob implements Job, ExportJob {
         List<Import.Row> newList = new ArrayList<>();
 
         try {
-            logger.debug("Finding custom fields for user={} for projectId={}", userId, projectId);
+            logger.trace("Finding custom fields for job={}", jobRequest.getId());
 
             Import.Row exheadRow = fullList.get(0); // get exhead (show probably use ImportEntityValue somewhere)
 

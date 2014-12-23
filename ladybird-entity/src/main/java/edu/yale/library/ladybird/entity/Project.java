@@ -140,17 +140,6 @@ public class Project implements java.io.Serializable {
         return "Project{"
                 + "projectId=" + projectId
                 + ", label='" + label + '\''
-                + ", date=" + date
-                + ", userId=" + userId
-                + ", location='" + location + '\''
-                + ", url='" + url + '\''
-                + ", add1='" + add1 + '\''
-                + ", add2='" + add2 + '\''
-                + ", city='" + city + '\''
-                + ", state='" + state + '\''
-                + ", zip='" + zip + '\''
-                + ", phone='" + phone + '\''
-                + ", user='" + creator.toString() + '\''
                 + '}';
     }
 

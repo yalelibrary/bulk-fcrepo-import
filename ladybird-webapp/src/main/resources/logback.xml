@@ -3,7 +3,7 @@
 <configuration>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d | %p | %logger{15} | %M >>  %m%n</pattern>
+            <pattern>%d | %p | %logger{0} | %M >>  %m%n</pattern>
         </encoder>
     </appender>
 

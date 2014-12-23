@@ -65,7 +65,8 @@ public final class ImportReader {
                     FieldConstant f = FieldConstantUtil.getFieldConstant(String.valueOf(SpreadsheetUtil.getCellValue(cell)));
                     valueMap.add(f);
 
-                    final Import.Column<String> column = new Import().new Column<>(f, String.valueOf(SpreadsheetUtil.getCellValue(cell)));
+                    final Import.Column<String> column
+                            = new Import().new Column<>(f, String.valueOf(SpreadsheetUtil.getCellValue(cell)));
                     headerRow.getColumns().add(column);
                 } catch (UnknownFieldConstantException unknownFunction) {
                     if (this.readMode == ReadMode.HALT) {
@@ -75,11 +76,13 @@ public final class ImportReader {
                         importReaderValidationException.initCause(unknownFunction);
                         throw importReaderValidationException;
                     }
-                    logger.debug("Unknown exhead={}", unknownFunction.getMessage()); //means probably fdid has not been added in the properties
+                    logger.debug("Unknown exhead={}", unknownFunction.getMessage());
+                    //means probably fdid has not been added in the properties
 
                     valueMap.add(FunctionConstants.UNK); //TODO shouldn't be used to represent both unknown func and fdid
 
-                    logger.debug("Adding UNK in 1st row for this unrecognized FieldConstant"); //added to keep the exhead and contents col. the same.
+                    //logger.trace("Adding UNK in 1st row for this unrecognized FieldConstant");
+                    // added to keep the exhead and contents col. the same.
 
                     final Import.Column<String> column = new Import()
                             .new Column<>(FunctionConstants.UNK, String.valueOf(SpreadsheetUtil.getCellValue(cell)));
