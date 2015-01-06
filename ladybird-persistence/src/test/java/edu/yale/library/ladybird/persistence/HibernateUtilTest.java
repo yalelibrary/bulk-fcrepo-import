@@ -13,24 +13,6 @@ public class HibernateUtilTest {
     private static final int IDX = 3;
 
     /**
-     * Test policy
-     */
-    @Test
-    public void configRulesShouldReturnApplicationRuleValueWhenInvoked() {
-        assert (ApplicationProperties.RUN_WITH_INCOMPLETE_CONFIG
-                == HibernateUtil.DBRules.proceedWith(HibernateUtil.DBConfigState.INCOMPLETE));
-    }
-
-    /**
-     * Tests policy
-     */
-    @Test
-    public void dbConfigStateShouldReturnApplicationRuleValueWhenInvoked() {
-        assert (ApplicationProperties.RUN_WITH_INCOMPLETE_CONFIG
-                == HibernateUtil.DBConfigState.INCOMPLETE.getConfig());
-    }
-
-    /**
      * Tests whether the relevant .properties file contains the right identifier for kicking off embedded DB.
      * The mechanism should return the same default file identifer from .properties as coded in
      * edu.yale.library.ladybird.kernel.ApplicationProperties.

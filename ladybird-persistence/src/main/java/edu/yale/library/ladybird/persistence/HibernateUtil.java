@@ -86,13 +86,7 @@ public final class HibernateUtil {
                     return ApplicationProperties.CUSTOM_HIBERNATE_FILE;
                 }
             } catch (Exception e) {
-                if (DBRules.proceedWith(DBConfigState.INCOMPLETE)) {
-                    logger.debug("Exception reading property " + "(DB config invalid or incomplete):", e);
-                    logger.debug("Recovering by: using default file " + ApplicationProperties.DEFAULT_HIBERNATE_FILE);
-                    return ApplicationProperties.DEFAULT_HIBERNATE_FILE;
-                } else {
-                    throw new Exception("DB config invalid or incomplete. ", e);
-                }
+                throw new Exception("DB config invalid or incomplete. ", e);
             }
         }
 
@@ -124,24 +118,6 @@ public final class HibernateUtil {
         public ConfigReader() {
         }
 
-        public ConfigReader(HibernateUtil h) {
-        }
-    }
-
-    public enum DBConfigState {
-        INCOMPLETE {
-            public boolean getConfig() {
-                return ApplicationProperties.runWithIncompleteDBConfig();
-            }
-        };
-
-        public abstract boolean getConfig();
-    }
-
-    public static class DBRules {
-        public static boolean proceedWith(final DBConfigState configState) {
-            return configState.getConfig();
-        }
     }
 
 }
