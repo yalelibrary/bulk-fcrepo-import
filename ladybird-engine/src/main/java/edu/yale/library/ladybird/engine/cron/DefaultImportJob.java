@@ -53,7 +53,7 @@ public class DefaultImportJob implements Job, ImportJob {
         final ImportRequestEvent importRequestedEvent = ImportEngineQueue.getJob();
         final Spreadsheet spreadsheet = importRequestedEvent.getSpreadsheet();
 
-        logger.debug("Starting importJobRequestId={} corresponding to file file={}", importRequestedEvent.getJobRequest().getId(), spreadsheet);
+        logger.debug("Starting importJobRequestId={} corresponding to file={}", importRequestedEvent.getJobRequest().getId(), spreadsheet);
 
         try {
             final int userId = importRequestedEvent.getJobRequest().getUser().getUserId();

@@ -145,7 +145,7 @@ public class MediaFunctionProcessor {
                 throw e;
             }
         }
-        logger.debug("[end] conversion complete in={} for={}",
+        logger.debug("[end] conversion complete in={} for importId={}",
                 DurationFormatUtils.formatDurationHMS(System.currentTimeMillis() - timeInConversion),
                 importId);
 
@@ -156,11 +156,11 @@ public class MediaFunctionProcessor {
      *
      * @param fileName filename
      * @param from  ext to convert to
-     * @param toExt    ext to convert to
      * @param oid      oid
      */
     private byte[] convertImage(final String fileName, final String outputFilePath, final MediaFormat from, final int oid)
             throws IOException {
+        //TODO note conversion errors will be in trace log
         // 1. convert
         final String inputFilePath = pathPrefix + fileName;
         try {
@@ -189,17 +189,18 @@ public class MediaFunctionProcessor {
         try {
             thumbnail = getBytes(thumbnailPath);
 
+            //TODO revise this. If image cannot be found, should it try again? or alert the user in some way?
             if (thumbnail == null || thumbnail.length == 0) {
-                logger.error("Null bytes for thumbnail for oid={}", oid);
+                logger.debug("Null thumbnail={}", oid);
+                thumbnail = getBytes(ImageMagickProcessor.getBlankImagePath()); //FIXME do once
             }
-
         } catch (IOException e) {
             logger.error("Thumbnail image not found for oid={}", oid, e); //this means a conversion error
             try {
-                thumbnail = getBytes(ImageMagickProcessor.getBlankImagePath());
+                thumbnail = getBytes(ImageMagickProcessor.getBlankImagePath()); //FIXME do once
 
                 if (thumbnail == null || thumbnail.length == 0) {
-                    throw new IOException("No thumbnail for oid=" + oid);
+                    throw new IOException("No default thumbnail either for oid=" + oid);
                 }
             } catch (IOException io) {
                 logger.error("Error setting default thumbnail image for oid={}", oid, io);
@@ -211,7 +212,7 @@ public class MediaFunctionProcessor {
     }
 
     /**
-     * Update dao with blank image found on project folder. Skip ImageMagick image conversion.
+     * Update DAO with blank image found on project folder. Skip ImageMagick image conversion.
      *
      * @param importValue import EntityValue
      * @throws Exception if any single conversion fails
