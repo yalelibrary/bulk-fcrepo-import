@@ -8,9 +8,11 @@ import java.sql.SQLException;
 /**
  * A facade to derby.
  */
-public final class EmbeddedDatabaseUtil {
-    private static Logger logger = LoggerFactory.getLogger(EmbeddedDatabaseUtil.class);
-    private EmbeddedDatabaseUtil() {
+public final class EmbeddedDBUtil {
+
+    private static Logger logger = LoggerFactory.getLogger(EmbeddedDBUtil.class);
+
+    private EmbeddedDBUtil() {
     }
 
     public static void start() {
@@ -31,7 +33,7 @@ public final class EmbeddedDatabaseUtil {
     }
 
     public static void init() {
-        new DerbySchemaUtil().init(); //TODO
+        new DerbySchemaUtil().init();
     }
 
 }

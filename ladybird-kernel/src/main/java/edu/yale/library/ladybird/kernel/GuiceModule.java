@@ -15,7 +15,7 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.UserEventHibernateDAO
 import java.util.Collections;
 import java.util.List;
 
-public class JobModule implements Module {
+public class GuiceModule implements Module {
 
     public void configure(Binder binder) {
         binder.bind(AbstractNotificationJob.class).to(NotificationJob.class);

@@ -26,9 +26,6 @@ public class ApplicationProperties {
     public static final String NO_IMAGE_FOUND_PATH = "no_image_found_path";
     public static final String WELCOME_PAGE_id = "welcome_page";
 
-    /**
-     *
-     */
     public static final class CONFIG_STATE {
 
         private static final Logger logger = LoggerFactory.getLogger(CONFIG_STATE.class);

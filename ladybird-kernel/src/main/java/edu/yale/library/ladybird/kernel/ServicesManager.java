@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.kernel;
 
-import edu.yale.library.ladybird.kernel.db.EmbeddedDatabaseUtil;
+import edu.yale.library.ladybird.kernel.db.EmbeddedDBUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,22 +11,22 @@ public final class ServicesManager {
 
     public void initDB() {
         startDB();
-        EmbeddedDatabaseUtil.init();
+        EmbeddedDBUtil.init();
     }
 
     public void startDB() {
-        if (EmbeddedDatabaseUtil.isDatabaseRunning()) {
-            throw new AppConfigException(ApplicationProperties.ALREADY_RUNNING);
+        if (EmbeddedDBUtil.isDatabaseRunning()) {
+            throw new EmbeddedDBException(ApplicationProperties.ALREADY_RUNNING);
         }
-        logger.debug("Trying to start and init DB");
-        EmbeddedDatabaseUtil.start();
+        logger.debug("Trying to start and init embedded DB");
+        EmbeddedDBUtil.start();
     }
 
     public void stopDB() throws SQLException {
-        if (!EmbeddedDatabaseUtil.isDatabaseRunning()) {
-            throw new AppConfigException(ApplicationProperties.ALREADY_STOPPED);
+        if (!EmbeddedDBUtil.isDatabaseRunning()) {
+            throw new EmbeddedDBException(ApplicationProperties.ALREADY_STOPPED);
         }
-        logger.debug("Trying to stop DB");
-        EmbeddedDatabaseUtil.stop();
+        logger.debug("Trying to stop embedded DB");
+        EmbeddedDBUtil.stop();
     }
 }

@@ -10,8 +10,10 @@ import java.util.concurrent.ArrayBlockingQueue;
  * TODO temp. A memory queue.
  */
 public class NotificationEventQueue {
+
     public static final int CAPACITY = 50;
-    static Queue<NotificationItem> notificationEventQueue = new ArrayBlockingQueue<>(CAPACITY);
+
+    private static Queue<NotificationItem> notificationEventQueue = new ArrayBlockingQueue<>(CAPACITY);
 
     public static boolean addEvent(NotificationItem e) {
         return notificationEventQueue.add(e);

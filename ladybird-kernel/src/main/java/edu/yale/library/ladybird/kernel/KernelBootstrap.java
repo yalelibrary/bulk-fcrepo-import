@@ -49,7 +49,7 @@ public class KernelBootstrap {
 
             //bootstrap notification:
             final KernelBootstrap kernelContext = new KernelBootstrap();
-            kernelContext.setAbstractModule(new JobModule());
+            kernelContext.setAbstractModule(new GuiceModule());
             initNotificationScheduler();
 
             if (eventBus == null) {
@@ -86,7 +86,7 @@ public class KernelBootstrap {
     public static void initNotificationScheduler() throws Exception {
         final Injector injector = Guice.createInjector(getJobModule());
         NotificationScheduler notificationScheduler = injector.getInstance(NotificationScheduler.class);
-        notificationScheduler.scheduleJob("notification", "trigger");
+        notificationScheduler.scheduleJob("notification");
     }
 
     /**

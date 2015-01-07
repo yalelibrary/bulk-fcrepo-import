@@ -22,15 +22,8 @@ public final class NotificationScheduler {
         this.notificationJob = notificationJob;
     }
 
-    /**
-     * Schedules and starts the notification job.
-     *
-     * @param jobName
-     * @param triggerName
-     * @throws Exception
-     */
-    public void scheduleJob(final String jobName, final String triggerName)  throws Exception {
-        logger.debug("Scheduling job= {}", jobName);
+    public void scheduleJob(final String jobName)  throws Exception {
+        logger.debug("Scheduling job={}", jobName);
         Scheduler scheduler = new StdSchedulerFactory().getScheduler();
         scheduler.start();
         doSchedule(jobName, getNotificationCronSchedule());
@@ -39,12 +32,6 @@ public final class NotificationScheduler {
         //defaultJobsManager.addJob(jobName);
     }
 
-    /**
-     * Schedule job
-     * @param jobName
-     * @param cronExpression
-     * @return
-     */
     public void doSchedule(final String jobName, final String cronExpression) {
         KernelBootstrap.scheduleGenericJob(notificationJob, jobName, cronExpression);
     }

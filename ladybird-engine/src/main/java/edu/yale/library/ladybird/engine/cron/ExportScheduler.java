@@ -48,7 +48,7 @@ public class ExportScheduler {
         } catch (SchedulerException e) {
             logger.error("Error", e);
             throw new CronSchedulingException(e);
-        } catch (Exception e){
+        } catch (Exception e) {
             logger.error("Error", e);
         }
     }

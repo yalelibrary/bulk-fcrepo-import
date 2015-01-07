@@ -6,7 +6,7 @@ import edu.yale.library.ladybird.persistence.dao.UserEventDAO;
 
 /**
  *  Used for testing
- *  @see edu.yale.library.ladybird.kernel.JobModule
+ *  @see edu.yale.library.ladybird.kernel.GuiceModule
  */
 public class TestJobModule  implements Module {
 

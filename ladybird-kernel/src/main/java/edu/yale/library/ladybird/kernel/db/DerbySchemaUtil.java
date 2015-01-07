@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.kernel.db;
 
 
-import edu.yale.library.ladybird.kernel.AppConfigException;
+import edu.yale.library.ladybird.kernel.EmbeddedDBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +23,7 @@ public final class DerbySchemaUtil {
     /**
      * Init schema
      *
-     * @throws edu.yale.library.ladybird.kernel.AppConfigException
+     * @throws edu.yale.library.ladybird.kernel.EmbeddedDBException
      */
     protected void init() {
         try {
@@ -39,7 +39,7 @@ public final class DerbySchemaUtil {
             final Map<String, String> m = schemaBean.getSchema();
 
             if (m == null || 0 == m.size()) {
-                throw new AppConfigException("Schema empty");
+                throw new EmbeddedDBException("Schema empty");
             }
             Iterator it = m.entrySet().iterator();
             while (it.hasNext()) {
@@ -54,7 +54,7 @@ public final class DerbySchemaUtil {
             final Map<String, String> fdidSchema = schemaBean.getFdidSchema();
 
             if (fdidSchema == null || 0 == m.size()) {
-                throw new AppConfigException("Schema empty");
+                throw new EmbeddedDBException("Schema empty");
             }
             Iterator it1 = fdidSchema.entrySet().iterator();
 
@@ -66,14 +66,14 @@ public final class DerbySchemaUtil {
             conn.commit();
             logger.debug("Init fdids(s)");
         } catch (SQLException e) {
-            throw new AppConfigException(e);
+            throw new EmbeddedDBException(e);
         }
     }
 
     /**
      * Remove schema
      *
-     * @throws edu.yale.library.ladybird.kernel.AppConfigException
+     * @throws edu.yale.library.ladybird.kernel.EmbeddedDBException
      */
     protected void killSchema() {
         try {
@@ -88,7 +88,7 @@ public final class DerbySchemaUtil {
             final Map<String, String> m = schemaBean.getKillSchema();
 
             if (m == null || 0 == m.size()) {
-                throw new AppConfigException("Schema empty");
+                throw new EmbeddedDBException("Schema empty");
             }
             Iterator it = m.entrySet().iterator();
             while (it.hasNext()) {
@@ -98,7 +98,7 @@ public final class DerbySchemaUtil {
             }
             conn.commit();
         } catch (SQLException e) {
-            throw new AppConfigException(e);
+            throw new EmbeddedDBException(e);
         }
     }
 

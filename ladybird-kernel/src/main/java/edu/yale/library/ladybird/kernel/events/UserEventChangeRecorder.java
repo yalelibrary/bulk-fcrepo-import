@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 
 public class UserEventChangeRecorder {
+
     private final Logger logger = LoggerFactory.getLogger(UserEventChangeRecorder.class);
 
     @Inject
@@ -33,7 +34,6 @@ public class UserEventChangeRecorder {
         userEvent.setUserId(event.getPrincipal());
         userEvent.setValue(event.getValue());
 
-        //logger.debug("Saving UserGeneratedEvent={} as UserGeneratedEvent={}", event.toString(), userEvent.toString());
         userEventDAO.save(userEvent);
     }
 }

@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.kernel.db;
 
-import edu.yale.library.ladybird.kernel.AppConfigException;
+import edu.yale.library.ladybird.kernel.EmbeddedDBException;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,19 +54,19 @@ public final class DerbyManager {
      * Start Db
      *
      * @return
-     * @throws edu.yale.library.ladybird.kernel.AppConfigException
+     * @throws edu.yale.library.ladybird.kernel.EmbeddedDBException
      */
     protected synchronized void start() {
         synchronized (RUNNING) {
             if (RUNNING) {
-                throw new AppConfigException(ApplicationProperties.ALREADY_RUNNING);
+                throw new EmbeddedDBException(ApplicationProperties.ALREADY_RUNNING);
             }
             try {
                 doStart();
                 logger.debug("Started driver");
                 RUNNING = true;
-            } catch (AppConfigException e) {
-                throw new AppConfigException(e);
+            } catch (EmbeddedDBException e) {
+                throw new EmbeddedDBException(e);
             }
         }
     }
@@ -75,7 +75,7 @@ public final class DerbyManager {
         try {
             loadDriver();
         } catch (Exception e) {
-            throw new AppConfigException(e);
+            throw new EmbeddedDBException(e);
         }
     }
 

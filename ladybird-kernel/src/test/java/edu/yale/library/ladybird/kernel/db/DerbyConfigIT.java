@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.kernel.db;
 
-import edu.yale.library.ladybird.kernel.AppConfigException;
+import edu.yale.library.ladybird.kernel.EmbeddedDBException;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
 import edu.yale.library.ladybird.kernel.ServicesManager;
 import org.junit.After;
@@ -38,7 +38,7 @@ public class DerbyConfigIT {
         try {
             servicesManager.startDB();
             fail("Failed. Tried to re-init driver.");
-        } catch (final AppConfigException e) {
+        } catch (final EmbeddedDBException e) {
             if (!e.getMessage().equalsIgnoreCase(ApplicationProperties.ALREADY_RUNNING)) {
                 logger.error("Error", e);
                 fail("Failed. Tried to re-init driver.");

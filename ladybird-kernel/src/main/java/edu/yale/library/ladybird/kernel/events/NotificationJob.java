@@ -16,6 +16,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  * (remove the job from the queue,but fail sending it).
  */
 public class NotificationJob extends AbstractNotificationJob implements Job {
+
     private final Logger logger = getLogger(this.getClass());
 
     private NotificationHandler notificationHandler;

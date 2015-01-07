@@ -3,7 +3,7 @@ package edu.yale.library.ladybird.web.http;
 
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.entity.UserBuilder;
-import edu.yale.library.ladybird.kernel.JobModule;
+import edu.yale.library.ladybird.kernel.GuiceModule;
 import edu.yale.library.ladybird.kernel.KernelBootstrap;
 import edu.yale.library.ladybird.kernel.events.UserGeneratedEvent;
 import edu.yale.library.ladybird.persistence.dao.UserDAO;
@@ -69,7 +69,7 @@ public class UserHttpService {
             userDAO.save(user);
             //Fire event:
             KernelBootstrap kernelBootstrap = new KernelBootstrap();
-            kernelBootstrap.setAbstractModule(new JobModule());
+            kernelBootstrap.setAbstractModule(new GuiceModule());
             KernelBootstrap.postEvent(new UserGeneratedEvent() {
                 @Override
                 public String getPrincipal() {
