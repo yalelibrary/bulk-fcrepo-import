@@ -22,7 +22,6 @@ public class ObjectAcidHibernateDAO extends GenericHibernateDAO<ObjectAcid, Inte
             if (s != null) {
                 s.close();
             }
-
         }
     }
 
@@ -39,7 +38,6 @@ public class ObjectAcidHibernateDAO extends GenericHibernateDAO<ObjectAcid, Inte
             if (s != null) {
                 s.close();
             }
-
         }
     }
 
@@ -56,7 +54,6 @@ public class ObjectAcidHibernateDAO extends GenericHibernateDAO<ObjectAcid, Inte
             if (s != null) {
                 s.close();
             }
-
         }
     }
 

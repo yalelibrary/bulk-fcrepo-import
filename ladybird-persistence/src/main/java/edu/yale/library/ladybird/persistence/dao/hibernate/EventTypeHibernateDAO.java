@@ -1,9 +1,7 @@
 package edu.yale.library.ladybird.persistence.dao.hibernate;
 
 import edu.yale.library.ladybird.entity.EventType;
-import edu.yale.library.ladybird.entity.ObjectEvent;
 import edu.yale.library.ladybird.persistence.dao.EventTypeDAO;
-import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;

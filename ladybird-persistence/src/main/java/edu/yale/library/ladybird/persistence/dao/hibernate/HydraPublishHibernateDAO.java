@@ -22,8 +22,6 @@ public class HydraPublishHibernateDAO extends GenericHibernateDAO<HydraPublish, 
             if (s != null) {
                 s.close();
             }
-
-
         }
     }
 

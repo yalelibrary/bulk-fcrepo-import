@@ -14,7 +14,6 @@ public class ObjectAcidVersionHibernateDAO extends GenericHibernateDAO<ObjectAci
     public ObjectAcidVersion findByOidAndFdidAndVersion(final int o, final int fdid, final int version) {
         final Session s = getSession();
 
-
         try {
             final Query q = s.createQuery("from edu.yale.library.ladybird.entity.ObjectAcidVersion where objectId = :param1 and fdid =:param2 and versionId =:param3");
             q.setParameter("param1", o);

@@ -348,11 +348,10 @@ public abstract class GenericHibernateDAO<T, ID extends Serializable>
             s.flush();
             tx.commit();
             logger.debug("Deleted entries num={}", num);
-        } catch (HibernateException f){
+        } catch (HibernateException f) {
             logger.error("Error deleting all", f);
             throw f;
-        }
-        finally {
+        } finally {
             if (s != null) {
                 s.close();
             } else {

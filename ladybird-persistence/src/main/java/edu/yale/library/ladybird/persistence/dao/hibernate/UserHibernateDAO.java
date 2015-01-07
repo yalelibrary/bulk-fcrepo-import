@@ -20,14 +20,15 @@ public class UserHibernateDAO extends GenericHibernateDAO<User, Integer> impleme
         Session s = getSession();
         final Query q = s.createQuery("from User where email = :param");
         q.setParameter("param", email);
-        List l = q.list();
+        List list = q.list();
 
         try {
             s.close();
         } catch (HibernateException e) {
+            logger.error("Error closing session", e);
         }
 
-        return l;
+        return list;
     }
 
     @Override
@@ -44,6 +45,7 @@ public class UserHibernateDAO extends GenericHibernateDAO<User, Integer> impleme
                 try {
                     s.close();
                 } catch (HibernateException e) {
+                    logger.error("Error closing session", e);
                 }
             }
         }
@@ -64,6 +66,7 @@ public class UserHibernateDAO extends GenericHibernateDAO<User, Integer> impleme
                 try {
                     s.close();
                 } catch (HibernateException e) {
+                    logger.error("Error closing session", e);
                 }
             }
         }

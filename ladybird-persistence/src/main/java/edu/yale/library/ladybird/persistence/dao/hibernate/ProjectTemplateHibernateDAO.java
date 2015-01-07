@@ -48,6 +48,9 @@ public class ProjectTemplateHibernateDAO extends GenericHibernateDAO<ProjectTemp
             q.setParameter("param1", label);
             return (q.list().isEmpty()) ? null : (ProjectTemplate) q.list().get(0);
         } finally {
+            if (s != null) {
+                s.close();
+            }
 
         }
     }
