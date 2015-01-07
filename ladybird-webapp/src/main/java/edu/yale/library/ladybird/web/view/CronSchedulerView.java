@@ -5,7 +5,7 @@ import edu.yale.library.ladybird.engine.cron.ExportScheduler;
 import edu.yale.library.ladybird.engine.cron.ImageConversionScheduler;
 import edu.yale.library.ladybird.engine.cron.ImportScheduler;
 import edu.yale.library.ladybird.entity.CronBean;
-import edu.yale.library.ladybird.kernel.cron.JobsManager;
+import edu.yale.library.ladybird.kernel.cron.ScheduledJobs;
 import org.quartz.JobDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ public class CronSchedulerView extends AbstractView {
     private ImageConversionScheduler imageConversionScheduler;
 
     @Inject
-    JobsManager jobsManager;
+    ScheduledJobs scheduledJobs;
 
     @PostConstruct
     public void init() {
@@ -87,7 +87,7 @@ public class CronSchedulerView extends AbstractView {
 
     //TODO robust mechanism to ensure that an import/export pair exists
     public boolean isCronScheduled() {
-        final List<JobDetail> jobs = jobsManager.getJobs();
+        final List<JobDetail> jobs = scheduledJobs.getJobs();
         if (!jobs.toString().contains(ImportScheduler.getDefaultGroup()) || !jobs.toString().contains(ExportScheduler.getDefaultExportJobId())) {
             return false;
         }
@@ -96,7 +96,7 @@ public class CronSchedulerView extends AbstractView {
 
     //TODO robust mechanism to ensure that an import/export pair exists
     public boolean isImportCronScheduled() {
-        final List<JobDetail> jobs = jobsManager.getJobs();
+        final List<JobDetail> jobs = scheduledJobs.getJobs();
         if (!jobs.toString().contains(ImportScheduler.getDefaultGroup())) {
             return false;
         }
@@ -105,7 +105,7 @@ public class CronSchedulerView extends AbstractView {
 
     //TODO robust mechanism to ensure that an import/export pair exists
     public boolean isExportCronScheduled() {
-        final List<JobDetail> jobs = jobsManager.getJobs();
+        final List<JobDetail> jobs = scheduledJobs.getJobs();
         if (!jobs.toString().contains(ExportScheduler.getDefaultExportJobId())) {
             return false;
         }
@@ -114,7 +114,7 @@ public class CronSchedulerView extends AbstractView {
 
     //TODO robust mechanism to ensure that an import/export pair exists
     public boolean isExportFileMailerCronScheduled() {
-        final List<JobDetail> jobs = jobsManager.getJobs();
+        final List<JobDetail> jobs = scheduledJobs.getJobs();
         if (!jobs.toString().contains(ExportFileMailerScheduler.getDefaultJobId())) {
             return false;
         }
@@ -122,7 +122,7 @@ public class CronSchedulerView extends AbstractView {
     }
 
     public boolean isImageConversionCronScheduled() {
-        final List<JobDetail> jobs = jobsManager.getJobs();
+        final List<JobDetail> jobs = scheduledJobs.getJobs();
         if (!jobs.toString().contains(ImageConversionScheduler.getDefaultJobId())) {
             return false;
         }

@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.engine.cron;
 
 import edu.yale.library.ladybird.engine.CronSchedulingException;
 import edu.yale.library.ladybird.entity.JobRequest;
-import edu.yale.library.ladybird.kernel.cron.DefaultJobsManager;
+import edu.yale.library.ladybird.kernel.cron.ScheduledJobsList;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
@@ -43,7 +43,7 @@ public class ExportScheduler {
                     .build();
             doScheduleJob(job, trigger);
 
-            DefaultJobsManager defaultJobsManager = new DefaultJobsManager();
+            ScheduledJobsList defaultJobsManager = new ScheduledJobsList();
             defaultJobsManager.addJob(job);
         } catch (SchedulerException e) {
             logger.error("Error", e);
@@ -62,7 +62,7 @@ public class ExportScheduler {
             job = getJob(DEFAULT_EXPORT_JOB_ID, ExportJobFactory.getInstance().getClass(), jobRequestItem);
             doScheduleJob(job, trigger);
 
-            DefaultJobsManager defaultJobsManager = new DefaultJobsManager();
+            ScheduledJobsList defaultJobsManager = new ScheduledJobsList();
             defaultJobsManager.addJob(job);
         } catch (SchedulerException e) {
             logger.error("Error", e);

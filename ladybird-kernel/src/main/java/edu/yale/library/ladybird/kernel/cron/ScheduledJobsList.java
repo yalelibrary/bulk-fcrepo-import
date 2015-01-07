@@ -1,18 +1,14 @@
 package edu.yale.library.ladybird.kernel.cron;
 
 import org.quartz.JobDetail;
-import org.slf4j.Logger;
 
 import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
 
 @Named
-public class DefaultJobsManager implements JobsManager {
-    private final Logger logger = getLogger(this.getClass());
+public class ScheduledJobsList implements ScheduledJobs {
 
     static List<JobDetail> jobs = new ArrayList<>(); //TODO
 

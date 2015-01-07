@@ -3,8 +3,8 @@ package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.engine.cron.ExportScheduler;
 import edu.yale.library.ladybird.engine.cron.ImportScheduler;
-import edu.yale.library.ladybird.kernel.cron.DefaultJobsManager;
-import edu.yale.library.ladybird.kernel.cron.JobsManager;
+import edu.yale.library.ladybird.kernel.cron.ScheduledJobsList;
+import edu.yale.library.ladybird.kernel.cron.ScheduledJobs;
 import org.quartz.JobDetail;
 import org.quartz.impl.JobDetailImpl;
 import org.slf4j.Logger;
@@ -40,8 +40,8 @@ public class CronView extends AbstractView {
     @PostConstruct
     public void init() {
         initFields();
-        final JobsManager jobsManager = new DefaultJobsManager(); //TODO
-        jobs = jobsManager.getJobs();
+        final ScheduledJobs scheduledJobs = new ScheduledJobsList(); //TODO
+        jobs = scheduledJobs.getJobs();
     }
 
     public List<JobDetail> getJobs() {

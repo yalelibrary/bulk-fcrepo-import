@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.engine.cron;
 
 import edu.yale.library.ladybird.engine.CronSchedulingException;
-import edu.yale.library.ladybird.kernel.cron.DefaultJobsManager;
+import edu.yale.library.ladybird.kernel.cron.ScheduledJobsList;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
@@ -45,7 +45,7 @@ public class ExportFileMailerScheduler {
             throw new CronSchedulingException(e);
         }
 
-        DefaultJobsManager defaultJobsManager = new DefaultJobsManager();
+        ScheduledJobsList defaultJobsManager = new ScheduledJobsList();
         defaultJobsManager.addJob(job);
     }
 

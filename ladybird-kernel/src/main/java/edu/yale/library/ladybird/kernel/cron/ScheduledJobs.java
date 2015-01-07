@@ -4,8 +4,11 @@ import org.quartz.JobDetail;
 
 import java.util.List;
 
-
-public interface JobsManager {
+/**
+ * Keeps track of which ron jobs are scheduled.
+ * Used for un- and re-scheduling
+ */
+public interface ScheduledJobs {
 
     List<JobDetail> getJobs();
 

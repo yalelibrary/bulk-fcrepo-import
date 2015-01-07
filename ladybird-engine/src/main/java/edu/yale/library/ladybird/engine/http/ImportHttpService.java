@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.engine.http;
 
 
-import edu.yale.library.ladybird.kernel.cron.JobsManager;
+import edu.yale.library.ladybird.kernel.cron.ScheduledJobs;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
@@ -21,11 +21,11 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ImportHttpService {
     private final Logger logger = getLogger(this.getClass());
 
-    JobsManager jobsManager;
+    ScheduledJobs scheduledJobs;
 
     @Inject
-    public ImportHttpService(JobsManager jobsManager) {
-        this.jobsManager = jobsManager;
+    public ImportHttpService(ScheduledJobs scheduledJobs) {
+        this.scheduledJobs = scheduledJobs;
     }
 
     @GET
@@ -36,10 +36,10 @@ public class ImportHttpService {
 
     public String getAllJobs() {
 
-        if (jobsManager == null) {
+        if (scheduledJobs == null) {
             logger.error("Jobs Manager null");
         }
 
-        return jobsManager.getJobs().toString();
+        return scheduledJobs.getJobs().toString();
     }
 }

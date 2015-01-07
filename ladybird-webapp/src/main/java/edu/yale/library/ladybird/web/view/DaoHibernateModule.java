@@ -8,8 +8,8 @@ import edu.yale.library.ladybird.engine.cron.ExportScheduler;
 import edu.yale.library.ladybird.engine.cron.ImportScheduler;
 import edu.yale.library.ladybird.entity.Project;
 import edu.yale.library.ladybird.entity.User;
-import edu.yale.library.ladybird.kernel.cron.DefaultJobsManager;
-import edu.yale.library.ladybird.kernel.cron.JobsManager;
+import edu.yale.library.ladybird.kernel.cron.ScheduledJobsList;
+import edu.yale.library.ladybird.kernel.cron.ScheduledJobs;
 import edu.yale.library.ladybird.persistence.dao.AccessconditionProjectDAO;
 import edu.yale.library.ladybird.persistence.dao.AuthorityControlDAO;
 import edu.yale.library.ladybird.persistence.dao.AuthorityControlVersionDAO;
@@ -153,7 +153,7 @@ public class DaoHibernateModule extends AbstractModule {
         bind(ExportFileMailerScheduler.class);
         bind(ProgressEventListener.class);
 
-        bind(JobsManager.class).to(DefaultJobsManager.class);
+        bind(ScheduledJobs.class).to(ScheduledJobsList.class);
 
         bind(AuthUtil.class);
     }
