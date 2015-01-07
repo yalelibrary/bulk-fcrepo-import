@@ -6,7 +6,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>ladybird (Project)</name>
+    <name>ladybird (Parent)</name>
     <description/>
     <url/>
     <inceptionYear>2014</inceptionYear>

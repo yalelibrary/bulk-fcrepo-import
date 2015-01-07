@@ -10,7 +10,7 @@
     <artifactId>ladybird-kernel</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <name>ladybird-kernel (Core)</name>
+    <name>ladybird-kernel (Kernel)</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
