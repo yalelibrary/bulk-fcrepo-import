@@ -337,9 +337,10 @@ public class ImportValue {
             values.add(c.getValue().toString());
         }
 
+        /*
         if (functionConstants == FunctionConstants.F104) {
             logger.debug("Column values for F104={}", values.toString());
-        }
+        } */
 
         return values;
     }

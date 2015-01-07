@@ -24,7 +24,7 @@ public class DefaultImportEngine extends AbstractImportEngine {
 
     @Override
     public int doWrite(final List<Import.Row> list) {
-        logger.debug("Initiating write, userId={} projectId={} row list size={}", USER_ID, PROJECT_ID, list.size());
+        logger.debug("Initiating write (userId={} projectId={} size={})", USER_ID, PROJECT_ID, list.size());
 
         ImportWriter importWriter = new ImportWriter();
         importWriter.setOaiProvider(oaiProvider);  //TODO

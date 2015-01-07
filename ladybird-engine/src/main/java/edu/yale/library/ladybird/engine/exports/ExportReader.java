@@ -72,8 +72,13 @@ public class ExportReader {
 
         logger.debug("Merging with OAI provider values for importId={}", importId);
         ExportReaderOaiMerger exportReaderOaiMerger = new ExportReaderOaiMerger();
-        int oaiColumnIndex = getLocalIdentifierColumnNum(plainRows);
-        List<Row> contentRows = exportReaderOaiMerger.merge(importId, oaiColumnIndex, ladybirdFieldConstants, plainRows);
+        int oaiColIndex = getLocalIdentifierColumnNum(plainRows);
+
+        if (oaiColIndex == -1) {
+            logger.debug("Col with f104/f105 data not found in this dataset(sheet) for importId={}", importId);
+        }
+
+        List<Row> contentRows = exportReaderOaiMerger.merge(importId, oaiColIndex, ladybirdFieldConstants, plainRows);
         resultRowList.addAll(contentRows);
 
         final ImportEntityContext iContext = new ImportEntityContext();
@@ -96,14 +101,14 @@ public class ExportReader {
         try {
             index = importValue.getFunctionPosition(FunctionConstants.F104); //or F105 TODO
         } catch (Exception e) {
-            logger.debug("Col with bib data not found in this dataset(sheet)");
+            //logger.debug("Col with bib data not found in this dataset(sheet)");
         }
 
         if (index == -1) {
             try {
                 index = importValue.getFunctionPosition(FunctionConstants.F105); //or F105 TODO
             } catch (Exception e) {
-                logger.debug("Col with barcode data not found in this dataset(sheet)");
+                //logger.debug("Col with barcode data not found in this dataset(sheet)");
             }
         }
         return index;

@@ -53,7 +53,7 @@ public class DefaultImportJob implements Job, ImportJob {
         final ImportRequestEvent importRequestedEvent = ImportEngineQueue.getJob();
         final Spreadsheet spreadsheet = importRequestedEvent.getSpreadsheet();
 
-        logger.debug("Starting import job for file={}", spreadsheet);
+        logger.debug("Starting import job={} for file={}", importRequestedEvent.getImportId(), spreadsheet);
 
         try {
             final int userId = importRequestedEvent.getJobRequest().getUser().getUserId();
@@ -68,23 +68,26 @@ public class DefaultImportJob implements Job, ImportJob {
             ExportBus.post(progressEvent);
 
             final List<Import.Row> rowList = importEngine.read(spreadsheet, ReadMode.FULL, fieldDataValidator);
-
             logger.trace("Read rows. list size={}", rowList.size());
 
-            //TODO provide
+            //TODO
             final OaiProvider provider = getCtxOaiProvider();
             importEngine.setOaiProvider(provider);
-            //passes relative path for each import job. This is provided by the user on each run. The root path is set application wide.
-            final MediaFunctionProcessor mediaFunctionProcessor = getCtxMediaFunctionProcessor(importRequestedEvent.getJobRequest().getExportPath());
+
+            //passes relative path for each import job.
+            //This is provided by the user on each run. The root path is set application wide.
+            final MediaFunctionProcessor mediaFunctionProcessor =
+                    getCtxMediaFunctionProcessor(importRequestedEvent.getJobRequest().getExportPath());
             importEngine.setMediaFunctionProcessor(mediaFunctionProcessor);
             importEngine.setImportSourceProcessor(new ImportSourceProcessor());
 
-            logger.debug("Writing to import table(s)");
+            logger.debug("Writing to import table(s) for job={}", importRequestedEvent.getImportId());
 
             final int imid = importEngine.write(rowList, spreadsheet, importRequestedEvent.getJobRequest().getId());
 
             long elapsedImport = System.currentTimeMillis() - startTime;
-            logger.debug("Completed import job in={}", DurationFormatUtils.formatDuration(elapsedImport, "HH:mm:ss:SS"));
+            logger.debug("Completed import job={} in={}",
+                    imid, DurationFormatUtils.formatDuration(elapsedImport, "HH:mm:ss:SS"));
 
             final ImportCompleteEvent importCompEvent = new ImportCompleteEventBuilder().setTime(elapsedImport)
                     .setRowsProcessed(rowList.size()).createImportDoneEvent();
@@ -96,7 +99,7 @@ public class DefaultImportJob implements Job, ImportJob {
 
             sendNotification(importCompEvent, Collections.singletonList(importRequestedEvent.getJobRequest().getUser()));
 
-            logger.debug("Added import event to notification queue");
+            logger.debug("Added import event for importId={} to notification queue", imid);
 
             /* Add request for export */  //Note: This needs to be re-visited per logic requirement
             final ExportRequestEvent exportEvent = new ExportRequestEvent(imid, importRequestedEvent.getJobRequest());

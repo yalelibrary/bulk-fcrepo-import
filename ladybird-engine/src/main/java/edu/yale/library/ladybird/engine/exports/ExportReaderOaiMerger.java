@@ -45,7 +45,7 @@ public class ExportReaderOaiMerger {
 
         List<Import.Row> resultRowList = new ArrayList<>();
         final List<LocalIdMarcValue> bibIdValueList = importSourceDataReader.readImportSourceData(importId);
-        logger.debug("BibIdValueList size={}", bibIdValueList.size());
+        logger.debug("BibIdValueList size={} for importId={}", bibIdValueList.size(), importId);
 
         for (int i = 0; i < numRowsToWrite; i++) {
             final List<Import.Column> cols = plainRows.get(i).getColumns();

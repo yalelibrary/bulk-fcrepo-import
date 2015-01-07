@@ -88,7 +88,7 @@ public class DefaultExportJob implements Job, ExportJob {
             /**
              * 1. a. Write to spreadsheet, b. update import_jobs, c. send file
              */
-            logger.debug("[start] writing sheet for export job={}", importEntityContext.getImportId());
+            logger.debug("Writing sheet for export job={}", importEntityContext.getImportId());
 
             final long timeInXlsWriting = System.currentTimeMillis();
             final String exportFilePath = getWritePath(exportFile(importEntityContext.getJobRequest().getExportPath()));
@@ -107,20 +107,20 @@ public class DefaultExportJob implements Job, ExportJob {
             updateImportJobsNotification(importEntityContext.getImportId(), importEntityContext.getJobRequest().getUser().getUserId());
 
             long elapsedInXls = System.currentTimeMillis() - timeInXlsWriting;
-            logger.debug("[end] Completed spreadsheet writing in={} for={}",
+            logger.debug("[end] Completed spreadsheet writing in={} for jobRequestId={}",
                     DurationFormatUtils.formatDuration(elapsedInXls, "HH:mm:ss:SS"),
                     jobRequestId);
 
             /**
              * 2. Write to object metadata tables, post ExportCompleteEvent and progress
              */
-            logger.debug("Writing to object metadata tables for={}", importEntityContext.getImportId());
+            logger.debug("Writing to object metadata tables for importId={}", importEntityContext.getImportId());
             ObjectMetadataWriter objectMetadataWriter = new ObjectMetadataWriter(); //TODO
             long timeInObjWriter = System.currentTimeMillis();
             objectMetadataWriter.write(importEntityContext);
             long elapsedInObjWriter = System.currentTimeMillis() - timeInObjWriter;
 
-            logger.debug("[end] Wrote to object metadata tables in={} for={}", formatDurationHMS(elapsedInObjWriter),
+            logger.debug("[end] Wrote to object metadata tables in={} for jobRequestId={}", formatDurationHMS(elapsedInObjWriter),
                     jobRequestId);
             final ExportCompleteEvent exportCompEvent = new ExportCompleteEventBuilder()
                     .setRowsProcessed(importEntityContext.getImportJobList().size()).setTime(elapsedInObjWriter).createExportCompleteEvent();
@@ -236,7 +236,7 @@ public class DefaultExportJob implements Job, ExportJob {
                 }
             }
 
-            logger.debug("Num. of columns to exclude={}", columnsToExclude.size());
+            logger.debug("Num. of columns to exclude={} for jobRequest={}", columnsToExclude.size(), jobRequest.getId());
 
             for (Import.Row row: fullList) {
                 final List<Import.Column> newColumns = new ArrayList<>();

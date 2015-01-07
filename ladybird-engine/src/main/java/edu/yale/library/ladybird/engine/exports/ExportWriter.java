@@ -51,7 +51,7 @@ public class ExportWriter {
             out = new FileOutputStream(new File(filePath));
             workbook.write(out);
             out.close();
-            logger.debug("Wrote Excel file={}", filePath);
+            logger.debug("Wrote file={}", filePath);
         } catch (IOException e) {
             logger.error("Error writing spreadsheet", e);
             throw e;

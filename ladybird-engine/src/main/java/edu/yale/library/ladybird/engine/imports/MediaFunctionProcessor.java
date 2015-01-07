@@ -75,7 +75,7 @@ public class MediaFunctionProcessor {
         for (int i = 0; i < rowList.size(); i++) {
 
             if (i % 100 == 0) {
-                logger.debug("Converted media, so far={} for importId={}", i, importId);
+                logger.debug("Progress in media conversion={} for importId={}", i, importId);
             }
 
             final Column<String> f3 = importValue.getRowFieldColumn(FunctionConstants.F3, i);
@@ -218,7 +218,7 @@ public class MediaFunctionProcessor {
      */
     @SuppressWarnings("unchecked")
     public void createObjectFiles(final int importId, final ImportValue importValue) throws Exception {
-        logger.debug("[start] Creating ObjectFiles with blank image references for importId={}", importId);
+        logger.debug("Creating ObjectFiles with blank image references for importId={}", importId);
         final int userId = 1; //TODO check this
         final String nullFileName = "N/A";
         final byte[] thumbnail = getDefaultThumbnail();
@@ -253,7 +253,7 @@ public class MediaFunctionProcessor {
             logger.error("Error/warning persisting importFile or objectFile", e);
             throw e;
         }
-        logger.debug("[end] done creating ObjectFiles");
+        logger.debug("Done creating ObjectFiles for importId={}", importId);
     }
 
     /**

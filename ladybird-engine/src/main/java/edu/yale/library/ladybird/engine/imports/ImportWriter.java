@@ -53,22 +53,23 @@ public class ImportWriter {
         try {
             final int importId = writeImportJob(importJobRequest);
 
-            logger.debug("Saved import job={}", importId);
+            logger.debug("Saved import job. importId={}", importId);
 
             //save which functions exist
             Set<FieldConstant> fieldConstants = importValue.getAllFunctions();
 
             //note 2 columns are added:
-            logger.debug("Processing oids");
+            logger.debug("Processing oids for importId={}", importId);
             importValue = writeF1(importValue, importJobRequest.getProjectId());
 
-            logger.debug("Process fdid111");
+            logger.debug("Process fdid111 for importId={}", importId);
             importValue = processFdid111(importValue);
 
             writeExHead(importId, importValue.getHeaderRow().getColumns());
-            logger.debug("Wrote import job exheads for={}", importId);
+            logger.debug("Wrote import job exheads for importId={}", importId);
             writeContents(importId, importValue, fieldConstants);
-            logger.debug("Wrote import job contents for={}", importId);
+            logger.debug("Wrote import job contents for importId" +
+                    "={}", importId);
             return importId;
         } catch (Exception e) {
             logger.error("Error in import writer for request id={}", importJobRequest.getRequestId());

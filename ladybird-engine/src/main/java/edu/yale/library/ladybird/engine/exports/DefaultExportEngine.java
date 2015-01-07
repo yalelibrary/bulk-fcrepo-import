@@ -28,7 +28,8 @@ public class DefaultExportEngine extends AbstractExportEngine {
     @Override
     public ImportEntityContext doRead() {
         final ImportEntityContext importEntityContext = reader.read();
-        logger.debug("Import job list size={}", importEntityContext.getImportJobList().size());
+        logger.debug("Import job list size={} for importId={}", importEntityContext.getImportJobList().size()
+                , importEntityContext.getImportId());
         return importEntityContext;
     }
 
