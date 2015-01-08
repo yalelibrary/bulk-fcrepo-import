@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.engine.cron;
 
 
+import edu.yale.library.ladybird.engine.JobStatus;
 import edu.yale.library.ladybird.engine.ProgressEventListener;
 import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportCompleteEvent;
@@ -83,7 +84,7 @@ public class DefaultExportJob implements Job, ExportJob {
             //post init
             final int jobRequestId = importEntityContext.getJobRequest().getId();
             post(new ProgressEvent(jobRequestId,
-                    exportRequestEvent, ProgressEventListener.JobStatus.INIT));
+                    exportRequestEvent, JobStatus.INIT));
 
             /**
              * 1. a. Write to spreadsheet, b. update import_jobs, c. send file
@@ -125,7 +126,7 @@ public class DefaultExportJob implements Job, ExportJob {
             final ExportCompleteEvent exportCompEvent = new ExportCompleteEventBuilder()
                     .setRowsProcessed(importEntityContext.getImportJobList().size()).setTime(elapsedInObjWriter).createExportCompleteEvent();
             exportCompEvent.setImportId(importEntityContext.getImportId());
-            post(new ProgressEvent(jobRequestId, exportCompEvent, ProgressEventListener.JobStatus.DONE));
+            post(new ProgressEvent(jobRequestId, exportCompEvent, JobStatus.DONE));
             logger.trace("Notifying user for job={}.", jobRequestId);
             sendNotification(exportCompEvent, Collections.singletonList(importEntityContext.getJobRequest().getUser()));
             logger.trace("Added export event to notification queue.");

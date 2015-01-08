@@ -3,6 +3,7 @@ package edu.yale.library.ladybird.engine;
 import com.google.common.eventbus.Subscribe;
 import edu.yale.library.ladybird.engine.cron.ProgressEvent;
 import edu.yale.library.ladybird.engine.imports.JobExceptionEvent;
+import edu.yale.library.ladybird.engine.JobStatus;
 import org.apache.commons.lang3.exception.ContextedRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ public class ProgressEventListener implements Serializable {
     private static final Logger logger = LoggerFactory.getLogger(ProgressEventListener.class);
 
     public static final int TOTAL_STEPS = 3;
+
     private static final Map<Integer, Integer> steps = new HashMap<>();
 
     private static final Map<Integer, List<String>> status = new HashMap<>();
@@ -59,7 +61,7 @@ public class ProgressEventListener implements Serializable {
             }
 
             if (event.getEvent().getEventName() == null) {
-                logger.trace("Null event name receieved");
+                logger.trace("Null event name received");
                 return;
             }
 
@@ -84,9 +86,7 @@ public class ProgressEventListener implements Serializable {
 
             int importId = event.getJobId();
             logger.trace("Recording exception event for importId={}", importId);
-            //List<String> existingStatus = status.get(importId);
-            //existingStatus.add(JobStatus.EXCEPTION.toString());
-            //status.put(importId, existingStatus);
+
             List<ContextedRuntimeException> list = exceptions.get(importId);
 
             if (list == null || list.isEmpty()) {
@@ -131,12 +131,6 @@ public class ProgressEventListener implements Serializable {
 
     public List<ContextedRuntimeException> getRawException(int jobId) {
         if (exceptions.get(jobId) == null) {
-            /*
-            logger.trace("Nothing for this jobId. Existing entries are:");
-            Set<Integer> s = exceptions.keySet();
-            for (int i: s) {
-                logger.trace("Key={}", i);
-            } */
             return null;
         }
 
@@ -147,7 +141,5 @@ public class ProgressEventListener implements Serializable {
         return TOTAL_STEPS;
     }
 
-    public enum JobStatus {
-        DONE, HANGING, EXCEPTION, INIT
-    }
+
 }

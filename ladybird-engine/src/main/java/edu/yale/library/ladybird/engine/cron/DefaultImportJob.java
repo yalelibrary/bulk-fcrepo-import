@@ -2,6 +2,7 @@ package edu.yale.library.ladybird.engine.cron;
 
 
 import edu.yale.library.ladybird.engine.EventBus;
+import edu.yale.library.ladybird.engine.JobStatus;
 import edu.yale.library.ladybird.engine.ProgressEventListener;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
 import edu.yale.library.ladybird.engine.imports.DefaultImportEngine;
@@ -62,7 +63,7 @@ public class DefaultImportJob implements Job, ImportJob {
 
             //Post init
             ProgressEvent progressEvent = new ProgressEvent(importRequestedEvent.getJobRequest().getId(), importRequestedEvent,
-                    ProgressEventListener.JobStatus.INIT);
+                    JobStatus.INIT);
             EventBus.post(progressEvent);
 
             final List<Import.Row> rowList = importEngine.read(spreadsheet, ReadMode.FULL);
@@ -93,7 +94,7 @@ public class DefaultImportJob implements Job, ImportJob {
 
             //Post progress
             EventBus.post(new ProgressEvent(importRequestedEvent.getJobRequest().getId(), importCompEvent,
-                    ProgressEventListener.JobStatus.DONE));
+                    JobStatus.DONE));
 
             sendNotification(importCompEvent, Collections.singletonList(importRequestedEvent.getJobRequest().getUser()));
 

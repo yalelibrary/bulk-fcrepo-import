@@ -1,5 +1,6 @@
 package edu.yale.library.ladybird.engine.cron;
 
+import edu.yale.library.ladybird.engine.JobStatus;
 import edu.yale.library.ladybird.engine.ProgressEventListener;
 import edu.yale.library.ladybird.engine.imports.ImageConversionRequestEvent;
 import edu.yale.library.ladybird.engine.imports.MediaFunctionProcessor;
@@ -67,7 +68,7 @@ public class ImageConversionJob implements Job {
 
         mediaEventInit.setImportId(requestId);
         ProgressEvent progressEvent = new ProgressEvent(requestId, mediaEventInit,
-                ProgressEventListener.JobStatus.INIT);
+                JobStatus.INIT);
         post(progressEvent);
 
         try {
@@ -81,7 +82,7 @@ public class ImageConversionJob implements Job {
             mediaEvent.setConversions(importReqEvent.getImportValue().getContentRows().size());
 
             // Post completion
-            post(new ProgressEvent(requestId, mediaEvent, ProgressEventListener.JobStatus.DONE));
+            post(new ProgressEvent(requestId, mediaEvent, JobStatus.DONE));
         } catch (IOException e) {
             logger.error("Error executing job", e);
         }
