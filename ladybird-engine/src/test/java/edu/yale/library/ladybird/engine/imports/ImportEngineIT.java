@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.engine.imports;
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
 import edu.yale.library.ladybird.engine.DefaultFieldDataValidator;
-import edu.yale.library.ladybird.engine.ExportBus;
+import edu.yale.library.ladybird.engine.EventBus;
 import edu.yale.library.ladybird.engine.TestModule;
 import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
 import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
@@ -53,8 +53,8 @@ public class ImportEngineIT extends AbstractDBTest {
         KernelBootstrap kernelBootstrap = new KernelBootstrap();
         kernelBootstrap.setAbstractModule(new TestModule());
 
-        ExportBus exportBus = new ExportBus();
-        exportBus.setAbstractModule(new TestModule());
+        EventBus eventBus = new EventBus();
+        eventBus.setAbstractModule(new TestModule());
 
         //initFdids(); //TODO tmp. Inst app. rules for test (since db state is cleaned)
 

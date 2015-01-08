@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.engine.file;
 
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
-import edu.yale.library.ladybird.engine.ExportBus;
+import edu.yale.library.ladybird.engine.EventBus;
 import edu.yale.library.ladybird.engine.TestModule;
 import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
 import edu.yale.library.ladybird.engine.imports.Import;
@@ -53,8 +53,8 @@ public class ObjectWriterIT {
         final int fdid2 = 70;
 
 
-        ExportBus exportBus = new ExportBus();
-        exportBus.setAbstractModule(new TestModule());
+        EventBus eventBus = new EventBus();
+        eventBus.setAbstractModule(new TestModule());
 
         JobRequest jobRequest = new JobRequest();
         User user = new User();

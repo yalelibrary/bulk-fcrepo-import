@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.engine.failing;
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
 import edu.yale.library.ladybird.engine.DefaultFieldDataValidator;
-import edu.yale.library.ladybird.engine.ExportBus;
+import edu.yale.library.ladybird.engine.EventBus;
 import edu.yale.library.ladybird.engine.TestModule;
 import edu.yale.library.ladybird.engine.Util;
 import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
@@ -76,8 +76,8 @@ public class MarcImportEngineIT extends AbstractDBTest {
         KernelBootstrap kernelBootstrap = new KernelBootstrap();
         kernelBootstrap.setAbstractModule(new TestModule());
 
-        ExportBus exportBus = new ExportBus();
-        exportBus.setAbstractModule(new TestModule());
+        EventBus eventBus = new EventBus();
+        eventBus.setAbstractModule(new TestModule());
 
         /* 1. read the marc fdid mapping */
         FdidMarcMappingUtil fdidMarcMappingUtil = new FdidMarcMappingUtil();

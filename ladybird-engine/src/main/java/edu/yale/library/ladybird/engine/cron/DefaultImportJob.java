@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.engine.cron;
 
 
 import edu.yale.library.ladybird.engine.DefaultFieldDataValidator;
-import edu.yale.library.ladybird.engine.ExportBus;
+import edu.yale.library.ladybird.engine.EventBus;
 import edu.yale.library.ladybird.engine.ProgressEventListener;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
 import edu.yale.library.ladybird.engine.imports.DefaultImportEngine;
@@ -65,7 +65,7 @@ public class DefaultImportJob implements Job, ImportJob {
             //Post init
             ProgressEvent progressEvent = new ProgressEvent(importRequestedEvent.getJobRequest().getId(), importRequestedEvent,
                     ProgressEventListener.JobStatus.INIT);
-            ExportBus.post(progressEvent);
+            EventBus.post(progressEvent);
 
             final List<Import.Row> rowList = importEngine.read(spreadsheet, ReadMode.FULL, fieldDataValidator);
             logger.trace("Read rows. list size={}", rowList.size());
@@ -94,7 +94,7 @@ public class DefaultImportJob implements Job, ImportJob {
             importCompEvent.setImportId(imid);
 
             //Post progress
-            ExportBus.post(new ProgressEvent(importRequestedEvent.getJobRequest().getId(), importCompEvent,
+            EventBus.post(new ProgressEvent(importRequestedEvent.getJobRequest().getId(), importCompEvent,
                     ProgressEventListener.JobStatus.DONE));
 
             sendNotification(importCompEvent, Collections.singletonList(importRequestedEvent.getJobRequest().getUser()));

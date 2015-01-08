@@ -3,7 +3,7 @@ package edu.yale.library.ladybird.engine.oai;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import edu.yale.library.ladybird.engine.ExportBus;
+import edu.yale.library.ladybird.engine.EventBus;
 import edu.yale.library.ladybird.engine.JobExceptionEventPoster;
 import edu.yale.library.ladybird.engine.imports.JobExceptionEvent;
 import edu.yale.library.ladybird.engine.model.LocalIdMarcImportSource;
@@ -40,7 +40,7 @@ public class ImportSourceDataReader implements JobExceptionEventPoster {
     //---------------------------------------------------------------
 
     public void post(JobExceptionEvent event) {
-        ExportBus.post(event);
+        EventBus.post(event);
     }
 
     /**

@@ -43,7 +43,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static edu.yale.library.ladybird.engine.ExportBus.post;
+import static edu.yale.library.ladybird.engine.EventBus.post;
 import static org.apache.commons.lang.time.DurationFormatUtils.formatDurationHMS;
 import static org.apache.commons.lang.time.DurationFormatUtils.formatDurationWords;
 import static org.slf4j.LoggerFactory.getLogger;

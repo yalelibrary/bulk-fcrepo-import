@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird;
 
+import edu.yale.library.ladybird.engine.EventBus;
 import edu.yale.library.ladybird.engine.RolesPermissionsLoader;
-import edu.yale.library.ladybird.engine.ExportBus;
 import edu.yale.library.ladybird.engine.oai.FdidMarcMappingUtil;
 import edu.yale.library.ladybird.entity.event.RollbackEventType;
 import edu.yale.library.ladybird.entity.event.UserEditEvent;
@@ -31,8 +31,8 @@ public class AppContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         kernelBootstrap.init();
-        ExportBus exportBus = getExportBus();
-        exportBus.init();
+        EventBus eventBus = getExportBus();
+        eventBus.init();
 
         // Load initial fdid marc mappings
         try {
@@ -71,8 +71,8 @@ public class AppContextListener implements ServletContextListener {
         }
     }
 
-    private ExportBus getExportBus() {
-        return new ExportBus();
+    private EventBus getExportBus() {
+        return new EventBus();
     }
 
 }

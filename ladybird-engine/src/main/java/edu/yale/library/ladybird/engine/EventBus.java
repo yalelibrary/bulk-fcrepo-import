@@ -1,6 +1,5 @@
 package edu.yale.library.ladybird.engine;
 
-import com.google.common.eventbus.EventBus;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
@@ -11,15 +10,15 @@ import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class ExportBus {
-    private static final Logger logger = getLogger(ExportBus.class);
+public class EventBus {
+    private static final Logger logger = getLogger(EventBus.class);
 
     private static Module module;
-    private static EventBus eventBus;
+    private static com.google.common.eventbus.EventBus eventBus;
 
     public void init() {
         try {
-            final ExportBus kernelContext = new ExportBus();
+            final EventBus kernelContext = new EventBus();
             kernelContext.setAbstractModule(new ListenerModule());
 
             if (eventBus == null) {
@@ -42,12 +41,12 @@ public class ExportBus {
      * Get the event bus and instantiate listeners
      * @return
      */
-    private static EventBus getEventBus() {
+    private static com.google.common.eventbus.EventBus getEventBus() {
         final Injector injector = Guice.createInjector(getModule()); //TODO
 
         if (eventBus == null) {
             logger.debug("Inst. Export EventBus");
-            eventBus = new EventBus();
+            eventBus = new com.google.common.eventbus.EventBus();
             final List<Class> globalListeners = injector.getInstance(List.class);
             for (Class o: globalListeners) {
                 eventBus.register(injector.getInstance(o));

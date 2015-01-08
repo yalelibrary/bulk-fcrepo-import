@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import java.io.IOException;
 import java.util.List;
 
-import static edu.yale.library.ladybird.engine.ExportBus.post;
+import static edu.yale.library.ladybird.engine.EventBus.post;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
