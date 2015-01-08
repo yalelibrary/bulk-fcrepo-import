@@ -1,7 +1,6 @@
 package edu.yale.library.ladybird.engine.imports;
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
-import edu.yale.library.ladybird.engine.DefaultFieldDataValidator;
 import edu.yale.library.ladybird.engine.EventBus;
 import edu.yale.library.ladybird.engine.TestModule;
 import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
@@ -61,8 +60,7 @@ public class ImportEngineIT extends AbstractDBTest {
         final ImportEngine importEngine = new DefaultImportEngine(0, 1); //TODO chek params logic
         importEngine.setImportSourceProcessor(new ImportSourceProcessor()); //TODO
 
-        final List<Import.Row> rows = importEngine.read(getImportSpreadsheeet(), ReadMode.FULL,
-                new DefaultFieldDataValidator());
+        final List<Import.Row> rows = importEngine.read(getImportSpreadsheeet(), ReadMode.FULL);
 
         assertEquals("Rows size mismatch", rows.size(), FileConstants.ROW_COUNT);
         assertEquals("Columns size mismatch", rows.get(0).getColumns().size(), 31);
@@ -112,8 +110,7 @@ public class ImportEngineIT extends AbstractDBTest {
         exportEngine.write(listExportRows, XLS_FILE_TO_WRITE);
 
         //again, read back:
-        final List<Import.Row> rowsReadBack = importEngine.read(getExportSpreadsheeet(), ReadMode.FULL,
-                new DefaultFieldDataValidator());
+        final List<Import.Row> rowsReadBack = importEngine.read(getExportSpreadsheeet(), ReadMode.FULL);
         assertEquals("Rows size mismatch", rowsReadBack.size(), 78);
     }
 

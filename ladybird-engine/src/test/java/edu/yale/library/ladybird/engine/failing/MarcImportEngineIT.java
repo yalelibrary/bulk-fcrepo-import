@@ -1,7 +1,6 @@
 package edu.yale.library.ladybird.engine.failing;
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
-import edu.yale.library.ladybird.engine.DefaultFieldDataValidator;
 import edu.yale.library.ladybird.engine.EventBus;
 import edu.yale.library.ladybird.engine.TestModule;
 import edu.yale.library.ladybird.engine.Util;
@@ -98,8 +97,7 @@ public class MarcImportEngineIT extends AbstractDBTest {
 
         List<Import.Row> rows = Collections.emptyList();
         try {
-            rows = importEngine.read(getImportSpreadsheeet(), ReadMode.FULL,
-                    new DefaultFieldDataValidator());
+            rows = importEngine.read(getImportSpreadsheeet(), ReadMode.FULL);
         } catch (ImportReaderValidationException e) {
             e.printStackTrace();  //TODO
         } catch (IOException e) {

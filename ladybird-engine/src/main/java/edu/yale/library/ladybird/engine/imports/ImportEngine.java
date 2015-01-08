@@ -1,7 +1,6 @@
 package edu.yale.library.ladybird.engine.imports;
 
 
-import edu.yale.library.ladybird.engine.DefaultFieldDataValidator;
 import edu.yale.library.ladybird.engine.oai.ImportSourceProcessor;
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
 
@@ -14,7 +13,7 @@ import java.util.List;
 public interface ImportEngine {
     List<Import.Row> read(Spreadsheet file) throws ImportReaderValidationException, IOException;
 
-    List<Import.Row> read(Spreadsheet file, ReadMode inputReadMode, DefaultFieldDataValidator validator)
+    List<Import.Row> read(Spreadsheet file, ReadMode inputReadMode)
             throws ImportReaderValidationException, IOException;
 
     int write(List<Import.Row> list);

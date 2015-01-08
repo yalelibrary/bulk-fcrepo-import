@@ -1,7 +1,6 @@
 package edu.yale.library.ladybird.engine.cron;
 
 
-import edu.yale.library.ladybird.engine.DefaultFieldDataValidator;
 import edu.yale.library.ladybird.engine.EventBus;
 import edu.yale.library.ladybird.engine.ProgressEventListener;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
@@ -60,14 +59,13 @@ public class DefaultImportJob implements Job, ImportJob {
             final int projectId = importRequestedEvent.getJobRequest().getCurrentProject().getProjectId();
 
             final ImportEngine importEngine = new DefaultImportEngine(userId, projectId);
-            final DefaultFieldDataValidator fieldDataValidator = new DefaultFieldDataValidator();
 
             //Post init
             ProgressEvent progressEvent = new ProgressEvent(importRequestedEvent.getJobRequest().getId(), importRequestedEvent,
                     ProgressEventListener.JobStatus.INIT);
             EventBus.post(progressEvent);
 
-            final List<Import.Row> rowList = importEngine.read(spreadsheet, ReadMode.FULL, fieldDataValidator);
+            final List<Import.Row> rowList = importEngine.read(spreadsheet, ReadMode.FULL);
             logger.trace("Read rows. list size={}", rowList.size());
 
             //TODO

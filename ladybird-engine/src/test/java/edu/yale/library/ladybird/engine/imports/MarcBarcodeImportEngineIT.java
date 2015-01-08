@@ -1,7 +1,6 @@
 package edu.yale.library.ladybird.engine.imports;
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
-import edu.yale.library.ladybird.engine.DefaultFieldDataValidator;
 import edu.yale.library.ladybird.engine.EventBus;
 import edu.yale.library.ladybird.engine.TestModule;
 import edu.yale.library.ladybird.engine.Util;
@@ -68,8 +67,7 @@ public class MarcBarcodeImportEngineIT extends AbstractDBTest {
 
             importEngine.setImportSourceProcessor(new ImportSourceProcessor()); //TODO
 
-            final List<Import.Row> rows = importEngine.read(getImportSpreadsheeet(), ReadMode.FULL,
-                    new DefaultFieldDataValidator());
+            final List<Import.Row> rows = importEngine.read(getImportSpreadsheeet(), ReadMode.FULL);
 
             assertEquals("Rows size mismatch", rows.size(), ExportFileConstants.ROW_COUNT);
             assertEquals("Columns size mismatch", rows.get(0).getColumns().size(), 5);

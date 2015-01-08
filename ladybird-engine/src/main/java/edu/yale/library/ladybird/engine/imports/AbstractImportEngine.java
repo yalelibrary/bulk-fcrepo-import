@@ -1,7 +1,6 @@
 package edu.yale.library.ladybird.engine.imports;
 
 
-import edu.yale.library.ladybird.engine.DefaultFieldDataValidator;
 import edu.yale.library.ladybird.engine.oai.ImportSourceProcessor;
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
 
@@ -40,21 +39,18 @@ public abstract class AbstractImportEngine implements ImportEngine {
     /**
      * Read with default param settings.
      *
-     * @see #read(Spreadsheet, ReadMode, edu.yale.library.ladybird.engine.DefaultFieldDataValidator)
      */
     public final List<Import.Row> read(Spreadsheet file) throws ImportReaderValidationException, IOException {
-        return read(file, ReadMode.FULL, new DefaultFieldDataValidator());
+        return read(file, ReadMode.FULL);
     }
 
     /**
      * Reads a given spreadsheet and returns row entities.
      *
      * @param inputReadMode
-     * @param validator
      * @return list of row values. Perhaps should return sheet.
      */
-    public final List<Import.Row> read(Spreadsheet file, ReadMode inputReadMode,
-                                             DefaultFieldDataValidator validator) throws ImportReaderValidationException, IOException {
+    public final List<Import.Row> read(Spreadsheet file, ReadMode inputReadMode) throws ImportReaderValidationException, IOException {
         spreadsheet = file;
         List<Import.Row> rows = doRead(file, inputReadMode);
         return rows;
