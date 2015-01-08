@@ -26,7 +26,7 @@ public class KernelBootstrap {
     /** Time embedded db has been alive */
     private static long DB_UPTIME = 0;
 
-    private final ServicesManager servicesManager = new ServicesManager();
+    private final EmbeddedDBServicesManager embeddedDBServicesManager = new EmbeddedDBServicesManager();
     private static Module jobModule;
     private static EventBus eventBus;
 
@@ -39,7 +39,7 @@ public class KernelBootstrap {
 
             if (ApplicationProperties.CONFIG_STATE.DEFAULT_DB_CONFIGURED) {
                 logger.debug("Trying to start embedded DB");
-                servicesManager.initDB();
+                embeddedDBServicesManager.initDB();
                 DB_UPTIME = System.currentTimeMillis();
                 logger.debug("Started embedded DB");
             }
@@ -68,7 +68,7 @@ public class KernelBootstrap {
         try {
             if (ApplicationProperties.CONFIG_STATE.DEFAULT_DB_CONFIGURED) {
                 logger.debug("Trying to stop embedded DB");
-                servicesManager.stopDB();
+                embeddedDBServicesManager.stopDB();
                 logger.debug("Closed embedded database. Time: " + getElapsedTime(DB_UPTIME));
             }
             HibernateUtil.shutdown();

@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 
-public final class ServicesManager {
-    private static final Logger logger = LoggerFactory.getLogger(ServicesManager.class);
+public final class EmbeddedDBServicesManager {
+    private static final Logger logger = LoggerFactory.getLogger(EmbeddedDBServicesManager.class);
 
     public void initDB() {
         startDB();

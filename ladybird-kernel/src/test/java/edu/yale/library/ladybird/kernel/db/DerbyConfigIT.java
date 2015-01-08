@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.kernel.db;
 
 import edu.yale.library.ladybird.kernel.EmbeddedDBException;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
-import edu.yale.library.ladybird.kernel.ServicesManager;
+import edu.yale.library.ladybird.kernel.EmbeddedDBServicesManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,17 +16,17 @@ import static org.junit.Assert.fail;
 public class DerbyConfigIT {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private ServicesManager servicesManager;
+    private EmbeddedDBServicesManager embeddedDBServicesManager;
 
     @Before
     public void init() {
-        servicesManager = new ServicesManager();
+        embeddedDBServicesManager = new EmbeddedDBServicesManager();
     }
 
     @After
     public void shtudown() {
         try {
-            servicesManager.stopDB();
+            embeddedDBServicesManager.stopDB();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -34,9 +34,9 @@ public class DerbyConfigIT {
 
     @Test
     public void shouldFailMultipleDriverStarting() {
-        servicesManager.startDB();
+        embeddedDBServicesManager.startDB();
         try {
-            servicesManager.startDB();
+            embeddedDBServicesManager.startDB();
             fail("Failed. Tried to re-init driver.");
         } catch (final EmbeddedDBException e) {
             if (!e.getMessage().equalsIgnoreCase(ApplicationProperties.ALREADY_RUNNING)) {

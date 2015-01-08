@@ -1,24 +1,24 @@
 package edu.yale.library.ladybird.engine;
 
 
-import edu.yale.library.ladybird.kernel.ServicesManager;
+import edu.yale.library.ladybird.kernel.EmbeddedDBServicesManager;
 
 import java.sql.SQLException;
 
 //TODO clean up..redundant methods
 public class AbstractDBTest {
 
-    private ServicesManager servicesManager;
+    private EmbeddedDBServicesManager embeddedDBServicesManager;
 
-    private static ServicesManager servicesManager2;
+    private static EmbeddedDBServicesManager embeddedDBServicesManager2;
 
     static boolean dbInit = false;
 
     protected synchronized void init() {
-        servicesManager = new ServicesManager();
+        embeddedDBServicesManager = new EmbeddedDBServicesManager();
 
         if (!dbInit) {
-            servicesManager.initDB();
+            embeddedDBServicesManager.initDB();
             dbInit = true;
         }
     }
@@ -32,21 +32,21 @@ public class AbstractDBTest {
     }
 
     public static  synchronized void initDB() {
-        servicesManager2 = new ServicesManager();
+        embeddedDBServicesManager2 = new EmbeddedDBServicesManager();
 
         if (dbInit) {
             System.out.println("Already init");
         }
 
         if (!dbInit) {
-            servicesManager2.initDB();
+            embeddedDBServicesManager2.initDB();
             dbInit = true;
         }
     }
 
     public static synchronized void stopDB() throws SQLException {
         if (dbInit) {
-            servicesManager2.stopDB();
+            embeddedDBServicesManager2.stopDB();
             dbInit = false;
         }
     }
