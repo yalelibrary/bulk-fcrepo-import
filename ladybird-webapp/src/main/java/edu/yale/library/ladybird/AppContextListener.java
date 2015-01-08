@@ -1,7 +1,6 @@
 package edu.yale.library.ladybird;
 
 import edu.yale.library.ladybird.engine.EventBus;
-import edu.yale.library.ladybird.engine.RolesPermissionsLoader;
 import edu.yale.library.ladybird.engine.oai.FdidMarcMappingUtil;
 import edu.yale.library.ladybird.entity.event.RollbackEventType;
 import edu.yale.library.ladybird.entity.event.UserEditEvent;
@@ -45,7 +44,7 @@ public class AppContextListener implements ServletContextListener {
 
         //Load properties file
         try {
-            SettingsInitializer settingsInit = new SettingsInitializer();
+            SettingsInit settingsInit = new SettingsInit();
             settingsInit.loadAndStore();
         } catch (Exception e) {
             logger.error("Error in setting settings", e);
@@ -64,8 +63,8 @@ public class AppContextListener implements ServletContextListener {
 
         //Add role permissions, if empty
         try {
-            RolesPermissionsLoader rolesPermissionsLoader = new RolesPermissionsLoader();
-            rolesPermissionsLoader.load();
+            RolesPermissionsInit rolesPermissionsInit = new RolesPermissionsInit();
+            rolesPermissionsInit.load();
         } catch (Exception e) {
             logger.error("Error init to db role permissions");
         }

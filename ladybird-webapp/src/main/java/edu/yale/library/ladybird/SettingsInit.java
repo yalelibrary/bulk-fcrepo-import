@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-public class SettingsInitializer {
+public class SettingsInit {
 
-    private Logger logger = LoggerFactory.getLogger(SettingsInitializer.class);
+    private Logger logger = LoggerFactory.getLogger(SettingsInit.class);
 
     /**
      * Loads prop(s) from ladybird.properties and stores them in db

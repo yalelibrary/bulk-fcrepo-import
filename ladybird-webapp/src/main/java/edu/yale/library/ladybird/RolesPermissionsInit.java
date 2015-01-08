@@ -1,4 +1,4 @@
-package edu.yale.library.ladybird.engine;
+package edu.yale.library.ladybird;
 
 import edu.yale.library.ladybird.auth.Permissions;
 import edu.yale.library.ladybird.auth.PermissionsValue;
@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  *
  */
-public class RolesPermissionsLoader {
+public class RolesPermissionsInit {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
