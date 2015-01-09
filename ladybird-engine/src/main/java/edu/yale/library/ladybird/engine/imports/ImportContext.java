@@ -1,6 +1,5 @@
-package edu.yale.library.ladybird.engine.exports;
+package edu.yale.library.ladybird.engine.imports;
 
-import edu.yale.library.ladybird.engine.imports.Import;
 import edu.yale.library.ladybird.entity.JobRequest;
 
 import java.util.Collections;
@@ -10,11 +9,13 @@ import java.util.List;
  * Used by Export related artifacts.
  * @see edu.yale.library.ladybird.engine.imports.ImportJobRequest for a related class
  */
-public class ImportEntityContext {
+public class ImportContext {
 
-    private List<Import.Row> importJobList; //TODO rename
+    private List<Import.Row> importRowsList;
+
     private JobRequest jobRequest;
-    /** imj id */
+
+    /** import job id */
     private int importId;
 
     public JobRequest getJobRequest() {
@@ -25,12 +26,12 @@ public class ImportEntityContext {
         this.jobRequest = jobRequest;
     }
 
-    public List<Import.Row> getImportJobList() {
-        return importJobList;
+    public List<Import.Row> getImportRowsList() {
+        return importRowsList;
     }
 
-    public void setImportJobList(final List<Import.Row> importJobList) {
-        this.importJobList = importJobList;
+    public void setImportRowsList(final List<Import.Row> importRowsList) {
+        this.importRowsList = importRowsList;
     }
 
     public int getImportId() {
@@ -43,20 +44,19 @@ public class ImportEntityContext {
 
     /**
      * Instantiates empty instance
-     * @return
      */
-    public static ImportEntityContext newInstance() {
-        ImportEntityContext importEntityContext = new ImportEntityContext();
-        importEntityContext.setImportJobList(Collections.emptyList());
-        importEntityContext.setJobRequest(new JobRequest());
-        importEntityContext.setImportId(-1);
-        return importEntityContext;
+    public static ImportContext newInstance() {
+        ImportContext importContext = new ImportContext();
+        importContext.setImportRowsList(Collections.emptyList());
+        importContext.setJobRequest(new JobRequest());
+        importContext.setImportId(-1);
+        return importContext;
     }
 
     @Override
     public String toString() {
         return "ImportEntityContext{"
-                + "importJobList size=" + importJobList.size()
+                + "importRowsList size=" + importRowsList.size()
                 + ", monitor=" + jobRequest
                 + '}';
     }

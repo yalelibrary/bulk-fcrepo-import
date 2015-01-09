@@ -6,7 +6,7 @@ import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
 import edu.yale.library.ladybird.engine.exports.ExportReader;
 import edu.yale.library.ladybird.engine.exports.ExportReaderOaiMerger;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
-import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
+import edu.yale.library.ladybird.engine.imports.ImportContext;
 import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.engine.oai.FdidMarcMappingUtil;
@@ -48,8 +48,8 @@ public class ExportReaderIT extends AbstractDBTest {
 
 
         ExportReader exportReader = new ExportReader();
-        ImportEntityContext importEntityContext = exportReader.read();
-        assert (importEntityContext.getImportJobList().size() == 0);
+        ImportContext importContext = exportReader.read();
+        assert (importContext.getImportRowsList().size() == 0);
     }
 
     @Test

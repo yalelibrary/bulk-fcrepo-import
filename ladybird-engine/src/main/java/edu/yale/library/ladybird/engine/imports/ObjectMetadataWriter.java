@@ -1,6 +1,5 @@
 package edu.yale.library.ladybird.engine.imports;
 
-import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
 import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.AuthorityControl;
@@ -43,19 +42,19 @@ public class ObjectMetadataWriter {
     /**
      * Populates object metadata tables
      *
-     * @param importEntityContext context
+     * @param importContext context
      * @see edu.yale.library.ladybird.engine.cron.DefaultExportJob#execute(org.quartz.JobExecutionContext) for call
      */
-    public void write(final ImportEntityContext importEntityContext) {
+    public void write(final ImportContext importContext) {
         try {
-            final List<Import.Row> importRows = importEntityContext.getImportJobList();
+            final List<Import.Row> importRows = importContext.getImportRowsList();
             final ImportValue importValue = new ImportValue(importRows);
-            final int userId = getUserId(importEntityContext);
+            final int userId = getUserId(importContext);
             final List<FieldConstant> fieldConstants = importValue.getAllFieldConstants();
             logger.trace("Field constants are={}", fieldConstants.toString());
 
             final Date currentDate = new Date();
-            final int importId = importEntityContext.getImportId();
+            final int importId = importContext.getImportId();
 
             // Go through each column (F1.. fdid=220), and persist object data (i.e. it processes vertically):
             for (final FieldConstant f : fieldConstants) {
@@ -162,8 +161,8 @@ public class ObjectMetadataWriter {
         OBJECT_LONGSTRING
     }
 
-    private int getUserId(final ImportEntityContext importEntityContext) {
-        final JobRequest jobRequest = importEntityContext.getJobRequest();
+    private int getUserId(final ImportContext importContext) {
+        final JobRequest jobRequest = importContext.getJobRequest();
         return jobRequest.getUser().getUserId();
     }
 

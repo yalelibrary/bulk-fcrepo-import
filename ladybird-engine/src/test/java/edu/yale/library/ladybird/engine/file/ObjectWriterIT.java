@@ -4,7 +4,7 @@ package edu.yale.library.ladybird.engine.file;
 import edu.yale.library.ladybird.engine.AbstractDBTest;
 import edu.yale.library.ladybird.engine.EventBus;
 import edu.yale.library.ladybird.engine.TestModule;
-import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
+import edu.yale.library.ladybird.engine.imports.ImportContext;
 import edu.yale.library.ladybird.engine.imports.Import;
 import edu.yale.library.ladybird.engine.imports.ObjectMetadataWriter;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
@@ -106,13 +106,13 @@ public class ObjectWriterIT {
         rowList.add(contentRow);
 
         //3. Init Object:
-        ImportEntityContext importEntityContext = new ImportEntityContext();
-        importEntityContext.setJobRequest(jobRequest);
-        importEntityContext.setImportJobList(rowList);
+        ImportContext importContext = new ImportContext();
+        importContext.setJobRequest(jobRequest);
+        importContext.setImportRowsList(rowList);
 
         // Finally, test the method:
         ObjectMetadataWriter objectMetadataWriter = new ObjectMetadataWriter();
-        objectMetadataWriter.write(importEntityContext);
+        objectMetadataWriter.write(importContext);
 
         // Now verify:
         ObjectAcidDAO objectAcidDAO = new ObjectAcidHibernateDAO();

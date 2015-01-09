@@ -8,7 +8,6 @@ import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
 import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
-import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
 import edu.yale.library.ladybird.engine.oai.FdidMarcMappingUtil;
 import edu.yale.library.ladybird.engine.oai.ImportSourceProcessor;
 import edu.yale.library.ladybird.engine.oai.OaiProvider;
@@ -98,9 +97,9 @@ public class MarcBarcodeImportEngineIT extends AbstractDBTest {
             /* Test Export */
             final ExportEngine exportEngine = new DefaultExportEngine();
 
-            final ImportEntityContext importEntityContext = exportEngine.read();
+            final ImportContext importContext = exportEngine.read();
 
-            final List<Import.Row> listExportRows = importEntityContext.getImportJobList();
+            final List<Import.Row> listExportRows = importContext.getImportRowsList();
 
             assertEquals("Export rows don't equal import expected rows", listExportRows.size(), 2);
 

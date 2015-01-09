@@ -2,14 +2,13 @@ package edu.yale.library.ladybird.engine.cron;
 
 
 import edu.yale.library.ladybird.engine.JobStatus;
-import edu.yale.library.ladybird.engine.ProgressEventListener;
 import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportCompleteEvent;
 import edu.yale.library.ladybird.engine.exports.ExportCompleteEventBuilder;
 import edu.yale.library.ladybird.engine.exports.ExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
 import edu.yale.library.ladybird.engine.exports.ExportSheet;
-import edu.yale.library.ladybird.engine.exports.ImportEntityContext;
+import edu.yale.library.ladybird.engine.imports.ImportContext;
 import edu.yale.library.ladybird.engine.imports.ImportEngineException;
 import edu.yale.library.ladybird.engine.imports.Import;
 import edu.yale.library.ladybird.engine.imports.ObjectMetadataWriter;
@@ -71,10 +70,10 @@ public class DefaultExportJob implements Job, ExportJob {
         final ExportEngine exportEngine = new DefaultExportEngine();
 
         try {
-            final ImportEntityContext importEntityContext = exportEngine.read();
-            logger.debug("Read from export engine, size={}", importEntityContext.getImportJobList().size());
+            final ImportContext importContext = exportEngine.read();
+            logger.debug("Read from export engine, size={}", importContext.getImportRowsList().size());
 
-            if (importEntityContext.getImportJobList().isEmpty()) {
+            if (importContext.getImportRowsList().isEmpty()) {
                 logger.error("0 rows to export.");
                 throw new JobExecutionException("0 rows to export");
             }
@@ -82,30 +81,30 @@ public class DefaultExportJob implements Job, ExportJob {
             ExportRequestEvent exportRequestEvent = new ExportRequestEvent();
 
             //post init
-            final int jobRequestId = importEntityContext.getJobRequest().getId();
+            final int jobRequestId = importContext.getJobRequest().getId();
             post(new ProgressEvent(jobRequestId,
                     exportRequestEvent, JobStatus.INIT));
 
             /**
              * 1. a. Write to spreadsheet, b. update import_jobs, c. send file
              */
-            logger.debug("Writing sheet for export job={}", importEntityContext.getImportId());
+            logger.debug("Writing sheet for export job={}", importContext.getImportId());
 
             final long timeInXlsWriting = System.currentTimeMillis();
-            final String exportFilePath = getWritePath(exportFile(importEntityContext.getJobRequest().getExportPath()));
+            final String exportFilePath = getWritePath(exportFile(importContext.getJobRequest().getExportPath()));
             final List<ExportSheet> exportSheets = new ArrayList<>();
             final ExportSheet sheet1 = new ExportSheet();
             sheet1.setTitle("Full Sheet");
-            sheet1.setContents(importEntityContext.getImportJobList());
+            sheet1.setContents(importContext.getImportRowsList());
             exportSheets.add(sheet1);
-            final ExportSheet sheet2 = getCustomSheet(importEntityContext.getImportJobList(), importEntityContext.getJobRequest());
+            final ExportSheet sheet2 = getCustomSheet(importContext.getImportRowsList(), importContext.getJobRequest());
             exportSheets.add(sheet2);
             exportEngine.writeSheets(exportSheets, exportFilePath);
 
             //1b. Update imjobs table
-            updateImportJobs(importEntityContext.getImportId(), exportFilePath);
+            updateImportJobs(importContext.getImportId(), exportFilePath);
             //1c. Create entry in import job notifications table (to enable spreadsheet file mailing etc)
-            updateImportJobsNotification(importEntityContext.getImportId(), importEntityContext.getJobRequest().getUser().getUserId());
+            updateImportJobsNotification(importContext.getImportId(), importContext.getJobRequest().getUser().getUserId());
 
             long elapsedInXls = System.currentTimeMillis() - timeInXlsWriting;
             logger.debug("[end] Completed spreadsheet writing in={} for jobRequestId={}",
@@ -115,20 +114,20 @@ public class DefaultExportJob implements Job, ExportJob {
             /**
              * 2. Write to object metadata tables, post ExportCompleteEvent and progress
              */
-            logger.debug("Writing to object metadata tables for importId={}", importEntityContext.getImportId());
+            logger.debug("Writing to object metadata tables for importId={}", importContext.getImportId());
             ObjectMetadataWriter objectMetadataWriter = new ObjectMetadataWriter(); //TODO
             long timeInObjWriter = System.currentTimeMillis();
-            objectMetadataWriter.write(importEntityContext);
+            objectMetadataWriter.write(importContext);
             long elapsedInObjWriter = System.currentTimeMillis() - timeInObjWriter;
 
             logger.debug("[end] Wrote to object metadata tables in={} for jobRequestId={}", formatDurationHMS(elapsedInObjWriter),
                     jobRequestId);
             final ExportCompleteEvent exportCompEvent = new ExportCompleteEventBuilder()
-                    .setRowsProcessed(importEntityContext.getImportJobList().size()).setTime(elapsedInObjWriter).createExportCompleteEvent();
-            exportCompEvent.setImportId(importEntityContext.getImportId());
+                    .setRowsProcessed(importContext.getImportRowsList().size()).setTime(elapsedInObjWriter).createExportCompleteEvent();
+            exportCompEvent.setImportId(importContext.getImportId());
             post(new ProgressEvent(jobRequestId, exportCompEvent, JobStatus.DONE));
             logger.trace("Notifying user for job={}.", jobRequestId);
-            sendNotification(exportCompEvent, Collections.singletonList(importEntityContext.getJobRequest().getUser()));
+            sendNotification(exportCompEvent, Collections.singletonList(importContext.getJobRequest().getUser()));
             logger.trace("Added export event to notification queue.");
         } catch (IOException e) {
             logger.error("Error executing job", e.getMessage());

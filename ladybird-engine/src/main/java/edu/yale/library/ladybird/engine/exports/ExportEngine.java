@@ -2,13 +2,14 @@ package edu.yale.library.ladybird.engine.exports;
 
 
 import edu.yale.library.ladybird.engine.imports.Import;
+import edu.yale.library.ladybird.engine.imports.ImportContext;
 
 import java.io.IOException;
 import java.util.List;
 
 
 public interface ExportEngine {
-    ImportEntityContext read();
+    ImportContext read();
 
     void write(List<Import.Row> list, String spreadSheetFilePath) throws IOException;
 

@@ -3,6 +3,7 @@ package edu.yale.library.ladybird.engine.exports;
 import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
 import edu.yale.library.ladybird.engine.imports.Import;
 import edu.yale.library.ladybird.engine.imports.Import.Row;
+import edu.yale.library.ladybird.engine.imports.ImportContext;
 import edu.yale.library.ladybird.engine.imports.ImportValue;
 import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
@@ -38,7 +39,7 @@ public class ExportReader {
      * Main method. Reads import tables (import job contents and import source) and merges OAI data
      * @return ImportEntityContext
      */
-    public ImportEntityContext read() {
+    public ImportContext read() {
         final ExportRequestEvent exportRequestEvent = ExportEngineQueue.getJob(); //from Queue
         final int importId = exportRequestEvent.getImportId();
         final int numRowsToWrite = importJobContentsDAO.getNumRowsPerImportJob(importId) + 1;
@@ -47,7 +48,7 @@ public class ExportReader {
 
         if (numRowsToWrite <= 1) {
             logger.debug("No rows to write for importId={}!", importId);
-            ImportEntityContext empty = ImportEntityContext.newInstance();
+            ImportContext empty = ImportContext.newInstance();
             empty.setImportId(importId);
             return empty;
         }
@@ -81,8 +82,8 @@ public class ExportReader {
         List<Row> contentRows = exportReaderOaiMerger.merge(importId, oaiColIndex, ladybirdFieldConstants, plainRows);
         resultRowList.addAll(contentRows);
 
-        final ImportEntityContext iContext = new ImportEntityContext();
-        iContext.setImportJobList(resultRowList);
+        final ImportContext iContext = new ImportContext();
+        iContext.setImportRowsList(resultRowList);
         iContext.setJobRequest(exportRequestEvent.getJobRequest());
         iContext.setImportId(importId);
         return iContext;
