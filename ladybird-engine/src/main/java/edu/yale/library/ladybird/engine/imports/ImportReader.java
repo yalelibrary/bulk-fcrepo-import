@@ -62,11 +62,11 @@ public final class ImportReader {
 
                 // read header:
                 try {
-                    FieldConstant f = FieldConstantUtil.getFieldConstant(String.valueOf(SpreadsheetUtil.getCellValue(cell)));
+                    FieldConstant f = FieldConstantUtil.getFieldConstant(String.valueOf(PoiCellConverter.getCellValue(cell)));
                     valueMap.add(f);
 
                     final Import.Column<String> column
-                            = new Import().new Column<>(f, String.valueOf(SpreadsheetUtil.getCellValue(cell)));
+                            = new Import().new Column<>(f, String.valueOf(PoiCellConverter.getCellValue(cell)));
                     headerRow.getColumns().add(column);
                 } catch (UnknownFieldConstantException unknownFunction) {
                     if (this.readMode == ReadMode.HALT) {
@@ -85,7 +85,7 @@ public final class ImportReader {
                     // added to keep the exhead and contents col. the same.
 
                     final Import.Column<String> column = new Import()
-                            .new Column<>(FunctionConstants.UNK, String.valueOf(SpreadsheetUtil.getCellValue(cell)));
+                            .new Column<>(FunctionConstants.UNK, String.valueOf(PoiCellConverter.getCellValue(cell)));
                     headerRow.getColumns().add(column);
                 } catch (Exception e) {
                     logger.error("Unknown error iterating header row", e);
@@ -116,7 +116,7 @@ public final class ImportReader {
                             cellCount++;
                         } else {
                             final Import.Column<String> column = importEntity.new Column<>(valueMap.get(cellCount),
-                                    String.valueOf(SpreadsheetUtil.getCellValue(cell)));
+                                    String.valueOf(PoiCellConverter.getCellValue(cell)));
                             contentsSheetRow.getColumns().add(column);
                             cellCount++;
                         }
