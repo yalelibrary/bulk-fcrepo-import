@@ -86,13 +86,13 @@ public class FieldConstantUtil {
     /**
      * Transform a strihng into a a FieldConstant
      *
-     * @param cellValue spreadsheet cell value
+     * @param value spreadsheet cell value
      * @return a FieldConstant
      * @throws edu.yale.library.ladybird.engine.model.UnknownFieldConstantException
      *
      */
-    public static FieldConstant getFieldConstant(final String cellValue) throws UnknownFieldConstantException {
-        final FieldConstant f = FieldConstantUtil.toFieldConstant(cellValue);
+    public static FieldConstant getFieldConstant(final String value) throws UnknownFieldConstantException {
+        final FieldConstant f = FieldConstantUtil.toFieldConstant(value);
 
         if (f != null) {
             return f;
@@ -100,10 +100,10 @@ public class FieldConstantUtil {
 
         //Try converting it to function constant (redundantly):
         try {
-            final String normCellString = cellValue.replace("{", "").replace("}", "");
+            final String normCellString = value.replace("{", "").replace("}", "");
             return FunctionConstants.valueOf(normCellString.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new UnknownFieldConstantException("Specified cell=" + cellValue + " unrecognized function or fdid.");
+            throw new UnknownFieldConstantException(value + " unknown function or fdid.");
         }
     }
 

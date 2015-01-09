@@ -76,7 +76,7 @@ public final class ImportReader {
                         importReaderValidationException.initCause(unknownFunction);
                         throw importReaderValidationException;
                     }
-                    logger.debug("Unknown exhead={}", unknownFunction.getMessage());
+                    logger.debug("Warning: ({}, {})={}", file, sheetNumber, unknownFunction.getMessage());
                     //means probably fdid has not been added in the properties
 
                     valueMap.add(FunctionConstants.UNK); //TODO shouldn't be used to represent both unknown func and fdid

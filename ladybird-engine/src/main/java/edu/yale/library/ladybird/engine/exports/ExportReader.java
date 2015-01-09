@@ -44,7 +44,7 @@ public class ExportReader {
         final int importId = exportRequestEvent.getImportId();
         final int numRowsToWrite = importJobContentsDAO.getNumRowsPerImportJob(importId) + 1;
 
-        logger.debug("Read job={} from export engine queue. Expected num to write={}", importId, numRowsToWrite);
+        logger.debug("Read job={} from export engine queue. Expected num rows to write={}", importId, numRowsToWrite);
 
         if (numRowsToWrite <= 1) {
             logger.debug("No rows to write for importId={}!", importId);
