@@ -36,7 +36,7 @@ public class ImportWriter {
     //TODO inject dao(s), etc
 
     private OaiProvider oaiProvider;
-    private MediaFunctionProcessor mediaFunctionProcessor;
+    private ImageFunctionProcessor imageFunctionProcessor;
     private ImportSourceProcessor importSourceProcessor;
     private final ImportJobContentsDAO dao = new ImportJobContentsHibernateDAO();
     private final ImportJobDAO importJobDAO = new ImportJobHibernateDAO();
@@ -129,7 +129,7 @@ public class ImportWriter {
             if (sheetFieldConstants.contains(FunctionConstants.F1)) {
                 if (sheetFieldConstants.contains(FunctionConstants.F3)) { //F1 is present -> update oid with attached F3
                     logger.info("Spreadsheet has col F1, and F3");
-                    mediaFunctionProcessor.createObjectFiles(importId, importEntity);
+                    imageFunctionProcessor.createObjectFiles(importId, importEntity);
                     addImageConversionJob(importId, importEntity);
                 } else { //F1 is present, but no F3. Nothing to do.
                     logger.info("No F3 column found in spreadsheet. Nothing to do.");
@@ -137,12 +137,12 @@ public class ImportWriter {
             } else {
                 if (sheetFieldConstants.contains(FunctionConstants.F3)) { //no F1 -> generate oid and attach F3
                     logger.info("Spreadsheet doesn't have F1, but F3");
-                    mediaFunctionProcessor.createObjectFiles(importId, importEntity);
+                    imageFunctionProcessor.createObjectFiles(importId, importEntity);
                     addImageConversionJob(importId, importEntity);
                 } else { //Neither F1, nor F3 present -> generate blank
                     logger.info("Spreadsheet doesn't have F1, nor F3");
                     importEntity = addF3Column(importEntity);
-                    mediaFunctionProcessor.createObjectFiles(importId, importEntity);
+                    imageFunctionProcessor.createObjectFiles(importId, importEntity);
                     addImageConversionJob(importId, importEntity);
                 }
             }
@@ -192,7 +192,7 @@ public class ImportWriter {
         ImageConversionRequestEvent event = new ImageConversionRequestEvent();
         event.setImportValue(importValue);
         event.setImportId(importId);
-        event.setExportDirPath(mediaFunctionProcessor.getProjectDir());
+        event.setExportDirPath(imageFunctionProcessor.getProjectDir());
 
         logger.debug("Adding event to image conversion queue={}", event);
 
@@ -239,8 +239,8 @@ public class ImportWriter {
     /**
      * Sets Media Function Processor. Subject to removal
      */
-    public void setMediaFunctionProcessor(final MediaFunctionProcessor mediaFunctionProcessor) {
-        this.mediaFunctionProcessor = mediaFunctionProcessor;
+    public void setImageFunctionProcessor(final ImageFunctionProcessor imageFunctionProcessor) {
+        this.imageFunctionProcessor = imageFunctionProcessor;
     }
 
     public void setImportSourceProcessor(ImportSourceProcessor importSourceProcessor) {

@@ -26,7 +26,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static java.lang.Integer.parseInt;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class MediaFunctionProcessor {
+public class ImageFunctionProcessor {
 
     private final Logger logger = getLogger(this.getClass());
 
@@ -40,7 +40,7 @@ public class MediaFunctionProcessor {
 
     private String outPathPrefix = "";
 
-    public MediaFunctionProcessor(String rootPath, String projectDir) {
+    public ImageFunctionProcessor(String rootPath, String projectDir) {
         this.rootPath = rootPath;
         this.projectDir = projectDir;
 

@@ -24,10 +24,10 @@ public abstract class AbstractImportEngine implements ImportEngine {
         this.oaiProvider = oaiProvider;
     }
 
-    protected MediaFunctionProcessor mediaFunctionProcessor; //TODO desgin
+    protected ImageFunctionProcessor imageFunctionProcessor; //TODO desgin
 
-    public void setMediaFunctionProcessor(MediaFunctionProcessor mediaFunctionProcessor) {
-        this.mediaFunctionProcessor = mediaFunctionProcessor;
+    public void setImageFunctionProcessor(ImageFunctionProcessor imageFunctionProcessor) {
+        this.imageFunctionProcessor = imageFunctionProcessor;
     }
 
     protected ImportSourceProcessor importSourceProcessor;

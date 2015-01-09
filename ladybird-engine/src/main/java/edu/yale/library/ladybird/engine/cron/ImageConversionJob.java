@@ -1,10 +1,9 @@
 package edu.yale.library.ladybird.engine.cron;
 
 import edu.yale.library.ladybird.engine.JobStatus;
-import edu.yale.library.ladybird.engine.ProgressEventListener;
 import edu.yale.library.ladybird.engine.imports.ImageConversionRequestEvent;
-import edu.yale.library.ladybird.engine.imports.MediaFunctionProcessor;
-import edu.yale.library.ladybird.engine.imports.MediaProcessingEvent;
+import edu.yale.library.ladybird.engine.imports.ImageFunctionProcessor;
+import edu.yale.library.ladybird.engine.imports.ImageProcessingEvent;
 import edu.yale.library.ladybird.entity.Settings;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
@@ -49,11 +48,11 @@ public class ImageConversionJob implements Job {
 
         final long timeInConversion = System.currentTimeMillis();
 
-        final MediaFunctionProcessor mediaFunctionProcessor =
+        final ImageFunctionProcessor imageFunctionProcessor =
                 getCtxMediaFunctionProcessor(importReqEvent.getExportDirPath());
 
         // Post init
-        MediaProcessingEvent mediaEventInit = new MediaProcessingEvent();
+        ImageProcessingEvent mediaEventInit = new ImageProcessingEvent();
 
         // TODO
         final int importId = importReqEvent.getImportId();
@@ -72,10 +71,10 @@ public class ImageConversionJob implements Job {
         post(progressEvent);
 
         try {
-            mediaFunctionProcessor.convert(importReqEvent.getImportId(), importReqEvent.getImportValue());
+            imageFunctionProcessor.convert(importReqEvent.getImportId(), importReqEvent.getImportValue());
             final long elapsed = System.currentTimeMillis() - timeInConversion;
 
-            MediaProcessingEvent mediaEvent = new MediaProcessingEvent();
+            ImageProcessingEvent mediaEvent = new ImageProcessingEvent();
             mediaEvent.setDuration(elapsed);
             mediaEvent.setImportId(requestId);
             //TODO check it matches up:
@@ -90,7 +89,7 @@ public class ImageConversionJob implements Job {
     }
 
     //TODO
-    private void sendNotification(final MediaProcessingEvent importEvent, final List<User> userList) {
+    private void sendNotification(final ImageProcessingEvent importEvent, final List<User> userList) {
         String message = "Media processed: " + importEvent.getConversions();
         message += ",Time: " + DurationFormatUtils.formatDurationWords(importEvent.getDuration(), true, true);
         String subject = "Import complete for job #" + importEvent.getImportId();
@@ -100,15 +99,15 @@ public class ImageConversionJob implements Job {
     /**
      * Returns a MediaFunctionProcessor if db state is found
      */
-    private MediaFunctionProcessor getCtxMediaFunctionProcessor(final String path) {
+    private ImageFunctionProcessor getCtxMediaFunctionProcessor(final String path) {
         final Settings settings = settingsDAO.findByProperty(ApplicationProperties.IMPORT_ROOT_PATH_ID);
 
         if (settings == null) {
             logger.debug("No db configured property={}", ApplicationProperties.IMPORT_ROOT_PATH_ID);
-            return new MediaFunctionProcessor(ApplicationProperties.CONFIG_STATE.IMPORT_ROOT_PATH, path);
+            return new ImageFunctionProcessor(ApplicationProperties.CONFIG_STATE.IMPORT_ROOT_PATH, path);
         }
 
         final String rootPath = settings.getValue();
-        return new MediaFunctionProcessor(rootPath, path);
+        return new ImageFunctionProcessor(rootPath, path);
     }
 }

@@ -3,7 +3,6 @@ package edu.yale.library.ladybird.engine.cron;
 
 import edu.yale.library.ladybird.engine.EventBus;
 import edu.yale.library.ladybird.engine.JobStatus;
-import edu.yale.library.ladybird.engine.ProgressEventListener;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
 import edu.yale.library.ladybird.engine.imports.DefaultImportEngine;
 import edu.yale.library.ladybird.engine.imports.ImportCompleteEvent;
@@ -13,7 +12,7 @@ import edu.yale.library.ladybird.engine.imports.ImportEngineException;
 import edu.yale.library.ladybird.engine.imports.Import;
 import edu.yale.library.ladybird.engine.imports.ImportReaderValidationException;
 import edu.yale.library.ladybird.engine.imports.ImportRequestEvent;
-import edu.yale.library.ladybird.engine.imports.MediaFunctionProcessor;
+import edu.yale.library.ladybird.engine.imports.ImageFunctionProcessor;
 import edu.yale.library.ladybird.engine.imports.ReadMode;
 import edu.yale.library.ladybird.engine.imports.Spreadsheet;
 import edu.yale.library.ladybird.engine.oai.ImportSourceProcessor;
@@ -75,9 +74,9 @@ public class DefaultImportJob implements Job, ImportJob {
 
             //passes relative path for each import job.
             //This is provided by the user on each run. The root path is set application wide.
-            final MediaFunctionProcessor mediaFunctionProcessor =
+            final ImageFunctionProcessor imageFunctionProcessor =
                     getCtxMediaFunctionProcessor(importRequestedEvent.getJobRequest().getExportPath());
-            importEngine.setMediaFunctionProcessor(mediaFunctionProcessor);
+            importEngine.setImageFunctionProcessor(imageFunctionProcessor);
             importEngine.setImportSourceProcessor(new ImportSourceProcessor());
 
             logger.debug("Writing to import table(s) for job={}", importRequestedEvent.getImportId());
@@ -148,16 +147,16 @@ public class DefaultImportJob implements Job, ImportJob {
     /**
      * Returns a MediaFunctionProcessor if db state is found
      */
-    private MediaFunctionProcessor getCtxMediaFunctionProcessor(final String path) {
+    private ImageFunctionProcessor getCtxMediaFunctionProcessor(final String path) {
         SettingsDAO settingsDAO = new SettingsHibernateDAO();
         final Settings settings = settingsDAO.findByProperty(ApplicationProperties.IMPORT_ROOT_PATH_ID);
 
         if (settings == null) {
             logger.debug("No db configured property={}", ApplicationProperties.IMPORT_ROOT_PATH_ID);
-            return new MediaFunctionProcessor(ApplicationProperties.CONFIG_STATE.IMPORT_ROOT_PATH, path);
+            return new ImageFunctionProcessor(ApplicationProperties.CONFIG_STATE.IMPORT_ROOT_PATH, path);
         }
         final String rootPath = settings.getValue();
-        return new MediaFunctionProcessor(rootPath, path);
+        return new ImageFunctionProcessor(rootPath, path);
     }
 
 }

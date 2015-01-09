@@ -28,7 +28,7 @@ public class DefaultImportEngine extends AbstractImportEngine {
 
         ImportWriter importWriter = new ImportWriter();
         importWriter.setOaiProvider(oaiProvider);  //TODO
-        importWriter.setMediaFunctionProcessor(mediaFunctionProcessor); //TODO
+        importWriter.setImageFunctionProcessor(imageFunctionProcessor); //TODO
         importWriter.setImportSourceProcessor(importSourceProcessor); //TODO
 
         ImportValue importValue = new ImportValue(list);
@@ -49,7 +49,7 @@ public class DefaultImportEngine extends AbstractImportEngine {
 
         ImportWriter importWriter = new ImportWriter();
         importWriter.setOaiProvider(oaiProvider);  //TODO
-        importWriter.setMediaFunctionProcessor(mediaFunctionProcessor); //TODO
+        importWriter.setImageFunctionProcessor(imageFunctionProcessor); //TODO
         importWriter.setImportSourceProcessor(importSourceProcessor); //TODO
 
         ImportValue importValue = new ImportValue(list);

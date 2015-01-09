@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.engine.imports;
 
 import edu.yale.library.ladybird.kernel.events.imports.ImportEvent;
 
-public final class MediaProcessingEvent extends ImportEvent {
+public final class ImageProcessingEvent extends ImportEvent {
 
     private  int importId;
 

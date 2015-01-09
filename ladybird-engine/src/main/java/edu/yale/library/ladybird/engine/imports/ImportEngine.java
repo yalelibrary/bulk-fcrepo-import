@@ -22,7 +22,7 @@ public interface ImportEngine {
 
     void setOaiProvider(OaiProvider oaiProvider);
 
-    void setMediaFunctionProcessor(MediaFunctionProcessor mediaFunctionProcessor);
+    void setImageFunctionProcessor(ImageFunctionProcessor imageFunctionProcessor);
 
     void setImportSourceProcessor(ImportSourceProcessor importSourceProcessor);
 

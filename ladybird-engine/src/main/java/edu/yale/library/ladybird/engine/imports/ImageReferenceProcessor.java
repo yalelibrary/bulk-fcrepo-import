@@ -12,6 +12,9 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * TODO to be used for F300
+ */
 public class ImageReferenceProcessor {
 
     private final Logger logger = LoggerFactory.getLogger(ImageReferenceProcessor.class);
@@ -29,7 +32,7 @@ public class ImageReferenceProcessor {
                 int oid = Integer.parseInt(col.getValue().toString());
 
                 ObjectFile objectFile = objectFileDAO.findByOid(oid);
-                String valueToUpdate = columnMap.get(col).getValue().toString(); //TODO check requirement
+                String valueToUpdate = columnMap.get(col).getValue().toString(); //TODO check
                 objectFile.setFilePath(valueToUpdate);
 
                 objectFileDAO.saveOrUpdateList(Collections.singletonList(objectFile));

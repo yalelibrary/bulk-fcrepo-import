@@ -28,7 +28,7 @@ import java.util.Set;
 /**
  * Populates object metadata (acid/strings) tables.
  *
- * @see MediaFunctionProcessor for object_file population
+ * @see ImageFunctionProcessor for object_file population
  */
 public class ObjectMetadataWriter {
 
