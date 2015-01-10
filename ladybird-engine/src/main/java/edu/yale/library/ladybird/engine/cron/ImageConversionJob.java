@@ -8,6 +8,7 @@ import edu.yale.library.ladybird.entity.Settings;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
 import edu.yale.library.ladybird.kernel.events.NotificationEventQueue;
+import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
 import edu.yale.library.ladybird.persistence.dao.SettingsDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.SettingsHibernateDAO;
@@ -32,10 +33,11 @@ public class ImageConversionJob implements Job {
 
     private SettingsDAO settingsDAO = new SettingsHibernateDAO();
 
+    private ImportJobDAO importJobDAO = new ImportJobHibernateDAO();
+
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.trace("Executing image conversion job");
-
 
         final ImageConversionRequestEvent importReqEvent = ImportImageConversionQueue.getJob();
 
@@ -44,19 +46,16 @@ public class ImageConversionJob implements Job {
             return;
         }
 
-        logger.debug("Got polled jobId={} with exportDir={}", importReqEvent.getImportId(), importReqEvent.getExportDirPath());
+        logger.debug("Got polled jobId={} with exportDir={}", importReqEvent.getImportId()
+                , importReqEvent.getExportDirPath());
 
         final long timeInConversion = System.currentTimeMillis();
-
         final ImageFunctionProcessor imageFunctionProcessor =
                 getCtxMediaFunctionProcessor(importReqEvent.getExportDirPath());
 
-        // Post init
-        ImageProcessingEvent mediaEventInit = new ImageProcessingEvent();
-
         // TODO
         final int importId = importReqEvent.getImportId();
-        List<edu.yale.library.ladybird.entity.ImportJob> importJobs = new ImportJobHibernateDAO().findByJobId(importId);
+        List<edu.yale.library.ladybird.entity.ImportJob> importJobs = importJobDAO.findByJobId(importId);
         int requestId = -1;
 
         if (importJobs.isEmpty()) {
@@ -65,6 +64,8 @@ public class ImageConversionJob implements Job {
             requestId = importJobs.get(0).getRequestId();
         }
 
+        // Post init
+        ImageProcessingEvent mediaEventInit = new ImageProcessingEvent();
         mediaEventInit.setImportId(requestId);
         ProgressEvent progressEvent = new ProgressEvent(requestId, mediaEventInit,
                 JobStatus.INIT);
@@ -74,14 +75,14 @@ public class ImageConversionJob implements Job {
             imageFunctionProcessor.convert(importReqEvent.getImportId(), importReqEvent.getImportValue());
             final long elapsed = System.currentTimeMillis() - timeInConversion;
 
-            ImageProcessingEvent mediaEvent = new ImageProcessingEvent();
-            mediaEvent.setDuration(elapsed);
-            mediaEvent.setImportId(requestId);
+            ImageProcessingEvent mediaCompleteEvent = new ImageProcessingEvent();
+            mediaCompleteEvent.setDuration(elapsed);
+            mediaCompleteEvent.setImportId(requestId);
             //TODO check it matches up:
-            mediaEvent.setConversions(importReqEvent.getImportValue().getContentRows().size());
+            mediaCompleteEvent.setConversions(importReqEvent.getImportValue().getContentRows().size());
 
             // Post completion
-            post(new ProgressEvent(requestId, mediaEvent, JobStatus.DONE));
+            post(new ProgressEvent(requestId, mediaCompleteEvent, JobStatus.DONE));
         } catch (IOException e) {
             logger.error("Error executing job", e);
         }
@@ -93,11 +94,12 @@ public class ImageConversionJob implements Job {
         String message = "Media processed: " + importEvent.getConversions();
         message += ",Time: " + DurationFormatUtils.formatDurationWords(importEvent.getDuration(), true, true);
         String subject = "Import complete for job #" + importEvent.getImportId();
-        NotificationEventQueue.addEvent(new NotificationEventQueue().new NotificationItem(importEvent, userList, message, subject));
+        NotificationEventQueue.addEvent(new NotificationEventQueue()
+                .new NotificationItem(importEvent, userList, message, subject));
     }
 
     /**
-     * Returns a MediaFunctionProcessor if db state is found
+     * Returns a ImageFunctionProcessor if db state is found
      */
     private ImageFunctionProcessor getCtxMediaFunctionProcessor(final String path) {
         final Settings settings = settingsDAO.findByProperty(ApplicationProperties.IMPORT_ROOT_PATH_ID);

@@ -25,19 +25,22 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  *  Schedules file notification job
- *  TODO test e.g. to ensure that only max num of tries is executed)
+ *  TODO test (e.g. to ensure that only max num of tries is executed)
  */
 public class DefaultExportMailerJob implements Job, ExportMailerJob {
 
     private Logger logger = getLogger(this.getClass());
 
-    //TODO: inject
     private ImportJobNotificationsDAO importJobNotficationsDAO = new ImportJobNotificationsHibernateDAO();
 
     private NotificationHandler notificationHandler = new EMailNotificationHandler();
 
-    /* maximum number of notification attemtps */
-    private short MAX_TRIES = 5;
+    private final UserDAO userDAO = new UserHibernateDAO();
+
+    private final ImportJobDAO importJobDAO = new ImportJobHibernateDAO();
+
+    /* maximum number of notification attempts */
+    private final short MAX_TRIES = 5;
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
@@ -46,9 +49,6 @@ public class DefaultExportMailerJob implements Job, ExportMailerJob {
         try {
             //1. Look up to see if any notifications need to be sent
             List<ImportJobNotifications> unsent = importJobNotficationsDAO.findAllUnsent();
-
-            UserDAO userDAO = new UserHibernateDAO(); //TODO
-            ImportJobDAO importJobDAO = new ImportJobHibernateDAO(); //TODO
 
             if (!unsent.isEmpty()) {
                 logger.trace("Unsent notifications list={}", unsent);
@@ -66,13 +66,13 @@ public class DefaultExportMailerJob implements Job, ExportMailerJob {
                         final String path = importJob.getExportJobDir();
 
                         if (path == null || path.isEmpty()) {
-                            logger.error("Path empty or null for importJob={}", importJob);
-                            logger.error("Skipping notificaion={}", unsentNotification);
+                            logger.debug("Path empty or null for importJob={}", importJob);
+                            logger.error("Skipping notification={}", unsentNotification);
                             throw new Exception("Path null or empty");
                         }
 
                         final File f = new File(path);
-                        logger.trace("Attempting to send file={} to user={}", f.getAbsolutePath(), user.getUsername());
+                        logger.trace("Sending file={} to user={}", f.getAbsolutePath(), user.getUsername());
                         notificationHandler.notifyUserWithFile(user, new ExportEvent() {
                             @Override
                             public String getEventName() {
@@ -85,21 +85,19 @@ public class DefaultExportMailerJob implements Job, ExportMailerJob {
                         unsentNotification.setNotified((byte) 1);
                         unsentNotification.setDateTried(new Date());
                         importJobNotficationsDAO.updateItem(unsentNotification);
-                        //logger.trace("Updated item={}", unsentNotification);
-                        //logger.trace("Full list={}", importJobNotficationsDAO.findAll()); //TODO remove
                     } catch (Exception e) {
-                        logger.error("Error notifing user with file attachment", e);
+                        logger.error("Error notifying user with file attachment", e);
                         unsentNotification.setNumTries(unsentNotification.getNumTries() + 1);
                         unsentNotification.setDateTried(new Date());
                         importJobNotficationsDAO.updateItem(unsentNotification);
                     }
                 } else {
-                    logger.error("Exhausted maximum number of tries notifiying userId={} for importId={}.",
+                    logger.error("Exhausted maximum number of tries notifying userId={} for importId={}.",
                             unsentNotification.getUserId(), unsentNotification.getImportJobId());
                 }
             }
         } catch (Exception e) {
-            logger.error("Error", e);
+            logger.error("Error in mailing", e);
             throw new JobExecutionException(e);
         }
     }

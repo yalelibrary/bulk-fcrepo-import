@@ -21,14 +21,12 @@ public class ImportScheduler {
     private final Logger logger = getLogger(this.getClass());
 
     private static final String DEFAULT_GROUP = "IMJ";
+
     private static final String DEFAULT_IMPORT_JOB_ID = "import_job";
 
 
     /**
      * Schedules an import cron job.
-     *
-     * @param cronExpression
-     * @throws Exception
      */
     public void scheduleJob(final String cronExpression) {
         logger.debug("Scheduling import job");
