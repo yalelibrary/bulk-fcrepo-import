@@ -19,6 +19,7 @@ public class ExportFileMailerScheduler {
     private final Logger logger = getLogger(this.getClass());
 
     private static final String DEFAULT_GROUP = "EX-MAILER";
+
     private static final String DEFAULT_JOB_ID = "ex-mailer-job";
 
     /**

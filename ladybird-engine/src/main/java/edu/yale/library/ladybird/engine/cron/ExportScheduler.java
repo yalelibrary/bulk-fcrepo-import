@@ -20,6 +20,7 @@ public class ExportScheduler {
     private final Logger logger = getLogger(this.getClass());
 
     private static final String DEFAULT_GROUP = "EXJ";
+
     private static final String DEFAULT_EXPORT_JOB_ID = "export_job";
 
     /**

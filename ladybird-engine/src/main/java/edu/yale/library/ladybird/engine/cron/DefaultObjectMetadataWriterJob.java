@@ -15,21 +15,17 @@ import org.slf4j.Logger;
 import java.util.Collections;
 import java.util.List;
 
-//import static edu.yale.library.ladybird.engine.EventBus.post;
 import static org.apache.commons.lang.time.DurationFormatUtils.formatDurationWords;
 import static org.apache.commons.lang.time.DurationFormatUtils.formatDurationHMS;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-
-//TODO schedule
 public class DefaultObjectMetadataWriterJob implements Job, ObjectMetataWriterJob {
 
     private final Logger logger = getLogger(this.getClass());
 
     private final ObjectMetadataWriter objectMetadataWriter = new ObjectMetadataWriter();
 
-    //TODO post progress. currently sends only notification (with the wrong event)
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         try {
@@ -57,16 +53,10 @@ public class DefaultObjectMetadataWriterJob implements Job, ObjectMetataWriterJo
             logger.debug("[end] Wrote to object metadata tables in={} for jobRequestId={}",
                     formatDurationHMS(elapsedInObjWriter), jobRequestId);
 
-            //TODO get some other event. Not exportComplete
             final ObjectMetadataWriteCompleteEvent objEvent = new ObjectMetadataWriteCompleteEventBuilder()
                     .setRowsProcessed(importContext.getImportRowsList().size())
                     .setTime(elapsedInObjWriter).createObjectMetadataWriteCompleteEvent();
             objEvent.setImportId(importContext.getImportId());
-
-            /*
-            //TODO should have the correct event, and init block
-            post(new ProgressEvent(jobRequestId, exportCompEvent, JobStatus.DONE));
-            */
 
             sendNotification(objEvent, Collections.singletonList(importContext.getJobRequest().getUser()));
         } catch (Exception e) {

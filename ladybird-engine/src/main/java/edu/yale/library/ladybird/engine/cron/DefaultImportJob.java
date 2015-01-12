@@ -69,7 +69,7 @@ public class DefaultImportJob implements Job, ImportJob {
             EventBus.post(progressEvent);
 
             final List<Import.Row> rowList = importEngine.read(spreadsheet, ReadMode.FULL);
-            logger.trace("Read rows. list size={}", rowList.size());
+            logger.trace("Read rows size={}", rowList.size());
 
             //TODO
             final OaiProvider provider = getCtxOaiProvider();
@@ -101,9 +101,13 @@ public class DefaultImportJob implements Job, ImportJob {
 
             logger.debug("Added import event for importId={} to notification queue", imid);
 
-            /* Add request for export */  //Note: This needs to be re-visited per logic requirement
+            //This drives both the export and object metadata writing. import context job adds an importcontext
+            //object to objWriteQ and exportQ:
+
+            //FIXME. This adds posts the ExportRequestEvent, which is not accurate
+            // it may not be the case that export is desired automatically (and only obj_ writing is desired)
+            // it should also post some ImportContext related event, indicating that an oai feed will be read
             final ExportRequestEvent exportEvent = new ExportRequestEvent(imid, importReqEvent.getJobRequest());
-            //ExportEngineQueue.addJob(exportEvent);
             ImportContextQueue.addJob(exportEvent);
 
             logger.trace("Added event to ExportEngineQueue=" + exportEvent.toString());
