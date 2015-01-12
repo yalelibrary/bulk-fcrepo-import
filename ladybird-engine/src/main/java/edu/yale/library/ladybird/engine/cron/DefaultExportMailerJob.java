@@ -76,7 +76,7 @@ public class DefaultExportMailerJob implements Job, ExportMailerJob {
                         notificationHandler.notifyUserWithFile(user, new ExportEvent() {
                             @Override
                             public String getEventName() {
-                                return "File for job #" + importJob.getImportId();
+                                return "Job #" + importJob.getImportId() + " file";
                             }
                         }, f);
 

@@ -36,9 +36,11 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import static org.apache.commons.lang3.time.DurationFormatUtils.formatDuration;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class DefaultImportJob implements Job, ImportJob {
+
     private final Logger logger = getLogger(this.getClass());
 
     /**
@@ -49,19 +51,20 @@ public class DefaultImportJob implements Job, ImportJob {
      */
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
         final long startTime = System.currentTimeMillis();
-        final ImportRequestEvent importRequestedEvent = ImportEngineQueue.getJob();
-        final Spreadsheet spreadsheet = importRequestedEvent.getSpreadsheet();
+        final ImportRequestEvent importReqEvent = ImportEngineQueue.getJob();
+        final Spreadsheet spreadsheet = importReqEvent.getSpreadsheet();
 
-        logger.debug("Starting importJobRequestId={} corresponding to file={}", importRequestedEvent.getJobRequest().getId(), spreadsheet);
+        logger.debug("Starting importJobRequestId={} corresponding to file={}",
+                importReqEvent.getJobRequest().getId(), spreadsheet);
 
         try {
-            final int userId = importRequestedEvent.getJobRequest().getUser().getUserId();
-            final int projectId = importRequestedEvent.getJobRequest().getCurrentProject().getProjectId();
+            final int userId = importReqEvent.getJobRequest().getUser().getUserId();
+            final int projectId = importReqEvent.getJobRequest().getCurrentProject().getProjectId();
 
             final ImportEngine importEngine = new DefaultImportEngine(userId, projectId);
 
             //Post init
-            ProgressEvent progressEvent = new ProgressEvent(importRequestedEvent.getJobRequest().getId(), importRequestedEvent,
+            ProgressEvent progressEvent = new ProgressEvent(importReqEvent.getJobRequest().getId(), importReqEvent,
                     JobStatus.INIT);
             EventBus.post(progressEvent);
 
@@ -75,32 +78,31 @@ public class DefaultImportJob implements Job, ImportJob {
             //passes relative path for each import job.
             //This is provided by the user on each run. The root path is set application wide.
             final ImageFunctionProcessor imageFunctionProcessor =
-                    getCtxMediaFunctionProcessor(importRequestedEvent.getJobRequest().getExportPath());
+                    getCtxMediaFunctionProcessor(importReqEvent.getJobRequest().getExportPath());
             importEngine.setImageFunctionProcessor(imageFunctionProcessor);
             importEngine.setImportSourceProcessor(new ImportSourceProcessor());
 
-            logger.debug("Writing to import table(s) for job={}", importRequestedEvent.getImportId());
+            logger.debug("Writing to import table(s) for job={}", importReqEvent.getImportId());
 
-            final int imid = importEngine.write(rowList, spreadsheet, importRequestedEvent.getJobRequest().getId());
+            final int imid = importEngine.write(rowList, spreadsheet, importReqEvent.getJobRequest().getId());
 
             long elapsedImport = System.currentTimeMillis() - startTime;
-            logger.debug("Completed import job={} in={}",
-                    imid, DurationFormatUtils.formatDuration(elapsedImport, "HH:mm:ss:SS"));
+            logger.debug("Completed import job={} in={}", imid, formatDuration(elapsedImport, "HH:mm:ss:SS"));
 
             final ImportCompleteEvent importCompEvent = new ImportCompleteEventBuilder().setTime(elapsedImport)
                     .setRowsProcessed(rowList.size()).createImportDoneEvent();
             importCompEvent.setImportId(imid);
 
             //Post progress
-            EventBus.post(new ProgressEvent(importRequestedEvent.getJobRequest().getId(), importCompEvent,
+            EventBus.post(new ProgressEvent(importReqEvent.getJobRequest().getId(), importCompEvent,
                     JobStatus.DONE));
 
-            sendNotification(importCompEvent, Collections.singletonList(importRequestedEvent.getJobRequest().getUser()));
+            sendNotification(importCompEvent, Collections.singletonList(importReqEvent.getJobRequest().getUser()));
 
             logger.debug("Added import event for importId={} to notification queue", imid);
 
             /* Add request for export */  //Note: This needs to be re-visited per logic requirement
-            final ExportRequestEvent exportEvent = new ExportRequestEvent(imid, importRequestedEvent.getJobRequest());
+            final ExportRequestEvent exportEvent = new ExportRequestEvent(imid, importReqEvent.getJobRequest());
             //ExportEngineQueue.addJob(exportEvent);
             ImportContextQueue.addJob(exportEvent);
 
@@ -112,18 +114,18 @@ public class DefaultImportJob implements Job, ImportJob {
             logger.error("Error executing job", e.getMessage());
             throw new ImportEngineException(e);
         } catch (final ImportEngineException cre) {
-            logger.error("Exception in import job number={}.", importRequestedEvent.getJobRequest().getId(), cre);
+            logger.error("Exception in import job number={}.", importReqEvent.getJobRequest().getId(), cre);
             throw cre;
         } catch (Exception e) {
-            logger.error("Exception in import job number={}.", importRequestedEvent.getJobRequest().getId(), e);
+            logger.error("Exception in import job number={}.", importReqEvent.getJobRequest().getId(), e);
             throw new ImportEngineException(e);
         }
     }
 
     private void sendNotification(final ImportCompleteEvent importEvent, final List<User> userList) {
-        String message = "Rows imported: " + importEvent.getRowsProcessed();
-        message += ",Time: " + DurationFormatUtils.formatDurationWords(importEvent.getTime(), true, true);
-        String subject = "Import complete for job #" + importEvent.getImportId();
+        String subject = "Job #" + importEvent.getImportId() + " spreadsheet import complete";
+        String message = "Rows imported from file: " + importEvent.getRowsProcessed();
+        message += ", Time: " + DurationFormatUtils.formatDurationWords(importEvent.getTime(), true, true);
         NotificationEventQueue.addEvent(new NotificationEventQueue().new NotificationItem(importEvent, userList, message, subject));
     }
 

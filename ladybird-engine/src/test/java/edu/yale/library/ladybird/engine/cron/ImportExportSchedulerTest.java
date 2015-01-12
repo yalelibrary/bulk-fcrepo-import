@@ -17,8 +17,8 @@ import static org.junit.Assert.fail;
 public class ImportExportSchedulerTest {
 
     private SimpleSmtpServer server = null;
-    public static final int PORT = 8082;
 
+    public static final int PORT = 8082;
 
     @Before
     public void setup() {

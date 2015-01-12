@@ -17,8 +17,10 @@ import edu.yale.library.ladybird.entity.ImportJob;
 import edu.yale.library.ladybird.entity.ImportJobNotifications;
 import edu.yale.library.ladybird.entity.JobRequest;
 import edu.yale.library.ladybird.entity.Settings;
+import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.entity.UserProjectFieldExportOptions;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
+import edu.yale.library.ladybird.kernel.events.NotificationEventQueue;
 import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobNotificationsDAO;
 import edu.yale.library.ladybird.persistence.dao.SettingsDAO;
@@ -35,10 +37,12 @@ import org.slf4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import static edu.yale.library.ladybird.engine.EventBus.post;
+import static org.apache.commons.lang.time.DurationFormatUtils.formatDurationWords;
 import static org.apache.commons.lang3.time.DurationFormatUtils.formatDuration;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -113,16 +117,26 @@ public class DefaultExportJob implements Job, ExportJob {
                     jobRequestId);
 
             final ExportCompleteEvent exportCompEvent = new ExportCompleteEventBuilder()
-                    .setRowsProcessed(importContext.getImportRowsList().size()).setTime(timeInXlsWriting)
+                    .setRowsProcessed(importContext.getImportRowsList().size()).setTime(elapsedInXls)
                     .createExportCompleteEvent();
 
             exportCompEvent.setImportId(importContext.getImportId());
             post(new ProgressEvent(jobRequestId, exportCompEvent, JobStatus.DONE));
 
+            sendNotification(exportCompEvent, Collections.singletonList(importContext.getJobRequest().getUser()));
         } catch (IOException e) {
             logger.error("Error executing job", e.getMessage());
             throw new ImportEngineException(e);
         }
+    }
+
+    private void sendNotification(final ExportCompleteEvent exportEvent, final List<User> u) {
+        String subject = "Job # " + exportEvent.getImportId() + " XLS write complete";
+        String message = "Metadata  written to a spreadsheet with rows:"
+                + exportEvent.getRowsProcessed();
+        message += ", Xls write time:" + formatDurationWords(exportEvent.getTime(), true, true);
+        NotificationEventQueue.addEvent(new NotificationEventQueue()
+                .new NotificationItem(exportEvent, u, message, subject));
     }
 
     private void updateImportJobs(final int jobId, final String exportFilePath) {
@@ -145,7 +159,6 @@ public class DefaultExportJob implements Job, ExportJob {
             notice.setDateCreated(new Date());
             notice.setUserId(userId);
             notificationsDAO.save(notice);
-            logger.trace("Saved entity={}", notice);
         } catch (Exception e) {
             logger.error("Error updating import job notification", e); //TODO throw exception
         }
@@ -161,7 +174,6 @@ public class DefaultExportJob implements Job, ExportJob {
      * @return full path
      */
     private String getWritePath(final String relativePath) {
-        logger.trace("Looking up relative path={}", relativePath);
         if (ApplicationProperties.CONFIG_STATE.IMPORT_ROOT_PATH == null) {
             logger.error("No import root path. Returning relative path as is.");
             return relativePath;
@@ -173,7 +185,6 @@ public class DefaultExportJob implements Job, ExportJob {
             logger.trace("No db configured property={}", ApplicationProperties.IMPORT_ROOT_PATH_ID);
             return ApplicationProperties.CONFIG_STATE.IMPORT_ROOT_PATH + File.separator + relativePath;
         } else {
-            logger.trace("Full path as={}", settings.getValue() + File.separator + relativePath);
             return settings.getValue() + File.separator + relativePath;
         }
     }

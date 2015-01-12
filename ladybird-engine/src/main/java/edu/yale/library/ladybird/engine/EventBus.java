@@ -14,6 +14,7 @@ public class EventBus {
     private static final Logger logger = getLogger(EventBus.class);
 
     private static Module module;
+
     private static com.google.common.eventbus.EventBus eventBus;
 
     public void init() {
@@ -39,7 +40,6 @@ public class EventBus {
 
     /**
      * Get the event bus and instantiate listeners
-     * @return
      */
     private static com.google.common.eventbus.EventBus getEventBus() {
         final Injector injector = Guice.createInjector(getModule()); //TODO

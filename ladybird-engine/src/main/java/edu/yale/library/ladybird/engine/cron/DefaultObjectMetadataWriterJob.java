@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.engine.cron;
 
-import edu.yale.library.ladybird.engine.exports.ExportCompleteEvent;
-import edu.yale.library.ladybird.engine.exports.ExportCompleteEventBuilder;
+import edu.yale.library.ladybird.engine.exports.ObjectMetadataWriteCompleteEvent;
+import edu.yale.library.ladybird.engine.exports.ObjectMetadataWriteCompleteEventBuilder;
 import edu.yale.library.ladybird.engine.imports.ImportContext;
 import edu.yale.library.ladybird.engine.imports.ImportEngineException;
 import edu.yale.library.ladybird.engine.imports.ObjectMetadataWriter;
@@ -58,27 +58,30 @@ public class DefaultObjectMetadataWriterJob implements Job, ObjectMetataWriterJo
                     formatDurationHMS(elapsedInObjWriter), jobRequestId);
 
             //TODO get some other event. Not exportComplete
-            final ExportCompleteEvent exportCompEvent = new ExportCompleteEventBuilder()
-                    .setRowsProcessed(importContext.getImportRowsList().size()).setTime(elapsedInObjWriter).createExportCompleteEvent();
-            exportCompEvent.setImportId(importContext.getImportId());
+            final ObjectMetadataWriteCompleteEvent objEvent = new ObjectMetadataWriteCompleteEventBuilder()
+                    .setRowsProcessed(importContext.getImportRowsList().size())
+                    .setTime(elapsedInObjWriter).createObjectMetadataWriteCompleteEvent();
+            objEvent.setImportId(importContext.getImportId());
 
             /*
             //TODO should have the correct event, and init block
             post(new ProgressEvent(jobRequestId, exportCompEvent, JobStatus.DONE));
             */
 
-            sendNotification(exportCompEvent, Collections.singletonList(importContext.getJobRequest().getUser()));
+            sendNotification(objEvent, Collections.singletonList(importContext.getJobRequest().getUser()));
         } catch (Exception e) {
             logger.error("Error executing job", e.getMessage());
             throw new ImportEngineException(e);
         }
     }
 
-    private void sendNotification(final ExportCompleteEvent exportEvent, final List<User> u) {
-        String message = "Rows metadata written:" + exportEvent.getRowsProcessed();
-        message += ", Time:" + formatDurationWords(exportEvent.getTime(), true, true);
-        String subject = "Export complete for job # " + exportEvent.getImportId();
-        NotificationEventQueue.addEvent(new NotificationEventQueue().new NotificationItem(exportEvent, u, message, subject));
+    private void sendNotification(final ObjectMetadataWriteCompleteEvent objectMetaEvent, final List<User> u) {
+        String subject = "Job # " + objectMetaEvent.getImportId() + " metadata population to db complete";
+        String message = "Metadata written to tables for spreadsheet rows:"
+                + objectMetaEvent.getRowsProcessed();
+        message += ", Time:" + formatDurationWords(objectMetaEvent.getTime(), true, true);
+        NotificationEventQueue.addEvent(new NotificationEventQueue()
+                .new NotificationItem(objectMetaEvent, u, message, subject));
     }
 
     private static final long current() {
