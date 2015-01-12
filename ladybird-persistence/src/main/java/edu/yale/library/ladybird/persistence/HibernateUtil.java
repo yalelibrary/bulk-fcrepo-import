@@ -22,15 +22,15 @@ public final class HibernateUtil {
      * @return org.hibernate.SessionFactory
      */
     private static SessionFactory buildSessionFactory() throws Exception {
-        logger.debug("Building Hibernate Session Factory");
         try {
             Configuration configuration = new Configuration();
-            final String CFG_XML = new ConfigReader().getConfigFile();
-            logger.debug("Using config: " + CFG_XML);
-            configuration.configure(CFG_XML);
+            final String cfgXmlFile = new ConfigReader().getConfigFile();
+            logger.debug("Using config file={}", cfgXmlFile);
+            configuration.configure(cfgXmlFile);
             ServiceRegistryBuilder serviceRegistryBuilder = new ServiceRegistryBuilder().
                     applySettings(configuration.getProperties());
-            SessionFactory sessionFactory = configuration.
+            logger.debug("Building session factory");
+           SessionFactory sessionFactory = configuration.
                     buildSessionFactory(serviceRegistryBuilder.buildServiceRegistry());
             return sessionFactory;
         } catch (Exception ex) {
@@ -46,7 +46,7 @@ public final class HibernateUtil {
                     try {
                         sessionFactory = buildSessionFactory();
                     } catch (Exception e) {
-                        e.printStackTrace(); //ignore for now
+                        logger.error("Error getting session factory", e);
                     }
                 }
             }
@@ -55,7 +55,7 @@ public final class HibernateUtil {
     }
 
     public static void shutdown() {
-        logger.debug("Shutting down Hibernate Session Factory");
+        logger.debug("Shutting down session factory");
         try {
             getSessionFactory().close();
         } catch (HibernateException e) {
@@ -63,7 +63,6 @@ public final class HibernateUtil {
         }
     }
 
-    //TODO external
     private static class ConfigReader {
         public String getConfigFile() throws Exception {
             ConfigReader configReader = new ConfigReader();
@@ -72,7 +71,7 @@ public final class HibernateUtil {
 
         /**
          * Sets the config file name.
-         * TODO change either-or logic (default or custom)
+         * TODO cleanup
          *
          * @return Name of configuration file
          * @throws Exception
@@ -105,17 +104,13 @@ public final class HibernateUtil {
             try {
                 Properties properties = new Properties();
                 properties.load(this.getClass().getResourceAsStream(path));
-                String config = properties.getProperty(p);
-                return config;
+                return properties.getProperty(p);
             } catch (IOException | NullPointerException e) {
-                logger.error("Error reading property :" + e.getMessage());
-                logger.error("The path or file to be read was:" + path);
-                logger.error("The property to be read was:" + p);
+                logger.error("Error reading property={}", e.getMessage());
+                logger.error("The path or file to be read was={}", path);
+                logger.error("The property to be read was={}", p);
                 throw new Exception(e);
             }
-        }
-
-        public ConfigReader() {
         }
 
     }
