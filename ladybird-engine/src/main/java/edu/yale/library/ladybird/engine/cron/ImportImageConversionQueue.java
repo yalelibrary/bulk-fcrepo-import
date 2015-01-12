@@ -20,7 +20,6 @@ public class ImportImageConversionQueue {
 
     public static boolean addJob(ImageConversionRequestEvent event) {
         logger.debug("Adding to image conversion job={}", event.toString());
-        KernelBootstrap.postEvent(event);
         return jobQueue.add(event);
     }
 

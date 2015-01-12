@@ -15,7 +15,6 @@ public class ExportWriterQueue {
 
     public static boolean addJob(ImportContext event) {
         logger.debug("Adding to queue job={}", event.toString());
-        //KernelBootstrap.postEvent(event); //TODO
         return jobQueue.add(event);
     }
 

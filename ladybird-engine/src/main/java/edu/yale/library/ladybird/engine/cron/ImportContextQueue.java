@@ -1,7 +1,6 @@
 package edu.yale.library.ladybird.engine.cron;
 
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
-import edu.yale.library.ladybird.kernel.KernelBootstrap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +16,6 @@ public class ImportContextQueue {
 
     public static boolean addJob(ExportRequestEvent event) {
         logger.debug("Adding to queue job={}", event.toString());
-        KernelBootstrap.postEvent(event);
         return jobQueue.add(event);
     }
 
