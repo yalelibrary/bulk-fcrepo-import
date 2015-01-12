@@ -2,9 +2,10 @@ package edu.yale.library.ladybird.engine.file;
 
 import com.google.common.collect.Multimap;
 import edu.yale.library.ladybird.engine.AbstractDBTest;
-import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
-import edu.yale.library.ladybird.engine.exports.ExportReader;
-import edu.yale.library.ladybird.engine.exports.ExportReaderOaiMerger;
+import edu.yale.library.ladybird.engine.cron.ExportWriterQueue;
+import edu.yale.library.ladybird.engine.cron.ImportContextQueue;
+import edu.yale.library.ladybird.engine.exports.ImportContextReader;
+import edu.yale.library.ladybird.engine.exports.ImportContextReaderOaiMerger;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
 import edu.yale.library.ladybird.engine.imports.ImportContext;
 import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
@@ -44,11 +45,10 @@ public class ExportReaderIT extends AbstractDBTest {
         KernelBootstrap kernelBootstrap = new KernelBootstrap();
         kernelBootstrap.setAbstractModule(new GuiceModule());
 
-        ExportEngineQueue.addJob(new ExportRequestEvent());
+        ImportContextQueue.addJob(new ExportRequestEvent());
 
-
-        ExportReader exportReader = new ExportReader();
-        ImportContext importContext = exportReader.read();
+        ImportContextReader importContextReader = new ImportContextReader();
+        ImportContext importContext = importContextReader.read();
         assert (importContext.getImportRowsList().size() == 0);
     }
 
@@ -78,12 +78,12 @@ public class ExportReaderIT extends AbstractDBTest {
         //logger.debug("Map={}", map.toString());
 
 
-        ExportReaderOaiMerger exportReaderOaiMerger = new ExportReaderOaiMerger();
+        ImportContextReaderOaiMerger importContextReaderOaiMerger = new ImportContextReaderOaiMerger();
 
 
         for (FieldConstant f: globalFConstantsList) {
             Marc21Field marc21Field = new FdidMarcMappingUtil().toMarc21Field(f);
-            String s = exportReaderOaiMerger.getMultimapMarc21Field(marc21Field, map);
+            String s = importContextReaderOaiMerger.getMultimapMarc21Field(marc21Field, map);
             //logger.debug("Value={}", s);
             assertEquals("Value mismatch", s, "Test value");
         }

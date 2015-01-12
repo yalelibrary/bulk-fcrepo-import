@@ -8,20 +8,17 @@ import edu.yale.library.ladybird.engine.exports.ExportCompleteEventBuilder;
 import edu.yale.library.ladybird.engine.exports.ExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
 import edu.yale.library.ladybird.engine.exports.ExportSheet;
+import edu.yale.library.ladybird.engine.imports.Import;
 import edu.yale.library.ladybird.engine.imports.ImportContext;
 import edu.yale.library.ladybird.engine.imports.ImportEngineException;
-import edu.yale.library.ladybird.engine.imports.Import;
-import edu.yale.library.ladybird.engine.imports.ObjectMetadataWriter;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.ImportJob;
 import edu.yale.library.ladybird.entity.ImportJobNotifications;
 import edu.yale.library.ladybird.entity.JobRequest;
 import edu.yale.library.ladybird.entity.Settings;
-import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.entity.UserProjectFieldExportOptions;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
-import edu.yale.library.ladybird.kernel.events.NotificationEventQueue;
 import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobNotificationsDAO;
 import edu.yale.library.ladybird.persistence.dao.SettingsDAO;
@@ -30,7 +27,6 @@ import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobHibernateDAO
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobNotificationsHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.SettingsHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserProjectFieldExportOptionsHibernateDAO;
-import org.apache.commons.lang.time.DurationFormatUtils;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -39,16 +35,15 @@ import org.slf4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import static edu.yale.library.ladybird.engine.EventBus.post;
-import static org.apache.commons.lang.time.DurationFormatUtils.formatDurationHMS;
-import static org.apache.commons.lang.time.DurationFormatUtils.formatDurationWords;
+import static org.apache.commons.lang3.time.DurationFormatUtils.formatDuration;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class DefaultExportJob implements Job, ExportJob {
+
     private final Logger logger = getLogger(this.getClass());
 
     private ImportJobDAO importJobDAO = new ImportJobHibernateDAO();
@@ -57,9 +52,10 @@ public class DefaultExportJob implements Job, ExportJob {
 
     private final SettingsDAO settingsDAO = new SettingsHibernateDAO();
 
+    private final ExportEngine exportEngine = new DefaultExportEngine();
+
     /**
      * Export Job reads content rows from import job tables and writes to a spreadsheet
-     * It also writes to Object metadata tables (e.g. object acid)
      *
      * TODO find out how to tie user id to file data
      *
@@ -67,11 +63,16 @@ public class DefaultExportJob implements Job, ExportJob {
      * @throws org.quartz.JobExecutionException
      */
     public void execute(JobExecutionContext ctx) throws JobExecutionException {
-        final ExportEngine exportEngine = new DefaultExportEngine();
 
         try {
-            final ImportContext importContext = exportEngine.read();
-            logger.debug("Read from export engine, size={}", importContext.getImportRowsList().size());
+            final ImportContext importContext = ExportWriterQueue.getJob();
+
+            if (importContext == null) {
+                return;
+            }
+
+            logger.debug("Read from export engine queue, import context size={}",
+                    importContext.getImportRowsList().size());
 
             if (importContext.getImportRowsList().isEmpty()) {
                 logger.error("0 rows to export.");
@@ -86,7 +87,7 @@ public class DefaultExportJob implements Job, ExportJob {
                     exportRequestEvent, JobStatus.INIT));
 
             /**
-             * 1. a. Write to spreadsheet, b. update import_jobs, c. send file
+             * Write to spreadsheet, b. update import_jobs, c. send file
              */
             logger.debug("Writing sheet for export job={}", importContext.getImportId());
 
@@ -101,34 +102,23 @@ public class DefaultExportJob implements Job, ExportJob {
             exportSheets.add(sheet2);
             exportEngine.writeSheets(exportSheets, exportFilePath);
 
-            //1b. Update imjobs table
+            //b. Update imjobs table
             updateImportJobs(importContext.getImportId(), exportFilePath);
-            //1c. Create entry in import job notifications table (to enable spreadsheet file mailing etc)
+            //c. Create entry in import job notifications table (to enable spreadsheet file mailing etc)
             updateImportJobsNotification(importContext.getImportId(), importContext.getJobRequest().getUser().getUserId());
 
             long elapsedInXls = System.currentTimeMillis() - timeInXlsWriting;
             logger.debug("[end] Completed spreadsheet writing in={} for jobRequestId={}",
-                    DurationFormatUtils.formatDuration(elapsedInXls, "HH:mm:ss:SS"),
+                    formatDuration(elapsedInXls, "HH:mm:ss:SS"),
                     jobRequestId);
 
-            /**
-             * 2. Write to object metadata tables, post ExportCompleteEvent and progress
-             */
-            logger.debug("Writing to object metadata tables for importId={}", importContext.getImportId());
-            ObjectMetadataWriter objectMetadataWriter = new ObjectMetadataWriter(); //TODO
-            long timeInObjWriter = System.currentTimeMillis();
-            objectMetadataWriter.write(importContext);
-            long elapsedInObjWriter = System.currentTimeMillis() - timeInObjWriter;
-
-            logger.debug("[end] Wrote to object metadata tables in={} for jobRequestId={}", formatDurationHMS(elapsedInObjWriter),
-                    jobRequestId);
             final ExportCompleteEvent exportCompEvent = new ExportCompleteEventBuilder()
-                    .setRowsProcessed(importContext.getImportRowsList().size()).setTime(elapsedInObjWriter).createExportCompleteEvent();
+                    .setRowsProcessed(importContext.getImportRowsList().size()).setTime(timeInXlsWriting)
+                    .createExportCompleteEvent();
+
             exportCompEvent.setImportId(importContext.getImportId());
             post(new ProgressEvent(jobRequestId, exportCompEvent, JobStatus.DONE));
-            logger.trace("Notifying user for job={}.", jobRequestId);
-            sendNotification(exportCompEvent, Collections.singletonList(importContext.getJobRequest().getUser()));
-            logger.trace("Added export event to notification queue.");
+
         } catch (IOException e) {
             logger.error("Error executing job", e.getMessage());
             throw new ImportEngineException(e);
@@ -159,13 +149,6 @@ public class DefaultExportJob implements Job, ExportJob {
         } catch (Exception e) {
             logger.error("Error updating import job notification", e); //TODO throw exception
         }
-    }
-
-    private void sendNotification(final ExportCompleteEvent exportEvent, final List<User> u) {
-        String message = "Rows exported:" + exportEvent.getRowsProcessed();
-        message += ", Time:" + formatDurationWords(exportEvent.getTime(), true, true);
-        String subject = "Export complete for job # " + exportEvent.getImportId();
-        NotificationEventQueue.addEvent(new NotificationEventQueue().new NotificationItem(exportEvent, u, message, subject));
     }
 
     private String exportFile(final String folder) {

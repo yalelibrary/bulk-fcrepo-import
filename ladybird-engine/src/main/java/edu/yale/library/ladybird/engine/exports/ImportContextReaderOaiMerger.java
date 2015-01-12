@@ -22,10 +22,8 @@ import java.util.Map;
 
 /**
  * Utility for merging with OAI values
- *
- * TODO refactor
  */
-public class ExportReaderOaiMerger {
+public class ImportContextReaderOaiMerger {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

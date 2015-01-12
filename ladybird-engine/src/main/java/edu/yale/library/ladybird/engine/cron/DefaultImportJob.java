@@ -101,7 +101,8 @@ public class DefaultImportJob implements Job, ImportJob {
 
             /* Add request for export */  //Note: This needs to be re-visited per logic requirement
             final ExportRequestEvent exportEvent = new ExportRequestEvent(imid, importRequestedEvent.getJobRequest());
-            ExportEngineQueue.addJob(exportEvent);
+            //ExportEngineQueue.addJob(exportEvent);
+            ImportContextQueue.addJob(exportEvent);
 
             logger.trace("Added event to ExportEngineQueue=" + exportEvent.toString());
         } catch (ImportReaderValidationException e) {

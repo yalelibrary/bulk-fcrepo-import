@@ -24,28 +24,61 @@ public class ImportScheduler {
 
     private static final String DEFAULT_IMPORT_JOB_ID = "import_job";
 
-
     /**
      * Schedules an import cron job.
      */
     public void scheduleJob(final String cronExpression) {
         logger.debug("Scheduling import job");
 
-        JobDetail job;
+        final Trigger trigger = TriggerBuilder
+                .newTrigger()
+                .withIdentity("IMG-TRIGER", DEFAULT_GROUP)
+                .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
+                .build();
+
+        final JobDetail importJob;
         try {
-            job = getJob(DEFAULT_IMPORT_JOB_ID, ImportJobFactory.getInstance().getClass());
-            final Trigger trigger = TriggerBuilder
-                    .newTrigger()
-                    .withIdentity("IMG-TRIGER", DEFAULT_GROUP)
-                    .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
-                    .build();
-            doScheduleJob(job, trigger);
+            importJob = getJob(DEFAULT_IMPORT_JOB_ID, ImportJobFactory.getInstance().getClass());
+
+            doScheduleJob(importJob, trigger);
         } catch (SchedulerException e) {
             throw new CronSchedulingException(e);
         }
 
         ScheduledJobsList defaultJobsManager = new ScheduledJobsList();
-        defaultJobsManager.addJob(job);
+        defaultJobsManager.addJob(importJob);
+
+        //schedule internal jobs (these run at the same schedule/trigger as above)
+
+        //1. importcontextreader job (this is what populates exportWriterQ and objectWriterQ
+        final Trigger trigger2 = TriggerBuilder
+                .newTrigger()
+                .withIdentity("IMG2-TRIGER", DEFAULT_GROUP)
+                .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
+                .build();
+        final JobDetail importContextJob;
+
+        try {
+            importContextJob = getJob("import_context_job", DefaultImportContextJob.class); //prep. for export
+            doScheduleJob(importContextJob, trigger2);
+        } catch (SchedulerException e) {
+            throw new CronSchedulingException(e);
+        }
+
+        //2. object writer job job (this is what will kick off the object writer job
+        final Trigger trigger3 = TriggerBuilder
+                .newTrigger()
+                .withIdentity("IMG3-TRIGER", DEFAULT_GROUP)
+                .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
+                .build();
+        final JobDetail objectWriterJob;
+
+        try {
+            objectWriterJob = getJob("object_writer_job", DefaultObjectMetadataWriterJob.class);
+            doScheduleJob(objectWriterJob, trigger3);
+        } catch (SchedulerException e) {
+            throw new CronSchedulingException(e);
+        }
     }
 
     @Deprecated

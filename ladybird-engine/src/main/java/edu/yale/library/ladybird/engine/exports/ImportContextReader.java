@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.engine.exports;
 
-import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
+import edu.yale.library.ladybird.engine.cron.ImportContextQueue;
 import edu.yale.library.ladybird.engine.imports.Import;
 import edu.yale.library.ladybird.engine.imports.Import.Row;
 import edu.yale.library.ladybird.engine.imports.ImportContext;
@@ -25,9 +25,10 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Reads from import job tables and data structures.
+ * Prepares final metadata by reading from import job tables and merging with OAI data.
+ * @see ImportContextReaderOaiMerger
  */
-public class ExportReader {
+public class ImportContextReader {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -40,7 +41,12 @@ public class ExportReader {
      * @return ImportEntityContext
      */
     public ImportContext read() {
-        final ExportRequestEvent exportRequestEvent = ExportEngineQueue.getJob(); //from Queue
+        final ExportRequestEvent exportRequestEvent = ImportContextQueue.getJob(); //from Queue
+
+        if (exportRequestEvent == null) {
+            return null;
+        }
+
         final int importId = exportRequestEvent.getImportId();
         final int numRowsToWrite = importJobContentsDAO.getNumRowsPerImportJob(importId) + 1;
 
@@ -72,14 +78,14 @@ public class ExportReader {
         logger.debug("Import job contents rows size={} for importId={}", plainRows.size(), importId);
 
         logger.debug("Merging with OAI provider values for importId={}", importId);
-        ExportReaderOaiMerger exportReaderOaiMerger = new ExportReaderOaiMerger();
+        ImportContextReaderOaiMerger importContextReaderOaiMerger = new ImportContextReaderOaiMerger();
         int oaiColIndex = getLocalIdentifierColumnNum(plainRows);
 
         if (oaiColIndex == -1) {
             logger.debug("Col with f104/f105 data not found in this dataset(sheet) for importId={}", importId);
         }
 
-        List<Row> contentRows = exportReaderOaiMerger.merge(importId, oaiColIndex, ladybirdFieldConstants, plainRows);
+        List<Row> contentRows = importContextReaderOaiMerger.merge(importId, oaiColIndex, ladybirdFieldConstants, plainRows);
         resultRowList.addAll(contentRows);
 
         final ImportContext iContext = new ImportContext();

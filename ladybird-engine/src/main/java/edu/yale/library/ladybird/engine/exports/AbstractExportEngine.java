@@ -12,8 +12,6 @@ import java.util.List;
  */
 public abstract class AbstractExportEngine implements ExportEngine {
 
-    protected static final Integer USER_ID = 0; //FIXME
-
     /**
      * Reads import job tables and returns row entities.
      *

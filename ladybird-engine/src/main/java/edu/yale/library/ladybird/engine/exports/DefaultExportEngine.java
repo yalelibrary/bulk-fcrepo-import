@@ -14,7 +14,7 @@ public class DefaultExportEngine extends AbstractExportEngine {
 
     private final Logger logger = getLogger(this.getClass());
 
-    private final ExportReader reader = new ExportReader();
+    private final ImportContextReader reader = new ImportContextReader();
 
     private final ExportWriter exportWriter = new ExportWriter();
 

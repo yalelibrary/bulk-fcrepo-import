@@ -4,7 +4,8 @@ import edu.yale.library.ladybird.engine.AbstractDBTest;
 import edu.yale.library.ladybird.engine.EventBus;
 import edu.yale.library.ladybird.engine.TestModule;
 import edu.yale.library.ladybird.engine.Util;
-import edu.yale.library.ladybird.engine.cron.ExportEngineQueue;
+import edu.yale.library.ladybird.engine.cron.ExportWriterQueue;
+import edu.yale.library.ladybird.engine.cron.ImportContextQueue;
 import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
@@ -115,7 +116,7 @@ public class MarcImportEngineIT extends AbstractDBTest {
 
             /* Add request for export */
         final ExportRequestEvent exportEvent = new ExportRequestEvent(imid);
-        ExportEngineQueue.addJob(exportEvent);
+        ImportContextQueue.addJob(exportEvent);
 
         //Now read back:
 
