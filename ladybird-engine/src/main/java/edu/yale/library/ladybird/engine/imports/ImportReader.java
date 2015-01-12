@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.engine.imports;
 
-import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
+import edu.yale.library.ladybird.engine.metadata.FieldConstantUtil;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.engine.model.UnknownFieldConstantException;
 import edu.yale.library.ladybird.entity.FieldConstant;

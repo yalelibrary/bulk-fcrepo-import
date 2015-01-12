@@ -5,7 +5,7 @@ import edu.yale.library.ladybird.engine.imports.Import;
 import edu.yale.library.ladybird.engine.imports.Import.Row;
 import edu.yale.library.ladybird.engine.imports.ImportContext;
 import edu.yale.library.ladybird.engine.imports.ImportValue;
-import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
+import edu.yale.library.ladybird.engine.metadata.FieldConstantUtil;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.entity.FieldConstant;
 import edu.yale.library.ladybird.entity.ImportJobContents;

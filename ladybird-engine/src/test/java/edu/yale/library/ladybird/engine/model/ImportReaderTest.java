@@ -1,5 +1,6 @@
 package edu.yale.library.ladybird.engine.model;
 
+import edu.yale.library.ladybird.engine.metadata.FieldConstantUtil;
 import edu.yale.library.ladybird.entity.FieldConstant;
 import org.junit.Test;
 

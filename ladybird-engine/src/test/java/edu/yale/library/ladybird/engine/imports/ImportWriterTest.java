@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.engine.imports;
 
 import com.google.common.collect.Multimap;
 import edu.yale.library.ladybird.engine.Util;
-import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
+import edu.yale.library.ladybird.engine.metadata.FieldConstantUtil;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.engine.model.LocalIdMarcImportSource;
 import edu.yale.library.ladybird.engine.model.LocalIdentifier;

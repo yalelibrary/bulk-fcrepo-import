@@ -1,7 +1,6 @@
 package edu.yale.library.ladybird.engine.metadata;
 
 import com.google.common.base.Preconditions;
-import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
 import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.AuthorityControlBuilder;
 import edu.yale.library.ladybird.entity.ObjectAcid;

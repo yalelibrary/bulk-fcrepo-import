@@ -4,7 +4,7 @@ package edu.yale.library.ladybird.web.view;
 import edu.yale.library.ladybird.engine.metadata.FieldDefinitionValue;
 import edu.yale.library.ladybird.engine.metadata.MetadataEditor;
 import edu.yale.library.ladybird.engine.metadata.Rollbacker;
-import edu.yale.library.ladybird.engine.model.FieldConstantUtil;
+import edu.yale.library.ladybird.engine.metadata.FieldConstantUtil;
 import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.EventType;
 import edu.yale.library.ladybird.entity.FieldDefinition;
