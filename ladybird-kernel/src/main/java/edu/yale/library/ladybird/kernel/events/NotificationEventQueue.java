@@ -25,12 +25,6 @@ public class NotificationEventQueue {
 
     public class NotificationItem {
 
-        @Deprecated
-        public NotificationItem(Event event, List<User> users) {
-            this.event = event;
-            this.users = users;
-        }
-
         public NotificationItem(Event event, List<User> users, String message, String subject) {
             this.event = event;
             this.users = users;

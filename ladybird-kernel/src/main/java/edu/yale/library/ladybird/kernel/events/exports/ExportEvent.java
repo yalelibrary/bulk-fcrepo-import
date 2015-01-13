@@ -8,6 +8,7 @@ import java.util.Date;
  * An import event. Classes may subcass this. Subject to modification.
  */
 public class ExportEvent implements UserGeneratedEvent {
+
     /* TIme started */
     private Date startTime;
 

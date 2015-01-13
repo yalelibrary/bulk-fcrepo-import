@@ -25,7 +25,7 @@ import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.FieldMarcMapping;
 import edu.yale.library.ladybird.entity.ImportJob;
 import edu.yale.library.ladybird.entity.ImportJobExhead;
-import edu.yale.library.ladybird.kernel.KernelBootstrap;
+import edu.yale.library.ladybird.kernel.ApplicationBootstrap;
 import edu.yale.library.ladybird.persistence.dao.AuthorityControlDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobExheadDAO;
@@ -72,8 +72,8 @@ public class MarcImportEngineIT extends AbstractDBTest {
     @Test
     public void shouldRunFullCycle() {
         //start the engine
-        KernelBootstrap kernelBootstrap = new KernelBootstrap();
-        kernelBootstrap.setAbstractModule(new TestModule());
+        ApplicationBootstrap applicationBootstrap = new ApplicationBootstrap();
+        applicationBootstrap.setAbstractModule(new TestModule());
 
         EventBus eventBus = new EventBus();
         eventBus.setAbstractModule(new TestModule());

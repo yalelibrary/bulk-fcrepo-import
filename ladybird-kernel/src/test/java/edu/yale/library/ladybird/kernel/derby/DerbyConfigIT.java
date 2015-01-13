@@ -1,4 +1,4 @@
-package edu.yale.library.ladybird.kernel.db;
+package edu.yale.library.ladybird.kernel.derby;
 
 import edu.yale.library.ladybird.kernel.EmbeddedDBException;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;

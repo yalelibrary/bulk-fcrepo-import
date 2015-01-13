@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.entity.ObjectFile;
 import edu.yale.library.ladybird.entity.UserEvent;
-import edu.yale.library.ladybird.kernel.KernelBootstrap;
+import edu.yale.library.ladybird.kernel.ApplicationBootstrap;
 import edu.yale.library.ladybird.kernel.events.Events;
 import edu.yale.library.ladybird.kernel.events.UserGeneratedEvent;
 import edu.yale.library.ladybird.persistence.dao.ObjectDAO;
@@ -110,7 +110,7 @@ public class SearchView extends AbstractView {
     }
 
     private void postSearchEvent(final String netid, final int oid) {
-        KernelBootstrap.postEvent(new UserGeneratedEvent() {
+        ApplicationBootstrap.postEvent(new UserGeneratedEvent() {
             @Override
             public String getPrincipal() {
                 return netid;

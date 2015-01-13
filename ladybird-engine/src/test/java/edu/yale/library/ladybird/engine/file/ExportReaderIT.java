@@ -18,7 +18,7 @@ import edu.yale.library.ladybird.entity.FieldDefinitionBuilder;
 import edu.yale.library.ladybird.entity.ImportSourceData;
 import edu.yale.library.ladybird.entity.ImportSourceDataBuilder;
 import edu.yale.library.ladybird.kernel.GuiceModule;
-import edu.yale.library.ladybird.kernel.KernelBootstrap;
+import edu.yale.library.ladybird.kernel.ApplicationBootstrap;
 import edu.yale.library.ladybird.persistence.dao.hibernate.FieldMarcMappingHibernateDAO;
 import org.junit.After;
 import org.junit.Before;
@@ -41,8 +41,8 @@ public class ExportReaderIT extends AbstractDBTest {
     //TODO
     @Test
     public void shouldReadRowsFromImportTable() {
-        KernelBootstrap kernelBootstrap = new KernelBootstrap();
-        kernelBootstrap.setAbstractModule(new GuiceModule());
+        ApplicationBootstrap applicationBootstrap = new ApplicationBootstrap();
+        applicationBootstrap.setAbstractModule(new GuiceModule());
 
         ImportContextQueue.addJob(new ExportRequestEvent());
 

@@ -10,7 +10,7 @@ import java.util.List;
 @Named
 public class ScheduledJobsList implements ScheduledJobs {
 
-    static List<JobDetail> jobs = new ArrayList<>(); //TODO
+    private static List<JobDetail> jobs = new ArrayList<>(); //FIXME
 
     public List<JobDetail> getJobs() {
         return jobs;
@@ -22,7 +22,7 @@ public class ScheduledJobsList implements ScheduledJobs {
 
     @Override
     public String toString() {
-        return "DefaultJobsManager{"
+        return " ScheduledJobsList{"
                 + "jobs=" + jobs
                 + '}';
     }

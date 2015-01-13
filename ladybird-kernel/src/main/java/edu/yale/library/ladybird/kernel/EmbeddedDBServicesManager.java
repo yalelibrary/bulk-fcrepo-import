@@ -1,12 +1,13 @@
 package edu.yale.library.ladybird.kernel;
 
-import edu.yale.library.ladybird.kernel.db.EmbeddedDBUtil;
+import edu.yale.library.ladybird.kernel.derby.EmbeddedDBUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 
 public final class EmbeddedDBServicesManager {
+
     private static final Logger logger = LoggerFactory.getLogger(EmbeddedDBServicesManager.class);
 
     public void initDB() {

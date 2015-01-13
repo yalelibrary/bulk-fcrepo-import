@@ -21,7 +21,8 @@ public class EMailNotificationHandler implements NotificationHandler {
     private final Logger logger = LoggerFactory.getLogger(EMailNotificationHandler.class);
 
     public void notifyUser(final User user, final Event event, String message, String subject) {
-        logger.trace("Sending e-mail notification to user email={} with subject={}", user.getEmail(), event.getEventName());
+        logger.trace("Sending e-mail notification to user email={} with subject={}",
+                user.getEmail(), event.getEventName());
 
         try {
             final Email email = new SimpleEmail();

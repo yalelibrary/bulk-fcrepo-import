@@ -1,4 +1,4 @@
-package edu.yale.library.ladybird.kernel.db;
+package edu.yale.library.ladybird.kernel.derby;
 
 
 import edu.yale.library.ladybird.kernel.EmbeddedDBException;
@@ -14,10 +14,8 @@ import java.util.Map;
 import java.util.Properties;
 
 
-/**
- *
- */
 public final class DerbySchemaUtil {
+
     private static final Logger logger = LoggerFactory.getLogger(DerbySchemaUtil.class);
 
     /**

@@ -15,23 +15,25 @@ import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class KernelBootstrap {
-    private static final Logger logger = getLogger(KernelBootstrap.class);
+public class ApplicationBootstrap {
+
+    private static final Logger logger = getLogger(ApplicationBootstrap.class);
 
     private static final String TIMESTAMP_FORMAT = "HH:mm:ss:SS";
 
     /** Time Hibernate Session Factory has been alive */
-    private static long HIBERNATE_UPTIME = 0;
+    private static long hibernateUptime = 0;
 
     /** Time embedded db has been alive */
-    private static long DB_UPTIME = 0;
+    private static long dbUptime = 0;
 
     private final EmbeddedDBServicesManager embeddedDBServicesManager = new EmbeddedDBServicesManager();
+
     private static Module jobModule;
+
     private static EventBus eventBus;
 
     public void init() {
-        logger.debug("Application Start up.");
         try {
             if (!System.getProperty("file.encoding").equals("UTF-8")) {
                 logger.error("UTF-8 file encoding not detected.");
@@ -40,15 +42,15 @@ public class KernelBootstrap {
             if (ApplicationProperties.CONFIG_STATE.DEFAULT_DB_CONFIGURED) {
                 logger.debug("Trying to start embedded DB");
                 embeddedDBServicesManager.initDB();
-                DB_UPTIME = System.currentTimeMillis();
+                dbUptime = System.currentTimeMillis();
                 logger.debug("Started embedded DB");
             }
 
-            HIBERNATE_UPTIME = HibernateUtil.getSessionFactory().getStatistics().getStartTime();
+            hibernateUptime = HibernateUtil.getSessionFactory().getStatistics().getStartTime();
             logger.debug("Built Session Factory");
 
             //bootstrap notification:
-            final KernelBootstrap kernelContext = new KernelBootstrap();
+            final ApplicationBootstrap kernelContext = new ApplicationBootstrap();
             kernelContext.setAbstractModule(new GuiceModule());
             initNotificationScheduler();
 
@@ -69,10 +71,10 @@ public class KernelBootstrap {
             if (ApplicationProperties.CONFIG_STATE.DEFAULT_DB_CONFIGURED) {
                 logger.debug("Trying to stop embedded DB");
                 embeddedDBServicesManager.stopDB();
-                logger.debug("Closed embedded database. Time: " + getElapsedTime(DB_UPTIME));
+                logger.debug("Closed embedded database. Time: " + getElapsedTime(dbUptime));
             }
             HibernateUtil.shutdown();
-            logger.debug("Closed Hibernate Session Factory. Time: " + getElapsedTime(HIBERNATE_UPTIME));
+            logger.debug("Closed Hibernate Session Factory. Time: " + getElapsedTime(hibernateUptime));
         } catch (Throwable t) {
             logger.error("Error in context shutdown", t);
         }
@@ -91,11 +93,9 @@ public class KernelBootstrap {
 
     /**
      * Utility method for scheduling a (generic) cron job
-     * @param jobName
-     * @param cronExpression
-     * @return
      */
-    public static void scheduleGenericJob(final AbstractNotificationJob notificationJob, final String jobName,
+    public static void scheduleGenericJob(final AbstractNotificationJob notificationJob,
+                                          final String jobName,
                                           final String cronExpression) {
         Guice.createInjector(getJobModule(), new org.nnsoft.guice.guartz.QuartzModule() {
             @Override

@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.auth;
 
-import edu.yale.library.ladybird.kernel.KernelBootstrap;
+import edu.yale.library.ladybird.kernel.ApplicationBootstrap;
 import edu.yale.library.ladybird.kernel.events.Events;
 import edu.yale.library.ladybird.kernel.events.UserGeneratedEvent;
 import org.slf4j.Logger;
@@ -143,7 +143,7 @@ public class CasNetIdFilter implements Filter {
     }
 
     private void postEvent(final String netid) {
-        KernelBootstrap.postEvent(new UserGeneratedEvent() {
+        ApplicationBootstrap.postEvent(new UserGeneratedEvent() {
             @Override
             public String getEventName() {
                 return Events.USER_LOGIN.toString();

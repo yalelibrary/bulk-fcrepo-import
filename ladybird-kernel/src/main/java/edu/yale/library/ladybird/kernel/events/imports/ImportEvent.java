@@ -9,6 +9,7 @@ import java.util.Date;
  * An import event. Classes may subcass this. Subject to modification.
  */
 public class ImportEvent implements UserGeneratedEvent {
+
     /* User requesting action */
     private User user;
 

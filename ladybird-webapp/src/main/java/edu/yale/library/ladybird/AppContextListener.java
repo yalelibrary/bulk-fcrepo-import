@@ -4,7 +4,7 @@ import edu.yale.library.ladybird.engine.EventBus;
 import edu.yale.library.ladybird.engine.oai.FdidMarcMappingUtil;
 import edu.yale.library.ladybird.entity.event.RollbackEventType;
 import edu.yale.library.ladybird.entity.event.UserEditEvent;
-import edu.yale.library.ladybird.kernel.KernelBootstrap;
+import edu.yale.library.ladybird.kernel.ApplicationBootstrap;
 import edu.yale.library.ladybird.persistence.dao.EventTypeDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.EventTypeHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.FieldMarcMappingHibernateDAO;
@@ -20,16 +20,16 @@ public class AppContextListener implements ServletContextListener {
 
     private static final Logger logger = getLogger(AppContextListener.class);
 
-    private final KernelBootstrap kernelBootstrap = new KernelBootstrap();
+    private final ApplicationBootstrap applicationBootstrap = new ApplicationBootstrap();
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        kernelBootstrap.stop();
+        applicationBootstrap.stop();
     }
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        kernelBootstrap.init();
+        applicationBootstrap.init();
         EventBus eventBus = getExportBus();
         eventBus.init();
 

@@ -4,7 +4,7 @@ package edu.yale.library.ladybird.web.http;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.entity.UserBuilder;
 import edu.yale.library.ladybird.kernel.GuiceModule;
-import edu.yale.library.ladybird.kernel.KernelBootstrap;
+import edu.yale.library.ladybird.kernel.ApplicationBootstrap;
 import edu.yale.library.ladybird.kernel.events.UserGeneratedEvent;
 import edu.yale.library.ladybird.persistence.dao.UserDAO;
 import org.slf4j.Logger;
@@ -68,9 +68,9 @@ public class UserHttpService {
         try {
             userDAO.save(user);
             //Fire event:
-            KernelBootstrap kernelBootstrap = new KernelBootstrap();
-            kernelBootstrap.setAbstractModule(new GuiceModule());
-            KernelBootstrap.postEvent(new UserGeneratedEvent() {
+            ApplicationBootstrap applicationBootstrap = new ApplicationBootstrap();
+            applicationBootstrap.setAbstractModule(new GuiceModule());
+            ApplicationBootstrap.postEvent(new UserGeneratedEvent() {
                 @Override
                 public String getPrincipal() {
                     return user.getUsername();

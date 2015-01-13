@@ -11,7 +11,7 @@ import edu.yale.library.ladybird.engine.oai.ImportSourceProcessor;
 import edu.yale.library.ladybird.entity.ImportJob;
 import edu.yale.library.ladybird.entity.ImportJobContents;
 import edu.yale.library.ladybird.entity.ImportJobExhead;
-import edu.yale.library.ladybird.kernel.KernelBootstrap;
+import edu.yale.library.ladybird.kernel.ApplicationBootstrap;
 import edu.yale.library.ladybird.persistence.dao.ImportJobContentsDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobExheadDAO;
@@ -48,8 +48,8 @@ public class ImportEngineIT extends AbstractDBTest {
     @Test
     public void shouldRunFullCycle() throws Exception {
 
-        KernelBootstrap kernelBootstrap = new KernelBootstrap();
-        kernelBootstrap.setAbstractModule(new TestModule());
+        ApplicationBootstrap applicationBootstrap = new ApplicationBootstrap();
+        applicationBootstrap.setAbstractModule(new TestModule());
 
         EventBus eventBus = new EventBus();
         eventBus.setAbstractModule(new TestModule());

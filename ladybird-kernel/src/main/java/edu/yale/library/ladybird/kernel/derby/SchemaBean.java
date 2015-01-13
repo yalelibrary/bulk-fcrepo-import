@@ -1,4 +1,4 @@
-package edu.yale.library.ladybird.kernel.db;
+package edu.yale.library.ladybird.kernel.derby;
 
 
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
@@ -12,11 +12,14 @@ import java.util.Map;
 import java.util.Properties;
 
 public class SchemaBean {
+
     private static final Logger logger = LoggerFactory.getLogger(SchemaBean.class);
 
-    final PropertyReader reader = new PropertyReader(ApplicationProperties.SCHEMA_PROPS_FILE);
-    final PropertyReader fdidReader = new PropertyReader(ApplicationProperties.FDID_PROPS_FILE);
-    final PropertyReader killReader = new PropertyReader(ApplicationProperties.KILL_SCHEMA_PROPS_FILE);
+    private final PropertyReader reader = new PropertyReader(ApplicationProperties.SCHEMA_PROPS_FILE);
+
+    private final PropertyReader fdidReader = new PropertyReader(ApplicationProperties.FDID_PROPS_FILE);
+
+    private final PropertyReader killReader = new PropertyReader(ApplicationProperties.KILL_SCHEMA_PROPS_FILE);
 
     private Map<String,String> build(PropertyReader reader) throws IOException {
         final Map<String, String> map = new HashMap<>();

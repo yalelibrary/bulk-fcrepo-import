@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.kernel.events;
 
 
 import com.dumbster.smtp.SimpleSmtpServer;
-import edu.yale.library.ladybird.kernel.KernelBootstrap;
+import edu.yale.library.ladybird.kernel.ApplicationBootstrap;
 import edu.yale.library.ladybird.entity.UserBuilder;
 import edu.yale.library.ladybird.kernel.events.imports.ImportEvent;
 import org.junit.Test;
@@ -24,9 +24,9 @@ public class NotificationSchedulerTest {
         SimpleSmtpServer server = null;
         try {
             server = SimpleSmtpServer.start(8082); //FIXME
-            KernelBootstrap kernelContext = new KernelBootstrap();
+            ApplicationBootstrap kernelContext = new ApplicationBootstrap();
             kernelContext.setAbstractModule(new TestJobModule());
-            KernelBootstrap.initNotificationScheduler();
+            ApplicationBootstrap.initNotificationScheduler();
             //Add dummy event:
             NotificationEventQueue.addEvent(new NotificationEventQueue().
                     new NotificationItem(new ImportEvent(), Collections.singletonList(new UserBuilder().createUser()), "message", "sujet"));

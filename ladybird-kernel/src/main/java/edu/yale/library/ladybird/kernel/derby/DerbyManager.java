@@ -1,4 +1,4 @@
-package edu.yale.library.ladybird.kernel.db;
+package edu.yale.library.ladybird.kernel.derby;
 
 import edu.yale.library.ladybird.kernel.EmbeddedDBException;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
@@ -9,6 +9,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public final class DerbyManager {
+
     private static final Logger logger = LoggerFactory.getLogger(DerbyManager.class);
 
     private static volatile Boolean RUNNING = false;
