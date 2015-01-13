@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.engine.cron;
 
 import edu.yale.library.ladybird.engine.JobStatus;
+import edu.yale.library.ladybird.engine.cron.queue.ImportImageConversionQueue;
 import edu.yale.library.ladybird.engine.imports.ImageConversionRequestEvent;
 import edu.yale.library.ladybird.engine.imports.ImageFunctionProcessor;
 import edu.yale.library.ladybird.engine.imports.ImageProcessingEvent;

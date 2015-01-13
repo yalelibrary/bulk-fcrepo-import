@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.engine.imports;
 
 
-import edu.yale.library.ladybird.engine.cron.ImportImageConversionQueue;
+import edu.yale.library.ladybird.engine.cron.queue.ImportImageConversionQueue;
 import edu.yale.library.ladybird.engine.model.FunctionConstants;
 import edu.yale.library.ladybird.engine.oai.ImportSourceProcessor;
 import edu.yale.library.ladybird.engine.oai.OaiProvider;

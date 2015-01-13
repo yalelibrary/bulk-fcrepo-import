@@ -1,7 +1,9 @@
-package edu.yale.library.ladybird.engine.cron;
+package edu.yale.library.ladybird.engine.cron.scheduler;
 
 
-import edu.yale.library.ladybird.engine.CronSchedulingException;
+import edu.yale.library.ladybird.engine.cron.job.DefaultImportContextJob;
+import edu.yale.library.ladybird.engine.cron.job.DefaultObjectMetadataWriterJob;
+import edu.yale.library.ladybird.engine.cron.ImportJobFactory;
 import edu.yale.library.ladybird.kernel.cron.ScheduledJobsList;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
@@ -30,17 +32,14 @@ public class ImportScheduler {
     public void scheduleJob(final String cronExpression) {
         logger.debug("Scheduling import job");
 
-        final Trigger trigger = TriggerBuilder
-                .newTrigger()
-                .withIdentity("IMG-TRIGER", DEFAULT_GROUP)
-                .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
-                .build();
+        final Trigger trigger = TriggerBuilder.newTrigger().withIdentity("IMG-TRIGER", DEFAULT_GROUP)
+                .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression)).build();
 
         final JobDetail importJob;
         try {
             importJob = getJob(DEFAULT_IMPORT_JOB_ID, ImportJobFactory.getInstance().getClass());
 
-            doScheduleJob(importJob, trigger);
+            schedule(importJob, trigger);
         } catch (SchedulerException e) {
             throw new CronSchedulingException(e);
         }
@@ -51,44 +50,42 @@ public class ImportScheduler {
         //schedule internal jobs (these run at the same schedule/trigger as above)
 
         //1. importcontextreader job (this is what populates exportWriterQ and objectWriterQ
-        final Trigger trigger2 = TriggerBuilder
-                .newTrigger()
-                .withIdentity("IMG2-TRIGER", DEFAULT_GROUP)
-                .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
-                .build();
+        logger.debug("Scheduling import context job");
+        final Trigger trigger2 = TriggerBuilder.newTrigger().withIdentity("IMG2-TRIGER", DEFAULT_GROUP)
+                .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression)).build();
         final JobDetail importContextJob;
-
         try {
+
             importContextJob = getJob("import_context_job", DefaultImportContextJob.class); //prep. for export
-            doScheduleJob(importContextJob, trigger2);
+            schedule(importContextJob, trigger2);
         } catch (SchedulerException e) {
             throw new CronSchedulingException(e);
         }
 
         //2. object writer job job (this is what will kick off the object writer job
-        final Trigger trigger3 = TriggerBuilder
-                .newTrigger()
-                .withIdentity("IMG3-TRIGER", DEFAULT_GROUP)
-                .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
-                .build();
+        logger.debug("Scheduling object writer job");
+        final Trigger trigger3 = TriggerBuilder.newTrigger().withIdentity("IMG3-TRIGER", DEFAULT_GROUP)
+                .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression)).build();
         final JobDetail objectWriterJob;
 
         try {
             objectWriterJob = getJob("object_writer_job", DefaultObjectMetadataWriterJob.class);
-            doScheduleJob(objectWriterJob, trigger3);
+            schedule(objectWriterJob, trigger3);
         } catch (SchedulerException e) {
             throw new CronSchedulingException(e);
         }
     }
 
-    @Deprecated
+    /**
+     * Used for testing
+     *
+     * @param trigger A custom trigger
+     */
     public void scheduleJob(final Trigger trigger) {
-        logger.debug("Scheduling import job");
-
         JobDetail job;
         try {
             job = getJob(DEFAULT_IMPORT_JOB_ID, ImportJobFactory.getInstance().getClass());
-            doScheduleJob(job, trigger);
+            schedule(job, trigger);
         } catch (SchedulerException e) {
             throw new CronSchedulingException(e);
         }
@@ -97,7 +94,7 @@ public class ImportScheduler {
         defaultJobsManager.addJob(job);
     }
 
-    private void doScheduleJob(final JobDetail job, final Trigger trigger) throws SchedulerException {
+    private void schedule(final JobDetail job, final Trigger trigger) throws SchedulerException {
         try {
             final Scheduler scheduler = new StdSchedulerFactory().getScheduler();
             scheduler.start();
@@ -108,10 +105,6 @@ public class ImportScheduler {
     }
 
     public void cancel() {
-        doCancel();
-    }
-
-    private void doCancel() {
         try {
             final Scheduler scheduler = new StdSchedulerFactory().getScheduler();
             final Trigger existingTrigger = scheduler.getTrigger(new TriggerKey("IMG-TRIGER", DEFAULT_GROUP));
@@ -125,14 +118,14 @@ public class ImportScheduler {
 
     @SuppressWarnings("unchecked")
     protected JobDetail getJob(String jobName, Class klass) {
-        JobDetail job = JobBuilder.newJob(klass)
-                .withIdentity(jobName, "IMJ").build();
-        return job;
+        return JobBuilder.newJob(klass).withIdentity(jobName, DEFAULT_GROUP).build();
     }
 
-    /** currently being used for unscheduling */
+    /**
+     * being used for unscheduling
+     */
     public static String getImportJobIdentifier() {
-        return ImportScheduler.DEFAULT_GROUP + "."  + ImportScheduler.DEFAULT_IMPORT_JOB_ID;
+        return ImportScheduler.DEFAULT_GROUP + "." + ImportScheduler.DEFAULT_IMPORT_JOB_ID;
     }
 
     public static String getDefaultGroup() {

@@ -1,7 +1,6 @@
-package edu.yale.library.ladybird.engine.cron;
+package edu.yale.library.ladybird.engine.cron.queue;
 
 import edu.yale.library.ladybird.engine.imports.ImageConversionRequestEvent;
-import edu.yale.library.ladybird.kernel.KernelBootstrap;
 import org.slf4j.Logger;
 
 import java.util.Queue;

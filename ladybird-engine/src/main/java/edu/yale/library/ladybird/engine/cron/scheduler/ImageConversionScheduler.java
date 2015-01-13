@@ -1,6 +1,6 @@
-package edu.yale.library.ladybird.engine.cron;
+package edu.yale.library.ladybird.engine.cron.scheduler;
 
-import edu.yale.library.ladybird.engine.CronSchedulingException;
+import edu.yale.library.ladybird.engine.cron.ImageConversionJobFactory;
 import edu.yale.library.ladybird.kernel.cron.ScheduledJobsList;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
@@ -20,7 +20,9 @@ public class ImageConversionScheduler {
     private final Logger logger = getLogger(this.getClass());
 
     private static final String DEFAULT_GROUP = "IMAGE-CONVERTER-GROUP";
+
     private static final String DEFAULT_JOB_ID = "image-converter-job";
+
     private static final String DEFAULT_TRIGGER = "import-converter-trigger";
 
     public void scheduleJob(String cronExpression) {
@@ -57,11 +59,7 @@ public class ImageConversionScheduler {
     /**
      * Cancel job
      */
-    public void cancel() {
-        doCancel();
-    }
-
-    private void doCancel() {
+     private void cancel() {
         try {
             final Scheduler scheduler = new StdSchedulerFactory().getScheduler();
             final Trigger existingTrigger = scheduler.getTrigger(new TriggerKey(DEFAULT_TRIGGER, DEFAULT_GROUP));

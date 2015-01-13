@@ -1,6 +1,6 @@
-package edu.yale.library.ladybird.engine.cron;
+package edu.yale.library.ladybird.engine.cron.scheduler;
 
-import edu.yale.library.ladybird.engine.CronSchedulingException;
+import edu.yale.library.ladybird.engine.cron.ExportJobFactory;
 import edu.yale.library.ladybird.entity.JobRequest;
 import edu.yale.library.ladybird.kernel.cron.ScheduledJobsList;
 import org.quartz.CronScheduleBuilder;
@@ -37,11 +37,8 @@ public class ExportScheduler {
             Scheduler scheduler = new StdSchedulerFactory().getScheduler();
             scheduler.start();
             job = getJob(DEFAULT_EXPORT_JOB_ID, ExportJobFactory.getInstance().getClass());
-            final Trigger trigger = TriggerBuilder
-                    .newTrigger()
-                    .withIdentity("EXJ-TRIGER", DEFAULT_GROUP)
-                    .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
-                    .build();
+            final Trigger trigger = TriggerBuilder.newTrigger().withIdentity("EXJ-TRIGER", DEFAULT_GROUP)
+                    .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression)).build();
             doScheduleJob(job, trigger);
 
             ScheduledJobsList defaultJobsManager = new ScheduledJobsList();
@@ -82,10 +79,6 @@ public class ExportScheduler {
     }
 
     public void cancel() {
-        doCancel();
-    }
-
-    private void doCancel() {
         try {
             final Scheduler scheduler = new StdSchedulerFactory().getScheduler();
             final Trigger existingTrigger = scheduler.getTrigger(new TriggerKey("EXJ-TRIGER", DEFAULT_GROUP));
@@ -97,20 +90,18 @@ public class ExportScheduler {
         }
     }
 
+
     @SuppressWarnings("unchecked")
     @Deprecated
     protected JobDetail getJob(String jobName, Class klass, JobRequest jobRequestItem) {
-        JobDetail job = JobBuilder.newJob(klass)
-                .withIdentity(jobName, "EXJ").build();
+        JobDetail job = JobBuilder.newJob(klass).withIdentity(jobName, "EXJ").build();
         job.getJobDataMap().put("event", jobRequestItem); //used by DefaultExportJob
         return job;
     }
 
     @SuppressWarnings("unchecked")
     protected JobDetail getJob(String jobName, Class klass) {
-        JobDetail job = JobBuilder.newJob(klass)
-                .withIdentity(jobName, "EXJ").build();
-        return job;
+        return JobBuilder.newJob(klass).withIdentity(jobName, "EXJ").build();
     }
 
     /** used for unscheduling */

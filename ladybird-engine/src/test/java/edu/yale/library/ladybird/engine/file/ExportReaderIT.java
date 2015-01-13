@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.engine.file;
 
 import com.google.common.collect.Multimap;
 import edu.yale.library.ladybird.engine.AbstractDBTest;
-import edu.yale.library.ladybird.engine.cron.ImportContextQueue;
+import edu.yale.library.ladybird.engine.cron.queue.ImportContextQueue;
 import edu.yale.library.ladybird.engine.exports.ImportContextReader;
 import edu.yale.library.ladybird.engine.exports.ImportContextReaderOaiMerger;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;

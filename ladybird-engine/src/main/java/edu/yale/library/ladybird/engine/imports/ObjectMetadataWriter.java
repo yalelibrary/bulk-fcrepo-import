@@ -43,7 +43,7 @@ public class ObjectMetadataWriter {
      * Populates object metadata tables
      *
      * @param importContext context
-     * @see edu.yale.library.ladybird.engine.cron.DefaultExportJob#execute(org.quartz.JobExecutionContext) for call
+     * @see edu.yale.library.ladybird.engine.cron.job.DefaultExportJob#execute(org.quartz.JobExecutionContext) for call
      */
     public void write(final ImportContext importContext) {
         try {
