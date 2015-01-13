@@ -35,17 +35,15 @@ public class ImportScheduler {
         final Trigger trigger = TriggerBuilder.newTrigger().withIdentity("IMG-TRIGER", DEFAULT_GROUP)
                 .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression)).build();
 
-        final JobDetail importJob;
         try {
-            importJob = getJob(DEFAULT_IMPORT_JOB_ID, ImportJobFactory.getInstance().getClass());
-
+            final JobDetail importJob = getJob(DEFAULT_IMPORT_JOB_ID, ImportJobFactory.getInstance().getClass());
             schedule(importJob, trigger);
+
+            ScheduledJobsList defaultJobsManager = new ScheduledJobsList();
+            defaultJobsManager.addJob(importJob);
         } catch (SchedulerException e) {
             throw new CronSchedulingException(e);
         }
-
-        ScheduledJobsList defaultJobsManager = new ScheduledJobsList();
-        defaultJobsManager.addJob(importJob);
 
         //schedule internal jobs (these run at the same schedule/trigger as above)
 
@@ -53,10 +51,10 @@ public class ImportScheduler {
         logger.debug("Scheduling import context job");
         final Trigger trigger2 = TriggerBuilder.newTrigger().withIdentity("IMG2-TRIGER", DEFAULT_GROUP)
                 .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression)).build();
-        final JobDetail importContextJob;
-        try {
 
-            importContextJob = getJob("import_context_job", DefaultImportContextJob.class); //prep. for export
+        try {
+            //prep. for export
+            final JobDetail importContextJob = getJob("import_context_job", DefaultImportContextJob.class);
             schedule(importContextJob, trigger2);
         } catch (SchedulerException e) {
             throw new CronSchedulingException(e);
@@ -66,10 +64,9 @@ public class ImportScheduler {
         logger.debug("Scheduling object writer job");
         final Trigger trigger3 = TriggerBuilder.newTrigger().withIdentity("IMG3-TRIGER", DEFAULT_GROUP)
                 .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression)).build();
-        final JobDetail objectWriterJob;
 
         try {
-            objectWriterJob = getJob("object_writer_job", DefaultObjectMetadataWriterJob.class);
+            final JobDetail objectWriterJob = getJob("object_writer_job", DefaultObjectMetadataWriterJob.class);
             schedule(objectWriterJob, trigger3);
         } catch (SchedulerException e) {
             throw new CronSchedulingException(e);
@@ -77,31 +74,26 @@ public class ImportScheduler {
     }
 
     /**
-     * Used for testing
+     * Used in test
      *
      * @param trigger A custom trigger
      */
+    @Deprecated
     public void scheduleJob(final Trigger trigger) {
-        JobDetail job;
         try {
-            job = getJob(DEFAULT_IMPORT_JOB_ID, ImportJobFactory.getInstance().getClass());
+            JobDetail job = getJob(DEFAULT_IMPORT_JOB_ID, ImportJobFactory.getInstance().getClass());
             schedule(job, trigger);
+            ScheduledJobsList defaultJobsManager = new ScheduledJobsList();
+            defaultJobsManager.addJob(job);
         } catch (SchedulerException e) {
             throw new CronSchedulingException(e);
         }
-
-        ScheduledJobsList defaultJobsManager = new ScheduledJobsList();
-        defaultJobsManager.addJob(job);
     }
 
     private void schedule(final JobDetail job, final Trigger trigger) throws SchedulerException {
-        try {
-            final Scheduler scheduler = new StdSchedulerFactory().getScheduler();
-            scheduler.start();
-            scheduler.scheduleJob(job, trigger);
-        } catch (SchedulerException e) {
-            throw e;
-        }
+        final Scheduler scheduler = new StdSchedulerFactory().getScheduler();
+        scheduler.start();
+        scheduler.scheduleJob(job, trigger);
     }
 
     public void cancel() {
@@ -122,7 +114,7 @@ public class ImportScheduler {
     }
 
     /**
-     * being used for unscheduling
+     * Used for unscheduling
      */
     public static String getImportJobIdentifier() {
         return ImportScheduler.DEFAULT_GROUP + "." + ImportScheduler.DEFAULT_IMPORT_JOB_ID;

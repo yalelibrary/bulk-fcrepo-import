@@ -9,7 +9,6 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
-import org.quartz.TriggerKey;
 import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 
@@ -31,56 +30,30 @@ public class ExportFileMailerScheduler {
     public void scheduleJob(String cronExpression) {
         logger.debug("Scheduling file mailer export job");
 
-        JobDetail job;
         try {
             Scheduler scheduler = new StdSchedulerFactory().getScheduler();
             scheduler.start();
-            job = getJob(DEFAULT_JOB_ID, ExportMailerFactory.getInstance().getClass());
+            JobDetail job = getJob(DEFAULT_JOB_ID, ExportMailerFactory.getInstance().getClass());
             final Trigger trigger = TriggerBuilder.newTrigger().withIdentity("EX-MAILER-TRIGER", DEFAULT_GROUP)
                     .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression)).build();
             doScheduleJob(job, trigger);
+
+            ScheduledJobsList defaultJobsManager = new ScheduledJobsList();
+            defaultJobsManager.addJob(job);
         } catch (SchedulerException e) {
             throw new CronSchedulingException(e);
         }
-
-        ScheduledJobsList defaultJobsManager = new ScheduledJobsList();
-        defaultJobsManager.addJob(job);
     }
 
     private void doScheduleJob(final JobDetail job, final Trigger trigger) throws SchedulerException {
-        try {
-            final Scheduler scheduler = new StdSchedulerFactory().getScheduler();
-            scheduler.start();
-            scheduler.scheduleJob(job, trigger);
-        } catch (SchedulerException e) {
-            throw e;
-        }
-    }
-
-    private void cancel() {
-        try {
-            final Scheduler scheduler = new StdSchedulerFactory().getScheduler();
-            final Trigger existingTrigger = scheduler.getTrigger(new TriggerKey("EX-MAILER-TRIGER", DEFAULT_GROUP));
-            logger.debug("Unscheduling jobs for trigger={}", existingTrigger.getKey());
-            scheduler.unscheduleJob(existingTrigger.getKey());
-        } catch (SchedulerException e) {
-            logger.error("Error unscheduling job", e);
-            throw new CronSchedulingException(e);
-        }
+        final Scheduler scheduler = new StdSchedulerFactory().getScheduler();
+        scheduler.start();
+        scheduler.scheduleJob(job, trigger);
     }
 
     @SuppressWarnings("unchecked")
     protected JobDetail getJob(String jobName, Class klass) {
          return JobBuilder.newJob(klass).withIdentity(jobName, DEFAULT_GROUP).build();
-    }
-
-    /** used for unscheduling */
-    public static String getJobIdentifier() {
-        return ExportFileMailerScheduler.DEFAULT_GROUP + "."  + ExportFileMailerScheduler.DEFAULT_JOB_ID;
-    }
-
-    public static String getDefaultGroup() {
-        return DEFAULT_GROUP;
     }
 
     public static String getDefaultJobId() {

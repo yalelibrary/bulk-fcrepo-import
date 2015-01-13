@@ -74,9 +74,7 @@ public class ImportExportSchedulerTest {
         try {
             ExportJobFactory.setInstance(new DummyImportEngineJob());
             final ExportScheduler exportScheduler = new ExportScheduler();
-            final JobRequest jobRequestUnit = new JobRequest();
-            jobRequestUnit.setUser(null);
-            exportScheduler.scheduleJob(jobRequestUnit, getSimpleTrigger());
+            exportScheduler.scheduleJob(getSimpleTrigger());
             Thread.sleep(3000); //TODO
         } catch (Exception e) {
             fail("Exception= " + e);
