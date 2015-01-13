@@ -21,11 +21,15 @@ import java.util.List;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class MetadataEditor {
+
     private final Logger logger = getLogger(this.getClass());
 
     private final ObjectStringDAO objectStringDAO = new ObjectStringHibernateDAO();
+
     private final ObjectAcidDAO objectAcidDAO = new ObjectAcidHibernateDAO();
+
     private final AuthorityControlDAO acidDAO = new AuthorityControlHibernateDAO();
+
     private final ObjectVersioner metadataEditor = new ObjectVersioner();
 
     /**

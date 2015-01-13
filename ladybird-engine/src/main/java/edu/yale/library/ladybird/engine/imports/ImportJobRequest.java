@@ -7,11 +7,17 @@ import java.util.Date;
  * Used by ImportWriter to represent import job request
  */
 public final class ImportJobRequest {
+
     private int userId;
+
     private Date date;
+
     private String jobFile;
+
     private String jobDir;
+
     private int projectId;
+
     private int requestId;
 
     public ImportJobRequest(int userId, Date date, String jobFile, String jobDir, int projectId, int requestId) {

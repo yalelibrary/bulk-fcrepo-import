@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class DeleteProcessor {
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private ObjectDAO objectDAO = new ObjectHibernateDAO();

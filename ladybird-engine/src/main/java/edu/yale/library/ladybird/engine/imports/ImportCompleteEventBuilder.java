@@ -3,12 +3,19 @@ package edu.yale.library.ladybird.engine.imports;
 import edu.yale.library.ladybird.entity.User;
 
 public class ImportCompleteEventBuilder {
+
     private User user;
+
     private Spreadsheet spreadsheet;
+
     private int rowsProcessed;
+
     private int passCount;
+
     private int failedValidations;
+
     private int failCount;
+
     private long time;
 
     public ImportCompleteEventBuilder setUser(User user) {

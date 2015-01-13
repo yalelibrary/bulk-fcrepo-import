@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
 
 
-//TODO schedule
 public class DefaultImportContextJob implements Job {
 
     private final Logger logger = getLogger(this.getClass());

@@ -16,6 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 public class ComplexProcessor {
+
     private Logger logger = LoggerFactory.getLogger(ComplexProcessor.class);
 
     final ObjectDAO objectDAO = new ObjectHibernateDAO();

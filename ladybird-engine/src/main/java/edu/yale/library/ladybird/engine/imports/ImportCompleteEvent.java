@@ -9,9 +9,13 @@ import edu.yale.library.ladybird.kernel.events.imports.ImportEvent;
 public final class ImportCompleteEvent extends ImportEvent {
 
     int rowsProcessed;
+
     int passCount;
+
     int failCount;
+
     int failedValidations;
+
     long time;
 
     private Spreadsheet spreadsheet;

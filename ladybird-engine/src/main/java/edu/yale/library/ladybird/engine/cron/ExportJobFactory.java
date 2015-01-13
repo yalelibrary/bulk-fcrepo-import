@@ -2,9 +2,7 @@ package edu.yale.library.ladybird.engine.cron;
 
 import edu.yale.library.ladybird.engine.cron.job.DefaultExportJob;
 
-/**
- *
- */
+
 public class ExportJobFactory {
 
     private static ExportJob instance;

@@ -4,12 +4,19 @@ import edu.yale.library.ladybird.engine.imports.Spreadsheet;
 import edu.yale.library.ladybird.entity.User;
 
 public class ObjectMetadataWriteCompleteEventBuilder {
+
     private User user;
+
     private Spreadsheet spreadsheet;
+
     private int rowsProcessed;
+
     private int passCount;
+
     private int failedValidations;
+
     private int failCount;
+
     private long time;
 
     public ObjectMetadataWriteCompleteEventBuilder setUser(User user) {

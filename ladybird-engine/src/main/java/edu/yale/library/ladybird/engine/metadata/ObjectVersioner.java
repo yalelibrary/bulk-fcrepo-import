@@ -25,10 +25,10 @@ public class ObjectVersioner {
 
     private Logger logger = LoggerFactory.getLogger(ObjectVersioner.class);
 
-
-    //TODO inject
     private ObjectStringVersionDAO objectStringVersionDAO = new ObjectStringVersionHibernateDAO();
+
     private ObjectAcidVersionDAO objectAcidVersionDAO = new ObjectAcidVersionHibernateDAO();
+
     private ObjectVersionDAO objectVersionDAO = new ObjectVersionHibernateDAO();
 
     /**
@@ -39,7 +39,6 @@ public class ObjectVersioner {
         for (ObjectString o : list) {
             try {
                 ObjectStringVersion objStrVersion = new ObjectStringVersion(o);
-                //logger.debug("Setting strings version={}", getLastObjectVersion(o.getOid()) + 1);
                 objStrVersion.setVersionId(getLastObjectVersion(o.getOid()) + 1);
                 objectStringVersionDAO.save(objStrVersion);
             } catch (Exception e) {

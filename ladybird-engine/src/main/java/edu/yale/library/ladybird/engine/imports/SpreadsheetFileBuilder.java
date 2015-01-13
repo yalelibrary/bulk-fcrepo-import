@@ -3,8 +3,11 @@ package edu.yale.library.ladybird.engine.imports;
 import java.io.InputStream;
 
 public class SpreadsheetFileBuilder {
+
     private String fileName;
+
     private String path;
+
     private InputStream fileStream;
 
     public SpreadsheetFileBuilder filename(String fileName) {

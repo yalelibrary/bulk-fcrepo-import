@@ -10,11 +10,17 @@ import edu.yale.library.ladybird.kernel.events.exports.ExportEvent;
 public final class ObjectMetadataWriteCompleteEvent extends ExportEvent {
 
     private int rowsProcessed;
+
     private int passCount;
+
     private int failCount;
+
     private int failedValidations;
+
     private Spreadsheet spreadsheet;
+
     private int importId;
+
     private long time;
 
     public ObjectMetadataWriteCompleteEvent(User user, Spreadsheet spreadsheet, int rowsProcessed, int passCount,

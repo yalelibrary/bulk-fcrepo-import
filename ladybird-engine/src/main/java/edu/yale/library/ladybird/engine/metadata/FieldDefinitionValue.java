@@ -8,7 +8,9 @@ import java.util.List;
  * Helper datastructure
  */
 public class FieldDefinitionValue {
+
     private FieldDefinition fdid;
+
     private List<String> value;
 
     public FieldDefinition getFdid() {

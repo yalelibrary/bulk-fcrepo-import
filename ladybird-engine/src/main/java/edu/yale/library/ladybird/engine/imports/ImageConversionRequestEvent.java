@@ -43,7 +43,7 @@ public class ImageConversionRequestEvent extends ImportEvent {
 
     @Override
     public String toString() {
-        return "ImageConversionRequestEvent{" + "importId=" + importId + ", exportDirPath='" + exportDirPath + '\''
-                + '}';
+        return "ImageConversionRequestEvent{" + "importId=" + importId
+                + ", exportDirPath='" + exportDirPath + '\'' + '}';
     }
 }

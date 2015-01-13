@@ -12,9 +12,10 @@ import java.util.Date;
 import java.util.List;
 
 public class OidMinter {
-    Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    ObjectDAO objectDAO = new ObjectHibernateDAO();
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private final ObjectDAO objectDAO = new ObjectHibernateDAO();
 
     public ImportValue write(final ImportValue importValue, final int projectId) {
         final List<Import.Column> exheadList = importValue.getHeaderRow().getColumns();

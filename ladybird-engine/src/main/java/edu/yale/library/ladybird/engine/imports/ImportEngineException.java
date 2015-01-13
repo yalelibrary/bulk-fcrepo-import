@@ -9,7 +9,4 @@ public class ImportEngineException extends ContextedRuntimeException {
         super(cause);
     }
 
-    public ImportEngineException(String message) {
-        super(message);
-    }
 }

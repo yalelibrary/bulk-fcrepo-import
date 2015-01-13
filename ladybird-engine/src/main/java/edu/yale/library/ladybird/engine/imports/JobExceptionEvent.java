@@ -9,6 +9,7 @@ public class JobExceptionEvent extends edu.yale.library.ladybird.kernel.events.i
 
     /** import id */
     private Integer jobId;
+
     private ContextedRuntimeException exception;
 
     public JobExceptionEvent(Integer jobId, ContextedRuntimeException exception) {

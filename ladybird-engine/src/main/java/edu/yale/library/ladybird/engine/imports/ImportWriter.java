@@ -36,10 +36,15 @@ public class ImportWriter {
     //TODO inject dao(s), etc
 
     private OaiProvider oaiProvider;
+
     private ImageFunctionProcessor imageFunctionProcessor;
+
     private ImportSourceProcessor importSourceProcessor;
+
     private final ImportJobContentsDAO dao = new ImportJobContentsHibernateDAO();
+
     private final ImportJobDAO importJobDAO = new ImportJobHibernateDAO();
+
     private final Date JOB_EXEC_DATE = new Date(); //TODO
 
     /**

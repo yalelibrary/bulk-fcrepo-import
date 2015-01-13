@@ -37,13 +37,18 @@ public class ProjectTemplateApplicator {
 
     private static final Logger logger = getLogger(ProjectTemplateApplicator.class);
 
-    //TODO inject DAO(s)
     private final ObjectDAO objectDAO = new ObjectHibernateDAO();
+
     private final ObjectAcidDAO objectAcidDAO = new ObjectAcidHibernateDAO();
+
     private final AuthorityControlDAO authorityControlDAO = new AuthorityControlHibernateDAO();
+
     private final ObjectStringDAO objectStringDAO = new ObjectStringHibernateDAO();
+
     private final FieldDefinitionDAO fieldDefinitionDAO = new FieldDefinitionHibernateDAO();
+
     private final ProjectTemplateStringsDAO templateStringsDAO = new ProjectTemplateStringsHibernateDAO();
+
     private final ObjectVersioner metadataEditor = new ObjectVersioner();
 
     // Note 1: Original schema has ProjectTemplateAcid and it seems there's no use for that table.

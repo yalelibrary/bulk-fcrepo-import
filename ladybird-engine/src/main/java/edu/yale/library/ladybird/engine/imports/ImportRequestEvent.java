@@ -9,6 +9,7 @@ import edu.yale.library.ladybird.kernel.events.imports.ImportEvent;
 public final class ImportRequestEvent extends ImportEvent {
 
     private Spreadsheet spreadsheet;
+
     private JobRequest jobRequest;
 
     public ImportRequestEvent(Spreadsheet spreadsheet, JobRequest jobRequest) {

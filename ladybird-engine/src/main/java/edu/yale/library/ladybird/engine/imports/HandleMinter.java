@@ -8,9 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-/**
- *
- */
+
 public class HandleMinter {
 
     private Logger logger = LoggerFactory.getLogger(HandleMinter.class);

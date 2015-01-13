@@ -2,8 +2,11 @@ package edu.yale.library.ladybird.engine.oai;
 
 
 public class OaiProvider {
+
     private String identifier;
+
     private String url;
+
     private String bibIdPrefix;
 
     public OaiProvider(String identifier, String url, String bibIdPrefix) {

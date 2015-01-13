@@ -12,7 +12,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class HydraPointerProcessor {
-    Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private ObjectDAO objectDAO = new ObjectHibernateDAO();
 

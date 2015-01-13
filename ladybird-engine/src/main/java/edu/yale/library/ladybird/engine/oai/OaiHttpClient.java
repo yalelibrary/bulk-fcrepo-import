@@ -31,11 +31,17 @@ import static org.slf4j.LoggerFactory.getLogger;
  * OAI-PMH client. Hits the web service and gets the XML. Passes off data to MarcReader
  */
 public class OaiHttpClient {
+
     private static final Logger logger = getLogger(OaiHttpClient.class);
+
     private OaiProvider oaiProvider;
+
     private MarcReader marcReader;
+
     private final PoolingHttpClientConnectionManager connectionManager;
+
     private final HttpClient httpClient;
+
     private static final int IDLE_TIMEOUT = 3;
 
     //TODO

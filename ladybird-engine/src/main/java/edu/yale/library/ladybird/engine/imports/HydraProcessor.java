@@ -25,13 +25,11 @@ public class HydraProcessor {
 
     private Logger logger = LoggerFactory.getLogger(HydraProcessor.class);
 
-    //TODO inject DAO(s)
+    private HydraDAO hydraDAO = new HydraHibernateDAO();
 
-    HydraDAO hydraDAO = new HydraHibernateDAO();
+    private ObjectFileDAO objectDAO = new ObjectFileHibernateDAO();
 
-    ObjectFileDAO objectDAO = new ObjectFileHibernateDAO();
-
-    HydraPublishDAO hydraPublishDAO = new HydraPublishHibernateDAO();
+    private HydraPublishDAO hydraPublishDAO = new HydraPublishHibernateDAO();
 
     enum ACTION {
         PUBLISH("PUBLISH"), DELETE("DELETE");

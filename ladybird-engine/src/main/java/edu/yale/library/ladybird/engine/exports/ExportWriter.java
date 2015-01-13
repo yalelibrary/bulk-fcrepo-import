@@ -17,6 +17,7 @@ import java.util.List;
  * Write Processor. Subject to modification.
  */
 public class ExportWriter {
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**

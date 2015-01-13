@@ -19,7 +19,7 @@ public class ImageReferenceProcessor {
 
     private final Logger logger = LoggerFactory.getLogger(ImageReferenceProcessor.class);
 
-    ObjectFileDAO objectFileDAO = new ObjectFileHibernateDAO();
+    private ObjectFileDAO objectFileDAO = new ObjectFileHibernateDAO();
 
     public void write(final ImportValue importValue) {
         try {

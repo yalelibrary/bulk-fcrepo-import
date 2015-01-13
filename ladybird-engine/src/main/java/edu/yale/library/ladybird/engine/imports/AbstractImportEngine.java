@@ -14,17 +14,17 @@ public abstract class AbstractImportEngine implements ImportEngine {
 
     private Spreadsheet spreadsheet = null;
 
-    protected Integer USER_ID = 0; //todo
+    protected Integer USER_ID = 0; //TODO
 
-    protected Integer PROJECT_ID = 0; //todo
+    protected Integer PROJECT_ID = 0; //TODO
 
-    protected OaiProvider oaiProvider; //TODO design
+    protected OaiProvider oaiProvider; //TODO
 
     public void setOaiProvider(OaiProvider oaiProvider) {
         this.oaiProvider = oaiProvider;
     }
 
-    protected ImageFunctionProcessor imageFunctionProcessor; //TODO desgin
+    protected ImageFunctionProcessor imageFunctionProcessor; //TODO
 
     public void setImageFunctionProcessor(ImageFunctionProcessor imageFunctionProcessor) {
         this.imageFunctionProcessor = imageFunctionProcessor;
@@ -38,7 +38,6 @@ public abstract class AbstractImportEngine implements ImportEngine {
 
     /**
      * Read with default param settings.
-     *
      */
     public final List<Import.Row> read(Spreadsheet file) throws ImportReaderValidationException, IOException {
         return read(file, ReadMode.FULL);

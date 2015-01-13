@@ -11,6 +11,7 @@ import java.util.List;
  * Implementations provide functionality specific to import. Subject to name change.
  */
 public interface ImportEngine {
+
     List<Import.Row> read(Spreadsheet file) throws ImportReaderValidationException, IOException;
 
     List<Import.Row> read(Spreadsheet file, ReadMode inputReadMode)

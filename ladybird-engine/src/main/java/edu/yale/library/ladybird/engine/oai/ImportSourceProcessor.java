@@ -13,7 +13,8 @@ import java.util.List;
 public class ImportSourceProcessor {
     private Logger logger = LoggerFactory.getLogger(ImportSourceProcessor.class);
 
-    final ImportSourceDataReader reader = new ImportSourceDataReader(); //TODO
+    final ImportSourceDataReader reader = new ImportSourceDataReader();
+
     final ImportSourceDataWriter writer = new ImportSourceDataWriter();
 
     /** Reaads and writes marc data */

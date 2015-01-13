@@ -164,4 +164,28 @@ public final class ImportReader {
         return blank;
     }
 
+    public static class PoiCellConverter {
+        /**
+         * Helper returns cell value as an object
+         *
+         * @param cell preadsheet cell
+         * @return Object wrapping primitive or string
+         */
+        public static Object getCellValue(final Cell cell) {
+            switch (cell.getCellType()) {
+                case Cell.CELL_TYPE_BOOLEAN:
+                    return cell.getBooleanCellValue();
+                case Cell.CELL_TYPE_NUMERIC:
+                    return (long) cell.getNumericCellValue(); //TODO note int. FIXME
+                case Cell.CELL_TYPE_STRING:
+                    return cell.getStringCellValue();
+                case Cell.CELL_TYPE_BLANK:
+                    return "";
+                default:
+                    throw new IllegalArgumentException("Unknown data type:" + cell.getCellType());
+            }
+        }
+    }
+
+
 }

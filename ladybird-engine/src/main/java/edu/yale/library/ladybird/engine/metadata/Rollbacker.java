@@ -31,12 +31,16 @@ import java.util.List;
 public class Rollbacker {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    //TODO inject
     private ObjectStringVersionDAO objectStringVersionDAO = new ObjectStringVersionHibernateDAO();
+
     private ObjectAcidVersionDAO objectAcidVersionDAO = new ObjectAcidVersionHibernateDAO();
+
     private ObjectVersionDAO objectVersionDAO = new ObjectVersionHibernateDAO();
+
     private ObjectStringDAO objectStringDAO = new ObjectStringHibernateDAO();
+
     private ObjectAcidDAO objectAcidDAO = new ObjectAcidHibernateDAO();
+
     private FieldDefinitionDAO fdidDAO = new FieldDefinitionHibernateDAO();
 
     /**

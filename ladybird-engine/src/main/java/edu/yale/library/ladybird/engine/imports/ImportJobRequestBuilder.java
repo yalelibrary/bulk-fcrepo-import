@@ -3,11 +3,17 @@ package edu.yale.library.ladybird.engine.imports;
 import java.util.Date;
 
 public class ImportJobRequestBuilder {
+
     private int userId;
+
     private Date date;
+
     private String jobFile;
+
     private String jobDir;
+
     private int projectId;
+
     private int requestId;
 
     public ImportJobRequestBuilder userId(int userId) {

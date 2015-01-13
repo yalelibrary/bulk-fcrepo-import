@@ -9,6 +9,7 @@ public class ExportRequestEvent extends ExportEvent {
      * Import Job identifier (aka imid) to run against
      */
     private int importId;
+
     private JobRequest jobRequest = new JobRequest();
 
     public ExportRequestEvent() {

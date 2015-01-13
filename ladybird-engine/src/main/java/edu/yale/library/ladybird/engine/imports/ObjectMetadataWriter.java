@@ -34,10 +34,11 @@ public class ObjectMetadataWriter {
 
     private Logger logger = LoggerFactory.getLogger(ObjectMetadataWriter.class);
 
-    // TODO inject:
-    final ObjectStringDAO objectStringDAO = new ObjectStringHibernateDAO();
-    final ObjectAcidDAO objectAcidDAO = new ObjectAcidHibernateDAO();
-    final AuthorityControlDAO authorityControlDAO = new AuthorityControlHibernateDAO();
+    private final ObjectStringDAO objectStringDAO = new ObjectStringHibernateDAO();
+
+    private final ObjectAcidDAO objectAcidDAO = new ObjectAcidHibernateDAO();
+
+    private final AuthorityControlDAO authorityControlDAO = new AuthorityControlHibernateDAO();
 
     /**
      * Populates object metadata tables

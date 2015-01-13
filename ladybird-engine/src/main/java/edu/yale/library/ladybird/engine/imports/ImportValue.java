@@ -21,14 +21,16 @@ import java.util.Set;
 /**
  * ImportEntityValue represents values and provides helper methods.
  *
- * TODO clone
+ * TODO write clone()
  */
 public class ImportValue {
 
     private static Logger logger = LoggerFactory.getLogger(ImportValue.class);
 
     private List<Import.Row> rowList;
+
     private static int HEADER_ROW = 0;
+
     private static int CONTENT_ROW = 1;
 
     public ImportValue(List<Row> rowList) {
@@ -37,12 +39,6 @@ public class ImportValue {
 
     public List<Row> getRowList() {
         return rowList;
-    }
-
-    @Deprecated
-    public void setRowList(final List<Row> rowList) {
-        //this.rowList = rowList;
-        throw new UnsupportedOperationException("Does not support setting value");
     }
 
     public static Column<String> getBlankColumn(FieldConstant f) {
@@ -134,8 +130,6 @@ public class ImportValue {
             Column o = rowList.get(i).getColumns().get(order);
             for (Column c : rowList.get(i).getColumns()) {
                 if (c.getField().getName().equals(fieldConstant.getName())) {
-                    //logger.trace("Found match={} with value={}", c.getField().getName(), fieldConstant.getName());
-                    //logger.trace("Values c1={} c2={}", o, c);
                     rowIdMap.put(o, c);
                 }
             }
@@ -159,7 +153,6 @@ public class ImportValue {
      * @return
      */
     public List<FieldConstant> getAllFieldConstants() {
-
         if (rowList.isEmpty()) {
             return Collections.EMPTY_LIST;
         }
@@ -336,12 +329,6 @@ public class ImportValue {
         for (Import.Column c : bibIdColumn) {
             values.add(c.getValue().toString());
         }
-
-        /*
-        if (functionConstants == FunctionConstants.F104) {
-            logger.debug("Column values for F104={}", values.toString());
-        } */
-
         return values;
     }
 
@@ -385,23 +372,13 @@ public class ImportValue {
 
     public ImportValue write(final ImportValue importValue, final FunctionConstants func, final String defaultValue) {
         final List<Import.Column> exheadList = importValue.getHeaderRow().getColumns();
-
-        logger.debug("Existing exhead cols size={}", exheadList.size());
-
         final Import.Column<String> column = newColumn(func, "");
-
         exheadList.add(column);
         importValue.setHeaderRow(exheadList);
-
-        logger.debug("New exhead cols size={}", exheadList.size());
-
         final List<Import.Row> rowList = importValue.getContentRows();
 
         for (Import.Row row : rowList) {
-            //row.getColumns().add(new ImportEntity().new Column<>(FunctionConstants.F1, defaultValue)); //too verbose
-            //logger.debug("Ex size={}", row.getColumns().size());
             row.getColumns().add(newColumn(func, defaultValue));
-            //logger.debug("New size={}", row.getColumns().size());
         }
 
         importValue.setContentRows(rowList);
@@ -411,7 +388,7 @@ public class ImportValue {
 
     @Override
     public String toString() {
-        return "ImportEntityValue{"
+        return "ImportValue{"
                 + "rowList=" + rowList
                 + ", HEADER_ROW=" + HEADER_ROW
                 + ", CONTENT_ROW=" + CONTENT_ROW

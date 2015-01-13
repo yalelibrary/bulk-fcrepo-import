@@ -17,7 +17,9 @@ public class LocalIdMarcValue {
 
     private LocalIdentifier<String> bibId;
 
-    private Multimap<Marc21Field, Map<String, String>> valueMap; //e.g. {(500 -> {("a", "some value")}, 245 -> { ("a", "value"), ("b", "value 2") }, {("a", "value c")}} //repeating 245 field (if it doesn't repeat, get rid of the multi map).
+    private Multimap<Marc21Field, Map<String, String>> valueMap;
+    //e.g. {(500 -> {("a", "some value")}, 245 -> { ("a", "value"), ("b", "value 2") }, {("a", "value c")}}
+    // repeating 245 field (if it doesn't repeat, get rid of the multi map).
 
     public LocalIdentifier<String> getBibId() {
         return bibId;

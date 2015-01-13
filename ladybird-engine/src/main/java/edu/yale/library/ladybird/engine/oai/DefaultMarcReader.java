@@ -12,6 +12,7 @@ import javax.xml.bind.Unmarshaller;
  * A simple impelmentation. Implement and Use Marc4J wrapper for more extensinve functionality.
  */
 public class DefaultMarcReader implements MarcReader {
+
     private static final Logger logger = LoggerFactory.getLogger(DefaultMarcReader.class);
 
     public Record readMarc(final Node arg) throws MarcReadingException {
