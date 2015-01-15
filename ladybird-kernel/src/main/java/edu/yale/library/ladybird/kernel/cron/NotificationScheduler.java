@@ -1,8 +1,10 @@
 package edu.yale.library.ladybird.kernel.cron;
 
 
+import com.google.inject.Guice;
 import com.google.inject.Inject;
-import edu.yale.library.ladybird.kernel.ApplicationBootstrap;
+import com.google.inject.Injector;
+import com.google.inject.Module;
 import edu.yale.library.ladybird.kernel.events.AbstractNotificationJob;
 import edu.yale.library.ladybird.kernel.events.NotificationJob;
 import org.quartz.Scheduler;
@@ -13,9 +15,11 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public final class NotificationScheduler {
 
-    private final Logger logger = getLogger(this.getClass());
+    private static final Logger logger = getLogger(NotificationScheduler.class);
 
     private AbstractNotificationJob notificationJob;
+
+    private static Module guiceModule;
 
     @Inject
     public NotificationScheduler(NotificationJob notificationJob) {
@@ -23,23 +27,51 @@ public final class NotificationScheduler {
     }
 
     /**
+     * Utility method for scheduling a (generic) cron job
+     */
+    public static void scheduleGenericJob(final AbstractNotificationJob notificationJob,
+                                          final String jobName,
+                                          final String cronExpression) {
+        Guice.createInjector(guiceModule, new org.nnsoft.guice.guartz.QuartzModule() {
+            @Override
+            protected void schedule() {
+                scheduleJob(notificationJob.getClass()).withCronExpression(cronExpression)
+                        .withJobName(jobName);
+            }
+        });
+    }
+
+    /**
+     * Initializes a notification scheduler
+     * @throws Exception
+     */
+    public static void initNotificationScheduler() throws Exception {
+        final Injector injector = Guice.createInjector(guiceModule);
+        NotificationScheduler notificationScheduler = injector.getInstance(NotificationScheduler.class);
+        notificationScheduler.doSchedule("notification");
+    }
+
+    /**
      * Schedule job
-     * TODO add to ScheduledJobs:
+     * TODO add to:
      * @see edu.yale.library.ladybird.kernel.cron.ScheduledJobs
      */
-    public void scheduleJob(final String jobName)  throws Exception {
-        logger.debug("Scheduling={}", jobName);
+    public void doSchedule(final String jobName)  throws Exception {
         Scheduler scheduler = new StdSchedulerFactory().getScheduler();
+        logger.debug("Scheduling={}", jobName);
         scheduler.start();
-        doSchedule(jobName, getNotificationCronSchedule());
+        scheduleGenericJob(notificationJob, jobName, getNotificationCronSchedule());
     }
 
-    public void doSchedule(final String jobName, final String cronExpression) {
-        ApplicationBootstrap.scheduleGenericJob(notificationJob, jobName, cronExpression);
+    public static void setGuiceModule(Module abstractModule) {
+        if (guiceModule != null) {
+            logger.error("Already inst");
+        }
+        guiceModule = abstractModule;
     }
 
-
-    private static String getNotificationCronSchedule() {
+    //TODO
+    private String getNotificationCronSchedule() {
         return "0/5 * * * * ?";
     }
 }

@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird;
 
-import edu.yale.library.ladybird.kernel.ApplicationBootstrap;
+import edu.yale.library.ladybird.kernel.EventHandler;
 import edu.yale.library.ladybird.kernel.events.Events;
 import edu.yale.library.ladybird.kernel.events.UserGeneratedEvent;
 import org.slf4j.Logger;
@@ -32,7 +32,7 @@ public class WebPageSessionTracker implements Filter {
     /**
      * Posts click events
      *
-     * @see edu.yale.library.ladybird.kernel.ApplicationBootstrap#postEvent(edu.yale.library.ladybird.kernel.events.Event)
+     * @see edu.yale.library.ladybird.kernel.EventHandler#postEvent(edu.yale.library.ladybird.kernel.events.Event)
      *
      * @param request @inheritDoc
      * @param servletResponse @inheritDoc
@@ -57,7 +57,7 @@ public class WebPageSessionTracker implements Filter {
         } else {
 
             if (httpRequest.getHeader("X-Requested-With") == null) { //ignore ajax
-                ApplicationBootstrap.postEvent(new UserGeneratedEvent() {
+                EventHandler.postEvent(new UserGeneratedEvent() {
                     @Override
                     public String getEventName() {
                         return Events.USER_VISIT.toString();

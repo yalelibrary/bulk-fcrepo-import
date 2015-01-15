@@ -4,8 +4,10 @@ package edu.yale.library.ladybird.kernel.events;
 import com.dumbster.smtp.SimpleSmtpServer;
 import edu.yale.library.ladybird.kernel.ApplicationBootstrap;
 import edu.yale.library.ladybird.entity.UserBuilder;
+import edu.yale.library.ladybird.kernel.cron.NotificationScheduler;
 import edu.yale.library.ladybird.kernel.events.imports.ImportEvent;
 import org.junit.Test;
+import org.mockito.internal.matchers.Not;
 
 import java.util.Collections;
 
@@ -24,9 +26,11 @@ public class NotificationSchedulerTest {
         SimpleSmtpServer server = null;
         try {
             server = SimpleSmtpServer.start(8082); //FIXME
-            ApplicationBootstrap kernelContext = new ApplicationBootstrap();
-            kernelContext.setAbstractModule(new TestJobModule());
-            ApplicationBootstrap.initNotificationScheduler();
+            NotificationScheduler.setGuiceModule(new TestJobModule());
+            NotificationScheduler.initNotificationScheduler();
+            //ApplicationBootstrap kernelContext = new ApplicationBootstrap();
+            //kernelContext.setGuiceModule(new TestJobModule());
+            //kernelContext.initNotificationcheduler();
             //Add dummy event:
             NotificationEventQueue.addEvent(new NotificationEventQueue().
                     new NotificationItem(new ImportEvent(), Collections.singletonList(new UserBuilder().createUser()), "message", "sujet"));

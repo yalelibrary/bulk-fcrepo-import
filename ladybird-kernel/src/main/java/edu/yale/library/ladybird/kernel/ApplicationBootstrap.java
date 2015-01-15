@@ -8,11 +8,13 @@ import edu.yale.library.ladybird.kernel.cron.NotificationScheduler;
 import edu.yale.library.ladybird.kernel.events.AbstractNotificationJob;
 import edu.yale.library.ladybird.kernel.events.Event;
 import edu.yale.library.ladybird.persistence.HibernateUtil;
-import org.apache.commons.lang.time.DurationFormatUtils;
 import org.slf4j.Logger;
 
 import java.util.List;
 
+import static java.lang.System.currentTimeMillis;
+import static java.lang.System.getProperty;
+import static org.apache.commons.lang.time.DurationFormatUtils.formatDuration;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ApplicationBootstrap {
@@ -29,20 +31,21 @@ public class ApplicationBootstrap {
 
     private final EmbeddedDBServicesManager embeddedDBServicesManager = new EmbeddedDBServicesManager();
 
-    private static Module jobModule;
+    private static Module guiceModule;
 
-    private static EventBus eventBus;
-
+    /**
+     * Start db, init scheduler, wire in guice bindings
+     */
     public void init() {
         try {
-            if (!System.getProperty("file.encoding").equals("UTF-8")) {
+            if (!getProperty("file.encoding").equals("UTF-8")) {
                 logger.error("UTF-8 file encoding not detected.");
             }
 
             if (ApplicationProperties.CONFIG_STATE.DEFAULT_DB_CONFIGURED) {
-                logger.debug("Trying to start embedded DB");
+                logger.debug("Starting embedded DB");
                 embeddedDBServicesManager.initDB();
-                dbUptime = System.currentTimeMillis();
+                dbUptime = currentTimeMillis();
                 logger.debug("Started embedded DB");
             }
 
@@ -50,13 +53,11 @@ public class ApplicationBootstrap {
             logger.debug("Built Session Factory");
 
             //bootstrap notification:
-            final ApplicationBootstrap kernelContext = new ApplicationBootstrap();
-            kernelContext.setAbstractModule(new GuiceModule());
-            initNotificationScheduler();
+            NotificationScheduler.setGuiceModule(guiceModule);
+            NotificationScheduler.initNotificationScheduler();
 
-            if (eventBus == null) {
-                eventBus = getEventBus();
-            }
+            //init event handler:
+            EventHandler.setGuiceModule(guiceModule);
         } catch (Throwable t) {
             logger.error("Error in context initialization", t);
         }
@@ -64,78 +65,29 @@ public class ApplicationBootstrap {
 
     /**
      * Stop embedded db
-     * TODO ensure DB is running
      */
     public void stop() {
         try {
             if (ApplicationProperties.CONFIG_STATE.DEFAULT_DB_CONFIGURED) {
-                logger.debug("Trying to stop embedded DB");
+                logger.debug("Stopping embedded DB");
+                // TODO check DB state
                 embeddedDBServicesManager.stopDB();
-                logger.debug("Closed embedded database. Time: " + getElapsedTime(dbUptime));
+                logger.debug("Closed embedded db. Time={}", getElapsed(dbUptime));
             }
             HibernateUtil.shutdown();
-            logger.debug("Closed Hibernate Session Factory. Time: " + getElapsedTime(hibernateUptime));
+            logger.debug("Closed Hibernate SessionFactory. Time={}",  getElapsed(hibernateUptime));
         } catch (Throwable t) {
             logger.error("Error in context shutdown", t);
         }
     }
 
-    /**
-     * Initializes a notification scheduler
-     * @throws Exception
-     * @see #scheduleGenericJob(edu.yale.library.ladybird.kernel.events.AbstractNotificationJob, String, String)
-     */
-    public static void initNotificationScheduler() throws Exception {
-        final Injector injector = Guice.createInjector(getJobModule());
-        NotificationScheduler notificationScheduler = injector.getInstance(NotificationScheduler.class);
-        notificationScheduler.scheduleJob("notification");
-    }
-
-    /**
-     * Utility method for scheduling a (generic) cron job
-     */
-    public static void scheduleGenericJob(final AbstractNotificationJob notificationJob,
-                                          final String jobName,
-                                          final String cronExpression) {
-        Guice.createInjector(getJobModule(), new org.nnsoft.guice.guartz.QuartzModule() {
-            @Override
-            protected void schedule() {
-                scheduleJob(notificationJob.getClass()).withCronExpression(cronExpression).withJobName(jobName);
-            }
-        });
-    }
-
-    private static Module getJobModule() {
-        return jobModule;
-    }
-
-    public void setAbstractModule(Module abstractModule) {
-        this.jobModule = abstractModule;
-    }
-
-    /**
-     * Get the event bus and instantiate listeners
-     * @return
-     */
-    private static EventBus getEventBus() {
-        final Injector injector = Guice.createInjector(getJobModule()); //TODO
-
-        if (eventBus == null) {
-            logger.debug("Inst. EventBus");
-            eventBus = new EventBus();
-            final List<Class> globalListeners = injector.getInstance(List.class);
-            for (Class o: globalListeners) {
-                eventBus.register(injector.getInstance(o));
-            }
+    public void setGuiceModule(Module abstractModule) {
+        if (guiceModule == null) {
+            guiceModule = abstractModule;
         }
-        return eventBus;
     }
 
-    public static void postEvent(final Event event) {
-        getEventBus().post(event);
-    }
-
-    public static String getElapsedTime(final long startTime) {
-        return DurationFormatUtils.formatDuration(System.currentTimeMillis() - startTime, TIMESTAMP_FORMAT);
+    private static String getElapsed(final long startTime) {
+        return formatDuration(currentTimeMillis() - startTime, TIMESTAMP_FORMAT);
     }
 }
