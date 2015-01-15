@@ -1,4 +1,4 @@
-package edu.yale.library.ladybird.engine.failing;
+package edu.yale.library.ladybird.engine.general;
 
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
