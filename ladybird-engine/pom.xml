@@ -18,7 +18,7 @@
         <tika-core.version>0.4</tika-core.version>
         <poi-ooxml.version>3.8</poi-ooxml.version>
         <xpathapi-jaxp.version>0.4</xpathapi-jaxp.version>
-        <ladybird-kernel.version>0.0.1-SNAPSHOT</ladybird-kernel.version>
+        <ladybird-auth.version>0.0.1-SNAPSHOT</ladybird-auth.version>
         <ladybird-persistence.version>0.0.1-SNAPSHOT</ladybird-persistence.version>
         <maven-failsafe-plugin.version>2.16</maven-failsafe-plugin.version>
         <validation-api.version>1.0.0.GA</validation-api.version>
@@ -33,13 +33,8 @@
         </dependency>
         <dependency>
             <groupId>edu.yale.library</groupId>
-            <artifactId>ladybird-kernel</artifactId>
-            <version>${ladybird-kernel.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>edu.yale.library</groupId>
             <artifactId>ladybird-auth</artifactId>
-            <version>${ladybird-kernel.version}</version>
+            <version>${ladybird-auth.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

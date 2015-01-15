@@ -1,8 +1,6 @@
 package edu.yale.library.ladybird.engine.imports;
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
-import edu.yale.library.ladybird.engine.EventBus;
-import edu.yale.library.ladybird.engine.TestModule;
 import edu.yale.library.ladybird.engine.cron.queue.ImportContextQueue;
 import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportEngine;
@@ -10,7 +8,6 @@ import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
 import edu.yale.library.ladybird.engine.oai.ImportSourceProcessor;
 import edu.yale.library.ladybird.entity.ImportJob;
 import edu.yale.library.ladybird.entity.ImportJobExhead;
-import edu.yale.library.ladybird.kernel.ApplicationBootstrap;
 import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobExheadDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobExheadHibernateDAO;
@@ -49,12 +46,6 @@ public class ImportEngineIT extends AbstractDBTest {
      */
     @Test
     public void shouldRunFullCycle() throws Exception {
-        ApplicationBootstrap applicationBootstrap = new ApplicationBootstrap();
-        applicationBootstrap.setAbstractModule(new TestModule());
-
-        EventBus eventBus = new EventBus();
-        eventBus.setAbstractModule(new TestModule());
-
         final ImportEngine importEngine = new DefaultImportEngine(0, 1); //TODO param chk
         importEngine.setImportSourceProcessor(new ImportSourceProcessor()); //TODO
 

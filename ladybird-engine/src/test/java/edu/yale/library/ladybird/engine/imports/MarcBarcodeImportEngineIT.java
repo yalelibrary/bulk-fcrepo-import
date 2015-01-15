@@ -1,8 +1,6 @@
 package edu.yale.library.ladybird.engine.imports;
 
 import edu.yale.library.ladybird.engine.AbstractDBTest;
-import edu.yale.library.ladybird.engine.EventBus;
-import edu.yale.library.ladybird.engine.TestModule;
 import edu.yale.library.ladybird.engine.Util;
 import edu.yale.library.ladybird.engine.cron.queue.ImportContextQueue;
 import edu.yale.library.ladybird.engine.exports.DefaultExportEngine;
@@ -16,7 +14,6 @@ import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.FieldMarcMapping;
 import edu.yale.library.ladybird.entity.ImportJob;
 import edu.yale.library.ladybird.entity.ImportJobExhead;
-import edu.yale.library.ladybird.kernel.ApplicationBootstrap;
 import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobExheadDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.FieldMarcMappingHibernateDAO;
@@ -46,13 +43,6 @@ public class MarcBarcodeImportEngineIT extends AbstractDBTest {
     @Test
     public void shouldRunFullCycle() {
         try {
-            //start the engine
-            ApplicationBootstrap applicationBootstrap = new ApplicationBootstrap();
-            applicationBootstrap.setAbstractModule(new TestModule());
-
-            EventBus eventBus = new EventBus();
-            eventBus.setAbstractModule(new TestModule());
-
             /* 1. read the marc fdid mapping */
             FdidMarcMappingUtil fdidMarcMappingUtil = new FdidMarcMappingUtil();
             fdidMarcMappingUtil.setFieldMarcMappingDAO(new FieldMarcMappingHibernateDAO());
