@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.engine.cron;
 
-import edu.yale.library.ladybird.kernel.events.Event;
+import edu.yale.library.ladybird.entity.event.Event;
 import edu.yale.library.ladybird.engine.JobStatus;
 
 /**

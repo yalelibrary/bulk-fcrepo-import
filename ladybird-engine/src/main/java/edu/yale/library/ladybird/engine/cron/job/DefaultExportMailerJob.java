@@ -6,7 +6,7 @@ import edu.yale.library.ladybird.entity.ImportJobNotifications;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.kernel.events.EMailNotificationHandler;
 import edu.yale.library.ladybird.kernel.events.NotificationHandler;
-import edu.yale.library.ladybird.kernel.events.exports.ExportEvent;
+import edu.yale.library.ladybird.entity.event.ExportEvent;
 import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobNotificationsDAO;
 import edu.yale.library.ladybird.persistence.dao.UserDAO;

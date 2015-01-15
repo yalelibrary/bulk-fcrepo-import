@@ -2,12 +2,10 @@ package edu.yale.library.ladybird.kernel.events;
 
 
 import com.dumbster.smtp.SimpleSmtpServer;
-import edu.yale.library.ladybird.kernel.ApplicationBootstrap;
 import edu.yale.library.ladybird.entity.UserBuilder;
 import edu.yale.library.ladybird.kernel.cron.NotificationScheduler;
-import edu.yale.library.ladybird.kernel.events.imports.ImportEvent;
+import edu.yale.library.ladybird.entity.event.ImportEvent;
 import org.junit.Test;
-import org.mockito.internal.matchers.Not;
 
 import java.util.Collections;
 

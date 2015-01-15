@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.engine.exports;
 
 import edu.yale.library.ladybird.entity.JobRequest;
-import edu.yale.library.ladybird.kernel.events.exports.ExportEvent;
+import edu.yale.library.ladybird.entity.event.ExportEvent;
 
 public class ExportRequestEvent extends ExportEvent {
 

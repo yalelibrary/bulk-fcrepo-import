@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.engine.imports;
 
-import edu.yale.library.ladybird.kernel.events.imports.ImportEvent;
+import edu.yale.library.ladybird.entity.event.ImportEvent;
 
 public final class ImageProcessingEvent extends ImportEvent {
 

@@ -6,7 +6,7 @@ import edu.yale.library.ladybird.entity.UserBuilder;
 import edu.yale.library.ladybird.kernel.EventHandler;
 import edu.yale.library.ladybird.kernel.GuiceModule;
 import edu.yale.library.ladybird.kernel.ApplicationBootstrap;
-import edu.yale.library.ladybird.kernel.events.UserGeneratedEvent;
+import edu.yale.library.ladybird.entity.event.UserGeneratedEvent;
 import edu.yale.library.ladybird.persistence.dao.UserDAO;
 import org.slf4j.Logger;
 

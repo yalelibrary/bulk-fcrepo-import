@@ -3,7 +3,7 @@ package edu.yale.library.ladybird.kernel.events;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import edu.yale.library.ladybird.entity.UserEvent;
-import edu.yale.library.ladybird.kernel.events.exports.ExportEvent;
+import edu.yale.library.ladybird.entity.event.ExportEvent;
 import edu.yale.library.ladybird.persistence.dao.UserEventDAO;
 import org.junit.Test;
 

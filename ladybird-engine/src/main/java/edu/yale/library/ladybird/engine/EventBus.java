@@ -3,7 +3,7 @@ package edu.yale.library.ladybird.engine;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
-import edu.yale.library.ladybird.kernel.events.Event;
+import edu.yale.library.ladybird.entity.event.Event;
 import org.slf4j.Logger;
 
 import java.util.List;

@@ -1,11 +1,12 @@
 package edu.yale.library.ladybird.engine.imports;
 
+import edu.yale.library.ladybird.entity.event.ImportEvent;
 import org.apache.commons.lang3.exception.ContextedRuntimeException;
 
 /**
  *  Reprsents a runtime exception corresponding to an import job
  */
-public class JobExceptionEvent extends edu.yale.library.ladybird.kernel.events.imports.ImportEvent {
+public class JobExceptionEvent extends ImportEvent {
 
     /** import id */
     private Integer jobId;

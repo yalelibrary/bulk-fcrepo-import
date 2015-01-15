@@ -4,6 +4,7 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import edu.yale.library.ladybird.entity.UserEvent;
 import edu.yale.library.ladybird.entity.UserEventBuilder;
+import edu.yale.library.ladybird.entity.event.UserGeneratedEvent;
 import edu.yale.library.ladybird.persistence.dao.UserEventDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

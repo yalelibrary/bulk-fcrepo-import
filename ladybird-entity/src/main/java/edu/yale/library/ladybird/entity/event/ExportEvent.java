@@ -1,19 +1,9 @@
-package edu.yale.library.ladybird.kernel.events.exports;
-
-import edu.yale.library.ladybird.kernel.events.UserGeneratedEvent;
-
-import java.util.Date;
+package edu.yale.library.ladybird.entity.event;
 
 /**
  * An import event. Classes may subcass this. Subject to modification.
  */
 public class ExportEvent implements UserGeneratedEvent {
-
-    /* TIme started */
-    private Date startTime;
-
-    /* Time ended */
-    private Date endTime;
 
     private final String eventName = "Export";
 

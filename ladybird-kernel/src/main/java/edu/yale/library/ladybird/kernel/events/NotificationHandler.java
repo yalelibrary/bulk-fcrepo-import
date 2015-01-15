@@ -1,6 +1,7 @@
 package edu.yale.library.ladybird.kernel.events;
 
 import edu.yale.library.ladybird.entity.User;
+import edu.yale.library.ladybird.entity.event.Event;
 
 import java.io.File;
 

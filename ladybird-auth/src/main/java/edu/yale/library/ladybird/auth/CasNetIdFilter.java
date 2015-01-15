@@ -1,8 +1,8 @@
 package edu.yale.library.ladybird.auth;
 
 import edu.yale.library.ladybird.kernel.EventHandler;
-import edu.yale.library.ladybird.kernel.events.Events;
-import edu.yale.library.ladybird.kernel.events.UserGeneratedEvent;
+import edu.yale.library.ladybird.entity.event.Events;
+import edu.yale.library.ladybird.entity.event.UserGeneratedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

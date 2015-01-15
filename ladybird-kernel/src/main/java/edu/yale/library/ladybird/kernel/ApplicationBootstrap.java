@@ -1,16 +1,9 @@
 package edu.yale.library.ladybird.kernel;
 
-import com.google.common.eventbus.EventBus;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import com.google.inject.Module;
 import edu.yale.library.ladybird.kernel.cron.NotificationScheduler;
-import edu.yale.library.ladybird.kernel.events.AbstractNotificationJob;
-import edu.yale.library.ladybird.kernel.events.Event;
 import edu.yale.library.ladybird.persistence.HibernateUtil;
 import org.slf4j.Logger;
-
-import java.util.List;
 
 import static java.lang.System.currentTimeMillis;
 import static java.lang.System.getProperty;
