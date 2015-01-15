@@ -19,7 +19,6 @@ public class LocalIdMarcValueTest {
         LocalIdMarcValue localIdMarcValue = new LocalIdMarcValue();
         localIdMarcValue.setBibId(new LocalIdentifier("980725"));
 
-
         Map<String, String> firstSetFor245 = new HashMap();
         firstSetFor245.put("a", "a field 1");
         firstSetFor245.put("b", "b field 1");
@@ -36,15 +35,13 @@ public class LocalIdMarcValueTest {
 
         localIdMarcValue.setValueMap(multiMap);
 
-
         //test:
         assertEquals("Value mismatch", localIdMarcValue.getBibId().getId(), "980725");
 
         Multimap<Marc21Field, Map<String, String>> multiMapReadback = localIdMarcValue.getValueMap();
-
         Collection collection = multiMapReadback.get(Marc21Field._245);
 
-        assert (collection.size() == 2);
+        assertEquals (collection.size(), 2);
 
         Iterator it = collection.iterator();
 

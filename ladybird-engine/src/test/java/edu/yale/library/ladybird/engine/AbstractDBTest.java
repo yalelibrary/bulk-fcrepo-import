@@ -5,7 +5,7 @@ import edu.yale.library.ladybird.kernel.EmbeddedDBServicesManager;
 
 import java.sql.SQLException;
 
-//TODO clean up..redundant methods
+//TODO redundant methods
 public class AbstractDBTest {
 
     private EmbeddedDBServicesManager embeddedDBServicesManager;
@@ -23,7 +23,6 @@ public class AbstractDBTest {
         }
     }
 
-    //TODO
     protected synchronized void stop() throws SQLException {
         if (dbInit) {
             //servicesManager.stopDB();
@@ -50,8 +49,5 @@ public class AbstractDBTest {
             dbInit = false;
         }
     }
-
-
-
 
 }

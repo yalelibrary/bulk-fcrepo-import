@@ -26,8 +26,6 @@ public class TestFilePOICompatiblityTest {
 
     /**
      * Tests number of rows and columns
-     *
-     * @throws Exception
      */
     @Test
     public void shouldEqualExpectedColumnsandRows() throws IOException {

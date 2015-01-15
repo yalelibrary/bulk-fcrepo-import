@@ -25,7 +25,7 @@ import static java.lang.String.valueOf;
 
 public class ComplexProcessorTest extends AbstractDBTest {
 
-    final ObjectDAO dao = new ObjectHibernateDAO();
+    private final ObjectDAO dao = new ObjectHibernateDAO();
 
     @Test
     public void shouldProcessComplexF4() {

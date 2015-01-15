@@ -29,7 +29,6 @@ public class ObjectVersionerTest extends AbstractDBTest {
     public void versionStrings() {
         ObjectStringVersionDAO objectStringVersionDAO = new ObjectStringVersionHibernateDAO();
         int obStr = ObjectTestsHelper.writeDummyObjString(15, 70, "Old value"); //FIXME oid
-
         ObjectVersioner metadataEditor = new ObjectVersioner();
         List<ObjectString> list = getEmptyList();
         list.add(new ObjectStringHibernateDAO().findByOid(15).get(0));
@@ -42,7 +41,6 @@ public class ObjectVersionerTest extends AbstractDBTest {
     public void shouldVersionAcid() {
         ObjectAcidVersionDAO dao = new ObjectAcidVersionHibernateDAO();
         int objAcid = ObjectTestsHelper.writeDummyObjAcid(16, 70, "Old Acid Value");  //FIXME oid
-
         //assert (dao.findAll().isEmpty());
 
         List<ObjectAcid> list = getEmptyList();

@@ -32,8 +32,6 @@ public class ExportWriterTest {
         final ExportWriter exportWriter = new ExportWriter();
         final String testFilePath = asTemp("temp-test2.xlsx");
 
-        System.out.println("path" + testFilePath);
-
         ExportSheet exportSheet = new ExportSheet();
         exportSheet.setTitle("Sheet 1");
         exportSheet.setContents(getData());

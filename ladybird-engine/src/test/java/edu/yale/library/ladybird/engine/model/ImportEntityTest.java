@@ -9,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 
 
 public class ImportEntityTest {
+
     /**
      * Tests backing representation for a column value
      */

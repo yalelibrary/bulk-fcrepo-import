@@ -36,9 +36,7 @@ public class DeleteProcessorTest extends AbstractDBTest {
     public void shouldDelete() {
         ObjectDAO objectDAO = new ObjectHibernateDAO();
         edu.yale.library.ladybird.entity.Object obj = new ObjectBuilder().createObject();
-
         obj.setDate(new Date());
-
         int oid = objectDAO.save(obj);
 
         assert (objectDAO.findByOid(oid).getOid().equals(oid));

@@ -56,7 +56,6 @@ public class ProjectTemplateApplicatorTest extends AbstractDBTest {
     private static final int ACID_FDID = 59;
     private static final int STRING_FDID = 70;
 
-    //TODO
     private final ObjectDAO objectDAO = new ObjectHibernateDAO();
     private final ObjectStringDAO objectStringDAO = new ObjectStringHibernateDAO();
     private final ObjectAcidDAO objectAcidDAO = new ObjectAcidHibernateDAO();
@@ -75,7 +74,6 @@ public class ProjectTemplateApplicatorTest extends AbstractDBTest {
         ObjectDAO objectDAO = new ObjectHibernateDAO();
         ProjectTemplateStringsDAO templateStringDAO = new ProjectTemplateStringsHibernateDAO();
         ProjectTemplateDAO projectTemplateDAO = new ProjectTemplateHibernateDAO();
-
 
         authDAO.deleteAll();
         osvDAO.deleteAll();
@@ -100,8 +98,6 @@ public class ProjectTemplateApplicatorTest extends AbstractDBTest {
         ProjectTemplateStringsDAO templateStringDAO = new ProjectTemplateStringsHibernateDAO();
         ProjectTemplateDAO projectTemplateDAO = new ProjectTemplateHibernateDAO();
         ObjectVersionDAO objectVersionDAO = new ObjectVersionHibernateDAO();
-
-
 
         authDAO.deleteAll();
         osvDAO.deleteAll();

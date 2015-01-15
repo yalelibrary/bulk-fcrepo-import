@@ -44,7 +44,6 @@ public class OidMinterTest extends AbstractDBTest {
 
     private ImportValue getTestData() {
         final List<Import.Column> columns = new ArrayList<>();
-
         columns.add(getColumn(new FieldDefinition(70, "Title"), ""));
         final Import.Row row = getRow(columns);
 
@@ -52,13 +51,11 @@ public class OidMinterTest extends AbstractDBTest {
         listColumns.add(getColumn(new FieldDefinition(70, "Title"), "The Wizard of Oz.")); //content
 
         final Import.Row contentRow = getRow(listColumns);
-
         List<Import.Row> spreadsheetRows = new ArrayList<>();
         spreadsheetRows.add(row);
         spreadsheetRows.add(contentRow);
 
         final ImportValue importValue = new ImportValue(spreadsheetRows);
-
         return importValue;
     }
 

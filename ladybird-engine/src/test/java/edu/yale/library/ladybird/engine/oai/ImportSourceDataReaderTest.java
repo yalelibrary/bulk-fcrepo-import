@@ -23,8 +23,6 @@ public class ImportSourceDataReaderTest {
 
         Multimap<Marc21Field, Map<String, String>> m = importSourceDataReader.buildMultimap(sourceData);
 
-        //logger.debug(m.toString());
-
         Collection marcMap = m.get(Marc21Field._245);
         Iterator it = marcMap.iterator();
 

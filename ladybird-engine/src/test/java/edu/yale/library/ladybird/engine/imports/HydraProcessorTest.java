@@ -29,7 +29,6 @@ public class HydraProcessorTest extends AbstractDBTest {
     @Ignore
     @Test
     public void shouldWrite() {
-
         final int oidToTest = 333993;
 
         try {

@@ -85,11 +85,10 @@ public class ImportValueTest {
         FieldDefinition fdValue = new FieldDefinition(69, "tt");
 
         final Map<Column, Column> map = importValue.getContentColumnValuesWithOIds(fdValue);
-        //logger.debug(map.toString());
-
         Set<Column> keySet = map.keySet();
 
-        // Column{field=F1, value=333993}=Column{field=FieldDefinition{fdid=69, acid=0, handle=''}, value=name}}
+        // Column{field=F1, value=333993}=Column{field=FieldDefinition{fdid=69, acid=0, handle=''}
+        // , value=name}}
 
         for (Column c: keySet) {
             assertTrue(c.getField().getName() == "F1");
@@ -155,7 +154,8 @@ public class ImportValueTest {
     @Test
     public void shouldGetMultipleFunctions() {
         ImportValue importValue = getTestTripleEntityValue();
-        assert (importValue.hasFunction(FunctionConstants.F1, FunctionConstants.F40, FunctionConstants.F104) == true);
+        assert (importValue.hasFunction(FunctionConstants.F1,
+                FunctionConstants.F40, FunctionConstants.F104) == true);
     }
 
     private ImportValue getTestSingleColumnRowImportEntityValue() {

@@ -37,8 +37,6 @@ import static org.junit.Assert.assertEquals;
  */
 public class ExportReaderIT extends AbstractDBTest {
 
-
-    //TODO
     @Test
     public void shouldReadRowsFromImportTable() {
         ApplicationBootstrap applicationBootstrap = new ApplicationBootstrap();
@@ -72,10 +70,8 @@ public class ExportReaderIT extends AbstractDBTest {
         final List<FieldConstant> globalFConstantsList = fakeGlobalApplicationFieldConstants();
 
         ImportSourceDataReader importSourceDataReader = new ImportSourceDataReader();
-        final Multimap<Marc21Field, Map<String, String>> map = importSourceDataReader.buildMultimap(fakeImportSourceData());
-
-        //logger.debug("Map={}", map.toString());
-
+        final Multimap<Marc21Field, Map<String, String>> map
+                = importSourceDataReader.buildMultimap(fakeImportSourceData());
 
         ImportContextReaderOaiMerger importContextReaderOaiMerger = new ImportContextReaderOaiMerger();
 

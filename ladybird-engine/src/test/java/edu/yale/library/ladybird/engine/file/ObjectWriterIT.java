@@ -48,10 +48,8 @@ public class ObjectWriterIT {
      */
     @Test
     public void shouldWriteToObjectMetadataTabes() {
-
         final int fdid1 = 59;
         final int fdid2 = 70;
-
 
         EventBus eventBus = new EventBus();
         eventBus.setAbstractModule(new TestModule());
@@ -122,9 +120,7 @@ public class ObjectWriterIT {
         ObjectStringDAO objectStringDAO = new ObjectStringHibernateDAO();
         List<ObjectString> objectStrings = objectStringDAO.findAll();
 
-        System.out.println("List" + objectStrings.toString());
         assert (objectStrings.size() == 1);
-
 
         ObjectAcid objectAcid = objectAcidList.get(0);
 

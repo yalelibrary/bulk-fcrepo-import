@@ -49,8 +49,6 @@ public class MetadataEditorTest extends AbstractDBTest {
     final int acidFdid = 59;
     final int stringFdid = 70;
 
-
-
     /**
      * Tests handling of multiple fdid metadata.
      * Makes an edit and tests whether edit was applied and the metadata items were versioned.
@@ -150,7 +148,8 @@ public class MetadataEditorTest extends AbstractDBTest {
         assertEquals(fieldDefinitionValueList.size(), 1);
 
         //1. Create an acid that should be shared since it's a drop down:
-        AuthorityControl sharedAcid = new AuthorityControlBuilder().setFdid(acidFdid).setDate(new Date()).setValue("WHATEVER 1").createAuthorityControl();
+        AuthorityControl sharedAcid = new AuthorityControlBuilder().setFdid(acidFdid)
+                .setDate(new Date()).setValue("WHATEVER 1").createAuthorityControl();
         authDAO.save(sharedAcid);
         assert (authDAO.findAll().size() == 1);
 
@@ -179,7 +178,8 @@ public class MetadataEditorTest extends AbstractDBTest {
 
     private int writeDummyObject() {
         Date d = new Date();
-        edu.yale.library.ladybird.entity.Object object = new ObjectBuilder().setUserId(0).setProjectId(0).setDate(d).createObject();
+        edu.yale.library.ladybird.entity.Object object = new ObjectBuilder().setUserId(0)
+                .setProjectId(0).setDate(d).createObject();
         return new ObjectHibernateDAO().save(object);
     }
 
@@ -189,7 +189,8 @@ public class MetadataEditorTest extends AbstractDBTest {
     private List<FieldDefinitionValue> getFdidValueList() {
         List<FieldDefinitionValue> fdidList = new ArrayList<>();
         fdidList.add(getAcidFdidValue(acidFdid, Arrays.asList("WHATEVER 1", "WHATEVER 2")));
-        fdidList.add(getStringFdidValue(stringFdid, Arrays.asList("New String value 1", "New String value 2")));
+        fdidList.add(getStringFdidValue(stringFdid, Arrays.asList("New String value 1",
+                "New String value 2")));
         return fdidList;
     }
 
@@ -221,7 +222,6 @@ public class MetadataEditorTest extends AbstractDBTest {
 
     @After
     public void stop() throws SQLException {
-
         AuthorityControlDAO authDAO = new AuthorityControlHibernateDAO();
         ObjectAcidDAO oaDAO = new ObjectAcidHibernateDAO();
         ObjectStringDAO osDAO = new ObjectStringHibernateDAO();

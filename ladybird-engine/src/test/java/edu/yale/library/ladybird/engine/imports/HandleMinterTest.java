@@ -13,9 +13,7 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
-/**
- *
- */
+
 public class HandleMinterTest extends AbstractDBTest {
 
     @Test

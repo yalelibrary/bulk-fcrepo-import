@@ -47,7 +47,8 @@ public class Marc21ReadingTest {
             final DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
             domFactory.setNamespaceAware(true);
             final DocumentBuilder builder = domFactory.newDocumentBuilder();
-            final Document doc = builder.parse(this.getClass().getClassLoader().getResourceAsStream("oai/oai_marc21"));
+            final Document doc = builder.parse(this.getClass().getClassLoader()
+                    .getResourceAsStream("oai/oai_marc21"));
             final Map<String, String> namespaceMap = new HashMap<>();
             namespaceMap.put("k", "http://www.openarchives.org/OAI/2.0/");
             namespaceMap.put("l", "http://www.loc.gov/MARC21/slim");

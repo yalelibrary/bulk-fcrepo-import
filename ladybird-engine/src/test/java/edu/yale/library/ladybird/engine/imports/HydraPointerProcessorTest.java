@@ -26,7 +26,6 @@ public class HydraPointerProcessorTest extends AbstractDBTest {
     @Test
     public void shouldProcess() {
         try {
-
             ObjectDAO objectDAO = new ObjectHibernateDAO();
             Object obj = new ObjectBuilder().createObject();
             obj.setDate(new Date());

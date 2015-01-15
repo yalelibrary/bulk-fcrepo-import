@@ -97,7 +97,8 @@ public class ImportWriterTest {
                .setK1("999").setK2("a").setDate(new Date()).setFdid(69).createFieldMarcMapping();
        fieldMarcMappingList.add(fieldMarcMapping3);
 
-       Map<Marc21Field, FieldMarcMapping> marc21FieldMap = new FdidMarcMappingUtil().buildMarcFdidMap(fieldMarcMappingList);
+       Map<Marc21Field, FieldMarcMapping> marc21FieldMap
+               = new FdidMarcMappingUtil().buildMarcFdidMap(fieldMarcMappingList);
 
        assert (marc21FieldMap.get(Marc21Field._245) == fieldMarcMapping1);
        assert (marc21FieldMap.get(Marc21Field._520) == fieldMarcMapping2);
