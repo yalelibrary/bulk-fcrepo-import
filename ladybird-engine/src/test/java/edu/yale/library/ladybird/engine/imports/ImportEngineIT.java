@@ -9,61 +9,61 @@ import edu.yale.library.ladybird.engine.exports.ExportEngine;
 import edu.yale.library.ladybird.engine.exports.ExportRequestEvent;
 import edu.yale.library.ladybird.engine.oai.ImportSourceProcessor;
 import edu.yale.library.ladybird.entity.ImportJob;
-import edu.yale.library.ladybird.entity.ImportJobContents;
 import edu.yale.library.ladybird.entity.ImportJobExhead;
 import edu.yale.library.ladybird.kernel.ApplicationBootstrap;
-import edu.yale.library.ladybird.persistence.dao.ImportJobContentsDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
 import edu.yale.library.ladybird.persistence.dao.ImportJobExheadDAO;
-import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobContentsHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobExheadHibernateDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobHibernateDAO;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.List;
 
+import static java.lang.System.getProperty;
 import static org.junit.Assert.assertEquals;
-
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Tests full cycle for read/write import/export.
  */
 public class ImportEngineIT extends AbstractDBTest {
 
-    @Deprecated
-    private static final String XLS_FILE_TO_WRITE = asTmp("test_export.xlsx");
+    private static final String XLS_EXPORT_FILE = asTmp("test_export.xlsx");
+
+    private static final String XLS = "4654-pt1-READY-FOR-INGEST-A.xlsx";
+
+    private static final int ROWS = 78;
+
+    private static final int COLS = 32;
 
     /**
      * Full cycle read write
      *
      * @throws Exception
      */
-    @Ignore("todo")
     @Test
     public void shouldRunFullCycle() throws Exception {
-
         ApplicationBootstrap applicationBootstrap = new ApplicationBootstrap();
         applicationBootstrap.setAbstractModule(new TestModule());
 
         EventBus eventBus = new EventBus();
         eventBus.setAbstractModule(new TestModule());
 
-        //initFdids(); //TODO tmp. Inst app. rules for test (since db state is cleaned)
-
-        final ImportEngine importEngine = new DefaultImportEngine(0, 1); //TODO chek params logic
+        final ImportEngine importEngine = new DefaultImportEngine(0, 1); //TODO param chk
         importEngine.setImportSourceProcessor(new ImportSourceProcessor()); //TODO
 
         final List<Import.Row> rows = importEngine.read(getImportSpreadsheeet(), ReadMode.FULL);
 
-        assertEquals("Rows size mismatch", rows.size(), FileConstants.ROW_COUNT);
+        assertEquals("Rows size mismatch", rows.size(), ROWS);
         assertEquals("Columns size mismatch", rows.get(0).getColumns().size(), 31);
-        assertEquals("Column value mismatch", rows.get(1).getColumns().get(4).getValue(), "Gilchrist, Scott");
+        assertEquals("Column value mismatch", rows.get(1).getColumns().get(4).getValue(),
+                "Gilchrist, Scott");
 
         final int imid = importEngine.write(rows);
 
@@ -82,31 +82,31 @@ public class ImportEngineIT extends AbstractDBTest {
         final ImportJobExheadDAO importJobExheadDAO = new ImportJobExheadHibernateDAO();
         final List<ImportJobExhead> jobExheads = importJobExheadDAO.findAll();
 
-        assertEquals("Import job exhead count mismatch", jobExheads.size(), FileConstants.COL_COUNT);
-        assertEquals("Exhead count per imid mismatch}", importJobExheadDAO.getNumEntriesPerImportJob(imid), 32);
+        assertEquals("Import job exhead count mismatch", jobExheads.size(), COLS);
+        assertEquals("Exhead count per imid mismatch}",
+                importJobExheadDAO.getNumEntriesPerImportJob(imid), 32);
 
         //Contents (aka imjobcontents):
+        /* assert that data written to DB equals rows times cols
+        (-1 for each since exhead is row 0 and F1 is col 1)
+           from the spreadsheet.
+
         final ImportJobContentsDAO importJobContentsDAO = new ImportJobContentsHibernateDAO();
         final List<ImportJobContents> importJobContents = importJobContentsDAO.findAll();
-
-        /* assert that data written to DB equals rows times cols (-1 for each since exhead is row 0 and F1 is col 1)
-           from the spreadsheet. */
-
-//        assertEquals("Import job contents size mismatch. ", importJobContents.size(),
-//                (FileConstants.ROW_COUNT - 1) * (FileConstants.COL_COUNT - 1));
+        assertEquals("Import job contents size mismatch. ", importJobContents.size(),
+                (FileConstants.ROWS - 1) * (FileConstants.COLS - 1));
+        */
 
         /* Test Export */
         final ExportEngine exportEngine = new DefaultExportEngine();
-
         final ImportContext importContext = exportEngine.read();
 
         final List<Import.Row> listExportRows = importContext.getImportRowsList();
-
-        assert (listExportRows != null);
+        assertNotNull(listExportRows);
         assertEquals("Export rows don't equal import expected rows", listExportRows.size(), 78);
 
-        //write this spreadsheet
-        exportEngine.write(listExportRows, XLS_FILE_TO_WRITE);
+        //write spreadsheet
+        exportEngine.write(listExportRows, XLS_EXPORT_FILE);
 
         //again, read back:
         final List<Import.Row> rowsReadBack = importEngine.read(getExportSpreadsheeet(), ReadMode.FULL);
@@ -115,33 +115,20 @@ public class ImportEngineIT extends AbstractDBTest {
 
 
     public Spreadsheet getImportSpreadsheeet() {
-        return new SpreadsheetFileBuilder().filename(FileConstants.TEST_XLS_FILE)
-                .filepath(FileConstants.TEST_XLS_FILE)
-                .stream(getClass().getClassLoader().getResourceAsStream(FileConstants.TEST_XLS_FILE))
+        return new SpreadsheetFileBuilder().filename(XLS).filepath(XLS)
+                .stream(getClass().getClassLoader().getResourceAsStream(XLS))
                 .create();
     }
 
     public Spreadsheet getExportSpreadsheeet() throws FileNotFoundException {
-        final String testPath = System.getProperty("java.io.tmpdir")
-                + System.getProperty("file.separator") + "test_export.xlsx";
-        return new SpreadsheetFileBuilder().filename("test_export_xlsx")
-                .filepath(testPath)
-                .stream(new FileInputStream(testPath))
-                .create();
-    }
-
-    /**
-     * Test file constants
-     */
-    private class FileConstants {
-        static final String TEST_XLS_FILE = "4654-pt1-READY-FOR-INGEST-A.xlsx";
-        static final int ROW_COUNT = 78;
-        static final int COL_COUNT = 32;
+        final String testPath = getProperty("java.io.tmpdir") + File.separator + "test_export.xlsx";
+        return new SpreadsheetFileBuilder().filename("test_export_xlsx").filepath(testPath)
+                    .stream(new FileInputStream(testPath)).create();
     }
 
     @Deprecated
     private static String asTmp(final String s) {
-        return System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + s;
+        return getProperty("java.io.tmpdir") + File.separator + s;
     }
 
     @Before
