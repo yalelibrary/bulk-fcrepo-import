@@ -1,8 +1,6 @@
-package edu.yale.library.ladybird.entity;
+package edu.yale.library.ladybird.web;
 
-/**
- *
- */
+
 public class CronBean {
 
     private String importCronExpression = "0/10 * * * * ?";

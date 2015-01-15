@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.web.http;
 
-import edu.yale.library.ladybird.entity.CronBean;
+import edu.yale.library.ladybird.web.CronBean;
 import edu.yale.library.ladybird.web.view.AbstractView;
 import edu.yale.library.ladybird.web.view.CronSchedulerView;
 import org.slf4j.Logger;
