@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-public class UserEventChangeRecorder {
+public class UserEventListener {
 
-    private final Logger logger = LoggerFactory.getLogger(UserEventChangeRecorder.class);
+    private final Logger logger = LoggerFactory.getLogger(UserEventListener.class);
 
     @Inject
     UserEventDAO userEventDAO;
@@ -33,7 +33,6 @@ public class UserEventChangeRecorder {
         userEvent.setEventType(event.getEventName());
         userEvent.setUserId(event.getPrincipal());
         userEvent.setValue(event.getValue());
-
         userEventDAO.save(userEvent);
     }
 }

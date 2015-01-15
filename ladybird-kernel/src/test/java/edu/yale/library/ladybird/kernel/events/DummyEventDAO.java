@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * Adds to a temporary list.
- * @see UserEventChangeRecorderTest#shouldAttemptToPersistEvent()
+ * @see UserEventListenerTest#shouldAttemptToPersistEvent()
  */
 public class DummyEventDAO implements UserEventDAO {
 

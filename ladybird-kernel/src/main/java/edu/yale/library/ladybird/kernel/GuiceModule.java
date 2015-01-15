@@ -8,7 +8,7 @@ import edu.yale.library.ladybird.kernel.events.AbstractNotificationJob;
 import edu.yale.library.ladybird.kernel.events.NotificationJob;
 import edu.yale.library.ladybird.kernel.events.NotificationHandler;
 import edu.yale.library.ladybird.kernel.events.EMailNotificationHandler;
-import edu.yale.library.ladybird.kernel.events.UserEventChangeRecorder;
+import edu.yale.library.ladybird.kernel.events.UserEventListener;
 import edu.yale.library.ladybird.persistence.dao.UserEventDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.UserEventHibernateDAO;
 
@@ -21,11 +21,11 @@ public class GuiceModule implements Module {
         binder.bind(AbstractNotificationJob.class).to(NotificationJob.class);
         binder.bind(NotificationHandler.class).to(EMailNotificationHandler.class);
         binder.bind(UserEventDAO.class).to(UserEventHibernateDAO.class);
-        binder.bind(UserEventChangeRecorder.class);
+        binder.bind(UserEventListener.class);
     }
 
     @Provides
     List provideListeners() {
-        return Collections.singletonList(UserEventChangeRecorder.class);
+        return Collections.singletonList(UserEventListener.class);
     }
 }

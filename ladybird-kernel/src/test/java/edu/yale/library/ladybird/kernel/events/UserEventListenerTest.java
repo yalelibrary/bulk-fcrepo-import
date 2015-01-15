@@ -11,13 +11,13 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class UserEventChangeRecorderTest {
+public class UserEventListenerTest {
 
     @Test
     public void shouldAttemptToPersistEvent() {
         final Injector injector = Guice.createInjector(new TestJobModule());
 
-        final UserEventChangeRecorder eventChangeRecorder = injector.getInstance(UserEventChangeRecorder.class);
+        final UserEventListener eventChangeRecorder = injector.getInstance(UserEventListener.class);
         eventChangeRecorder.recordEvent(new ExportEvent());
 
         final UserEventDAO dao = injector.getInstance(UserEventDAO.class);
