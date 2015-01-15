@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 /**
  * General utility class. Subject to removal
  */
-public class PropUtil {
+public class PropertiesConfigInit {
 
-    private static final Logger logger = LoggerFactory.getLogger(PropUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(PropertiesConfigInit.class);
 
     private static Configuration config;
 

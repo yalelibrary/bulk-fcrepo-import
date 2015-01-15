@@ -171,7 +171,7 @@ public class CasNetIdFilter implements Filter {
     }
 
     private String getProp(final String property) throws IOException {
-        return PropUtil.getProperty(property);
+        return PropertiesConfigInit.getProperty(property);
     }
 
     public long getCurrentTime() {
