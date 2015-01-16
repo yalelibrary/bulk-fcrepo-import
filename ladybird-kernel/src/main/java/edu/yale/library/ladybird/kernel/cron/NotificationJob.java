@@ -13,11 +13,6 @@ import org.slf4j.Logger;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-/**
- * Polls the queue.
- * TODO Subject to modification because the current impl. will fail silently
- * (remove the job from the queue,but fail sending it).
- */
 public class NotificationJob extends AbstractNotificationJob implements Job {
 
     private final Logger logger = getLogger(this.getClass());
@@ -29,30 +24,28 @@ public class NotificationJob extends AbstractNotificationJob implements Job {
         this.notificationHandler = notificationHandler;
     }
 
+    /**
+     * FIXME Current impl. will fail silently (remove the job from Q but fail to send it)
+     * @param ctx JobExecutionContext
+     * @throws JobExecutionException
+     */
     public void execute(JobExecutionContext ctx) throws JobExecutionException {
-        NotificationEventQueue.NotificationItem notificationItem = NotificationEventQueue.getLastEvent();
-        Event event = null;  //FIXME  see javadoc comment
-        User user = null;
+        final NotificationEventQueue.NotificationItem notificationItem
+                = NotificationEventQueue.getLastEvent();
+
         try {
-            event = notificationItem.getEvent();
-            user = notificationItem.getUsers().get(0); //TODO could be multimpe users
-        } catch (Exception e) {
-            if (event == null) {
+            final Event event = notificationItem.getEvent();
+            final User user = notificationItem.getUsers().get(0); //TODO multimpe users?
+
+            if (event == null || user == null) {
                 return;
             }
-            logger.trace(e.getMessage());
-        }
 
-        if (event == null || user == null) { //FIXME
-            return;
-        }
-
-        try {
-            logger.debug("Notifying user={} for event={}", user.toString(), event.getEventName());
-            notificationHandler.notifyUser(user, event, notificationItem.getMessage(), notificationItem.getSubject());
-            logger.trace("Notification sent.");
+            logger.trace("Notifying user={} for event={}", user.getUserId(), event.getEventName());
+            notificationHandler.notifyUser(user, event,
+                    notificationItem.getMessage(), notificationItem.getSubject());
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error("Error executing notification job", e);
         }
     }
 }
