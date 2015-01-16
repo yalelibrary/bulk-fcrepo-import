@@ -1,4 +1,4 @@
-package edu.yale.library.ladybird.kernel.derby;
+package edu.yale.library.ladybird.kernel.db;
 
 
 import edu.yale.library.ladybird.kernel.ApplicationProperties;

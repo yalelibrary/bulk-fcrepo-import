@@ -1,7 +1,6 @@
-package edu.yale.library.ladybird.kernel.derby;
+package edu.yale.library.ladybird.kernel.db;
 
 
-import edu.yale.library.ladybird.kernel.EmbeddedDBException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +20,7 @@ public final class DerbySchemaUtil {
     /**
      * Init schema
      *
-     * @throws edu.yale.library.ladybird.kernel.EmbeddedDBException
+     * @throws EmbeddedDBException
      */
     protected void init() {
         try {
@@ -71,7 +70,7 @@ public final class DerbySchemaUtil {
     /**
      * Remove schema
      *
-     * @throws edu.yale.library.ladybird.kernel.EmbeddedDBException
+     * @throws EmbeddedDBException
      */
     protected void killSchema() {
         try {

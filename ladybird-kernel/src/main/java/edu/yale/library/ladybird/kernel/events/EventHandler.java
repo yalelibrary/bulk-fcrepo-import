@@ -1,4 +1,4 @@
-package edu.yale.library.ladybird.kernel;
+package edu.yale.library.ladybird.kernel.events;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Guice;

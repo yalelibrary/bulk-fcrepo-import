@@ -1,6 +1,5 @@
-package edu.yale.library.ladybird.kernel.derby;
+package edu.yale.library.ladybird.kernel.db;
 
-import edu.yale.library.ladybird.kernel.EmbeddedDBException;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +54,7 @@ public final class DerbyManager {
      * Start Db
      *
      * @return
-     * @throws edu.yale.library.ladybird.kernel.EmbeddedDBException
+     * @throws EmbeddedDBException
      */
     protected synchronized void start() {
         synchronized (RUNNING) {

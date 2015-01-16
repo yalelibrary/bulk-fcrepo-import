@@ -1,4 +1,4 @@
-package edu.yale.library.ladybird.kernel.events;
+package edu.yale.library.ladybird.kernel.notificaiton;
 
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.entity.event.Event;

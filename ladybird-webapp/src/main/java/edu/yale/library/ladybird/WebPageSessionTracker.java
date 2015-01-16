@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird;
 
-import edu.yale.library.ladybird.kernel.EventHandler;
+import edu.yale.library.ladybird.kernel.events.EventHandler;
 import edu.yale.library.ladybird.entity.event.Events;
 import edu.yale.library.ladybird.entity.event.UserGeneratedEvent;
 import org.slf4j.Logger;
@@ -32,7 +32,7 @@ public class WebPageSessionTracker implements Filter {
     /**
      * Posts click events
      *
-     * @see edu.yale.library.ladybird.kernel.EventHandler#postEvent(edu.yale.library.ladybird.entity.event.Event)
+     * @see edu.yale.library.ladybird.kernel.events.EventHandler#postEvent(edu.yale.library.ladybird.entity.event.Event)
      *
      * @param request @inheritDoc
      * @param servletResponse @inheritDoc

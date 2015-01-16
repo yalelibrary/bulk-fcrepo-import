@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.engine;
 
 
-import edu.yale.library.ladybird.kernel.EmbeddedDBServicesManager;
+import edu.yale.library.ladybird.kernel.db.EmbeddedDBServicesManager;
 
 import java.sql.SQLException;
 

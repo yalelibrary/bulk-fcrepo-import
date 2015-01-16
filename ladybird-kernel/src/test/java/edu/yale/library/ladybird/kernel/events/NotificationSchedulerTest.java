@@ -5,6 +5,7 @@ import com.dumbster.smtp.SimpleSmtpServer;
 import edu.yale.library.ladybird.entity.UserBuilder;
 import edu.yale.library.ladybird.kernel.cron.NotificationScheduler;
 import edu.yale.library.ladybird.entity.event.ImportEvent;
+import edu.yale.library.ladybird.kernel.notificaiton.NotificationEventQueue;
 import org.junit.Test;
 
 import java.util.Collections;

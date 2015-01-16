@@ -1,6 +1,6 @@
-package edu.yale.library.ladybird.kernel;
+package edu.yale.library.ladybird.kernel.db;
 
-import edu.yale.library.ladybird.kernel.derby.EmbeddedDBUtil;
+import edu.yale.library.ladybird.kernel.ApplicationProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

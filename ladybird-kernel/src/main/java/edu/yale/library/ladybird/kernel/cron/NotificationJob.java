@@ -1,9 +1,11 @@
-package edu.yale.library.ladybird.kernel.events;
+package edu.yale.library.ladybird.kernel.cron;
 
 
 import com.google.inject.Inject;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.entity.event.Event;
+import edu.yale.library.ladybird.kernel.notificaiton.NotificationEventQueue;
+import edu.yale.library.ladybird.kernel.notificaiton.NotificationHandler;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;

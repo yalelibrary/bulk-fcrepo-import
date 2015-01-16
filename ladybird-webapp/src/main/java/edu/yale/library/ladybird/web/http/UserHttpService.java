@@ -3,7 +3,7 @@ package edu.yale.library.ladybird.web.http;
 
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.entity.UserBuilder;
-import edu.yale.library.ladybird.kernel.EventHandler;
+import edu.yale.library.ladybird.kernel.events.EventHandler;
 import edu.yale.library.ladybird.kernel.GuiceModule;
 import edu.yale.library.ladybird.kernel.ApplicationBootstrap;
 import edu.yale.library.ladybird.entity.event.UserGeneratedEvent;

@@ -25,7 +25,7 @@ import edu.yale.library.ladybird.entity.ImportSource;
 import edu.yale.library.ladybird.entity.Settings;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
-import edu.yale.library.ladybird.kernel.events.NotificationEventQueue;
+import edu.yale.library.ladybird.kernel.notificaiton.NotificationEventQueue;
 import edu.yale.library.ladybird.persistence.dao.ImportSourceDAO;
 import edu.yale.library.ladybird.persistence.dao.SettingsDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportSourceHibernateDAO;

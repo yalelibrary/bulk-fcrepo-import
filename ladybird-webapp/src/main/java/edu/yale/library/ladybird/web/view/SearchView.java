@@ -2,7 +2,7 @@ package edu.yale.library.ladybird.web.view;
 
 import edu.yale.library.ladybird.entity.ObjectFile;
 import edu.yale.library.ladybird.entity.UserEvent;
-import edu.yale.library.ladybird.kernel.EventHandler;
+import edu.yale.library.ladybird.kernel.events.EventHandler;
 import edu.yale.library.ladybird.entity.event.Events;
 import edu.yale.library.ladybird.entity.event.UserGeneratedEvent;
 import edu.yale.library.ladybird.persistence.dao.ObjectDAO;

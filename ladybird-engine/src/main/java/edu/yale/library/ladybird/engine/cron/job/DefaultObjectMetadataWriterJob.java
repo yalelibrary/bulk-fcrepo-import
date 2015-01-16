@@ -8,7 +8,7 @@ import edu.yale.library.ladybird.engine.imports.ImportContext;
 import edu.yale.library.ladybird.engine.imports.ImportEngineException;
 import edu.yale.library.ladybird.engine.imports.ObjectMetadataWriter;
 import edu.yale.library.ladybird.entity.User;
-import edu.yale.library.ladybird.kernel.events.NotificationEventQueue;
+import edu.yale.library.ladybird.kernel.notificaiton.NotificationEventQueue;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;

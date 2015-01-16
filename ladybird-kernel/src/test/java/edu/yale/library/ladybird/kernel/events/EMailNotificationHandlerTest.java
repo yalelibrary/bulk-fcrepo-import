@@ -5,6 +5,7 @@ import com.dumbster.smtp.SmtpMessage;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.entity.UserBuilder;
 import edu.yale.library.ladybird.entity.event.ImportEvent;
+import edu.yale.library.ladybird.kernel.notificaiton.EMailNotificationHandler;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

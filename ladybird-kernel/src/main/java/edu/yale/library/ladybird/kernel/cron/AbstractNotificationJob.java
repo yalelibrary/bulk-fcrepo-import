@@ -1,4 +1,4 @@
-package edu.yale.library.ladybird.kernel.events;
+package edu.yale.library.ladybird.kernel.cron;
 
 import org.quartz.Job;
 

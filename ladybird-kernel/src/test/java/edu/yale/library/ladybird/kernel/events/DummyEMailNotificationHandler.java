@@ -3,6 +3,7 @@ package edu.yale.library.ladybird.kernel.events;
 import edu.yale.library.ladybird.entity.event.Event;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
 import edu.yale.library.ladybird.entity.User;
+import edu.yale.library.ladybird.kernel.notificaiton.NotificationHandler;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.SimpleEmail;

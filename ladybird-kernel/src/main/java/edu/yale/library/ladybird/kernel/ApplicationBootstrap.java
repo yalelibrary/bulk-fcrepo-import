@@ -2,6 +2,8 @@ package edu.yale.library.ladybird.kernel;
 
 import com.google.inject.Module;
 import edu.yale.library.ladybird.kernel.cron.NotificationScheduler;
+import edu.yale.library.ladybird.kernel.db.EmbeddedDBServicesManager;
+import edu.yale.library.ladybird.kernel.events.EventHandler;
 import edu.yale.library.ladybird.persistence.HibernateUtil;
 import org.slf4j.Logger;
 

@@ -5,8 +5,6 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Module;
-import edu.yale.library.ladybird.kernel.events.AbstractNotificationJob;
-import edu.yale.library.ladybird.kernel.events.NotificationJob;
 import org.quartz.Scheduler;
 import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;

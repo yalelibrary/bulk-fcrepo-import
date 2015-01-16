@@ -1,4 +1,4 @@
-package edu.yale.library.ladybird.kernel;
+package edu.yale.library.ladybird.kernel.db;
 
 public class EmbeddedDBException extends RuntimeException {
 

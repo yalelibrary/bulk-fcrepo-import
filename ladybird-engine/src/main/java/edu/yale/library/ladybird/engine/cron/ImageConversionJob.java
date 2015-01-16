@@ -8,7 +8,7 @@ import edu.yale.library.ladybird.engine.imports.ImageProcessingEvent;
 import edu.yale.library.ladybird.entity.Settings;
 import edu.yale.library.ladybird.entity.User;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
-import edu.yale.library.ladybird.kernel.events.NotificationEventQueue;
+import edu.yale.library.ladybird.kernel.notificaiton.NotificationEventQueue;
 import edu.yale.library.ladybird.persistence.dao.ImportJobDAO;
 import edu.yale.library.ladybird.persistence.dao.SettingsDAO;
 import edu.yale.library.ladybird.persistence.dao.hibernate.ImportJobHibernateDAO;

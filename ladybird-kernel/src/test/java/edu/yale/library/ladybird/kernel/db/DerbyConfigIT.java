@@ -1,8 +1,6 @@
-package edu.yale.library.ladybird.kernel.derby;
+package edu.yale.library.ladybird.kernel.db;
 
-import edu.yale.library.ladybird.kernel.EmbeddedDBException;
 import edu.yale.library.ladybird.kernel.ApplicationProperties;
-import edu.yale.library.ladybird.kernel.EmbeddedDBServicesManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
