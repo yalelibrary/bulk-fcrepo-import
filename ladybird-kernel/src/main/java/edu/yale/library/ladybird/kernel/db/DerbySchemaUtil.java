@@ -1,13 +1,17 @@
 package edu.yale.library.ladybird.kernel.db;
 
 
+import edu.yale.library.ladybird.kernel.ApplicationProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -32,8 +36,8 @@ public final class DerbySchemaUtil {
 
             logger.trace("Creating table(s)");
 
-            final SchemaBean schemaBean = new SchemaBean();
-            final Map<String, String> m = schemaBean.getSchema();
+            final SchemaUtil schemaUtil = new SchemaUtil();
+            final Map<String, String> m = schemaUtil.getSchema();
 
             if (m == null || 0 == m.size()) {
                 throw new EmbeddedDBException("Schema empty");
@@ -48,7 +52,7 @@ public final class DerbySchemaUtil {
             logger.debug("Created table(s)");
 
 
-            final Map<String, String> fdidSchema = schemaBean.getFdidSchema();
+            final Map<String, String> fdidSchema = schemaUtil.getFdidSchema();
 
             if (fdidSchema == null || 0 == m.size()) {
                 throw new EmbeddedDBException("Schema empty");
@@ -81,8 +85,8 @@ public final class DerbySchemaUtil {
 
             logger.debug("Killing table(s)");
 
-            final SchemaBean schemaBean = new SchemaBean();
-            final Map<String, String> m = schemaBean.getKillSchema();
+            final SchemaUtil schemaUtil = new SchemaUtil();
+            final Map<String, String> m = schemaUtil.getKillSchema();
 
             if (m == null || 0 == m.size()) {
                 throw new EmbeddedDBException("Schema empty");
@@ -98,6 +102,14 @@ public final class DerbySchemaUtil {
             throw new EmbeddedDBException(e);
         }
     }
+
+    /**
+     * A filter transforms the schema in some way.
+     */
+    interface SchemaFilter {
+        String filter(final String s);
+    }
+
 
     /**
      * General config settings
@@ -116,6 +128,90 @@ public final class DerbySchemaUtil {
         }
     }
 
+    public class SchemaUtil {
 
-}
+        private final Logger logger = LoggerFactory.getLogger(SchemaUtil.class);
+
+        private final PropertyReader reader = new PropertyReader(ApplicationProperties.SCHEMA_PROPS_FILE);
+
+        private final PropertyReader fdidReader = new PropertyReader(ApplicationProperties.FDID_PROPS_FILE);
+
+        private final PropertyReader killReader = new PropertyReader(ApplicationProperties.KILL_SCHEMA_PROPS_FILE);
+
+        private Map<String, String> build(PropertyReader reader) throws IOException {
+            final Map<String, String> map = new HashMap<>();
+            final Properties props = reader.readAll();
+            for (final String key : props.stringPropertyNames()) {
+                map.put(key, value(props.getProperty(key)));
+            }
+            return map;
+        }
+
+        public Map<String, String> getSchema() {
+            try {
+                final Map<String, String> map = new SchemaUtil().build(reader);
+                return Collections.unmodifiableMap(map);
+            } catch (IOException e) {
+                return Collections.emptyMap();
+            }
+        }
+
+        public Map<String, String> getFdidSchema() {
+            try {
+                final Map<String, String> map = new SchemaUtil().build(fdidReader);
+                return Collections.unmodifiableMap(map);
+            } catch (IOException e) {
+                logger.error("Error reading properties for init fdid", e);
+                return Collections.emptyMap();
+            }
+        }
+
+        public Map<String, String> getKillSchema() {
+            try {
+                final Map<String, String> map = new SchemaUtil().build(killReader);
+                return Collections.unmodifiableMap(map);
+            } catch (IOException e) {
+                logger.error("Error ridding of schema", e);
+                return Collections.emptyMap();
+            }
+        }
+
+        /**
+         * Reads properties.
+         */
+        private class PropertyReader {
+            final String path;
+
+            PropertyReader(final String path) {
+                this.path = path;
+            }
+
+            private Properties readAll() throws IOException {
+                Properties properties = new Properties();
+                properties.load(this.getClass().getResourceAsStream(path));
+                return properties;
+            }
+        }
+
+        /**
+         * TODO re-visit this as schema is changed.
+         * Filters value. Method subject to removal.
+         *
+         * @param statement sql statement
+         * @return transformed value
+         */
+        private String value(final String statement) {
+            final SchemaFilter f = (s) -> s.replace("`", "")
+                    .replace("int(11)", "int")
+                    .replace("datetime", "timestamp")
+                    .replace("longtext", "blob");
+
+            return f.filter(statement);
+        }
+
+    }
+
+
+
+    }
 
