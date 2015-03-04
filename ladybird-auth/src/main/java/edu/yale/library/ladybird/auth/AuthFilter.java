@@ -22,7 +22,7 @@ public final class AuthFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         final AuthenticationFilter casFilter = new AuthenticationFilter();
-        casFilter.setCasServerLoginUrl(PropertiesConfigInit.getProperty("cas_server_url"));
+        casFilter.setCasServerLoginUrl(PropertiesConfigUtil.getProperty("cas_server_url"));
         casFilter.setServerName(getServerName() + ":" + request.getServerPort());
         final CustomFilterChain customFilterChain = new CustomFilterChain(chain);
         customFilterChain.addFilter(casFilter);

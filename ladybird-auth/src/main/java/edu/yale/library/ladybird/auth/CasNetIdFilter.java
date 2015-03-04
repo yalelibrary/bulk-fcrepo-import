@@ -31,6 +31,7 @@ public class CasNetIdFilter implements Filter {
     private static final Logger logger = LoggerFactory.getLogger(CasNetIdFilter.class);
 
     private String webXmlNetIdParam;
+
     private String adminPage;
 
     public CasNetIdFilter() {
@@ -98,33 +99,31 @@ public class CasNetIdFilter implements Filter {
 
     /**
      *
-     * @param casUrl
-     * @param contents
-     * @return
+     * @param casUrl string representing cas url
+     * @param contents string
+     * @return an object representing authentication results
      * @throws java.io.IOException
      */
     private UserAuthResponse getUser(final String casUrl, final String contents) throws IOException {
+        final URL url = new URL(casUrl);
+        final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setDoOutput(true);
 
-        OutputStreamWriter writer = null;
-        BufferedReader in = null;
-        try {
-            final URL url = new URL(casUrl);
-            final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            writer = new OutputStreamWriter(conn.getOutputStream());
+        BufferedReader reader = null;
+        try (OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream()) ) {
             writer.write(contents);
             writer.flush();
-            in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
             final UserAuthResponse userAuthResponse = new UserAuthResponse();
 
             if (conn.getResponseCode() == 200) {
-                String auth  = in.readLine();
+                String auth  = reader.readLine();
                 if (auth.equals("yes")) {
-                    userAuthResponse.isCasAuthenticated = CasAuthenticated.yes;
-                    userAuthResponse.principal = in.readLine();
+                    userAuthResponse.isCasAuthenticated = true;
+                    userAuthResponse.principal = reader.readLine();
                 } else {
-                    userAuthResponse.isCasAuthenticated = CasAuthenticated.no;
+                    userAuthResponse.isCasAuthenticated = false;
                 }
                 return userAuthResponse;
             }
@@ -134,14 +133,11 @@ public class CasNetIdFilter implements Filter {
             throw new IOException(e);
         } finally {
             try {
-                if (writer != null) {
-                    writer.close();
-                }
-                if (in != null) {
-                    in.close();
+                if (reader != null) {
+                    reader.close();
                 }
             } catch (IOException e) {
-                throw new IOException(e);
+                logger.error("Error closing stream");
             }
         }
     }
@@ -175,7 +171,7 @@ public class CasNetIdFilter implements Filter {
     }
 
     private String getProp(final String property) throws IOException {
-        return PropertiesConfigInit.getProperty(property);
+        return PropertiesConfigUtil.getProperty(property);
     }
 
     public long getCurrentTime() {
@@ -183,7 +179,7 @@ public class CasNetIdFilter implements Filter {
     }
 
     private class UserAuthResponse {
-        CasAuthenticated isCasAuthenticated;
+        boolean isCasAuthenticated;
         String principal;
 
         @Override
@@ -193,11 +189,6 @@ public class CasNetIdFilter implements Filter {
                     + ", principal='" + principal + '\''
                     + '}';
         }
-    }
-
-    enum CasAuthenticated {
-        yes,
-        no
     }
 
 }

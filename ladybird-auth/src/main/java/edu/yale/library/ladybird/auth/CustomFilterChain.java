@@ -13,7 +13,9 @@ import java.util.List;
 public class CustomFilterChain implements FilterChain {
 
     private FilterChain chain;
+
     private List<Filter> filters = new ArrayList<>();
+
     private Iterator<Filter> iterator;
 
     public CustomFilterChain(FilterChain chain) {

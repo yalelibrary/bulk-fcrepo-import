@@ -7,6 +7,7 @@ package edu.yale.library.ladybird.auth;
 public class PermissionsValue {
 
     private Permissions permissions;
+
     private boolean enabled;
 
     public PermissionsValue(Permissions permissions, boolean enabled) {

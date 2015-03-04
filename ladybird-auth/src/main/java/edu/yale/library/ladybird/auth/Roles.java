@@ -115,7 +115,7 @@ public enum Roles {
         return null;
     }
 
-    public static int getRolesPermissionsSize() {
+    private static int getRolesPermissionsSize() {
         int count = 0;
         Roles[] roles =  Roles.values();
         for (Roles r: roles) {
