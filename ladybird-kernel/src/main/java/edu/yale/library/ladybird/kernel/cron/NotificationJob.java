@@ -25,25 +25,31 @@ public class NotificationJob extends AbstractNotificationJob implements Job {
     }
 
     /**
-     * FIXME Current impl. will fail silently (remove the job from Q but fail to send it)
+     * TODO can fail silently (remove the job from Q but fail to send it)
      * @param ctx JobExecutionContext
      * @throws JobExecutionException
      */
     public void execute(JobExecutionContext ctx) throws JobExecutionException {
-        final NotificationEventQueue.NotificationItem notificationItem
+        final NotificationEventQueue.NotificationItem n
                 = NotificationEventQueue.getLastEvent();
 
+        if (n == null) {
+            logger.trace("skipping notification job");
+            return;
+        }
+
         try {
-            final Event event = notificationItem.getEvent();
-            final User user = notificationItem.getUsers().get(0); //TODO multimpe users?
+            final Event event = n.getEvent();
+            final User user = n.getUsers().get(0);
 
             if (event == null || user == null) {
                 return;
             }
 
-            logger.trace("Notifying user={} for event={}", user.getUserId(), event.getEventName());
-            notificationHandler.notifyUser(user, event,
-                    notificationItem.getMessage(), notificationItem.getSubject());
+            logger.trace("Notifying user={} for event={}",
+                    user.getUserId(), event.getEventName());
+
+            notificationHandler.notifyUser(user, event, n.getMessage(), n.getSubject());
         } catch (Exception e) {
             logger.error("Error executing notification job", e);
         }
