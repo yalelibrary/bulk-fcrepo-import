@@ -12,9 +12,9 @@
 
         <div>
             <span>
-                <h:outputLink value="/ladybird-webapp/web/pages/secure/import/import_engine_file.xhtml"
+                <h:outputLink value="/ladybird-webapp/web/pages/secure/import/new_job.xhtml"
                               styleClass="btn btn-primary btn-primary">
-                    Add Import Job
+                    New Import Job
                 </h:outputLink>
             </span>
         </div>
@@ -45,22 +45,27 @@
                         <h:outputText value="local" rendered="#{empty monitorItem.dirPath}"/>
                     </p:column>
 
-                    <p:column headerText="Export Directory" width="12%">
-                        <h:outputText value="#{monitorItem.exportPath}"/>
+                    <p:column headerText="Id" width="3%">
+                        <h:outputText value="#{monitorItem.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Date" width="12%">
+                        <h:outputText value="#{monitorItem.date}">
+                            <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
+                        </h:outputText>
                     </p:column>
 
                     <p:column headerText="User" width="14%">
                         <h:outputText value="#{monitorItem.notificationEmail}"/>
                     </p:column>
 
-                    <p:column headerText="Time Scheduled" width="12%">
-                        <h:outputText value="#{monitorItem.date}">
-                            <f:convertDateTime pattern="yyyy-MM-d HH:mm"/>
-                        </h:outputText>
+                    <p:column headerText="Export Directory" width="12%">
+                        <h:outputText value="#{monitorItem.exportPath}"/>
                     </p:column>
 
+
                     <!-- progress meter -->
-                    <p:column headerText="Progress" width="12%">
+                    <p:column headerText="Steps Completed" width="12%">
                         <h:graphicImage library="img" name="check.png"
                                         rendered="#{importProgressView.count(monitorItem.id) eq importProgressView.STEPS_TO_COMPLETE}"/>
                         &nbsp;
