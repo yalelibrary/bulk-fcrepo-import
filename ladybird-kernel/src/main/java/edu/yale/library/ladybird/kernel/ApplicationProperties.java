@@ -11,20 +11,22 @@ import java.nio.file.Paths;
 public class ApplicationProperties {
 
     public static final String DEFAULT_PROPS_FILE = "ladybird.properties";
+
     public static final String DATABASE_STRING_IDENTIFIER = "database";
+
     public static final String DATABASE_DEFAULT_IDENTIFIER = "default";
-    public static final String ALREADY_RUNNING = "Driver already RUNNING.";
-    public static final String ALREADY_STOPPED = "Driver already STOPPED.";
+
     public static final String SCHEMA_PROPS_FILE = "/derby.schema.properties";
+
     public static final String FDID_PROPS_FILE = "/fdid.schema.properties";
+
     public static final String KILL_SCHEMA_PROPS_FILE = "/derby.kill.schema.properties";
-    private static final String EMAIL_PORT_IDENTIFIER = "mail_port";
-    private static final String HOST_NAME_IDENTIFIER = "mail_host";
-    private static final String ADMIN_EMAIL_IDENTIFIER = "mail_admin";
+
     public static final String IMAGE_MAGICK_PATH_ID = "image_magick_path";
+
     public static final String IMPORT_ROOT_PATH_ID = "import_root_path";
+
     public static final String NO_IMAGE_FOUND_PATH = "no_image_found_path";
-    public static final String WELCOME_PAGE_id = "welcome_page";
 
     public static final class CONFIG_STATE {
 
@@ -49,12 +51,19 @@ public class ApplicationProperties {
         }
 
         public static final boolean DEFAULT_DB_CONFIGURED = isDefaultDbConfig();
+
         public static final String EMAIL_ADMIN = getAdminEmail();
+
         public static final int EMAIL_PORT = getEmailPort();
+
         public static final String EMAIL_HOST = getEmailHost();
+
         public static final String IMAGE_MAGICK_PATH = getImageMagickCommandPath();
+
         public static final String IMPORT_ROOT_PATH = getImportRootPath();
+
         public static final String NO_IMAGE_FOUND_FILE = getNoImageFoundFilePath();
+
         public static final String WELCOME_PAGE = getWelcomePage();
 
         /**
@@ -69,15 +78,15 @@ public class ApplicationProperties {
         }
 
         private static String getAdminEmail() {
-            return readProperty(ADMIN_EMAIL_IDENTIFIER);
+            return readProperty("mail_admin");
         }
 
         private static int getEmailPort() {
-            return readIntProperty(EMAIL_PORT_IDENTIFIER);
+            return readIntProperty("mail_port");
         }
 
         private static String getEmailHost() {
-            return readProperty(HOST_NAME_IDENTIFIER);
+            return readProperty("mail_host");
         }
 
         private static String getImageMagickCommandPath() {
@@ -101,7 +110,7 @@ public class ApplicationProperties {
         }
 
         private static String getWelcomePage() {
-            return readProperty(WELCOME_PAGE_id);
+            return readProperty("welcome_page");
         }
 
     }

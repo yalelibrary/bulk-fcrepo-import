@@ -37,7 +37,7 @@ public class DerbyConfigIT {
             embeddedDBServicesManager.startDB();
             fail("Failed. Tried to re-init driver.");
         } catch (final EmbeddedDBException e) {
-            if (!e.getMessage().equalsIgnoreCase(ApplicationProperties.ALREADY_RUNNING)) {
+            if (!e.getMessage().equalsIgnoreCase("Driver already RUNNING.")) {
                 logger.error("Error", e);
                 fail("Failed. Tried to re-init driver.");
             }

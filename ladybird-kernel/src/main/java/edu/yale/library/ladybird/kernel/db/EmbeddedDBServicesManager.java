@@ -17,7 +17,7 @@ public final class EmbeddedDBServicesManager {
 
     public void startDB() {
         if (EmbeddedDBUtil.isDatabaseRunning()) {
-            throw new EmbeddedDBException(ApplicationProperties.ALREADY_RUNNING);
+            throw new EmbeddedDBException("Driver already RUNNING.");
         }
         logger.debug("Trying to start and init embedded DB");
         EmbeddedDBUtil.start();
@@ -25,7 +25,7 @@ public final class EmbeddedDBServicesManager {
 
     public void stopDB() throws SQLException {
         if (!EmbeddedDBUtil.isDatabaseRunning()) {
-            throw new EmbeddedDBException(ApplicationProperties.ALREADY_STOPPED);
+            throw new EmbeddedDBException("Driver already STOPPED.");
         }
         logger.debug("Trying to stop embedded DB");
         EmbeddedDBUtil.stop();

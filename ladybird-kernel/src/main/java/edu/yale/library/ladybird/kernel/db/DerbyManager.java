@@ -59,7 +59,7 @@ public final class DerbyManager {
     protected synchronized void start() {
         synchronized (RUNNING) {
             if (RUNNING) {
-                throw new EmbeddedDBException(ApplicationProperties.ALREADY_RUNNING);
+                throw new EmbeddedDBException("Driver already RUNNING.");
             }
             try {
                 doStart();
