@@ -73,8 +73,7 @@ public class ImportWriter {
             writeExHead(importId, importValue.getHeaderRow().getColumns());
             logger.debug("Wrote import job exheads for importId={}", importId);
             writeContents(importId, importValue, fieldConstants);
-            logger.debug("Wrote import job contents for importId" +
-                    "={}", importId);
+            logger.debug("Wrote import job contents for importId={}", importId);
             return importId;
         } catch (Exception e) {
             logger.error("Error in import writer for request id={}", importJobRequest.getRequestId());

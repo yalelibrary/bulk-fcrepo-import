@@ -2,7 +2,6 @@ package edu.yale.library.ladybird.persistence.dao.hibernate;
 
 import edu.yale.library.ladybird.entity.ObjectString;
 import edu.yale.library.ladybird.persistence.dao.ObjectStringDAO;
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 

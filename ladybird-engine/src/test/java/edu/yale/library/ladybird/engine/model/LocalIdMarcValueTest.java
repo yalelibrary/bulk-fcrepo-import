@@ -41,7 +41,7 @@ public class LocalIdMarcValueTest {
         Multimap<Marc21Field, Map<String, String>> multiMapReadback = localIdMarcValue.getValueMap();
         Collection collection = multiMapReadback.get(Marc21Field._245);
 
-        assertEquals (collection.size(), 2);
+        assertEquals(collection.size(), 2);
 
         Iterator it = collection.iterator();
 

@@ -76,7 +76,7 @@ public class DefaultObjectMetadataWriterJob implements Job, ObjectMetataWriterJo
                 .new NotificationItem(objectMetaEvent, u, message, subject));
     }
 
-    private static final long current() {
+    private static long current() {
         return System.currentTimeMillis();
     }
 }

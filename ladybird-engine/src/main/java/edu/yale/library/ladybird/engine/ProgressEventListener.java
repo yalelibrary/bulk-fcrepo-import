@@ -3,7 +3,6 @@ package edu.yale.library.ladybird.engine;
 import com.google.common.eventbus.Subscribe;
 import edu.yale.library.ladybird.engine.cron.ProgressEvent;
 import edu.yale.library.ladybird.engine.imports.JobExceptionEvent;
-import edu.yale.library.ladybird.engine.JobStatus;
 import org.apache.commons.lang3.exception.ContextedRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

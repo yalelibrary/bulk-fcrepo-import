@@ -2,7 +2,6 @@ package edu.yale.library.ladybird.persistence.dao.hibernate;
 
 import edu.yale.library.ladybird.entity.Project;
 import edu.yale.library.ladybird.persistence.dao.ProjectDAO;
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -27,7 +26,6 @@ public class ProjectHibernateDAO extends GenericHibernateDAO<Project, Integer> i
     @Override
     public Project findByProjectId(int projectId) {
         final Session s = getSession();
-
 
         try {
             final Query q = s.createQuery("from Project where projectId = :param");
