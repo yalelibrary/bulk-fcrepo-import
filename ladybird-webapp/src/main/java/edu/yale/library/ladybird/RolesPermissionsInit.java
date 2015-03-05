@@ -19,45 +19,45 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- *
- */
 public class RolesPermissionsInit {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private final RolesPermissionsDAO rolesPermissionsDAO = new RolesPermissionsHibernateDAO();
+
+    private final RolesDAO rolesDAO = new RolesHibernateDAO();
+
+    private final PermissionsDAO permissionsDAO = new PermissionsHibernateDAO();
+
     public void load() {
-        Date date = new Date();
+        logger.debug("Loading default init permissions"); //should be removed for dynamic state
 
         try {
-            RolesPermissionsDAO rolesPermissionsDAO = new RolesPermissionsHibernateDAO();
-            RolesDAO rolesDAO = new RolesHibernateDAO();
-            PermissionsDAO permissionsDAO = new PermissionsHibernateDAO();
 
-            if (rolesDAO.count() != 0 || permissionsDAO.count() != 0 || rolesPermissionsDAO.count() != 0) {
-                logger.debug("Fdid already initalized. Skipping");
+            if (rolesDAO.count() != 0 || permissionsDAO.count() != 0
+                    || rolesPermissionsDAO.count() != 0) {
+                logger.info("fdid already initialized. Skipping");
                 return;
             }
 
-            Permissions[] permissions = Permissions.values();
-            Map<Permissions, Integer> savedIds = new HashMap<>();
+            final Permissions[] permissions = Permissions.values();
+            final Map<Permissions, Integer> savedIds = new HashMap<>();
+            final Date date = new Date();
 
-            logger.debug("Loading default init permissions"); //should be removed for dynamic state
-
-
-            for (Permissions p: permissions) {
-                edu.yale.library.ladybird.entity.Permissions pe = new edu.yale.library.ladybird.entity.Permissions();
+            for (final Permissions p: permissions) {
+                edu.yale.library.ladybird.entity.Permissions pe
+                        = new edu.yale.library.ladybird.entity.Permissions();
                 pe.setPermissionsName(p.getName());
                 int savedId = permissionsDAO.save(pe);
                 savedIds.put(p, savedId);
             }
 
 
-            List<RolesPermissions> rolesPermissionsList = new ArrayList<>();
+            final List<RolesPermissions> rolesPermissionsList = new ArrayList<>();
 
-            for (Roles r: Roles.values()) {
-
-                edu.yale.library.ladybird.entity.Roles role = new edu.yale.library.ladybird.entity.Roles();
+            for (final Roles r: Roles.values()) {
+                edu.yale.library.ladybird.entity.Roles role
+                        = new edu.yale.library.ladybird.entity.Roles();
                 role.setRoleName(r.getName());
                 role.setRoleDesc("");
                 int roleId;
@@ -70,30 +70,29 @@ public class RolesPermissionsInit {
                     roleId = rolesDAO.save(role);
                 }
 
-                List<PermissionsValue> p = r.getPermissions();
+                final List<PermissionsValue> p = r.getPermissions();
                 // for each of these permissions
 
-                for (PermissionsValue pv : p) {
+                for (final PermissionsValue v : p) {
                     RolesPermissions rolesPermissions = new RolesPermissions();
                     rolesPermissions.setCreatedDate(date);
                     rolesPermissions.setRoleId(roleId);
-                    rolesPermissions.setPermissionsId(savedIds.get(pv.getPermissions()));
+                    rolesPermissions.setPermissionsId(savedIds.get(v.getPermissions()));
                     char enabled = 'n';
 
-                    if (pv.isEnabled()) {
+                    if (v.isEnabled()) {
                         enabled = 'y';
                     }
 
                     rolesPermissions.setValue(enabled);
                     rolesPermissionsList.add(rolesPermissions);
-                    //rolesPermissionsDAO.save(rolesPermissions);
-                    logger.debug("Will save role permissions={}", rolesPermissions);
+                    logger.debug("Saving role permissions={}", rolesPermissions);
                 }
 
                 rolesPermissionsDAO.saveList(rolesPermissionsList);
             }
         } catch (Exception e) {
-            logger.error("Error init to db role permissions", e);
+            logger.error("Error persisting role permissions", e);
             throw e;
         }
     }
