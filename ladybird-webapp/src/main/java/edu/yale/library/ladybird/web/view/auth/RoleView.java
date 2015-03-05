@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.web.view.auth;
 
-import edu.yale.library.ladybird.auth.Roles;
+import edu.yale.library.ladybird.auth.RoleSet;
 import edu.yale.library.ladybird.web.view.NavigationUtil;
 
 import javax.annotation.PostConstruct;
@@ -15,29 +15,29 @@ import java.util.List;
 @ViewScoped
 public class RoleView implements Serializable {
 
-    private List<Roles> itemList = new ArrayList<>();
+    private List<RoleSet> itemList = new ArrayList<>();
 
-    private Roles selectedItem;
+    private RoleSet selectedItem;
 
     @PostConstruct
     public void init() {
-        final Roles[] roles = Roles.values();
+        final RoleSet[] roles = RoleSet.values();
         itemList.addAll(Arrays.asList(roles));
     }
 
-    public List<Roles> getItemList() {
+    public List<RoleSet> getItemList() {
         return itemList;
     }
 
-    public void setItemList(List<Roles> itemList) {
+    public void setItemList(List<RoleSet> itemList) {
         this.itemList = itemList;
     }
 
-    public Roles getSelectedItem() {
+    public RoleSet getSelectedItem() {
         return selectedItem;
     }
 
-    public void setSelectedItem(Roles selectedItem) {
+    public void setSelectedItem(RoleSet selectedItem) {
         this.selectedItem = selectedItem;
     }
 

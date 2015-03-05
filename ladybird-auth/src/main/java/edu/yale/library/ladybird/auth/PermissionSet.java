@@ -2,9 +2,9 @@ package edu.yale.library.ladybird.auth;
 
 /**
  *  Permissions. Must keep Roles up-to-date if a new Permissions is added.
- *  @see Roles
+ *  @see RoleSet
  */
-public enum Permissions {
+public enum PermissionSet {
     USER_ADD("user.add"),
     USER_DELETE("user.remove"),
     USER_LIST("user.list"),
@@ -18,7 +18,7 @@ public enum Permissions {
 
     private String name;
 
-    private Permissions(String name) {
+    private PermissionSet(String name) {
         this.name = name;
     }
 

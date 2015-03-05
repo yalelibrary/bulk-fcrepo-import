@@ -6,25 +6,25 @@ package edu.yale.library.ladybird.auth;
  */
 public class PermissionsValue {
 
-    private Permissions permissions;
+    private PermissionSet permissionSet;
 
     private boolean enabled;
 
-    public PermissionsValue(Permissions permissions, boolean enabled) {
-        this.permissions = permissions;
+    public PermissionsValue(PermissionSet permissionSet, boolean enabled) {
+        this.permissionSet = permissionSet;
         this.enabled = enabled;
     }
 
-    public Permissions getPermissions() {
-        return permissions;
+    public PermissionSet getPermissionSet() {
+        return permissionSet;
     }
 
     public boolean isEnabled() {
         return enabled;
     }
 
-    public void setPermissions(Permissions permissions) {
-        this.permissions = permissions;
+    public void setPermissionSet(PermissionSet permissionSet) {
+        this.permissionSet = permissionSet;
     }
 
     public void setEnabled(boolean enabled) {
@@ -34,7 +34,7 @@ public class PermissionsValue {
     @Override
     public String toString() {
         return "PermissionsValue{"
-                + "permissions=" + permissions
+                + "permissions=" + permissionSet
                 + ", enabled=" + enabled
                 + '}';
     }

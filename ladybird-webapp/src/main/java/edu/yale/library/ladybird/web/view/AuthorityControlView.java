@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.web.view;
 
 
-import edu.yale.library.ladybird.auth.Permissions;
+import edu.yale.library.ladybird.auth.PermissionSet;
 import edu.yale.library.ladybird.engine.metadata.FieldConstantUtil;
 import edu.yale.library.ladybird.entity.AuthorityControl;
 import edu.yale.library.ladybird.entity.AuthorityControlBuilder;
@@ -127,7 +127,7 @@ public class AuthorityControlView extends AbstractView {
         try {
             final User user = authUtil.getCurrentUser();
             final String userRoleStr = user.getRole();
-            RolesPermissions rolesPerm = authUtil.getRolePermission(userRoleStr, Permissions.ACID_ADD);
+            RolesPermissions rolesPerm = authUtil.getRolePermission(userRoleStr, PermissionSet.ACID_ADD);
 
             if (rolesPerm == null) {
                 logger.error("Role permisison not found for user={}", user);

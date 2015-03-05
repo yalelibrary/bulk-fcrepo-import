@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.web.view;
 
-import edu.yale.library.ladybird.auth.Permissions;
+import edu.yale.library.ladybird.auth.PermissionSet;
 import edu.yale.library.ladybird.engine.metadata.FieldConstantUtil;
 import edu.yale.library.ladybird.entity.FieldDefinition;
 import edu.yale.library.ladybird.entity.FieldDefinitionBuilder;
@@ -92,7 +92,7 @@ public class FieldDefinitionView extends AbstractView {
         try {
             final User user = authUtil.getCurrentUser();
             final String userRoleStr = user.getRole();
-            RolesPermissions rolesPerm = authUtil.getRolePermission(userRoleStr, Permissions.FDID_ADD);
+            RolesPermissions rolesPerm = authUtil.getRolePermission(userRoleStr, PermissionSet.FDID_ADD);
 
             if (rolesPerm == null) {
                 logger.error("Role permisison not found for user={}", user);

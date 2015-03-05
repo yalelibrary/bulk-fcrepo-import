@@ -1,8 +1,10 @@
 package edu.yale.library.ladybird;
 
-import edu.yale.library.ladybird.auth.Permissions;
+import edu.yale.library.ladybird.auth.PermissionSet;
 import edu.yale.library.ladybird.auth.PermissionsValue;
-import edu.yale.library.ladybird.auth.Roles;
+import edu.yale.library.ladybird.auth.RoleSet;
+import edu.yale.library.ladybird.entity.Permissions;
+import edu.yale.library.ladybird.entity.Roles;
 import edu.yale.library.ladybird.entity.RolesPermissions;
 import edu.yale.library.ladybird.persistence.dao.PermissionsDAO;
 import edu.yale.library.ladybird.persistence.dao.RolesDAO;
@@ -40,13 +42,12 @@ public class RolesPermissionsInit {
                 return;
             }
 
-            final Permissions[] permissions = Permissions.values();
-            final Map<Permissions, Integer> savedIds = new HashMap<>();
+            final PermissionSet[] permissions = PermissionSet.values();
+            final Map<PermissionSet, Integer> savedIds = new HashMap<>();
             final Date date = new Date();
 
-            for (final Permissions p: permissions) {
-                edu.yale.library.ladybird.entity.Permissions pe
-                        = new edu.yale.library.ladybird.entity.Permissions();
+            for (final PermissionSet p: permissions) {
+                Permissions pe = new Permissions();
                 pe.setPermissionsName(p.getName());
                 int savedId = permissionsDAO.save(pe);
                 savedIds.put(p, savedId);
@@ -55,9 +56,8 @@ public class RolesPermissionsInit {
 
             final List<RolesPermissions> rolesPermissionsList = new ArrayList<>();
 
-            for (final Roles r: Roles.values()) {
-                edu.yale.library.ladybird.entity.Roles role
-                        = new edu.yale.library.ladybird.entity.Roles();
+            for (final RoleSet r: RoleSet.values()) {
+                Roles role = new Roles();
                 role.setRoleName(r.getName());
                 role.setRoleDesc("");
                 int roleId;
@@ -77,7 +77,7 @@ public class RolesPermissionsInit {
                     RolesPermissions rolesPermissions = new RolesPermissions();
                     rolesPermissions.setCreatedDate(date);
                     rolesPermissions.setRoleId(roleId);
-                    rolesPermissions.setPermissionsId(savedIds.get(v.getPermissions()));
+                    rolesPermissions.setPermissionsId(savedIds.get(v.getPermissionSet()));
                     char enabled = 'n';
 
                     if (v.isEnabled()) {

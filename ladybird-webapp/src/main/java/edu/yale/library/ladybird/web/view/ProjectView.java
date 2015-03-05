@@ -1,6 +1,6 @@
 package edu.yale.library.ladybird.web.view;
 
-import edu.yale.library.ladybird.auth.Permissions;
+import edu.yale.library.ladybird.auth.PermissionSet;
 import edu.yale.library.ladybird.entity.Project;
 import edu.yale.library.ladybird.entity.ProjectBuilder;
 import edu.yale.library.ladybird.entity.RolesPermissions;
@@ -143,7 +143,7 @@ public class ProjectView extends AbstractView {
         try {
             final User user = authUtil.getCurrentUser();
             final String userRoleStr = user.getRole();
-            RolesPermissions rolesPerm = authUtil.getRolePermission(userRoleStr, Permissions.PROJECT_ADD);
+            RolesPermissions rolesPerm = authUtil.getRolePermission(userRoleStr, PermissionSet.PROJECT_ADD);
 
             if (rolesPerm == null) {
                 logger.error("Role permission not found for user={}", user);

@@ -17,7 +17,7 @@
                 <div>
                     <ui:repeat var="p" value="#{permsisionsView.itemList}">
                         <div>
-                            <h:outputText value="#{p.permissions.name}"/>
+                            <h:outputText value="#{p.permissionSet.name}"/>
                             <h:selectBooleanCheckbox value="#{p.enabled}" readonly="true"/>
                         </div>
                     </ui:repeat>

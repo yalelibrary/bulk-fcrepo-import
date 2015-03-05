@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.web.view;
 
-import edu.yale.library.ladybird.auth.Permissions;
-import edu.yale.library.ladybird.auth.Roles;
+import edu.yale.library.ladybird.auth.PermissionSet;
+import edu.yale.library.ladybird.auth.RoleSet;
 import edu.yale.library.ladybird.entity.Project;
 import edu.yale.library.ladybird.entity.RolesPermissions;
 import edu.yale.library.ladybird.entity.User;
@@ -150,9 +150,9 @@ public class AuthUtil extends AbstractView {
         return (netId == null) ? "" : netId.toString();
     }
 
-    public RolesPermissions getRolePermission(String userRoleStr, Permissions requiredPermission) {
+    public RolesPermissions getRolePermission(String userRoleStr, PermissionSet requiredPermission) {
         try {
-            final Roles role = Roles.fromString(userRoleStr);
+            final RoleSet role = RoleSet.fromString(userRoleStr);
             final int roleId = rolesDAO.findByName(role.getName()).getRoleId();
             final int permissionsId = permissionsDAO.findByName(requiredPermission.getName()).getPermissionsId();
             return rolesPermissionsDAO.findByRolesPermissionsId(roleId, permissionsId);

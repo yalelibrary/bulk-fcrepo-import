@@ -1,7 +1,7 @@
 package edu.yale.library.ladybird.web.view.auth;
 
 import edu.yale.library.ladybird.auth.PermissionsValue;
-import edu.yale.library.ladybird.auth.Roles;
+import edu.yale.library.ladybird.auth.RoleSet;
 import org.omnifaces.util.Faces;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,15 +38,15 @@ public class PermsisionsView implements Serializable {
     //TODO
     private List<PermissionsValue> getPermissionsValueForRole(final String role) {
         if (role.equalsIgnoreCase("ADMIN")) {
-            return Roles.ADMIN.getPermissions();
+            return RoleSet.ADMIN.getPermissions();
         } else if (role.equalsIgnoreCase("VISITOR")) {
-            return Roles.VISITOR.getPermissions();
+            return RoleSet.VISITOR.getPermissions();
         } else if (role.equalsIgnoreCase("PROJECTADMIN")) {
-            return Roles.PROJECT_ADMIN.getPermissions();
+            return RoleSet.PROJECT_ADMIN.getPermissions();
         } else if (role.equalsIgnoreCase("PROJECTUSER")) {
-            return Roles.PROJECT_USER.getPermissions();
+            return RoleSet.PROJECT_USER.getPermissions();
         }
-        return Roles.NONE.getPermissions();
+        return RoleSet.NONE.getPermissions();
     }
 
     public String getRole() {
