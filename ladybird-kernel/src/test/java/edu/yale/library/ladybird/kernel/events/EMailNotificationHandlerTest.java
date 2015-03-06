@@ -47,6 +47,6 @@ public class EMailNotificationHandlerTest {
         final Iterator emailIter = server.getReceivedEmail();
         final SmtpMessage email = (SmtpMessage) emailIter.next();
         assertEquals("Wrong subject", email.getHeaderValue("Subject"), "Subject");
-        assertEquals("Wrong address", email.getHeaderValue("To"), "\"test@test.edu\" <test@test.edu>");
+        assertEquals("Wrong address", email.getHeaderValue("To"), "test@test.edu");
     }
 }

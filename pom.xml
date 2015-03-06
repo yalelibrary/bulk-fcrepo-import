@@ -42,34 +42,35 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <logback.version>1.1.1</logback.version>
+        <logback.version>1.1.2</logback.version>
         <quartz.version>2.2.1</quartz.version>
-        <surefire.version>4.8.1</surefire.version>
-        <powermock.version>1.5.1</powermock.version>
-        <slf4j.version>1.7.5</slf4j.version>
-        <httpclient.version>4.3.1</httpclient.version>
-        <httpcomponents.version>4.3</httpcomponents.version>
-        <hibernate.version>4.2.1.Final</hibernate.version>
-        <joda.version>2.2</joda.version>
-        <mysql.version>5.1.20</mysql.version>
-        <derby.version>10.10.1.1</derby.version>
-        <mail.version>1.4.4</mail.version>
-        <javaee-api.version>6.0</javaee-api.version>
-        <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
-        <resteasy-jaxrs.version>3.0.6.Final</resteasy-jaxrs.version>
-        <javax.inject.version>1</javax.inject.version>
+        <surefire.version>4.12</surefire.version>
+        <powermock.version>1.6.1</powermock.version>
+        <slf4j.version>1.7.10</slf4j.version>
+        <httpclient.version>4.4</httpclient.version>
+        <httpcomponents.version>4.4</httpcomponents.version>
+        <hibernate.version>4.3.8.Final</hibernate.version>
+        <hibernate-c3p0.version>4.3.8.Final</hibernate-c3p0.version>
+        <joda.version>2.7</joda.version>
+        <mysql.version>5.1.34</mysql.version>
+        <derby.version>10.11.1.1</derby.version>
+        <mail.version>1.5.0-b01</mail.version>
+        <javaee-api.version>7.0</javaee-api.version>
+        <javax.servlet-api.version>3.1.0</javax.servlet-api.version>
+        <resteasy-jaxrs.version>3.0.10.Final</resteasy-jaxrs.version>
+        <javax.inject.version>1.0-PFD-1</javax.inject.version>
         <guice.version>3.0</guice.version>
-        <resteasy-guice.version>3.0.6.Final</resteasy-guice.version>
+        <resteasy-guice.version>3.0.10.Final</resteasy-guice.version>
         <maven-compiler-plugin.source>1.8</maven-compiler-plugin.source>
         <maven-compiler-plugin.target>1.8</maven-compiler-plugin.target>
-        <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
-        <maven-checkstyle-plugin.version>2.12</maven-checkstyle-plugin.version>
+        <maven-compiler-plugin.version>3.2</maven-compiler-plugin.version>
+        <maven-checkstyle-plugin.version>2.14</maven-checkstyle-plugin.version>
         <mockito-core.version>1.9.5</mockito-core.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-config.version>1.10</commons-config.version>
-        <guava.version>17.0</guava.version>
-        <prettytime.version>3.2.5.Final</prettytime.version>
-        <maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
+        <guava.version>18.0</guava.version>
+        <prettytime.version>3.2.7.Final</prettytime.version>
+        <maven-javadoc-plugin.version>2.10.1</maven-javadoc-plugin.version>
         <prettytime-integration-jsf.version>3.2.6-SNAPSHOT</prettytime-integration-jsf.version>
     </properties>
 
@@ -255,7 +256,7 @@
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-c3p0</artifactId>
-                <version>4.2.1.Final</version>
+                <version>${hibernate-c3p0.version}</version>
             </dependency>
             <dependency>
                 <groupId>c3p0</groupId>
