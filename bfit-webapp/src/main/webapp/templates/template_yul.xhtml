@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+    <h:outputStylesheet library="boostrap" name="css/bootstrap.css"/>
+    <title><ui:insert name="title"/></title>
+    <f:facet name="first">
+        <ui:insert name="meta"/>
+    </f:facet>
+</h:head>
+<h:body>
+
+    <div>
+        <!-- TODO make navbar configurable -->
+        <div class="row">
+            <div class="col-xs-12 col-md-10">
+                <table>
+                    <tr>
+                        <td><img src="https://avatars2.githubusercontent.com/u/3673435?v=3&amp;s=50"></img></td>
+                        <td><h3>bfit</h3></td>
+                    </tr>
+                </table>
+            </div>
+
+            <!--
+            <div class="col-xs-6 col-md-2">
+            <img src="http://lbdev.library.yale.edu/imgs/ladybird_header_right1_small.png"></img></div> -->
+        </div>
+
+        <div>
+            <div>
+
+                <h:form id="EmbeddedSearchForm" enctype="multipart/form-data" styleClass="form-horizontal" role="form">
+
+                    <p:menubar>
+                        <p:submenu label="Dashboard">
+                            <p:menuitem value="Workspace" url="/pages/secure/welcome.xhtml"/>
+                            <p:menuitem value="Schedule Import" url="/pages/secure/import/new_job.xhtml"/>
+                            <p:menuitem value="Add New Object" url="/pages/secure/object/object_new_metadata.xhtml"/>
+                            <p:menuitem value="User Manager" url="/pages/secure/user/user_manager.xhtml"/>
+                            <p:menuitem value="Project Manager" url="/pages/secure/projects.xhtml"/>
+                            <p:menuitem value="Export Options" url="/pages/secure/import/user_export.xhtml"/>
+                        </p:submenu>
+
+                        <!--
+                        <p:submenu label="New Object">
+                        </p:submenu>
+                        -->
+
+                        <p:submenu label="Search">
+                            <p:menuitem value="General Search" url="/pages/secure/search_oid.xhtml"/>
+                            <p:menuitem value="Browse Project" url="/pages/secure/object/object_import.xhtml"/>
+                            <p:menuitem value="Search History" url="/pages/secure/data_history.xhtml"/>
+                            <p:menuitem value="Versions History" url="/pages/secure/object/object_version.xhtml"/>
+                            <p:menuitem value="Audit" url="/pages/secure/audit.xhtml"/>
+                        </p:submenu>
+
+                        <p:submenu label="Authority Control">
+                            <p:menuitem value="Authority Lists" url="/pages/secure/acid_home.xhtml"/>
+                        </p:submenu>
+
+                        <p:submenu label="Project Settings">
+                            <p:menuitem value="Project Authorization" url="/pages/secure/users_projects.xhtml"/>
+                            <p:menuitem value="Templates" url="/pages/secure/project_template.xhtml"/>
+                            <p:menuitem value="Metadata Access" url="/pages/secure/user_project_field.xhtml"/>
+                            <p:menuitem value="Copy Metadata Access" url="/pages/secure/copy_metadata_access.xhtml"/>
+                            <p:menuitem value="Field Definitions" url="/pages/secure/import/field_definition.xhtml"/>
+                            <p:menuitem value="MARC xwalk" url="/pages/secure/import/field_marc_mapping.xhtml"/>
+                        </p:submenu>
+
+                        <p:submenu label="Stats">
+                            <p:menuitem value="Dashboard" url="/pages/secure/stats.xhtml"/>
+                            <p:menuitem value="Imports Status" url="/pages/secure/import/jobs.xhtml"/>
+                        </p:submenu>
+
+                        <p:submenu label="Admin Settings">
+                            <p:menuitem value="Application Settings" url="/pages/secure/settings.xhtml"/>
+                            <p:menuitem value="Crons Manager" url="/pages/secure/crons.xhtml"/>
+                            <p:menuitem value="OAI-PMH Settings" url="/pages/secure/import/import_source.xhtml"/>
+                            <p:menuitem value="Roles Authorization"
+                                        url="/pages/secure/authz/roles_permissions.xhtml"/>
+                        </p:submenu>
+
+                        <p:submenu label="#{welcomeView.currentUsername}">
+                            <p:menuitem value="Preferences" url="/pages/secure/user_preferences.xhtml"/>
+                            <p:menuitem value="Log Out" url="/pages/logout.xhtml"/>
+                        </p:submenu>
+
+                        <f:facet name="options">
+                            <h:inputText value="#{searchView.oid}"
+                                         style="margin-right:10px" placeholder="Search"
+                                         onkeypress="if (event.keyCode == 13) {
+                                         onchange();
+                                         return false;
+                                     }">
+                                <f:ajax event="change" listener="#{searchView.searchAjax}"/>
+                            </h:inputText>
+                        </f:facet>
+                    </p:menubar>
+
+                </h:form>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid" style="margin-left:15px">
+
+        <div>
+            <h:outputText value="Project: #{userPreferencesView.defaultProjectForCurrentUser.label}"
+                          rendered="#{userPreferencesView.defaultProjectForCurrentUser != null}"
+                          style="font-style:italic"/>
+        </div>
+
+        <div class="row row-offcanvas row-offcanvas-right">
+            <div class="col-xs-12 col-sm-8">
+                <div class="row">
+                    <ui:insert name="content"/>
+                </div>
+                <!--/row-->
+            </div>
+            <!--/span-->
+
+            <div class="col-xs-6 col-sm-2 sidebar-offcanvas" id="sidebar" role="navigation">
+                <div class="list-group">
+                    <ui:insert name="offcanvas"/>
+                </div>
+            </div>
+        </div>
+        <!--/row-->
+
+    </div>
+    <!--main -->
+
+
+    <footer class="bs-footer" role="contentinfo">
+        <div class="container">
+            <!-- TODO-->
+            <br/><br/>
+
+            <p>Copyright © <a href="http://www.yale.edu">Yale University 2014</a></p>
+        </div>
+    </footer>
+
+    <ui:debug/>
+</h:body>
+</html>

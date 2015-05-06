@@ -2,11 +2,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>edu.yale.library</groupId>
-    <artifactId>ladybird</artifactId>
+    <artifactId>bfit</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>ladybird (Parent)</name>
+    <name>bfit (Parent)</name>
     <description/>
     <url/>
     <inceptionYear>2014</inceptionYear>
@@ -26,12 +26,12 @@
     <mailingLists/>
 
     <modules>
-        <module>ladybird-webapp</module>
-        <module>ladybird-kernel</module>
-        <module>ladybird-engine</module>
-        <module>ladybird-persistence</module>
-        <module>ladybird-entity</module>
-        <module>ladybird-auth</module>
+        <module>bfit-webapp</module>
+        <module>bfit-kernel</module>
+        <module>bfit-engine</module>
+        <module>bfit-persistence</module>
+        <module>bfit-entity</module>
+        <module>bfit-auth</module>
     </modules>
 
     <scm/>
@@ -334,7 +334,7 @@
                         <id>validate</id>
                         <phase>verify</phase>
                         <configuration>
-                            <configLocation>ladybird-sun.xml</configLocation>
+                            <configLocation>bfit-sun.xml</configLocation>
                             <encoding>UTF-8</encoding>
                             <consoleOutput>true</consoleOutput>
                             <failsOnError>false</failsOnError>
