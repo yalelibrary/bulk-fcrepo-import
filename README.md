@@ -1,6 +1,6 @@
 bulk fcrepo import tool
 =======================
-bfit (befit, be fit, beef it -- depending on your taste) is a Java analog of the active C# application [ladybird] (http://ladybird.library.yale.edu/) at Yale University.
+Java analog of the active C# application [ladybird] (http://ladybird.library.yale.edu/) at Yale University.
 
 ### Building
 
