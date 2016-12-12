@@ -21,6 +21,8 @@ The webapp is launched at: http://localhost:8080/bfit-webapp
 The application uses an embedded Tomcat and relational database. The generated .war file should ideally be placed
 in a regular servlet container, however. Similarly MySQL should be used as the data store.
 
+![ladybird](lb2.png)
+
 ### Authors
 
 Lead developer: Osman Din
