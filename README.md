@@ -5,12 +5,9 @@ The project began in 2014.
 
 ### Installation
 
-System Requirements
-
-1. Java 8
-
 ```
 mvn clean install
+cd target
 mvn cargo:run
 ```
 
@@ -20,8 +17,8 @@ The webapp is launched at: http://localhost:8080/bfit-webapp. You should see som
 
 ### Deployment
 
-The application uses an embedded Tomcat and relational database. The generated .war file should ideally be placed
-in a regular servlet container, however. Similarly MySQL should be used as the data store.
+The application comes with an embedded Tomcat and an in-memory relational database. The generated .war file should ideally be placed
+in a regular servlet container, however. Similarly MySQL should be used as the data store for Hibernate.
 
 ### Limitations
 
@@ -29,4 +26,4 @@ The application does not currently publish to Fedora. The project is currently o
 
 ### Authors
 
-Lead developer: Osman Din
+Lead Developer: Osman Din
