@@ -7,17 +7,21 @@ The project began in 2014.
 
 ```
 mvn clean install
-cd target
+cd bfit-webapp
 mvn cargo:run
 ```
+
+Some tests that rely on access to the library's OAI-PMH server might fail. Please set up your VPN before doing a build.
 
 The webapp is launched at: http://localhost:8080/bfit-webapp. You should see something like:
 
 ![ladybird](lb2.png)
 
+The application requires CAS credentials.
+
 ### Deployment
 
-The application comes with an embedded Tomcat and an in-memory relational database. The generated .war file should ideally be placed
+The application comes with an embedded Tomcat 7 and an in-memory relational database. The generated .war file should ideally be placed
 in a regular servlet container, however. Similarly MySQL should be used as the data store for Hibernate.
 
 ### Limitations
